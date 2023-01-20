@@ -1,6 +1,7 @@
 import type { Decorator, Parameters } from "@storybook/react";
-import { GlobalStyle } from "../src/components/GlobalStyle";
 import React from "react";
+import "../src/styles/fonts.css";
+import { GlobalStyle } from "../src/components/GlobalStyle";
 
 export const parameters: Parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
