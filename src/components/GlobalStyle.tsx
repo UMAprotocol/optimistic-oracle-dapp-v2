@@ -1,18 +1,21 @@
 import {
-  black,
-  green,
+  blueGrey300,
+  blueGrey400,
+  blueGrey500,
+  blueGrey600,
+  blueGrey700,
   grey100,
+  grey400,
   grey50,
   grey500,
-  grey800,
+  grey900,
   headerLg,
   headerMd,
   headerSm,
   headerXl,
   headerXs,
-  red100,
   red500,
-  red600,
+  red800,
   shadow1,
   shadow2,
   shadow3,
@@ -204,15 +207,18 @@ a:not([class]) {
   html {
     /* Colors */
     --white: ${white};
-    --black: ${black};
-    --red-100: ${red100};
     --red-500: ${red500};
-    --red-600: ${red600};
-    --green: ${green};
+    --red-800: ${red800};
+    --blue-grey-300: ${blueGrey300};
+    --blue-grey-400: ${blueGrey400};
+    --blue-grey-500: ${blueGrey500};
+    --blue-grey-600: ${blueGrey600};
+    --blue-grey-700: ${blueGrey700};
     --grey-50: ${grey50};
     --grey-100: ${grey100};
+    --grey-400: ${grey400};
     --grey-500: ${grey500};
-    --grey-800: ${grey800};
+    --grey-900: ${grey900};
     /* Fonts */
     --header-xl: ${headerXl};
     --header-lg: ${headerLg};
