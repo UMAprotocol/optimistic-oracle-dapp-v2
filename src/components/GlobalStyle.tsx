@@ -15,7 +15,6 @@ import {
   headerXl,
   headerXs,
   red500,
-  red800,
   shadow1,
   shadow2,
   shadow3,
@@ -208,7 +207,6 @@ a:not([class]) {
     /* Colors */
     --white: ${white};
     --red-500: ${red500};
-    --red-800: ${red800};
     --blue-grey-300: ${blueGrey300};
     --blue-grey-400: ${blueGrey400};
     --blue-grey-500: ${blueGrey500};
