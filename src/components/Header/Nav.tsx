@@ -1,7 +1,7 @@
 import { navLinks } from "@/constants";
 import { isExternalLink } from "@/helpers";
 import NextLink from "next/link";
-import ExternalLink from "public/assets/icons/external-link.svg";
+import ExternalLink from "public/assets/external-link.svg";
 import styled from "styled-components";
 
 export function Nav() {
