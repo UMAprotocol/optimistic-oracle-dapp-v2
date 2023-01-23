@@ -37,6 +37,7 @@ import {
   voteTickerHeight,
   white,
 } from "@/constants";
+import { animationDuration } from "@/constants/styles/animation";
 import { createGlobalStyle } from "styled-components";
 
 /** Creates the global style object for the dapp.
@@ -269,6 +270,8 @@ a:not([class]) {
     @media ${mobileAndUnder} {
       --page-padding: var(--mobile-page-padding);
     }
+    /* Animation */
+    --animation-duration: ${animationDuration};
     /* Shadows */
     --shadow-1: ${shadow1};
     --shadow-2: ${shadow2};
