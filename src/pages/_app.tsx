@@ -1,5 +1,6 @@
 import { GlobalStyle } from "@/components";
 import { infuraId } from "@/constants";
+import "@/styles/fonts.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
