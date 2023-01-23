@@ -22,6 +22,8 @@ import {
   shadow1,
   shadow2,
   shadow3,
+  subHeader,
+  subHeaderSm,
   white,
 } from "@/constants";
 import { createGlobalStyle } from "styled-components";
@@ -221,6 +223,8 @@ a:not([class]) {
     --header-md: ${headerMd};
     --header-sm: ${headerSm};
     --header-xs: ${headerXs};
+    --sub-header: ${subHeader};
+    --sub-header-sm: ${subHeaderSm};
     --body-xl: ${bodyXl};
     --body-lg: ${bodyLg};
     --body-md: ${bodyMd};
