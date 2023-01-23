@@ -1,43 +1,19 @@
 import { GlobalStyle } from "@/components";
-import { infuraId } from "@/constants";
+import { infuraId, supportedChains, walletsAndConnectors } from "@/constants";
 import "@/styles/fonts.css";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import {
-  arbitrum,
-  avalanche,
-  evmos,
-  gnosis,
-  goerli,
-  mainnet,
-  optimism,
-  polygon,
-  polygonMumbai,
-} from "wagmi/chains";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
-export const { chains, provider } = configureChains(
-  [
-    mainnet,
-    goerli,
-    optimism,
-    gnosis,
-    polygon,
-    evmos,
-    arbitrum,
-    avalanche,
-    polygonMumbai,
-  ],
-  [infuraProvider({ apiKey: infuraId }), publicProvider()]
-);
+export const { chains, provider } = configureChains(supportedChains, [
+  infuraProvider({ apiKey: infuraId }),
+  publicProvider(),
+]);
 
-const { connectors } = getDefaultWallets({
-  appName: "Optimistic Oracle dApp V2",
-  chains,
-});
+const { connectors } = walletsAndConnectors;
 
 export const wagmiClient = createClient({
   autoConnect: true,

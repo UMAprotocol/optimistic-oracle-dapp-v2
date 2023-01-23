@@ -1,4 +1,4 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from "@/components";
 import Logo from "public/assets/logo.svg";
 import styled from "styled-components";
 import { Nav } from "./Nav";

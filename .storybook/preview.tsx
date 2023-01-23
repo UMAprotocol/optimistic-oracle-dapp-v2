@@ -1,10 +1,11 @@
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
 import { Decorator, Parameters } from "@storybook/react";
 import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
 import { WagmiConfig } from "wagmi";
 import { GlobalStyle } from "../src/components/GlobalStyle";
-import { wagmiClient, chains } from "../src/pages/_app";
+import { chains, wagmiClient } from "../src/pages/_app";
 import "../src/styles/fonts.css";
 
 initialize();

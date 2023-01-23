@@ -1,4 +1,5 @@
 export * from "./env";
+export * from "./wallet";
 export * from "./misc/links";
 export * from "./misc/siteMetaData";
 export * from "./misc/timeUnits";
