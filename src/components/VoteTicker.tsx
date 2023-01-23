@@ -8,8 +8,9 @@ import UpRightArrow from "public/assets/up-right-arrow.svg";
 import { useState } from "react";
 import styled from "styled-components";
 import { useInterval } from "usehooks-ts";
+const redOpacity15 = addOpacityToHsl(red500, 0.15);
 
-export default function VoteTicker() {
+export function VoteTicker() {
   const { data } = useVotingInfo();
   const [timeRemaining, setTimeRemaining] = useState("--:--:--");
   const isActive = !!data && data.activeRequests > 0;
@@ -90,6 +91,7 @@ const OuterWrapper = styled(motion.div)`
   padding-top: 16px;
   padding-bottom: 4px;
   padding-inline: var(--page-padding);
+  color: var(--blue-grey-300);
   background-size: cover;
   background-repeat: no-repeat;
 
@@ -102,7 +104,6 @@ const InnerWrapper = styled.div`
   width: 100%;
   max-width: var(--page-width);
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px 8px 8px;
@@ -125,13 +126,13 @@ const VoteDetails = styled.div`
 
 const ClockIcon = styled(Clock)`
   g {
-    fill: var(--red-500);
+    fill: ${redOpacity15};
   }
 `;
 
 const ArrowIcon = styled(UpRightArrow)`
   path {
-    stroke: var(--blue-grey-500);
+    stroke: var(--blue-grey-300);
   }
 `;
 
@@ -143,13 +144,12 @@ const ClockWrapper = styled.div`
   gap: 8px;
   width: 32px;
   height: 32px;
-  background: ${addOpacityToHsl(red500, 0.15)};
-  border-radius: var(--border-radius);
+  background: ${redOpacity15};
+  border-radius: 50%;
 `;
 
 const TextWrapper = styled.div`
   font: var(--body-sm);
-  color: var(--grey-300);
 `;
 
 const TimeRemaining = styled.span`
@@ -179,9 +179,8 @@ const NumVotes = styled.div`
   padding-inline: 8px;
   padding-block: 4px;
   background: var(--blue-grey-500);
-  border-radius: 12px;
+  border-radius: 14px;
   font: var(--body-sm);
-  color: var(--blue-grey-300);
 
   @media ${mobileAndUnder} {
     display: none;
@@ -199,7 +198,7 @@ const MoreDetailsText = styled.span`
 const Link = styled(NextLink)`
   text-decoration: none;
   font: var(--body-sm);
-  color: var(--grey-300);
+  color: inherit;
   display: flex;
   flex-direction: row;
   align-items: center;
