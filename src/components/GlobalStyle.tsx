@@ -4,6 +4,11 @@ import {
   blueGrey500,
   blueGrey600,
   blueGrey700,
+  bodyLg,
+  bodyMd,
+  bodySm,
+  bodyXl,
+  bodyXs,
   grey100,
   grey400,
   grey50,
@@ -12,17 +17,11 @@ import {
   headerLg,
   headerMd,
   headerSm,
-  headerXl,
   headerXs,
   red500,
   shadow1,
   shadow2,
   shadow3,
-  textFine,
-  textLg,
-  textMd,
-  textSm,
-  textXs,
   white,
 } from "@/constants";
 import { createGlobalStyle } from "styled-components";
@@ -218,16 +217,15 @@ a:not([class]) {
     --grey-500: ${grey500};
     --grey-900: ${grey900};
     /* Fonts */
-    --header-xl: ${headerXl};
     --header-lg: ${headerLg};
     --header-md: ${headerMd};
     --header-sm: ${headerSm};
     --header-xs: ${headerXs};
-    --text-lg: ${textLg};
-    --text-md: ${textMd};
-    --text-sm: ${textSm};
-    --text-xs: ${textXs};
-    --text-fine: ${textFine};
+    --body-xl: ${bodyXl};
+    --body-lg: ${bodyLg};
+    --body-md: ${bodyMd};
+    --body-sm: ${bodySm};
+    --body-xs: ${bodyXs};
     /* Shadows */
     --shadow-1: ${shadow1};
     --shadow-2: ${shadow2};
