@@ -25,7 +25,11 @@ import {
   mobileHeaderHeight,
   mobilePagePadding,
   mobilePageWidth,
+  red100,
   red500,
+  red500Opacity15,
+  red500Opacity5,
+  red600,
   shadow1,
   shadow2,
   shadow3,
@@ -219,7 +223,11 @@ a:not([class]) {
   html {
     /* Colors */
     --white: ${white};
+    --red-100: ${red100};
     --red-500: ${red500};
+    --red-500-opacity-5: ${red500Opacity5};
+    --red-500-opacity-15: ${red500Opacity15};
+    --red-600: ${red600};
     --blue-grey-300: ${blueGrey300};
     --blue-grey-400: ${blueGrey400};
     --blue-grey-500: ${blueGrey500};

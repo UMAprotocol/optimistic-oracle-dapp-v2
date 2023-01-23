@@ -1,4 +1,10 @@
+import { addOpacityToHsl } from "@/helpers";
+
+export const red100 = "hsla(0, 100%, 96%, 1)"; // #FFEBEB
 export const red500 = "hsla(0, 100%, 65%, 1)"; // #ff4d4d
+export const red500Opacity5 = addOpacityToHsl(red500, 0.05);
+export const red500Opacity15 = addOpacityToHsl(red500, 0.15);
+export const red600 = "hsla(0, 79%, 59%, 1)"; // #E94444
 export const blueGrey300 = "hsla(255, 3%, 69%, 1)"; // #b0afb3
 export const blueGrey400 = "hsla(255, 2%, 64%, 1)"; // #a3a2a6
 export const blueGrey500 = "hsla(288, 4%, 25%, 1)"; // #413d42

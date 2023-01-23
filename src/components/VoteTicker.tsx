@@ -1,5 +1,4 @@
-import { laptopAndUnder, mobileAndUnder, red500 } from "@/constants";
-import { addOpacityToHsl } from "@/helpers";
+import { laptopAndUnder, mobileAndUnder } from "@/constants";
 import { useVotingInfo } from "@/hooks";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
@@ -8,8 +7,6 @@ import UpRightArrow from "public/assets/up-right-arrow.svg";
 import { useState } from "react";
 import styled from "styled-components";
 import { useInterval } from "usehooks-ts";
-
-const redOpacity15 = addOpacityToHsl(red500, 0.15);
 
 export function VoteTicker() {
   const { data } = useVotingInfo();
@@ -127,7 +124,7 @@ const VoteDetails = styled.div`
 
 const ClockIcon = styled(Clock)`
   g {
-    fill: ${redOpacity15};
+    fill: var(--red-opacity-15);
   }
 `;
 
@@ -145,7 +142,7 @@ const ClockWrapper = styled.div`
   gap: 8px;
   width: 32px;
   height: 32px;
-  background: ${redOpacity15};
+  background: var(--red-opacity-15);
   border-radius: 50%;
 `;
 
