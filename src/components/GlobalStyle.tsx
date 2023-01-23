@@ -9,6 +9,9 @@ import {
   bodySm,
   bodyXl,
   bodyXs,
+  desktopHeaderHeight,
+  desktopPagePadding,
+  desktopPageWidth,
   grey100,
   grey400,
   grey50,
@@ -18,12 +21,20 @@ import {
   headerMd,
   headerSm,
   headerXs,
+  mobileAndUnder,
+  mobileHeaderHeight,
+  mobilePagePadding,
+  mobilePageWidth,
   red500,
   shadow1,
   shadow2,
   shadow3,
   subHeader,
   subHeaderSm,
+  tabletAndUnder,
+  tabletPagePadding,
+  tabletPageWidth,
+  voteTickerHeight,
   white,
 } from "@/constants";
 import { createGlobalStyle } from "styled-components";
@@ -230,6 +241,34 @@ a:not([class]) {
     --body-md: ${bodyMd};
     --body-sm: ${bodySm};
     --body-xs: ${bodyXs};
+    /* Containers */
+    --desktop-page-width: ${desktopPageWidth}px;
+    --tablet-page-width: ${tabletPageWidth}px;
+    --mobile-page-width: ${mobilePageWidth}px;
+    --page-width: var(--desktop-page-width);
+    @media ${tabletAndUnder} {
+      --page-width: var(--tablet-page-width);
+    }
+    @media ${mobileAndUnder} {
+      --page-width: var(--mobile-page-width);
+    }
+    --desktop-header-height: ${desktopHeaderHeight}px;
+    --mobile-header-height: ${mobileHeaderHeight}px;
+    --header-height: var(--desktop-header-height);
+    @media ${mobileAndUnder} {
+      --header-height: var(--mobile-header-height);
+    }
+    --vote-ticker-height: ${voteTickerHeight}px;
+    --desktop-page-padding: ${desktopPagePadding}px;
+    --tablet-page-padding: ${tabletPagePadding}px;
+    --mobile-page-padding: ${mobilePagePadding}px;
+    --page-padding: var(--desktop-page-padding);
+    @media ${tabletAndUnder} {
+      --page-padding: var(--tablet-page-padding);
+    }
+    @media ${mobileAndUnder} {
+      --page-padding: var(--mobile-page-padding);
+    }
     /* Shadows */
     --shadow-1: ${shadow1};
     --shadow-2: ${shadow2};
