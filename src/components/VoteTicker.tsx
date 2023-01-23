@@ -8,6 +8,7 @@ import UpRightArrow from "public/assets/up-right-arrow.svg";
 import { useState } from "react";
 import styled from "styled-components";
 import { useInterval } from "usehooks-ts";
+
 const redOpacity15 = addOpacityToHsl(red500, 0.15);
 
 export function VoteTicker() {

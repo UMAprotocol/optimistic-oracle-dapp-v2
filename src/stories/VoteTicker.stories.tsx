@@ -11,19 +11,57 @@ export default meta;
 
 type Story = StoryObj<typeof VoteTicker>;
 
+const activeCommitResult = {
+  apy: defaultApy,
+  activeRequests: 2,
+  phase: "commit",
+};
+
+const activeRevealResult = {
+  apy: defaultApy,
+  activeRequests: 2,
+  phase: "reveal",
+};
+
+const noVotesResult = {
+  apy: defaultApy,
+  activeRequests: 0,
+  phase: "commit",
+};
+
 export const NoVotes: Story = {
   render: () => <VoteTicker />,
   parameters: {
     msw: {
       handlers: [
         rest.get("/api/get-voting-info", (_req, res, ctx) => {
-          return res(
-            ctx.json({
-              apy: defaultApy,
-              activeRequests: 2,
-              phase: "commit",
-            })
-          );
+          return res(ctx.json(noVotesResult));
+        }),
+      ],
+    },
+  },
+};
+
+export const ActiveCommit: Story = {
+  render: () => <VoteTicker />,
+  parameters: {
+    msw: {
+      handlers: [
+        rest.get("/api/get-voting-info", (_req, res, ctx) => {
+          return res(ctx.json(activeCommitResult));
+        }),
+      ],
+    },
+  },
+};
+
+export const ActiveReveal: Story = {
+  render: () => <VoteTicker />,
+  parameters: {
+    msw: {
+      handlers: [
+        rest.get("/api/get-voting-info", (_req, res, ctx) => {
+          return res(ctx.json(activeRevealResult));
         }),
       ],
     },
