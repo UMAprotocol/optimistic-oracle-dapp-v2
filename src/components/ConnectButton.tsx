@@ -1,7 +1,10 @@
 import { walletsAndConnectors } from "@/constants";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
+import NextImage from "next/image";
 import { useEffect, useState } from "react";
+import styled, { CSSProperties } from "styled-components";
 import { useAccount } from "wagmi";
+
 export function ConnectButton() {
   const { connector } = useAccount();
   const [walletIcon, setWalletIcon] = useState("");
@@ -48,77 +51,52 @@ export function ConnectButton() {
         const ready = mounted;
         const connected = ready && account && chain;
 
+        const wrapperStyle = {
+          "--opacity": ready ? 1 : 0,
+          "--pointer-events": ready ? "" : "none",
+          "--user-select": ready ? "" : "none",
+        } as CSSProperties;
+
         return (
-          <div
-            {...(!ready && {
-              "aria-hidden": true,
-              style: {
-                opacity: 0,
-                pointerEvents: "none",
-                userSelect: "none",
-              },
-            })}
-          >
+          <Wrapper aria-hidden={!ready} style={wrapperStyle}>
             {(() => {
               if (!connected) {
                 return (
-                  <button onClick={openConnectModal} type="button">
-                    Connect Wallet
-                  </button>
+                  <Button onClick={openConnectModal}>Connect wallet</Button>
                 );
               }
 
               if (chain.unsupported) {
-                return (
-                  <button onClick={openChainModal} type="button">
-                    Wrong network
-                  </button>
-                );
+                return <Button onClick={openChainModal}>Wrong network</Button>;
               }
 
               return (
-                <div style={{ display: "flex", gap: 12 }}>
-                  <button
-                    onClick={openChainModal}
-                    style={{ display: "flex", alignItems: "center" }}
-                    type="button"
-                  >
-                    {chain.hasIcon && (
-                      <div
-                        style={{
-                          background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
-                          borderRadius: 999,
-                          overflow: "hidden",
-                          marginRight: 4,
-                        }}
-                      >
-                        {chain.iconUrl && (
-                          <img
-                            alt={chain.name ?? "Chain icon"}
-                            src={chain.iconUrl}
-                            style={{ width: 12, height: 12 }}
-                          />
-                        )}
-                      </div>
-                    )}
-                    {chain.name}
-                  </button>
-
-                  <button onClick={openAccountModal} type="button">
-                    <img src={walletIcon} />
+                <Wrapper>
+                  <Button onClick={openAccountModal}>
+                    <NextImage
+                      unoptimized
+                      src={walletIcon}
+                      width={25}
+                      height={25}
+                      alt="Connected wallet icon"
+                    />
                     {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ""}
-                  </button>
-                </div>
+                  </Button>
+                </Wrapper>
               );
             })()}
-          </div>
+          </Wrapper>
         );
       }}
     </RainbowkitConnectButton.Custom>
   );
 }
+
+const Wrapper = styled.div`
+  opacity: var(--opacity);
+  pointer-events: var(--pointer-events);
+  user-select: var(--user-select);
+  transition: opacity var(--animation-duration);
+`;
+
+const Button = styled.button``;
