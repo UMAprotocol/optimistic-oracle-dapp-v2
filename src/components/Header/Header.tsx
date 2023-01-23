@@ -1,4 +1,4 @@
-import { Button } from "@/components";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Logo from "public/assets/logo.svg";
 import styled from "styled-components";
 import { Nav } from "./Nav";
@@ -10,11 +10,7 @@ export function Header() {
         <LogoIcon />
       </HomeButton>
       <Nav />
-      <Button
-        variant="primary"
-        onClick={() => console.log("clicked")}
-        label="Connect wallet"
-      />
+      <ConnectButton />
     </Wrapper>
   );
 }

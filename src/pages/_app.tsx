@@ -18,7 +18,7 @@ import {
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
-const { chains, provider } = configureChains(
+export const { chains, provider } = configureChains(
   [
     mainnet,
     goerli,
@@ -38,7 +38,7 @@ const { connectors } = getDefaultWallets({
   chains,
 });
 
-const wagmiClient = createClient({
+export const wagmiClient = createClient({
   autoConnect: true,
   connectors,
   provider,
