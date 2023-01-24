@@ -8,6 +8,7 @@ export function Header() {
     <Wrapper>
       <HomeButton>
         <LogoIcon />
+        <HomeButtonText>ORACLE</HomeButtonText>
       </HomeButton>
       <Nav />
       <ConnectButton />
@@ -15,8 +16,28 @@ export function Header() {
   );
 }
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background: var(--blue-grey-700);
+  font: var(--body-sm);
+  font-size: 14px;
+  color: var(--white);
+`;
 
 const LogoIcon = styled(Logo)``;
 
-const HomeButton = styled.button``;
+const HomeButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: none;
+  border: none;
+  transition: opacity var(--animation-duration);
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const HomeButtonText = styled.span``;
