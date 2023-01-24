@@ -124,7 +124,7 @@ const VoteDetails = styled.div`
 
 const ClockIcon = styled(Clock)`
   g {
-    fill: var(--red-opacity-15);
+    fill: var(--red-500-opacity-15);
   }
 `;
 
@@ -142,7 +142,7 @@ const ClockWrapper = styled.div`
   gap: 8px;
   width: 32px;
   height: 32px;
-  background: var(--red-opacity-15);
+  background: var(--red-500-opacity-15);
   border-radius: 50%;
 `;
 

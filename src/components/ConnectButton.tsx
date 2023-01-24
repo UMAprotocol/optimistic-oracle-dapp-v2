@@ -1,6 +1,7 @@
 import { walletsAndConnectors } from "@/constants";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import NextImage from "next/image";
+import Chevron from "public/assets/chevron.svg";
 import { useEffect, useState } from "react";
 import styled, { CSSProperties } from "styled-components";
 import { useAccount } from "wagmi";
@@ -71,9 +72,9 @@ export function ConnectButton() {
               }
 
               return (
-                <Wrapper>
-                  <Button onClick={openAccountModal}>
-                    <NextImage
+                <Button onClick={openAccountModal}>
+                  <ButtonInnerWrapper>
+                    <Image
                       unoptimized
                       src={walletIcon}
                       width={25}
@@ -81,8 +82,9 @@ export function ConnectButton() {
                       alt="Connected wallet icon"
                     />
                     {account.displayName}
-                  </Button>
-                </Wrapper>
+                  </ButtonInnerWrapper>
+                  <ChevronIcon />
+                </Button>
               );
             })()}
           </Wrapper>
@@ -99,4 +101,26 @@ const Wrapper = styled.div`
   transition: opacity var(--animation-duration);
 `;
 
-const Button = styled.button``;
+const Image = styled(NextImage)`
+  border-radius: 50%;
+`;
+
+const ButtonInnerWrapper = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 45px;
+  min-width: 190px;
+  padding-inline: 20px;
+  border-radius: 12px;
+  font: var(--body-sm);
+  color: var(--white);
+  background: var(--blue-grey-600);
+`;
+
+const ChevronIcon = styled(Chevron)``;
