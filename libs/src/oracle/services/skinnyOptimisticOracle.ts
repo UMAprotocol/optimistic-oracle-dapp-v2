@@ -1,5 +1,5 @@
 import assert from "assert";
-import { clients } from "@uma/sdk";
+import {skinnyOptimisticOracle} from "@libs/clients"
 import {
   BigNumberish,
   Provider,
@@ -21,12 +21,11 @@ import {
   isUnique,
 } from "../utils";
 
-const { skinnyOptimisticOracle } = clients;
-type RequestPrice = clients.skinnyOptimisticOracle.RequestPrice;
-type ProposePrice = clients.skinnyOptimisticOracle.ProposePrice;
-type DisputePrice = clients.skinnyOptimisticOracle.DisputePrice;
-type Settle = clients.skinnyOptimisticOracle.Settle;
-type SolidityRequest = clients.skinnyOptimisticOracle.SolidityRequest;
+type RequestPrice = skinnyOptimisticOracle.RequestPrice;
+type ProposePrice = skinnyOptimisticOracle.ProposePrice;
+type DisputePrice = skinnyOptimisticOracle.DisputePrice;
+type Settle = skinnyOptimisticOracle.Settle;
+type SolidityRequest = skinnyOptimisticOracle.SolidityRequest;
 
 export type OptimisticOracleEvent =
   | RequestPrice
@@ -64,7 +63,7 @@ function validateSolidityRequest(request: Request): SolidityRequest {
 }
 
 export class SkinnyOptimisticOracle implements OracleInterface {
-  private readonly contract: clients.skinnyOptimisticOracle.Instance;
+  private readonly contract: skinnyOptimisticOracle.Instance;
   private readonly events: OptimisticOracleEvent[] = [];
   private requests: Record<string, Request> = {};
   constructor(

@@ -19,16 +19,16 @@ import {
   eventKey,
   isUnique,
 } from "../utils";
-import { clients } from "@uma/sdk";
+import {optimisticOracleV2} from "@libs/clients"
 
-const { connect, getEventState } = clients.optimisticOracleV2;
+const { connect, getEventState } = optimisticOracleV2;
 
-type Instance = clients.optimisticOracleV2.Instance;
-type RequestPrice = clients.optimisticOracleV2.RequestPrice;
-type ProposePrice = clients.optimisticOracleV2.ProposePrice;
-type DisputePrice = clients.optimisticOracleV2.DisputePrice;
-type Settle = clients.optimisticOracleV2.Settle;
-type RawRequest = clients.optimisticOracleV2.Request;
+type Instance = optimisticOracleV2.Instance;
+type RequestPrice = optimisticOracleV2.RequestPrice;
+type ProposePrice = optimisticOracleV2.ProposePrice;
+type DisputePrice = optimisticOracleV2.DisputePrice;
+type Settle = optimisticOracleV2.Settle;
+type RawRequest = optimisticOracleV2.Request;
 
 export type OptimisticOracleEvent =
   | RequestPrice

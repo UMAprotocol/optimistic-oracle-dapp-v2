@@ -1,8 +1,8 @@
 import { GlobalStyle } from "@/components";
 import type { AppProps } from "next/app";
-import example from "@libs/example";
+import oracle from "@/helpers/oracleSdk";
 
-example();
+oracle && console.log("oracle client loaded");
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

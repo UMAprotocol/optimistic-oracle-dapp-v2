@@ -4,7 +4,7 @@ import * as statemachine from "../types/statemachine";
 
 import { requestId } from "../utils";
 import { factory as Erc20Factory } from "../services/erc20";
-import { Multicall2 } from "@uma/sdk";
+import Multicall2 from "@libs/multicall2";
 import { SortedRequests } from "../services/sortedRequests";
 import type { OracleInterface, Request, Requests } from "../types/interfaces";
 

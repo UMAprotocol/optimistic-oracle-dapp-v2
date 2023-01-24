@@ -1,4 +1,5 @@
-import { clients, Multicall2 } from "@uma/sdk";
+import Multicall2 from "@libs/multicall2";
+import * as clients from "@libs/clients";
 import {
   JsonRpcSigner,
   BigNumber,

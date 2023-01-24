@@ -1,6 +1,5 @@
 // return true only if value is not null or undefined
-import { utils } from "@uma/sdk";
-const { exists } = utils;
+import { exists } from "@libs/utils";
 
 // we only ignore this specific error type explicitly emitted from reader class, meaning value is undefined
 import { ignoreExistenceError } from "../errors";

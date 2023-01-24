@@ -3,9 +3,8 @@
 import sortedIndex from "lodash/sortedIndex";
 import sortedLastIndex from "lodash/sortedLastIndex";
 
-import { utils } from "@uma/sdk";
+import { exists } from "@libs/utils";
 import { requestId } from "../utils";
-const { exists } = utils;
 
 import {
   InputRequestWithOracleType,
