@@ -1,7 +1,13 @@
 import { GlobalStyle } from "@/components";
-import { infuraId, supportedChains, walletsAndConnectors } from "@/constants";
+import {
+  infuraId,
+  red500,
+  supportedChains,
+  walletsAndConnectors,
+  white,
+} from "@/constants";
 import "@/styles/fonts.css";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
@@ -21,10 +27,17 @@ export const wagmiClient = createClient({
   provider,
 });
 
+const rainbowKitTheme = darkTheme({
+  accentColor: red500,
+  accentColorForeground: white,
+  borderRadius: "small",
+  overlayBlur: "small",
+});
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
+      <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
         <GlobalStyle />
         <Component {...pageProps} />
       </RainbowKitProvider>
