@@ -88,7 +88,6 @@ const OuterWrapper = styled(motion.div)`
   background: inherit;
   padding-top: 16px;
   padding-bottom: 4px;
-  padding-inline: var(--page-padding);
   color: var(--blue-grey-300);
   background-size: cover;
   background-repeat: no-repeat;
@@ -100,7 +99,6 @@ const OuterWrapper = styled(motion.div)`
 
 const InnerWrapper = styled.div`
   width: 100%;
-  max-width: var(--page-width);
   display: flex;
   justify-content: space-between;
   align-items: center;

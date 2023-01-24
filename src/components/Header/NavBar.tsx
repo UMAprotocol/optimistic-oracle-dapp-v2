@@ -3,7 +3,7 @@ import Logo from "public/assets/logo.svg";
 import styled from "styled-components";
 import { Nav } from "./Nav";
 
-export function Header() {
+export function NavBar() {
   return (
     <Wrapper>
       <HomeButton>

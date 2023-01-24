@@ -2,7 +2,7 @@ import { grey400, navLinks, white } from "@/constants";
 import { isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import ExternalLink from "public/assets/external-link.svg";
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 import { useIsClient } from "usehooks-ts";
 
 export function Nav() {
@@ -14,6 +14,7 @@ export function Nav() {
     if (!isClient) return false;
     return window.location.href.includes(href);
   }
+
   return (
     <Wrapper>
       <NavItems>
@@ -22,7 +23,9 @@ export function Nav() {
             <Link
               href={href}
               target={isExternalLink(href) ? "_blank" : undefined}
-              style={{ "--color": isActive(href) ? white : grey400 }}
+              style={
+                { "--color": isActive(href) ? white : grey400 } as CSSProperties
+              }
             >
               {title} {isExternalLink(href) && <ExternalLinkIcon />}
             </Link>

@@ -9,8 +9,6 @@ import {
   bodySm,
   bodyXl,
   bodyXs,
-  desktopHeaderHeight,
-  desktopPagePadding,
   desktopPageWidth,
   grey100,
   grey400,
@@ -22,8 +20,6 @@ import {
   headerSm,
   headerXs,
   mobileAndUnder,
-  mobileHeaderHeight,
-  mobilePagePadding,
   mobilePageWidth,
   red100,
   red500,
@@ -36,7 +32,6 @@ import {
   subHeader,
   subHeaderSm,
   tabletAndUnder,
-  tabletPagePadding,
   tabletPageWidth,
   voteTickerHeight,
   white,
@@ -261,23 +256,7 @@ a:not([class]) {
     @media ${mobileAndUnder} {
       --page-width: var(--mobile-page-width);
     }
-    --desktop-header-height: ${desktopHeaderHeight}px;
-    --mobile-header-height: ${mobileHeaderHeight}px;
-    --header-height: var(--desktop-header-height);
-    @media ${mobileAndUnder} {
-      --header-height: var(--mobile-header-height);
-    }
     --vote-ticker-height: ${voteTickerHeight}px;
-    --desktop-page-padding: ${desktopPagePadding}px;
-    --tablet-page-padding: ${tabletPagePadding}px;
-    --mobile-page-padding: ${mobilePagePadding}px;
-    --page-padding: var(--desktop-page-padding);
-    @media ${tabletAndUnder} {
-      --page-padding: var(--tablet-page-padding);
-    }
-    @media ${mobileAndUnder} {
-      --page-padding: var(--mobile-page-padding);
-    }
     /* Animation */
     --animation-duration: ${animationDuration};
     /* Shadows */
