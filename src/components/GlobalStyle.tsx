@@ -9,6 +9,8 @@ import {
   bodySm,
   bodyXl,
   bodyXs,
+  desktopHeaderHeight,
+  desktopNavBarHeight,
   desktopPageWidth,
   grey100,
   grey400,
@@ -19,8 +21,6 @@ import {
   headerMd,
   headerSm,
   headerXs,
-  mobileAndUnder,
-  mobilePageWidth,
   red100,
   red500,
   red500Opacity15,
@@ -31,8 +31,6 @@ import {
   shadow3,
   subHeader,
   subHeaderSm,
-  tabletAndUnder,
-  tabletPageWidth,
   voteTickerHeight,
   white,
 } from "@/constants";
@@ -246,16 +244,9 @@ a:not([class]) {
     --body-sm: ${bodySm};
     --body-xs: ${bodyXs};
     /* Containers */
-    --desktop-page-width: ${desktopPageWidth}px;
-    --tablet-page-width: ${tabletPageWidth}px;
-    --mobile-page-width: ${mobilePageWidth}px;
-    --page-width: var(--desktop-page-width);
-    @media ${tabletAndUnder} {
-      --page-width: var(--tablet-page-width);
-    }
-    @media ${mobileAndUnder} {
-      --page-width: var(--mobile-page-width);
-    }
+    --page-width: ${desktopPageWidth}px;
+    --header-height: ${desktopHeaderHeight}px;
+    --nav-bar-height: ${desktopNavBarHeight}px;
     --vote-ticker-height: ${voteTickerHeight}px;
     /* Animation */
     --animation-duration: ${animationDuration};

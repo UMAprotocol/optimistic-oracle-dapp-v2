@@ -17,6 +17,7 @@ export function NavBar() {
 }
 
 const Wrapper = styled.div`
+  height: var(--nav-bar-height);
   display: flex;
   justify-content: space-between;
   background: var(--blue-grey-700);
