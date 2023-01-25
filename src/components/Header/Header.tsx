@@ -12,7 +12,14 @@ export function Header({ page }: { page: Page }) {
         <VoteTicker />
         <NavBar />
         <Title page={page} />
-        {page !== "settled" && <Steps page={page} />}
+        {page === "settled" ? (
+          <Text>
+            A short explanation what this page is about and what the user can
+            expect lorem ipsum text
+          </Text>
+        ) : (
+          <Steps page={page} />
+        )}
       </InnerWrapper>
     </OuterWrapper>
   );
@@ -30,4 +37,10 @@ const InnerWrapper = styled.div`
   gap: 36px;
   max-width: var(--page-width);
   margin-inline: auto;
+`;
+
+const Text = styled.p`
+  font: var(--body-sm);
+  color: var(--white);
+  max-width: 592px;
 `;
