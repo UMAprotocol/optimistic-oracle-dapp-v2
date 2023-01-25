@@ -1,4 +1,4 @@
-import { walletsAndConnectors } from "@/constants";
+import { blueGrey600, walletsAndConnectors } from "@/constants";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import NextImage from "next/image";
 import Chevron from "public/assets/chevron.svg";
@@ -72,7 +72,15 @@ export function ConnectButton() {
               }
 
               return (
-                <Button onClick={openAccountModal}>
+                <Button
+                  onClick={openAccountModal}
+                  style={
+                    {
+                      "--justify-content": "space-between",
+                      "--background": blueGrey600,
+                    } as CSSProperties
+                  }
+                >
                   <ButtonInnerWrapper>
                     {walletIcon && (
                       <Image
@@ -115,14 +123,14 @@ const ButtonInnerWrapper = styled.div`
 const Button = styled.button`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: var(--justify-content, center);
   height: 45px;
   min-width: 190px;
   padding-inline: 20px;
   border-radius: 12px;
   font: var(--body-sm);
   color: var(--white);
-  background: var(--blue-grey-600);
+  background: var(--background, var(--red-500));
 `;
 
 const ChevronIcon = styled(Chevron)``;
