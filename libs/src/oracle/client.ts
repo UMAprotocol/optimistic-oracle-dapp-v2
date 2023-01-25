@@ -10,11 +10,9 @@ import {
   StateMachine,
   setActiveRequestByTransaction,
 } from "./services/statemachines";
-import { utils } from "@uma/sdk";
 import { toWei } from "./utils";
 import { NewOracle } from "./types/interfaces";
-
-const { loop } = utils;
+import { loop } from "@libs/utils"
 
 export class Client {
   private intervalStarted = false;
