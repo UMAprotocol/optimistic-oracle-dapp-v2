@@ -47,42 +47,6 @@ export default class MyDocument extends Document {
             type="font/woff2"
             crossOrigin="anonymous"
           />
-          <link
-            href="/fonts/HalyardDisplayLight.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="/fonts/HalyardDisplaySemiBold.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="/fonts/HalyardDisplay-Bold.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="/fonts/HalyardDisplayLight.ttf"
-            as="font"
-            type="font/ttf"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="/fonts/HalyardDisplaySemiBold.ttf"
-            as="font"
-            type="font/ttf"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="/fonts/HalyardDisplay-Bold.ttf"
-            as="font"
-            type="font/ttf"
-            crossOrigin="anonymous"
-          />
         </Head>
         <body>
           <Main />

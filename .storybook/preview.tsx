@@ -1,7 +1,14 @@
-import type { Decorator, Parameters } from "@storybook/react";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+import { Decorator, Parameters } from "@storybook/react";
+import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
-import "../src/styles/fonts.css";
+import { WagmiConfig } from "wagmi";
 import { GlobalStyle } from "../src/components/GlobalStyle";
+import { chains, wagmiClient } from "../src/pages/_app";
+import "../src/styles/fonts.css";
+
+initialize();
 
 export const parameters: Parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -14,10 +21,19 @@ export const parameters: Parameters = {
 };
 
 export const decorators: Decorator[] = [
+  // @ts-expect-error mswDecorator has not updated to the storybook v7 types
+  mswDecorator,
   (Story) => (
     <>
       <GlobalStyle />
       <Story />
     </>
+  ),
+  (Story) => (
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains}>
+        <Story />
+      </RainbowKitProvider>
+    </WagmiConfig>
   ),
 ];

@@ -1,28 +1,40 @@
 import {
-  black,
-  green,
+  blueGrey300,
+  blueGrey400,
+  blueGrey500,
+  blueGrey600,
+  blueGrey700,
+  bodyLg,
+  bodyMd,
+  bodySm,
+  bodyXl,
+  bodyXs,
+  desktopHeaderHeight,
+  desktopNavBarHeight,
+  desktopPageWidth,
   grey100,
+  grey400,
   grey50,
   grey500,
-  grey800,
+  grey900,
   headerLg,
   headerMd,
   headerSm,
-  headerXl,
   headerXs,
   red100,
   red500,
+  red500Opacity15,
+  red500Opacity5,
   red600,
   shadow1,
   shadow2,
   shadow3,
-  textFine,
-  textLg,
-  textMd,
-  textSm,
-  textXs,
+  subHeader,
+  subHeaderSm,
+  voteTickerHeight,
   white,
 } from "@/constants";
+import { animationDuration } from "@/constants/styles/animation";
 import { createGlobalStyle } from "styled-components";
 
 /** Creates the global style object for the dapp.
@@ -91,22 +103,6 @@ body {
 :where(img, svg, video) {
   block-size: auto;
   max-inline-size: 100%;
-}
-
-/* Remove stroke and set fill color to the inherited font color */
-:where(svg) {
-  stroke: none;
-  fill: currentColor;
-}
-
-/* SVG's without a fill attribute */
-:where(svg):where(:not([fill])) {
-  /* Remove fill and set stroke color to the inherited font color */
-  stroke: currentColor;
-  fill: none;
-  /* Rounded stroke */
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 /* Set a size for SVG's without a width attribute */
@@ -204,26 +200,40 @@ a:not([class]) {
   html {
     /* Colors */
     --white: ${white};
-    --black: ${black};
     --red-100: ${red100};
     --red-500: ${red500};
+    --red-500-opacity-5: ${red500Opacity5};
+    --red-500-opacity-15: ${red500Opacity15};
     --red-600: ${red600};
-    --green: ${green};
+    --blue-grey-300: ${blueGrey300};
+    --blue-grey-400: ${blueGrey400};
+    --blue-grey-500: ${blueGrey500};
+    --blue-grey-600: ${blueGrey600};
+    --blue-grey-700: ${blueGrey700};
     --grey-50: ${grey50};
     --grey-100: ${grey100};
+    --grey-400: ${grey400};
     --grey-500: ${grey500};
-    --grey-800: ${grey800};
+    --grey-900: ${grey900};
     /* Fonts */
-    --header-xl: ${headerXl};
     --header-lg: ${headerLg};
     --header-md: ${headerMd};
     --header-sm: ${headerSm};
     --header-xs: ${headerXs};
-    --text-lg: ${textLg};
-    --text-md: ${textMd};
-    --text-sm: ${textSm};
-    --text-xs: ${textXs};
-    --text-fine: ${textFine};
+    --sub-header: ${subHeader};
+    --sub-header-sm: ${subHeaderSm};
+    --body-xl: ${bodyXl};
+    --body-lg: ${bodyLg};
+    --body-md: ${bodyMd};
+    --body-sm: ${bodySm};
+    --body-xs: ${bodyXs};
+    /* Containers */
+    --page-width: ${desktopPageWidth}px;
+    --header-height: ${desktopHeaderHeight}px;
+    --nav-bar-height: ${desktopNavBarHeight}px;
+    --vote-ticker-height: ${voteTickerHeight}px;
+    /* Animation */
+    --animation-duration: ${animationDuration};
     /* Shadows */
     --shadow-1: ${shadow1};
     --shadow-2: ${shadow2};

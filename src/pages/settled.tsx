@@ -1,5 +1,5 @@
 import { Layout } from "@/components";
 
-export default function Home() {
+export default function Settled() {
   return <Layout>rest of page</Layout>;
 }
