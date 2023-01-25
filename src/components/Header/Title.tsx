@@ -31,7 +31,15 @@ export function Title({ page }: { page: Page }) {
   return (
     <Wrapper>
       <BoxIcon />
-      <TitleText>{pageTitle}</TitleText>
+      <TextWrapper>
+        <TitleText>{pageTitle}</TitleText>
+        {page === "settled" && (
+          <SubTitle>
+            A short explanation what this page is about and what the user can
+            expect lorem ipsum text
+          </SubTitle>
+        )}
+      </TextWrapper>
     </Wrapper>
   );
 }
@@ -44,6 +52,8 @@ const Wrapper = styled.div`
 
 const BoxIcon = styled(Box)``;
 
+const TextWrapper = styled.div``;
+
 const TitleText = styled.h1`
   font: var(--header-md);
   font-size: 52px;
@@ -54,4 +64,12 @@ const TitleText = styled.h1`
     font-weight: inherit;
     color: var(--red-500);
   }
+`;
+
+const SubTitle = styled.h2`
+  font: var(--body-sm);
+  color: var(--white);
+  max-width: 592px;
+  margin-top: 4px;
+  margin-left: 4px;
 `;
