@@ -74,13 +74,15 @@ export function ConnectButton() {
               return (
                 <Button onClick={openAccountModal}>
                   <ButtonInnerWrapper>
-                    <Image
-                      unoptimized
-                      src={walletIcon}
-                      width={25}
-                      height={25}
-                      alt="Connected wallet icon"
-                    />
+                    {walletIcon && (
+                      <Image
+                        unoptimized
+                        src={walletIcon}
+                        width={25}
+                        height={25}
+                        alt="Connected wallet icon"
+                      />
+                    )}
                     {account.displayName}
                   </ButtonInnerWrapper>
                   <ChevronIcon />
