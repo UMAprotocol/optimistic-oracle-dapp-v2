@@ -10,7 +10,8 @@
     "lint-fix": "next lint --fix",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=e13461f750dc"
+    "chromatic": "npx chromatic --project-token=e13461f750dc",
+    "chromatic-accept": "npx chromatic --project-token=e13461f750dc --auto-accept-changes"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.8.1",
