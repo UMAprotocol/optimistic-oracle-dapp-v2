@@ -1,18 +1,17 @@
-import { grey400, navLinks, white } from "@/constants";
+import { blueGrey400, navLinks, white } from "@/constants";
 import { isExternalLink } from "@/helpers";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import ExternalLink from "public/assets/external-link.svg";
 import styled, { CSSProperties } from "styled-components";
-import { useIsClient } from "usehooks-ts";
 
 export function Nav() {
   // todo: add closePanel on routeChangeStart once panel is implemented
 
-  const isClient = useIsClient();
+  const router = useRouter();
 
   function isActive(href: string) {
-    if (!isClient) return false;
-    return window.location.href.includes(href);
+    return router.pathname === href;
   }
 
   return (
@@ -24,7 +23,9 @@ export function Nav() {
               href={href}
               target={isExternalLink(href) ? "_blank" : undefined}
               style={
-                { "--color": isActive(href) ? white : grey400 } as CSSProperties
+                {
+                  "--color": isActive(href) ? white : blueGrey400,
+                } as CSSProperties
               }
             >
               {title} {isExternalLink(href) && <ExternalLinkIcon />}
