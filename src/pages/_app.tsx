@@ -7,12 +7,15 @@ import {
   white,
 } from "@/constants";
 import "@/styles/fonts.css";
+import example from "@libs/example";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
+
+example();
 
 export const { chains, provider } = configureChains(supportedChains, [
   infuraProvider({ apiKey: infuraId }),
