@@ -10,22 +10,40 @@ export default meta;
 type Story = StoryObj<typeof Header>;
 
 export const VerifyPage: Story = {
-  render: (args) => <Header {...args} />,
   args: {
     page: "verify",
+  },
+  parameters: {
+    nextjs: {
+      router: {
+        pathname: "/",
+      },
+    },
   },
 };
 
 export const ProposePage: Story = {
-  render: (args) => <Header {...args} />,
   args: {
     page: "propose",
+  },
+  parameters: {
+    nextjs: {
+      router: {
+        pathname: "/propose",
+      },
+    },
   },
 };
 
 export const SettledPage: Story = {
-  render: (args) => <Header {...args} />,
   args: {
     page: "settled",
+  },
+  parameters: {
+    nextjs: {
+      router: {
+        pathname: "/settled",
+      },
+    },
   },
 };
