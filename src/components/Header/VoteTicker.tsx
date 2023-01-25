@@ -1,4 +1,4 @@
-import { laptopAndUnder, mobileAndUnder } from "@/constants";
+import { mobileAndUnder } from "@/constants";
 import { useVotingInfo } from "@/hooks";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
@@ -36,80 +36,61 @@ export function VoteTicker() {
   }, 1000);
 
   return (
-    <OuterWrapper
+    <Wrapper
       initial={{ opacity: 0, translateY: "-20px" }}
       animate={{ opacity: 1, translateY: "0%" }}
       transition={{ duration: 0.3, delay: 0.8 }}
     >
-      <InnerWrapper>
-        <VoteDetails>
-          <ClockWrapper>
-            <ClockIcon />
-          </ClockWrapper>
-          {isActive ? (
-            <>
-              <TextWrapper>
-                <DesktopText>Time to {data.phase} vote: </DesktopText>
-                <MobileText>{data.phase} vote: </MobileText>
-                <TimeRemaining>{timeRemaining}</TimeRemaining>
-              </TextWrapper>
-              <NumVotes>
-                {data.activeRequests === 1
-                  ? "1 vote"
-                  : `${data.activeRequests} votes`}
-              </NumVotes>
-            </>
-          ) : (
+      <VoteDetails>
+        <ClockWrapper>
+          <ClockIcon />
+        </ClockWrapper>
+        {isActive ? (
+          <>
             <TextWrapper>
-              <DesktopText>No active votes</DesktopText>
-              <MobileText>No votes</MobileText>
+              <DesktopText>Time to {data.phase} vote: </DesktopText>
+              <MobileText>{data.phase} vote: </MobileText>
+              <TimeRemaining>{timeRemaining}</TimeRemaining>
             </TextWrapper>
-          )}
-        </VoteDetails>
-        <MoreDetailsWrapper>
-          <Link
-            href="https://vote.uma.xyz/"
-            target="_blank"
-            aria-label="Link to voter dapp"
-          >
-            <MoreDetailsText>More details</MoreDetailsText>
-            <ArrowIcon />
-          </Link>
-        </MoreDetailsWrapper>
-      </InnerWrapper>
-    </OuterWrapper>
+            <NumVotes>
+              {data.activeRequests === 1
+                ? "1 vote"
+                : `${data.activeRequests} votes`}
+            </NumVotes>
+          </>
+        ) : (
+          <TextWrapper>
+            <DesktopText>No active votes</DesktopText>
+            <MobileText>No votes</MobileText>
+          </TextWrapper>
+        )}
+      </VoteDetails>
+      <MoreDetailsWrapper>
+        <Link
+          href="https://vote.uma.xyz/"
+          target="_blank"
+          aria-label="Link to voter dapp"
+        >
+          <MoreDetailsText>More details</MoreDetailsText>
+          <ArrowIcon />
+        </Link>
+      </MoreDetailsWrapper>
+    </Wrapper>
   );
 }
 
-const OuterWrapper = styled(motion.div)`
-  display: grid;
-  place-items: center;
+const Wrapper = styled(motion.div)`
   height: var(--vote-ticker-height);
-  background: inherit;
-  padding-top: 16px;
-  padding-bottom: 4px;
-  color: var(--blue-grey-300);
-  background-size: cover;
-  background-repeat: no-repeat;
-
-  @media ${laptopAndUnder} {
-    padding-inline: 0;
-  }
-`;
-
-const InnerWrapper = styled.div`
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px 8px 8px;
-  gap: 16px;
-  isolation: isolate;
+  color: var(--blue-grey-300);
   background: var(--blue-grey-600);
+  border-radius: 8px;
   background-image: url("/assets/black-lines.png");
   background-size: cover;
   background-repeat: no-repeat;
-  border-radius: 8px;
 `;
 
 const VoteDetails = styled.div`
