@@ -1,4 +1,4 @@
-import { VoteTicker } from "@/components";
+import { VoteTicker } from "@/components/Header/VoteTicker";
 import { defaultApy } from "@/constants";
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
