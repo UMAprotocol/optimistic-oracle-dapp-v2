@@ -4,4 +4,4 @@ export const mobilePageWidth = 608;
 
 export const desktopHeaderHeight = 390;
 export const desktopNavBarHeight = 40;
-export const voteTickerHeight = 68;
+export const voteTickerHeight = 48;

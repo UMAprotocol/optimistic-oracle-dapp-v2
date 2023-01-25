@@ -1,5 +1,4 @@
 export * from "./env";
-export * from "./wallet";
 export * from "./misc/links";
 export * from "./misc/siteMetaData";
 export * from "./misc/timeUnits";
@@ -8,3 +7,4 @@ export * from "./styles/colors";
 export * from "./styles/containers";
 export * from "./styles/fonts";
 export * from "./styles/shadows";
+export * from "./wallet";
