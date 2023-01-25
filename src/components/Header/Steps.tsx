@@ -31,4 +31,13 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-inline: 32px;
+  padding-block: 24px;
+  background: linear-gradient(
+    180deg,
+    var(--blue-grey-600) 0%,
+    transparent 100%
+  );
+  border: 1px solid var(--blue-grey-500);
+  border-radius: 4px;
 `;
