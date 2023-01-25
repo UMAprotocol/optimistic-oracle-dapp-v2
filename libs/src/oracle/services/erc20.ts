@@ -1,4 +1,6 @@
-import { clients, Multicall2, utils } from "@uma/sdk";
+import { Calls, BatchReadWithErrorsType,BatchReadWithErrors } from "@libs/utils";
+import {erc20 } from "@libs/clients"
+import Multicall2 from "@libs/multicall2"
 import {
   Provider,
   Signer,
@@ -7,23 +9,23 @@ import {
 } from "../types/ethers";
 import { Erc20Props } from "../types/state";
 
-const batchProps: utils.Calls = [
+const batchProps: Calls = [
   ["symbol"],
   ["name"],
   ["decimals"],
   ["totalSupply"],
 ];
 export class Erc20 {
-  public contract: clients.erc20.Instance;
+  public contract: erc20.Instance;
   constructor(protected provider: Provider, public readonly address: string) {
-    this.contract = clients.erc20.connect(address, provider);
+    this.contract = erc20.connect(address, provider);
   }
   async approve(
     signer: Signer,
     spender: string,
     amount: BigNumberish
   ): Promise<TransactionResponse> {
-    const contract = clients.erc20.connect(this.address, signer);
+    const contract = erc20.connect(this.address, signer);
     return contract.approve(spender, amount);
   }
   async getProps(): Promise<Erc20Props> {
@@ -38,14 +40,14 @@ export class Erc20 {
   }
 }
 export class Erc20Multicall extends Erc20 {
-  private batchRead: utils.BatchReadWithErrorsType;
+  private batchRead: BatchReadWithErrorsType;
   constructor(
     provider: Provider,
     address: string,
     private multicall2: Multicall2
   ) {
     super(provider, address);
-    this.batchRead = utils.BatchReadWithErrors(multicall2)(this.contract);
+    this.batchRead = BatchReadWithErrors(multicall2)(this.contract);
   }
   async getProps(): Promise<Erc20Props> {
     return {

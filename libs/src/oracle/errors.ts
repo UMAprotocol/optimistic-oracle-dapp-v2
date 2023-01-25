@@ -1,4 +1,4 @@
-import { utils } from "@uma/sdk";
+import { exists } from "@libs/utils";
 
 // This error should be thrown if an expected value does not exist
 export class ExistenceError extends Error {
@@ -15,7 +15,7 @@ export function assertExists<T>(
   condition: T,
   message = ""
 ): asserts condition is NonNullable<T> {
-  if (!utils.exists(condition)) throw new ExistenceError(message);
+  if (!exists(condition)) throw new ExistenceError(message);
 }
 
 // Ignore only existence errors. If thrown properly this can be used to convert a non existent value to undefined.

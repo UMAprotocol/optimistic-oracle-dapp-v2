@@ -2,9 +2,9 @@ import assert from "assert";
 import { ethers } from "ethers";
 import sortedLastIndexBy from "lodash/sortedLastIndexBy";
 import { ignoreExistenceError } from "./errors";
-import { clients } from "@uma/sdk";
+import { optimisticOracle } from "@libs/clients";
 // this request id does not include chain id
-export const { requestId } = clients.optimisticOracle;
+export const { requestId } = optimisticOracle;
 
 import {
   State,

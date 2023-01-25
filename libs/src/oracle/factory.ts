@@ -54,7 +54,7 @@ export default (
             ),
           ];
         default:
-          throw new Error("Unknown oracle type: " + oracleType);
+          throw new Error(`Unknown oracle type: ${oracleType}`);
       }
     })
   );
