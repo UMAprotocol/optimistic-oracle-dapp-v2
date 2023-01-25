@@ -30,7 +30,6 @@ const noVotesResult = {
 };
 
 export const NoVotes: Story = {
-  render: () => <VoteTicker />,
   parameters: {
     msw: {
       handlers: [
@@ -43,7 +42,6 @@ export const NoVotes: Story = {
 };
 
 export const ActiveCommit: Story = {
-  render: () => <VoteTicker />,
   parameters: {
     msw: {
       handlers: [
@@ -56,7 +54,6 @@ export const ActiveCommit: Story = {
 };
 
 export const ActiveReveal: Story = {
-  render: () => <VoteTicker />,
   parameters: {
     msw: {
       handlers: [

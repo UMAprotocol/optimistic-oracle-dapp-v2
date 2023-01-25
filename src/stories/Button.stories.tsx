@@ -17,14 +17,12 @@ const asButtonArgs = {
 };
 
 export const AsButtonPrimary: Story = {
-  render: (args) => <Button {...args} />,
   args: {
     ...asButtonArgs,
   },
 };
 
 export const AsButtonPrimaryDisabled: Story = {
-  render: (args) => <Button {...args} />,
   args: {
     ...asButtonArgs,
     disabled: true,
@@ -32,7 +30,6 @@ export const AsButtonPrimaryDisabled: Story = {
 };
 
 export const AsButtonSecondary: Story = {
-  render: (args) => <Button {...args} />,
   args: {
     ...asButtonArgs,
     variant: "secondary",
@@ -40,7 +37,6 @@ export const AsButtonSecondary: Story = {
 };
 
 export const AsButtonSecondaryDisabled: Story = {
-  render: (args) => <Button {...args} />,
   args: {
     ...asButtonArgs,
     variant: "secondary",
@@ -49,7 +45,6 @@ export const AsButtonSecondaryDisabled: Story = {
 };
 
 export const AsButtonTertiary: Story = {
-  render: (args) => <Button {...args} />,
   args: {
     ...asButtonArgs,
     variant: "tertiary",
@@ -64,14 +59,12 @@ const asLinkArgs = {
 };
 
 export const AsLinkPrimary: Story = {
-  render: (args) => <Button {...args} />,
   args: {
     ...asLinkArgs,
   },
 };
 
 export const AsLinkSecondary: Story = {
-  render: (args) => <Button {...args} />,
   args: {
     ...asLinkArgs,
     variant: "secondary",
@@ -79,7 +72,6 @@ export const AsLinkSecondary: Story = {
 };
 
 export const AsLinkTertiary: Story = {
-  render: (args) => <Button {...args} />,
   args: {
     ...asLinkArgs,
     variant: "tertiary",
