@@ -12,9 +12,9 @@ export function Search() {
   return (
     <Wrapper>
       <SearchIconWrapper>
-        <SearchIcon aria-label="search input icon" />
+        <SearchIcon aria-hidden />
       </SearchIconWrapper>
-      <Input placeholder="Search" onInput={onInput} />
+      <Input placeholder="Search" onInput={onInput} aria-label="search input" />
     </Wrapper>
   );
 }
