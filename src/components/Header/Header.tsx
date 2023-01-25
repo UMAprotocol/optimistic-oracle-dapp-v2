@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { NavBar } from "./NavBar";
+import { Title } from "./Title";
 import { VoteTicker } from "./VoteTicker";
 
 export function Header() {
@@ -8,6 +9,7 @@ export function Header() {
       <InnerWrapper>
         <VoteTicker />
         <NavBar />
+        <Title />
       </InnerWrapper>
     </OuterWrapper>
   );
