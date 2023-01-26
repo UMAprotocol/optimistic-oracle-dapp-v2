@@ -1,27 +1,60 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { CheckboxDropdown, Items } from "./CheckboxDropdown";
+import { Search } from "./Search";
 
 export function Filters() {
   const [checkedTypes, setCheckedTypes] = useState<Items>({
-    all: {
+    All: {
       checked: true,
       count: 256,
     },
-    "event-based": {
+    "Event-Based": {
       checked: false,
       count: 128,
     },
-    "time-based": {
+    "Time-Based": {
       checked: false,
       count: 128,
     },
   });
 
+  const [checkedProjects, setCheckedProjects] = useState<Items>({
+    All: {
+      checked: true,
+      count: 256,
+    },
+    Polymarket: {
+      checked: false,
+      count: 128,
+    },
+    UMA: {
+      checked: false,
+      count: 12,
+    },
+    "Cozy Finance": {
+      checked: false,
+      count: 50,
+    },
+    "stake.com": {
+      checked: false,
+      count: 0,
+    },
+  });
+
   return (
     <Wrapper>
-      {/* <Search /> */}
-      <CheckboxDropdown items={checkedTypes} setChecked={setCheckedTypes} />
+      <Search />
+      <CheckboxDropdown
+        title="Types"
+        items={checkedTypes}
+        setChecked={setCheckedTypes}
+      />
+      <CheckboxDropdown
+        title="Projects"
+        items={checkedProjects}
+        setChecked={setCheckedProjects}
+      />
     </Wrapper>
   );
 }
