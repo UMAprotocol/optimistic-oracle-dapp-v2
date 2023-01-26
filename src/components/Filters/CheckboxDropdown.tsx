@@ -78,7 +78,7 @@ export function CheckboxDropdown({ title, items, setChecked }: Props) {
   }
 
   return (
-    <Root defaultOpen={true}>
+    <Root>
       <_Trigger>
         {title} <ChevronIcon />
       </_Trigger>

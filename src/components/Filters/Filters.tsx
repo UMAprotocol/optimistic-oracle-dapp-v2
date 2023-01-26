@@ -42,6 +42,29 @@ export function Filters() {
     },
   });
 
+  const [checkedChains, setCheckedChains] = useState<Items>({
+    All: {
+      checked: true,
+      count: 256,
+    },
+    Ethereum: {
+      checked: false,
+      count: 128,
+    },
+    Polygon: {
+      checked: false,
+      count: 12,
+    },
+    Optimism: {
+      checked: false,
+      count: 50,
+    },
+    Boba: {
+      checked: false,
+      count: 0,
+    },
+  });
+
   return (
     <Wrapper>
       <Search />
@@ -55,6 +78,11 @@ export function Filters() {
         items={checkedProjects}
         setChecked={setCheckedProjects}
       />
+      <CheckboxDropdown
+        title="Chains"
+        items={checkedChains}
+        setChecked={setCheckedChains}
+      />
     </Wrapper>
   );
 }
@@ -63,5 +91,6 @@ const Wrapper = styled.div`
   min-height: 96px;
   display: flex;
   align-items: center;
+  gap: 18px;
   background: var(--white);
 `;
