@@ -1,10 +1,27 @@
+import { useState } from "react";
 import styled from "styled-components";
-import { Search } from "./Search";
+import { CheckboxDropdown, Items } from "./CheckboxDropdown";
 
 export function Filters() {
+  const [checkedTypes, setCheckedTypes] = useState<Items>({
+    all: {
+      checked: true,
+      count: 256,
+    },
+    "event-based": {
+      checked: false,
+      count: 128,
+    },
+    "time-based": {
+      checked: false,
+      count: 128,
+    },
+  });
+
   return (
     <Wrapper>
-      <Search />
+      {/* <Search /> */}
+      <CheckboxDropdown items={checkedTypes} setChecked={setCheckedTypes} />
     </Wrapper>
   );
 }
