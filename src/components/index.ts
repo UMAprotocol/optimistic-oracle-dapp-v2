@@ -4,3 +4,4 @@ export { Filters } from "./Filters/Filters";
 export { GlobalStyle } from "./GlobalStyle";
 export { Header } from "./Header/Header";
 export { Layout } from "./Layout";
+export { Table } from "./Table/Table";
