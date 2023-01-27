@@ -1,16 +1,21 @@
-import { Page } from "@/types";
+import { Page, Request } from "@/types";
 import styled from "styled-components";
+import { Button } from "../Button";
 
-export function Table({ page }: { page: Page }) {
+interface Props {
+  page: Page;
+  requests: Request[];
+}
+export function Table({ page, requests }: Props) {
   return (
-    <_Table>
+    <table>
       <Headers page={page} />
       <TBody>
-        <TR>
-          <TD>{page}</TD>
-        </TR>
+        {requests.map((request) => (
+          <Row key={request.id} page={page} request={request} />
+        ))}
       </TBody>
-    </_Table>
+    </table>
   );
 }
 
@@ -46,7 +51,73 @@ function Headers({ page }: { page: Page }) {
   );
 }
 
-const _Table = styled.table``;
+function Row({ page, request }: { page: Page; request: Request }) {
+  const rows = {
+    verify: <VerifyRow {...request} />,
+    propose: <ProposeRow {...request} />,
+    settled: <SettledRow {...request} />,
+  };
+
+  const row = rows[page];
+
+  return (
+    <TR>
+      <RequestCell {...request} />
+      {row}
+      <MoreDetailsCell request={request} />
+    </TR>
+  );
+}
+
+function RequestCell({ title, project, chain, time }: Request) {
+  return (
+    <TD>
+      <span>{title}</span>
+      <span>{project}</span>
+      <span>{chain}</span>
+      <span>{time.toString()}</span>
+    </TD>
+  );
+}
+
+function MoreDetailsCell({ request }: { request: Request }) {
+  return (
+    <TD>
+      <Button
+        onClick={() => alert(JSON.stringify(request))}
+        label="More details"
+      />
+    </TD>
+  );
+}
+
+function VerifyRow({ proposal, challengePeriodEnd }: Request) {
+  return (
+    <>
+      <TD>{proposal}</TD>
+      <TD>{challengePeriodEnd.toString()}</TD>
+    </>
+  );
+}
+
+function ProposeRow({ type, bond, reward }: Request) {
+  return (
+    <>
+      <TD>{type}</TD>
+      <TD>{bond.toString()}</TD>
+      <TD>{reward.toString()}</TD>
+    </>
+  );
+}
+
+function SettledRow({ type, settledAs }: Request) {
+  return (
+    <>
+      <TD>{type}</TD>
+      <TD>{settledAs}</TD>
+    </>
+  );
+}
 
 const THead = styled.thead``;
 

@@ -3,9 +3,15 @@ import { BigNumber } from "ethers";
 
 /** I'm using this type to represent the data that the UI expects.
  * A lot of this data will need to be parsed out of ancillary data when we get to wiring this up.
+ * We also need to identify which fields are present for verify, propose and settled.
  */
 export type Request = {
-  title: string;
+  id: ID;
+  ancillaryData: string;
+  identifier: string;
+  decodedAncillaryData: string;
+  decodedIdentifier: string;
+  title: string | undefined;
   time: BigNumber;
   project: Project;
   chain: Chain;
@@ -17,7 +23,13 @@ export type Request = {
   bond: BigNumber;
   reward: BigNumber;
   oracle: Oracle;
+  asserterAddress: string;
+  proposerAddress: string;
+  umip: number;
 };
+
+/** Formed like so: [decodedIdentifier]-[time]-[ancillaryData] */
+export type ID = string;
 
 export type Project =
   | "UMA"
