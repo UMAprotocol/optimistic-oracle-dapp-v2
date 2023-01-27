@@ -66,31 +66,39 @@ export function Filters() {
   });
 
   return (
-    <Wrapper>
-      <Search />
-      <CheckboxDropdown
-        title="Types"
-        items={checkedTypes}
-        setChecked={setCheckedTypes}
-      />
-      <CheckboxDropdown
-        title="Projects"
-        items={checkedProjects}
-        setChecked={setCheckedProjects}
-      />
-      <CheckboxDropdown
-        title="Chains"
-        items={checkedChains}
-        setChecked={setCheckedChains}
-      />
-    </Wrapper>
+    <OuterWrapper>
+      <InnerWrapper>
+        <Search />
+        <CheckboxDropdown
+          title="Types"
+          items={checkedTypes}
+          setChecked={setCheckedTypes}
+        />
+        <CheckboxDropdown
+          title="Projects"
+          items={checkedProjects}
+          setChecked={setCheckedProjects}
+        />
+        <CheckboxDropdown
+          title="Chains"
+          items={checkedChains}
+          setChecked={setCheckedChains}
+        />
+      </InnerWrapper>
+    </OuterWrapper>
   );
 }
 
-const Wrapper = styled.div`
+const OuterWrapper = styled.div`
   min-height: 96px;
+  background: var(--white);
   display: flex;
   align-items: center;
+`;
+
+const InnerWrapper = styled.div`
+  display: flex;
   gap: 18px;
-  background: var(--white);
+  max-width: var(--page-width);
+  margin-inline: auto;
 `;
