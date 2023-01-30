@@ -1,0 +1,38 @@
+{
+  "name": "workers",
+  "version": "0.0.1",
+  "description": "web workers",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b",
+    "bundle": "esbuild ./src/oracle.worker.ts --bundle --outfile=../public/workers/oracle.worker.js --define:process.env.NODE_DEBUG='false'",
+    "watch": "tsc --watch",
+    "lint": "eslint ./src --fix --ext .ts",
+    "format": "prettier --write ./src",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "e2e": "jest --config jest.config.e2e.js"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.2.6",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
+    "esbuild": "^0.17.5",
+    "eslint": "^8.32.0",
+    "jest": "^29.3.1",
+    "prettier": "^2.8.3",
+    "ts-jest": "^29.0.5",
+    "ts-loader": "^9.4.2",
+    "tsconfig-paths-webpack-plugin": "^4.0.0",
+    "typescript": "^4.9.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2",
+    "immer": "^9.0.18"
+  }
+}

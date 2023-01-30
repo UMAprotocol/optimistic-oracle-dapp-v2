@@ -36,3 +36,4 @@ build-storybook.log
 *.tsbuildinfo
 next-env.d.ts
 .env
+dist

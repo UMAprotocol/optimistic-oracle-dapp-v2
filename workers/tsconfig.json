@@ -1,0 +1,17 @@
+{
+  "include": ["src/*.ts"],
+  "compilerOptions": {
+    "baseUrl": "./",                                  
+    "target": "es6",                         
+    "lib": ["webworker", "es5", "scripthost"],
+    "module": "commonjs",                     
+    "esModuleInterop": true,                  
+    "forceConsistentCasingInFileNames": true,  
+    "strict": true,                            
+    "skipLibCheck": true,
+    "paths": {
+      "@libs/*": ["../libs/src/*"]
+    },
+    "outDir": "./dist"
+  }
+}
