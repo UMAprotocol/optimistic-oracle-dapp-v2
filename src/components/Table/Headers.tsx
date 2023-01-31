@@ -39,4 +39,5 @@ const TH = styled.th`
   text-align: left;
   font: var(--body-sm);
   color: var(--blue-grey-700);
+  padding-bottom: 4px;
 `;
