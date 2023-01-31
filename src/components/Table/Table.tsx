@@ -1,8 +1,8 @@
+import { Button } from "@/components";
 import { Page, Request } from "@/types";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useIsClient } from "usehooks-ts";
-import { Button } from "../Button";
 
 interface Props {
   page: Page;
