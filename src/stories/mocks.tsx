@@ -97,7 +97,9 @@ export function makeMockRequest({
     _decodedAncillaryData ?? `ANCILLARY_DATA_${index}`;
   const time =
     _time ?? BigNumber.from(Math.floor(Date.now() / 1000)).add(index);
-  const title = _title ?? `TITLE_${index}`;
+  const title =
+    _title ??
+    `Nice long dummy text title that will cause overflow number #${index}`;
   const project = _project ?? mockProjects[index % mockProjects.length];
   const chain = _chain ?? mockChains[index % mockChains.length];
   const type = _type ?? mockTypes[index % mockTypes.length];

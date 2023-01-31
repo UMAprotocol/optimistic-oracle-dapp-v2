@@ -1,5 +1,7 @@
 import { Page, Request } from "@/types";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { useIsClient } from "usehooks-ts";
 import { Button } from "../Button";
 
 interface Props {
@@ -8,14 +10,14 @@ interface Props {
 }
 export function Table({ page, requests }: Props) {
   return (
-    <table>
+    <Wrapper>
       <Headers page={page} />
       <TBody>
         {requests.map((request) => (
           <Row key={request.id} page={page} request={request} />
         ))}
       </TBody>
-    </table>
+    </Wrapper>
   );
 }
 
@@ -52,6 +54,28 @@ function Headers({ page }: { page: Page }) {
 }
 
 function Row({ page, request }: { page: Page; request: Request }) {
+  const rowRef = useRef<HTMLTableRowElement>(null);
+  const [rowWidth, setRowWidth] = useState(0);
+  const isClient = useIsClient();
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    handleUpdateRowWidth();
+
+    window.addEventListener("resize", handleUpdateRowWidth);
+
+    function handleUpdateRowWidth() {
+      if (rowRef.current) {
+        setRowWidth(rowRef.current.offsetWidth);
+      }
+    }
+
+    return () => {
+      window.removeEventListener("resize", handleUpdateRowWidth);
+    };
+  }, [isClient]);
+
   const rows = {
     verify: <VerifyRow {...request} />,
     propose: <ProposeRow {...request} />,
@@ -61,22 +85,35 @@ function Row({ page, request }: { page: Page; request: Request }) {
   const row = rows[page];
 
   return (
-    <TR>
-      <RequestCell {...request} />
+    <TR ref={rowRef}>
+      <TitleCell {...request} rowWidth={rowWidth} />
       {row}
       <MoreDetailsCell request={request} />
     </TR>
   );
 }
 
-function RequestCell({ title, project, chain, time }: Request) {
+function TitleCell({
+  title,
+  project,
+  chain,
+  time,
+  rowWidth,
+}: Request & { rowWidth: number }) {
+  const width = rowWidth * 0.45;
+  const style = {
+    "--width": `${width}px`,
+  } as CSSProperties;
+
   return (
-    <TD>
-      <span>{title}</span>
-      <span>{project}</span>
-      <span>{chain}</span>
-      <span>{time.toString()}</span>
-    </TD>
+    <TitleTD style={style}>
+      <TitleWrapper>
+        {title}
+        {project}
+        {chain}
+        {time.toString()}
+      </TitleWrapper>
+    </TitleTD>
   );
 }
 
@@ -119,12 +156,31 @@ function SettledRow({ type, settledAs }: Request) {
   );
 }
 
+const Wrapper = styled.table`
+  width: 100%;
+  max-width: var(--page-width);
+  border-spacing: 0 4px;
+`;
+
 const THead = styled.thead``;
 
 const TBody = styled.tbody``;
 
 const TR = styled.tr``;
 
-const TH = styled.th``;
+const TH = styled.th`
+  text-align: left;
+`;
 
 const TD = styled.td``;
+
+const TitleTD = styled(TD)`
+  width: var(--width);
+`;
+
+const TitleWrapper = styled.div`
+  width: var(--width);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
