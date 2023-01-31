@@ -33,7 +33,6 @@ export type ID = string;
 export type Project =
   | "UMA"
   | "Polymarket"
-  | "Sherlock"
   | "Stake.com"
   | "Cozy Finance"
   | undefined;

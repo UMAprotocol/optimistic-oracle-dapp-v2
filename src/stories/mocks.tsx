@@ -26,7 +26,6 @@ export const mockWagmiClient = createClient({
 const mockProjects: Project[] = [
   "UMA",
   "Polymarket",
-  "Sherlock",
   "Stake.com",
   "Cozy Finance",
 ];
