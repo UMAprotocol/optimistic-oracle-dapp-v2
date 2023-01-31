@@ -95,7 +95,8 @@ export function makeMockRequest({
   const decodedIdentifier = _decodedIdentifier ?? `IDENTIFIER_${index}`;
   const decodedAncillaryData =
     _decodedAncillaryData ?? `ANCILLARY_DATA_${index}`;
-  const time = _time ?? BigNumber.from(Date.now() / 1000).add(index);
+  const time =
+    _time ?? BigNumber.from(Math.floor(Date.now() / 1000)).add(index);
   const title = _title ?? `TITLE_${index}`;
   const project = _project ?? mockProjects[index % mockProjects.length];
   const chain = _chain ?? mockChains[index % mockChains.length];
