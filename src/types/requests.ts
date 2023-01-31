@@ -1,4 +1,3 @@
-import { supportedChains } from "@/constants";
 import { BigNumber } from "ethers";
 
 /** I'm using this type to represent the data that the UI expects.
@@ -14,7 +13,7 @@ export type Request = {
   title: string | undefined;
   time: BigNumber;
   project: Project;
-  chain: Chain;
+  chain: string;
   type: Type;
   status: Status;
   challengePeriodEnd: BigNumber;
@@ -33,13 +32,11 @@ export type ID = string;
 
 export type Project =
   | "UMA"
-  | "Polygon"
+  | "Polymarket"
   | "Sherlock"
   | "Stake.com"
   | "Cozy Finance"
   | undefined;
-
-export type Chain = (typeof supportedChains)[number]["name"];
 
 export type Type = "Event-Based" | "Time-Based";
 

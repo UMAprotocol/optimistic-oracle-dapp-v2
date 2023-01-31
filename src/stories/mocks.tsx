@@ -1,7 +1,7 @@
 import { Oracle, Project, Status, Type } from "@/types";
 import { MockConnector } from "@wagmi/core/connectors/mock";
 import { BigNumber, Wallet } from "ethers";
-import { Chain, createClient } from "wagmi";
+import { createClient } from "wagmi";
 import { chains, provider } from "../pages/_app";
 
 export const mockAddress =
@@ -23,19 +23,19 @@ export const mockWagmiClient = createClient({
   ],
 });
 
-const mockProjects = [
+const mockProjects: Project[] = [
   "UMA",
-  "Polygon",
+  "Polymarket",
   "Sherlock",
   "Stake.com",
   "Cozy Finance",
 ];
 
-const mockTypes = ["Event-Based", "Time-Based"];
+const mockTypes: Type[] = ["Event-Based", "Time-Based"];
 
-const mockStatuses = ["verify", "propose", "settled"];
+const mockStatuses: Status[] = ["verify", "propose", "settled"];
 
-const mockOracles = [
+const mockOracles: Oracle[] = [
   "Optimistic Asserter",
   "Optimistic Oracle",
   "Optimistic Oracle V2",
@@ -53,7 +53,7 @@ type MockRequestInput = {
   _time?: BigNumber;
   _title?: string;
   _project?: Project;
-  _chain?: Chain;
+  _chain?: string;
   _type?: Type;
   _status?: Status;
   _challengePeriodEnd?: BigNumber;
@@ -62,8 +62,10 @@ type MockRequestInput = {
   _bond?: BigNumber;
   _reward?: BigNumber;
   _oracle?: Oracle;
+  _proposerAddress?: string;
   _asserterAddress?: string;
   _oracleAddress?: string;
+  _umip?: number;
 };
 export function makeMockRequest({
   index,
@@ -83,8 +85,10 @@ export function makeMockRequest({
   _bond,
   _reward,
   _oracle,
+  _proposerAddress,
   _asserterAddress,
   _oracleAddress,
+  _umip,
 }: MockRequestInput) {
   const identifier = _identifier ?? `0x${index}`;
   const ancillaryData = _ancillaryData ?? `0x${index}`;
@@ -103,10 +107,14 @@ export function makeMockRequest({
   const bond = _bond ?? BigNumber.from(1000).add(index);
   const reward = _reward ?? BigNumber.from(1000).add(index);
   const oracle = _oracle ?? mockOracles[index % mockOracles.length];
+  const proposerAddress = _proposerAddress ?? `0x${index}`;
   const asserterAddress = _asserterAddress ?? `0x${index}`;
   const oracleAddress = _oracleAddress ?? `0x${index}`;
+  const id = `${identifier}-${ancillaryData}-${time.toString()}`;
+  const umip = _umip ?? index;
 
   return {
+    id,
     identifier,
     ancillaryData,
     decodedIdentifier,
@@ -123,8 +131,10 @@ export function makeMockRequest({
     bond,
     reward,
     oracle,
+    proposerAddress,
     asserterAddress,
     oracleAddress,
+    umip,
   };
 }
 
