@@ -1,4 +1,4 @@
-import SearchIcon from "public/assets/search.svg";
+import SearchIcon from "public/assets/icons/search.svg";
 import { FormEvent, useState } from "react";
 import styled from "styled-components";
 

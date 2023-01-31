@@ -8,8 +8,8 @@ import {
   Root,
   Trigger,
 } from "@radix-ui/react-dropdown-menu";
-import Check from "public/assets/check.svg";
-import Chevron from "public/assets/chevron.svg";
+import Check from "public/assets/icons/check.svg";
+import Chevron from "public/assets/icons/chevron.svg";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import styled, { CSSProperties } from "styled-components";
 
