@@ -12,7 +12,7 @@ interface Props {
   /**
    * button contents
    */
-  label: ReactNode;
+  children: ReactNode;
   /**
    * optional click handler
    */
@@ -44,7 +44,7 @@ interface Props {
 }
 export function Button({
   variant = "tertiary",
-  label,
+  children,
   onClick,
   href,
   width = 200,
@@ -111,7 +111,7 @@ export function Button({
     <>
       {href ? (
         <_Link href={href} style={style}>
-          {label}
+          {children}
         </_Link>
       ) : null}
       {onClick || type === "submit" ? (
@@ -121,7 +121,7 @@ export function Button({
           disabled={disabled}
           type={type}
         >
-          {label}
+          {children}
         </_Button>
       ) : null}
     </>
