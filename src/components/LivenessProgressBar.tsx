@@ -7,26 +7,28 @@ import styled, { css, CSSProperties } from "styled-components";
 import { useInterval } from "usehooks-ts";
 
 interface Props {
-  assertionTime: BigNumber;
-  expirationTime: BigNumber;
+  /** Time the request or assertion was made */
+  startTime: BigNumber;
+  /** Time the request or assertion will expire */
+  endTime: BigNumber;
 }
-export function LivenessProgressBar({ assertionTime, expirationTime }: Props) {
+export function LivenessProgressBar({ startTime, endTime }: Props) {
   const [now, setNow] = useState(new Date());
 
   useInterval(() => {
     setNow(new Date());
   }, 1000);
 
-  const assertionTimeMilliseconds = assertionTime.toNumber() * 1000;
-  const expirationTimeMilliseconds = expirationTime.toNumber() * 1000;
-  const expirationTimeAsDate = new Date(expirationTimeMilliseconds);
-  const totalTime = expirationTimeMilliseconds - assertionTimeMilliseconds;
+  const startTimeMilliseconds = startTime.toNumber() * 1000;
+  const endTimeMilliseconds = endTime.toNumber() * 1000;
+  const endTimeAsDate = new Date(endTimeMilliseconds);
+  const totalTime = endTimeMilliseconds - startTimeMilliseconds;
   const currentTime = now.getTime();
-  const progress = currentTime - assertionTimeMilliseconds;
+  const progress = currentTime - startTimeMilliseconds;
   const percent = Math.round((progress / totalTime) * 100);
   const timeRemaining = intervalToDuration({
     start: now,
-    end: expirationTimeAsDate,
+    end: endTimeAsDate,
   });
   const { hours, minutes, seconds } = timeRemaining;
   const timeRemainingString = `${hours && hours > 0 ? `${hours} h ` : ""}${
@@ -34,7 +36,7 @@ export function LivenessProgressBar({ assertionTime, expirationTime }: Props) {
   }${seconds ?? 0} s`;
   const isTextRed = !hours || hours === 0;
 
-  if (expirationTimeAsDate < now) return null;
+  if (endTimeAsDate < now) return null;
 
   return (
     <Wrapper>
