@@ -6,7 +6,7 @@ import {
   walletsAndConnectors,
   white,
 } from "@/constants";
-import { PanelProvider } from "@/contexts/PanelContext";
+import { PanelProvider } from "@/contexts";
 import oracle from "@/helpers/oracleSdk";
 import "@/styles/fonts.css";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";

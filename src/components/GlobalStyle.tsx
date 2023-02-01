@@ -12,6 +12,7 @@ import {
   desktopHeaderHeight,
   desktopNavBarHeight,
   desktopPageWidth,
+  desktopPanelWidth,
   grey100,
   grey400,
   grey50,
@@ -232,6 +233,7 @@ a:not([class]) {
     --header-height: ${desktopHeaderHeight}px;
     --nav-bar-height: ${desktopNavBarHeight}px;
     --vote-ticker-height: ${voteTickerHeight}px;
+    --panel-width: ${desktopPanelWidth}px;
     /* Animation */
     --animation-duration: ${animationDuration};
     /* Shadows */
