@@ -10,9 +10,23 @@ export default meta;
 
 type Story = StoryObj<typeof LivenessProgressBar>;
 
-export const Default: Story = {
+export const WithHoursRemaining: Story = {
   args: {
-    assertionTime: BigNumber.from(Math.floor(Date.now() / 1000) - 100),
-    expirationTime: BigNumber.from(Math.floor(Date.now() / 1000) + 50),
+    assertionTime: BigNumber.from(Math.floor(Date.now() / 1000) - 10_000),
+    expirationTime: BigNumber.from(Math.floor(Date.now() / 1000) + 10_000),
+  },
+};
+
+export const WithMinutesRemaining: Story = {
+  args: {
+    assertionTime: BigNumber.from(Math.floor(Date.now() / 1000) - 1000),
+    expirationTime: BigNumber.from(Math.floor(Date.now() / 1000) + 1000),
+  },
+};
+
+export const WithSecondsRemaining: Story = {
+  args: {
+    assertionTime: BigNumber.from(Math.floor(Date.now() / 1000) - 10),
+    expirationTime: BigNumber.from(Math.floor(Date.now() / 1000) + 10),
   },
 };
