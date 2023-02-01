@@ -7,21 +7,22 @@ import { FocusOn } from "react-focus-on";
 import styled from "styled-components";
 
 export function Panel() {
-  const { content, panelOpen, openPanel, closePanel } = usePanelContext();
+  const { content, panelOpen, closePanel } = usePanelContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const overlayVisibleColor = addOpacityToHsl(blueGrey700, 0.75);
   const overlayHiddenColor = addOpacityToHsl(blueGrey700, 0);
+  const open = panelOpen && !!content;
 
   useEffect(() => {
-    if (panelOpen) {
+    if (open) {
       contentRef?.current?.scrollTo({ top: 0 });
     }
-  }, [panelOpen]);
+  }, [open]);
 
   return (
     <>
       <AnimatePresence>
-        {panelOpen && (
+        {open && (
           <Overlay
             onClick={closePanel}
             initial={{ backgroundColor: overlayHiddenColor }}
@@ -31,7 +32,7 @@ export function Panel() {
         )}
       </AnimatePresence>
       <FocusOn
-        enabled={panelOpen}
+        enabled={open}
         onClickOutside={closePanel}
         onEscapeKey={closePanel}
         preventScrollOnFocus
@@ -39,11 +40,11 @@ export function Panel() {
         <Content
           ref={contentRef}
           role="dialog"
-          aria-modal={panelOpen}
+          aria-modal={open}
           aria-labelledby="panel-title"
           style={
             {
-              "--right": panelOpen ? 0 : "var(--panel-width)",
+              "--right": open ? 0 : "var(--panel-width)",
             } as CSSProperties
           }
         >
