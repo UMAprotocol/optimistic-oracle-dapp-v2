@@ -12,6 +12,7 @@ type Story = StoryObj<typeof LivenessProgressBar>;
 
 export const Default: Story = {
   args: {
-    liveness: BigNumber.from(Math.floor(Date.now() / 1000) + 10_000),
+    assertionTime: BigNumber.from(Math.floor(Date.now() / 1000) - 100),
+    expirationTime: BigNumber.from(Math.floor(Date.now() / 1000) + 50),
   },
 };
