@@ -1,13 +1,13 @@
-export type OracleQuery =
-  | Request
-  | Dispute
-  | PendingStatement
-  | AcceptedStatement;
+import { Request } from "@libs/oracle/types/interfaces";
 
-export type Request = {};
+export type OracleQuery = Request & OracleQueryMetadata;
 
-export type Dispute = {};
+export type OracleQueryMetadata = {
+  type: OracleType;
+};
 
-export type PendingStatement = {};
-
-export type AcceptedStatement = {};
+export type OracleType =
+  | "Optimistic Oracle"
+  | "Optimistic Oracle V2"
+  | "Skinny Optimistic Oracle"
+  | "Optimistic Asserter";
