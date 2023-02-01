@@ -9,6 +9,7 @@ import {
   bodySm,
   bodyXl,
   bodyXs,
+  darkText,
   desktopHeaderHeight,
   desktopNavBarHeight,
   desktopPageWidth,
@@ -21,6 +22,7 @@ import {
   headerMd,
   headerSm,
   headerXs,
+  lightText,
   red100,
   red500,
   red500Opacity15,
@@ -215,6 +217,8 @@ a:not([class]) {
     --grey-400: ${grey400};
     --grey-500: ${grey500};
     --grey-900: ${grey900};
+    --dark-text: ${darkText}; /* alias for --blue-grey-700 */
+    --light-text: ${lightText}; /* alias for --white */
     /* Fonts */
     --header-lg: ${headerLg};
     --header-md: ${headerMd};
