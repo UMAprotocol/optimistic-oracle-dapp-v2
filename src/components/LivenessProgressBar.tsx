@@ -1,17 +1,16 @@
+import { darkText, red500 } from "@/constants";
 import { Indicator, Root } from "@radix-ui/react-progress";
 import { intervalToDuration } from "date-fns";
 import { BigNumber } from "ethers";
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { css, CSSProperties } from "styled-components";
 import { useInterval } from "usehooks-ts";
 
-export function LivenessProgressBar({
-  assertionTime,
-  expirationTime,
-}: {
+interface Props {
   assertionTime: BigNumber;
   expirationTime: BigNumber;
-}) {
+}
+export function LivenessProgressBar({ assertionTime, expirationTime }: Props) {
   const [now, setNow] = useState(new Date());
 
   useInterval(() => {
@@ -33,12 +32,21 @@ export function LivenessProgressBar({
   const timeRemainingString = `${hours && hours > 0 ? `${hours} h ` : ""}${
     minutes && minutes > 0 ? `${minutes} m ` : ""
   }${seconds ?? 0} s`;
+  const isTextRed = !hours || hours === 0;
 
   if (expirationTimeAsDate < now) return null;
 
   return (
     <Wrapper>
-      {timeRemainingString}
+      <Text
+        style={
+          {
+            "--color": isTextRed ? red500 : darkText,
+          } as CSSProperties
+        }
+      >
+        {timeRemainingString}
+      </Text>
       <_Root value={percent}>
         <_Indicator style={{ transform: `translateX(-${100 - percent}%)` }} />
       </_Root>
@@ -48,26 +56,31 @@ export function LivenessProgressBar({
 
 const Wrapper = styled.div``;
 
-const _Root = styled(Root)`
+const Text = styled.p`
+  margin-bottom: 8px;
+  font: var(--body-sm);
+  color: var(--color);
+`;
+
+const barStyle = css`
   position: relative;
   overflow: hidden;
   background: var(--grey-500);
-  width: 300px;
-  height: 25px;
+  width: min(160px, 100%);
+  height: 3px;
+  border-radius: 2px;
 
   /* Fix overflow clipping in Safari */
   /* https://gist.github.com/domske/b66047671c780a238b51c51ffde8d3a0 */
   transform: translateZ(0);
 `;
 
-const _Indicator = styled(Indicator)`
-  position: relative;
-  overflow: hidden;
-  background: var(--red-500);
-  width: 300px;
-  height: 25px;
+const _Root = styled(Root)`
+  ${barStyle}
+  background: var(--grey-500);
+`;
 
-  /* Fix overflow clipping in Safari */
-  /* https://gist.github.com/domske/b66047671c780a238b51c51ffde8d3a0 */
-  transform: translateZ(0);
+const _Indicator = styled(Indicator)`
+  ${barStyle}
+  background: var(--red-500);
 `;
