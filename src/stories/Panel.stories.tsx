@@ -19,8 +19,11 @@ const defaultArgs = {
   panelOpen: true,
 };
 
-export const EmptyContent: Story = {
-  args: defaultArgs,
+export const Verify: Story = {
+  args: {
+    ...defaultArgs,
+    page: "verify",
+  },
   render: (args) => (
     <PanelContext.Provider value={{ ...args }}>
       <Panel />

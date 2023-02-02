@@ -1,18 +1,18 @@
-import { OracleQuery } from "@/types";
+import { OracleQuery, Page } from "@/types";
 import { createContext, ReactNode, useState } from "react";
 
 export interface PanelContextState {
-  content: OracleQuery | undefined;
-  setContent: (content: OracleQuery) => void;
   panelOpen: boolean;
-  openPanel: (content: OracleQuery) => void;
+  page: Page | undefined;
+  content: OracleQuery | undefined;
+  openPanel: (content: OracleQuery, page: Page) => void;
   closePanel: () => void;
 }
 
 export const defaultPanelContextState = {
-  content: undefined,
-  setContent: () => undefined,
   panelOpen: false,
+  page: undefined,
+  content: undefined,
   openPanel: () => undefined,
   closePanel: () => undefined,
 };
@@ -22,10 +22,12 @@ export const PanelContext = createContext<PanelContextState>(
 );
 
 export function PanelProvider({ children }: { children: ReactNode }) {
-  const [content, setContent] = useState<OracleQuery | undefined>(undefined);
+  const [content, setContent] = useState<OracleQuery | undefined>();
+  const [page, setPage] = useState<Page | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
 
-  function openPanel(content: OracleQuery) {
+  function openPanel(content: OracleQuery, page: Page) {
+    setPage(page);
     setContent(content);
     setPanelOpen(true);
   }
@@ -37,8 +39,8 @@ export function PanelProvider({ children }: { children: ReactNode }) {
   return (
     <PanelContext.Provider
       value={{
+        page,
         content,
-        setContent,
         panelOpen,
         openPanel,
         closePanel,

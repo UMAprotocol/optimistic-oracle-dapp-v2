@@ -5,13 +5,24 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CSSProperties, useEffect, useRef } from "react";
 import { FocusOn } from "react-focus-on";
 import styled from "styled-components";
+import { Propose } from "./Propose";
+import { Settled } from "./Settled";
+import { Verify } from "./Verify";
 
 export function Panel() {
-  const { content, panelOpen, closePanel } = usePanelContext();
+  const { content, page, panelOpen, closePanel } = usePanelContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const overlayVisibleColor = addOpacityToHsl(blueGrey700, 0.75);
   const overlayHiddenColor = addOpacityToHsl(blueGrey700, 0);
   const open = panelOpen && !!content;
+
+  const panels = {
+    verify: <Verify />,
+    propose: <Propose />,
+    settled: <Settled />,
+  };
+
+  const panel = page ? panels[page] : null;
 
   useEffect(() => {
     if (open) {
@@ -48,7 +59,19 @@ export function Panel() {
             } as CSSProperties
           }
         >
-          {JSON.stringify(content)}
+          <TitleWrapper>
+            <IconWrapper>
+              <Icon />
+            </IconWrapper>
+            <Title id="panel-title">
+              More than 2.5 million people traveled through a TSA checkpoint on
+              any day by December 31, 2022
+            </Title>
+            <CloseButton aria-label="close panel" onClick={closePanel}>
+              <CloseIcon />
+            </CloseButton>
+          </TitleWrapper>
+          {panel}
         </Content>
       </FocusOn>
     </>
@@ -84,3 +107,11 @@ const Content = styled.div`
   transition: transform 400ms;
   z-index: 1;
 `;
+
+const IconWrapper = styled.div``;
+
+const Title = styled.h2``;
+
+const CloseButton = styled.button``;
+
+const TitleWrapper = styled.div``;
