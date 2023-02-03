@@ -16,3 +16,5 @@ export const grey400 = "hsla(0, 0%, 94%, 1)"; // #f0f0f0
 export const grey500 = "hsla(0, 0%, 91%, 1)"; // #e9e9e9
 export const grey900 = "hsla(0, 0%, 12%, 1)"; // #1f1f1f
 export const white = "hsla(0, 0%, 100%, 1)"; // #ffffff
+export const darkText = blueGrey700;
+export const lightText = white;
