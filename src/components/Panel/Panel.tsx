@@ -77,7 +77,7 @@ export function Panel() {
           <ActionsWrapper>
             <SectionTitleWrapper>
               <PencilIcon />
-              <SectionTitleText>Assertion</SectionTitleText>
+              <SectionTitle>Assertion</SectionTitle>
             </SectionTitleWrapper>
             <ValueWrapper>
               <ValueText>True</ValueText>
@@ -130,7 +130,7 @@ export function Panel() {
             <DetailWrapper>
               <SectionTitleWrapper>
                 <TimestampIcon />
-                <SectionTitleText>Timestamp</SectionTitleText>
+                <SectionTitle>Timestamp</SectionTitle>
               </SectionTitleWrapper>
               <Time>
                 <TimeFormat>UTC</TimeFormat> Nov 17 2022 23:00:00{" "}
@@ -142,41 +142,41 @@ export function Panel() {
             <DetailWrapper>
               <SectionTitleWrapper>
                 <AncillaryDataIcon />
-                <SectionTitleText>Ancillary Data</SectionTitleText>
+                <SectionTitle>Ancillary Data</SectionTitle>
               </SectionTitleWrapper>
-              <SubTitle>String</SubTitle>
-              <AncillaryDataText>
+              <SectionSubTitle>String</SectionSubTitle>
+              <DetailText>
                 q: title: Did Euler get hacked? , description: Was there a hack,
                 bug, user error, or malfeasance resulting in a loss or lock-up
                 of tokens in Euler (https://app.euler.finance/) at any point
                 after Ethereum Mainnet block number 16175802? This will revert
                 if a non-YES answer is proposed.
-              </AncillaryDataText>
-              <SubTitle>Bytes</SubTitle>
-              <AncillaryDataText>
+              </DetailText>
+              <SectionSubTitle>Bytes</SectionSubTitle>
+              <DetailText>
                 0x713a207469746c653a204469642045756c657220676574206861636b65643f202c206465736372697074696f6e3a205761732074686572652061206861636b2c206275672c2075736572206572726f722c206f72206d616c66656173616e636520726573756c74696e6720696e2061206c6f7373206f72206c6f636b2d7570206f6620746f6b656e7320696e2045756c6572202868747470733a2f2f6170702e65756c65722e6669
-              </AncillaryDataText>
+              </DetailText>
             </DetailWrapper>
             <DetailWrapper>
               <SectionTitleWrapper>
                 <AncillaryDataIcon />
-                <SectionTitleText>More information</SectionTitleText>
+                <SectionTitle>More information</SectionTitle>
               </SectionTitleWrapper>
-              <SubTitle>Requester</SubTitle>
+              <SectionSubTitle>Requester</SectionSubTitle>
               <Link
                 href="https://goerli.etherscan.io/address/0xF40C3EF015B699cc70088c35efA2cC96aF5F8554"
                 target="_blank"
               >
                 0xF40C3EF015B699cc70088c35efA2cC96aF5F8554
               </Link>
-              <SubTitle>Identifier</SubTitle>
+              <SectionSubTitle>Identifier</SectionSubTitle>
               <Link
                 href="https://docs.umaproject.org/resources/approved-price-identifiers"
                 target="_blank"
               >
                 0xB40C3EF015B6919cc70088cF87
               </Link>
-              <SubTitle>UMIP</SubTitle>
+              <SectionSubTitle>UMIP</SectionSubTitle>
               <Link
                 href="https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md"
                 target="_blank"
@@ -191,6 +191,7 @@ export function Panel() {
   );
 }
 
+// wrappers
 const AnimatedOverlay = motion.div;
 
 const Overlay = styled(AnimatedOverlay)`
@@ -231,49 +232,17 @@ const TitleWrapper = styled.div`
   background: var(--blue-grey-700);
 `;
 
-const Title = styled.h2`
-  max-width: 400px;
-  font: var(--body-md);
-  color: var(--light-text);
+const SectionTitleWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
 `;
-
-const IconWrapper = styled.div``;
-
-const CloseButton = styled.button`
-  background: transparent;
-`;
-
-const CloseIconWrapper = styled.div`
-  width: 20px;
-  height: 20px;
-  margin-top: 6px;
-`;
-
-const CloseIcon = styled(Close)``;
 
 const ActionsWrapper = styled.div`
   background: var(--grey-400);
   padding-inline: 28px;
   padding-top: 20px;
   padding-bottom: 24px;
-`;
-
-const PencilIcon = styled(Pencil)``;
-
-const ValueWrapper = styled.div`
-  display: grid;
-  align-items: center;
-  min-height: 44px;
-  margin-top: 16px;
-  margin-bottom: 20px;
-  padding-inline: 16px;
-  border-radius: 4px;
-  background: var(--white);
-`;
-
-const ValueText = styled.p`
-  font: var(--body-md);
-  font-weight: 600;
 `;
 
 const ActionsInnerWrapper = styled.div`
@@ -289,34 +258,11 @@ const ActionWrapper = styled.div`
   }
 `;
 
-const InfoIcon = styled(Info)`
-  display: inline-block;
-  margin-left: 8px;
-`;
-
-const ActionText = styled.p`
-  display: flex;
-  align-items: center;
-`;
-
-const USDCIcon = styled(USDC)`
-  display: inline-block;
-  margin-right: 8px;
-`;
-
 const ActionButtonWrapper = styled.div``;
 
 const DetailsWrapper = styled.div`
   padding-inline: 28px;
   padding-bottom: 64px;
-`;
-
-const InfoIconsWrapper = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  padding-inline: 28px;
-  margin-bottom: 42px;
 `;
 
 const DetailWrapper = styled.div`
@@ -329,6 +275,71 @@ const DetailWrapper = styled.div`
   }
 `;
 
+const InfoIconsWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  padding-inline: 28px;
+  margin-bottom: 42px;
+`;
+
+const IconWrapper = styled.div``;
+
+const CloseIconWrapper = styled.div`
+  width: 20px;
+  height: 20px;
+  margin-top: 6px;
+`;
+
+const ValueWrapper = styled.div`
+  display: grid;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  padding-inline: 16px;
+  border-radius: 4px;
+  background: var(--white);
+`;
+
+// titles
+
+const Title = styled.h1`
+  max-width: 400px;
+  font: var(--body-md);
+  color: var(--light-text);
+`;
+
+const SectionTitle = styled.h2`
+  font: var(--body-md);
+  font-weight: 700;
+`;
+
+const SectionSubTitle = styled.h3`
+  font: var(--body-sm);
+  font-weight: 600;
+
+  &:not(:first-child) {
+    margin-top: 16px;
+  }
+`;
+
+// text
+
+const ValueText = styled.p`
+  font: var(--body-md);
+  font-weight: 600;
+`;
+
+const ActionText = styled.p`
+  display: flex;
+  align-items: center;
+`;
+
+const DetailText = styled.p`
+  font: var(--body-sm);
+`;
+
 const Time = styled.p`
   font: var(--body-sm);
 `;
@@ -338,22 +349,7 @@ const TimeFormat = styled.span`
   margin-right: 32px;
 `;
 
-const TimestampIcon = styled(Timestamp)``;
-
-const AncillaryDataIcon = styled(AncillaryData)``;
-
-const SubTitle = styled.h3`
-  font: var(--body-sm);
-  font-weight: 600;
-
-  &:not(:first-child) {
-    margin-top: 16px;
-  }
-`;
-
-const AncillaryDataText = styled.p`
-  font: var(--body-sm);
-`;
+// interactive elements
 
 const Link = styled(NextLink)`
   font: var(--body-sm);
@@ -366,13 +362,26 @@ const Link = styled(NextLink)`
   }
 `;
 
-const SectionTitleWrapper = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
+const CloseButton = styled.button`
+  background: transparent;
 `;
 
-const SectionTitleText = styled.h2`
-  font: var(--body-md);
-  font-weight: 700;
+// icons
+
+const CloseIcon = styled(Close)``;
+
+const PencilIcon = styled(Pencil)``;
+
+const InfoIcon = styled(Info)`
+  display: inline-block;
+  margin-left: 8px;
 `;
+
+const USDCIcon = styled(USDC)`
+  display: inline-block;
+  margin-right: 8px;
+`;
+
+const TimestampIcon = styled(Timestamp)``;
+
+const AncillaryDataIcon = styled(AncillaryData)``;
