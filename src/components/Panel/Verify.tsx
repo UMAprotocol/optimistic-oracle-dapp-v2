@@ -4,6 +4,7 @@ import Info from "public/assets/icons/info.svg";
 import Pencil from "public/assets/icons/pencil.svg";
 import styled from "styled-components";
 import { ChainIcon } from "./ChainIcon";
+import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
 
 export function Verify() {
@@ -62,6 +63,7 @@ export function Verify() {
         <InfoIconsWrapper>
           <ChainIcon chainId={1} />
           <OoTypeIcon ooType="Optimistic Asserter" />
+          <ExpiryTypeIcon expiryType="Event-based" />
         </InfoIconsWrapper>
       </DetailsWrapper>
     </>
@@ -134,3 +136,14 @@ const USDCIcon = styled(USDC)`
 `;
 
 const ActionButtonWrapper = styled.div``;
+
+const DetailsWrapper = styled.div`
+  margin-top: 20px;
+  padding-inline: 28px;
+`;
+
+const InfoIconsWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-bottom: 42px;
+`;

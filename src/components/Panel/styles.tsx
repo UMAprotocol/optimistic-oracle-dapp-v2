@@ -13,5 +13,5 @@ export const InfoIconWrapper = styled.div`
 `;
 
 export const InfoIconText = styled.p`
-  font: var(--text-sm);
+  font: var(--body-xs);
 `;

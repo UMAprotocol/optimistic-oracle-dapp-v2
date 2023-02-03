@@ -1,5 +1,5 @@
-import { Request } from "@libs/oracle/types/interfaces";
 import { supportedChainsById } from "@/constants";
+import { Request } from "@libs/oracle/types/interfaces";
 
 export type OracleQuery = Request & OracleQueryMetadata;
 
@@ -14,3 +14,5 @@ export type OracleType =
   | "Optimistic Asserter";
 
 export type SupportedChainIds = keyof typeof supportedChainsById;
+
+export type ExpiryType = "Event-based" | "Time-based";
