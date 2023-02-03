@@ -7,7 +7,7 @@ import styled from "styled-components";
 export function Verify() {
   return (
     <>
-      <DetailsWrapper>
+      <ActionsWrapper>
         <SectionTitleWrapper>
           <PencilIcon />
           <SectionTitleText>
@@ -17,35 +17,35 @@ export function Verify() {
         <ValueWrapper>
           <ValueText>True</ValueText>
         </ValueWrapper>
-        <DetailsInnerWrapper>
-          <DetailWrapper>
-            <DetailText>
+        <ActionsInnerWrapper>
+          <ActionWrapper>
+            <ActionText>
               Dispute Bond
               <InfoIcon />
-            </DetailText>
-            <DetailText>
+            </ActionText>
+            <ActionText>
               <USDCIcon />
               $500
-            </DetailText>
-          </DetailWrapper>
-          <DetailWrapper>
-            <DetailText>
+            </ActionText>
+          </ActionWrapper>
+          <ActionWrapper>
+            <ActionText>
               Dispute Reward
               <InfoIcon />
-            </DetailText>
-            <DetailText>
+            </ActionText>
+            <ActionText>
               <USDCIcon />
               $500
-            </DetailText>
-          </DetailWrapper>
-          <DetailWrapper>
-            <DetailText>
+            </ActionText>
+          </ActionWrapper>
+          <ActionWrapper>
+            <ActionText>
               Challenge period left
               <InfoIcon />
-            </DetailText>
-            <DetailText>53 min 11 sec</DetailText>
-          </DetailWrapper>
-        </DetailsInnerWrapper>
+            </ActionText>
+            <ActionText>53 min 11 sec</ActionText>
+          </ActionWrapper>
+        </ActionsInnerWrapper>
         <ActionButtonWrapper>
           <Button
             variant="primary"
@@ -55,12 +55,12 @@ export function Verify() {
             Dispute
           </Button>
         </ActionButtonWrapper>
-      </DetailsWrapper>
+      </ActionsWrapper>
     </>
   );
 }
 
-const DetailsWrapper = styled.div`
+const ActionsWrapper = styled.div`
   background: var(--grey-400);
   padding-inline: 28px;
   padding-top: 20px;
@@ -97,11 +97,11 @@ const ValueText = styled.p`
   font-weight: 600;
 `;
 
-const DetailsInnerWrapper = styled.div`
+const ActionsInnerWrapper = styled.div`
   margin-bottom: 16px;
 `;
 
-const DetailWrapper = styled.div`
+const ActionWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   font: var(--body-sm);
@@ -115,7 +115,7 @@ const InfoIcon = styled(Info)`
   margin-left: 8px;
 `;
 
-const DetailText = styled.p`
+const ActionText = styled.p`
   display: flex;
   align-items: center;
 `;
