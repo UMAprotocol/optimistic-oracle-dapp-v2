@@ -23,6 +23,11 @@ export const Verify: Story = {
   args: {
     ...defaultArgs,
     page: "verify",
+    content: {
+      project: "uma",
+      title:
+        "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",
+    },
   },
   render: (args) => (
     <PanelContext.Provider value={{ ...args }}>

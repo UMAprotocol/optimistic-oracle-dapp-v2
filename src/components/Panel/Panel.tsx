@@ -1,5 +1,6 @@
 import { Button } from "@/components";
 import { blueGrey700 } from "@/constants";
+import { projectIcons } from "@/constants/projects/icons";
 import { addOpacityToHsl } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,7 +10,6 @@ import Close from "public/assets/icons/close.svg";
 import USDC from "public/assets/icons/currencies/usdc.svg";
 import Info from "public/assets/icons/info.svg";
 import Pencil from "public/assets/icons/pencil.svg";
-import UMA from "public/assets/icons/projects/uma.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import { CSSProperties, useEffect, useRef } from "react";
 import { FocusOn } from "react-focus-on";
@@ -30,6 +30,12 @@ export function Panel() {
       contentRef?.current?.scrollTo({ top: 0 });
     }
   }, [open]);
+
+  if (!content) return null;
+
+  const { title, project } = content;
+
+  const projectIcon = projectIcons[project];
 
   return (
     <>
@@ -61,13 +67,8 @@ export function Panel() {
           }
         >
           <TitleWrapper>
-            <IconWrapper>
-              <UMA />
-            </IconWrapper>
-            <Title id="panel-title">
-              More than 2.5 million people traveled through a TSA checkpoint on
-              any day by December 31, 2022
-            </Title>
+            <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
+            <Title id="panel-title">{title}</Title>
             <CloseButton aria-label="close panel" onClick={closePanel}>
               <CloseIconWrapper>
                 <CloseIcon />
@@ -283,7 +284,7 @@ const InfoIconsWrapper = styled.div`
   margin-bottom: 42px;
 `;
 
-const IconWrapper = styled.div``;
+const ProjectIconWrapper = styled.div``;
 
 const CloseIconWrapper = styled.div`
   width: 20px;

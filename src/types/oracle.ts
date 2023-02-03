@@ -1,10 +1,14 @@
 import { supportedChainsById } from "@/constants";
 import { Request } from "@libs/oracle/types/interfaces";
+import { ReactNode } from "react";
 
 export type OracleQuery = Request & OracleQueryMetadata;
 
 export type OracleQueryMetadata = {
   type: OracleType;
+  expiryType: ExpiryType;
+  project: Project;
+  title: ReactNode;
 };
 
 export type OracleType =
@@ -16,3 +20,5 @@ export type OracleType =
 export type SupportedChainIds = keyof typeof supportedChainsById;
 
 export type ExpiryType = "Event-based" | "Time-based";
+
+export type Project = "uma" | "polymarket" | "cozy";
