@@ -2,14 +2,14 @@ import { blueGrey700 } from "@/constants";
 import { addOpacityToHsl } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import { AnimatePresence, motion } from "framer-motion";
+import Close from "public/assets/icons/close.svg";
+import UMA from "public/assets/icons/projects/uma.svg";
 import { CSSProperties, useEffect, useRef } from "react";
 import { FocusOn } from "react-focus-on";
 import styled from "styled-components";
 import { Propose } from "./Propose";
 import { Settled } from "./Settled";
 import { Verify } from "./Verify";
-import UMA from "public/assets/icons/projects/uma.svg";
-import Close from "public/assets/icons/close.svg";
 
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
@@ -112,22 +112,32 @@ const Content = styled.div`
   z-index: 1;
 `;
 
-const IconWrapper = styled.div``;
-
-const Title = styled.h2`
-  font: var(--body-md);
-  color: var(--text-)
-`;
-
-const CloseButton = styled.button``;
-
-const CloseIconWrapper = styled.div``;
-
-const CloseIcon = styled(Close)``;
-
 const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
   min-height: 84px;
-  padding-inline: 32px;
+  padding-inline: 28px;
   padding-block: 20px;
   background: var(--blue-grey-700);
 `;
+
+const Title = styled.h2`
+  max-width: 400px;
+  font: var(--body-md);
+  color: var(--light-text);
+`;
+
+const IconWrapper = styled.div``;
+
+const CloseButton = styled.button`
+  background: transparent;
+`;
+
+const CloseIconWrapper = styled.div`
+  width: 20px;
+  height: 20px;
+  margin-top: 6px;
+`;
+
+const CloseIcon = styled(Close)``;
