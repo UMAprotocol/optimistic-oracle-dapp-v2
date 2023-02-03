@@ -8,13 +8,15 @@ import styled from "styled-components";
 import { Propose } from "./Propose";
 import { Settled } from "./Settled";
 import { Verify } from "./Verify";
+import UMA from "public/assets/icons/projects/uma.svg";
+import Close from "public/assets/icons/close.svg";
 
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const overlayVisibleColor = addOpacityToHsl(blueGrey700, 0.75);
   const overlayHiddenColor = addOpacityToHsl(blueGrey700, 0);
-  const open = panelOpen && !!content;
+  const open = panelOpen;
 
   const panels = {
     verify: <Verify />,
@@ -61,14 +63,16 @@ export function Panel() {
         >
           <TitleWrapper>
             <IconWrapper>
-              <Icon />
+              <UMA />
             </IconWrapper>
             <Title id="panel-title">
               More than 2.5 million people traveled through a TSA checkpoint on
               any day by December 31, 2022
             </Title>
             <CloseButton aria-label="close panel" onClick={closePanel}>
-              <CloseIcon />
+              <CloseIconWrapper>
+                <CloseIcon />
+              </CloseIconWrapper>
             </CloseButton>
           </TitleWrapper>
           {panel}
@@ -110,8 +114,20 @@ const Content = styled.div`
 
 const IconWrapper = styled.div``;
 
-const Title = styled.h2``;
+const Title = styled.h2`
+  font: var(--body-md);
+  color: var(--text-)
+`;
 
 const CloseButton = styled.button``;
 
-const TitleWrapper = styled.div``;
+const CloseIconWrapper = styled.div``;
+
+const CloseIcon = styled(Close)``;
+
+const TitleWrapper = styled.div`
+  min-height: 84px;
+  padding-inline: 32px;
+  padding-block: 20px;
+  background: var(--blue-grey-700);
+`;
