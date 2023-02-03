@@ -200,6 +200,10 @@ a:not([class]) {
 
   /*  All CSS custom properties that are intended to be global must be defined here */
 
+  * {
+      color: var(--dark-text);
+    }
+
   html {
     /* Colors */
     --white: ${white};
