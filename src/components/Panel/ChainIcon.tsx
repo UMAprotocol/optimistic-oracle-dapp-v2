@@ -9,6 +9,8 @@ import Optimism from "public/assets/icons/chains/optimism.svg";
 import Polygon from "public/assets/icons/chains/polygon.svg";
 import SX from "public/assets/icons/chains/sx.svg";
 import styled from "styled-components";
+import { IconWrapper } from "../IconWrapper";
+import { InfoIconText, InfoIconWrapper } from "./styles";
 
 export function ChainIcon({
   chainId,
@@ -34,35 +36,14 @@ export function ChainIcon({
   if (!Icon || !chainName) return null;
 
   return (
-    <Wrapper>
-      <IconWrapper>
+    <InfoIconWrapper>
+      <IconWrapper width={24} height={24}>
         <Icon />
       </IconWrapper>
-      <ChainName>{chainName}</ChainName>
-    </Wrapper>
+      <InfoIconText>{chainName}</InfoIconText>
+    </InfoIconWrapper>
   );
 }
-
-const Wrapper = styled.div`
-  height: 35px;
-  width: max-content;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-inline: 10px;
-  padding-block: 8px;
-  border: 1px solid var(--grey-100);
-  border-radius: 5px;
-`;
-
-const IconWrapper = styled.div`
-  width: 24px;
-  height: 24px;
-`;
-
-const ChainName = styled.p`
-  font: var(--text-sm);
-`;
 
 const EthereumIcon = styled(Ethereum)``;
 

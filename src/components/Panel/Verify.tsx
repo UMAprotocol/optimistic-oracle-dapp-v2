@@ -3,6 +3,8 @@ import USDC from "public/assets/icons/currencies/usdc.svg";
 import Info from "public/assets/icons/info.svg";
 import Pencil from "public/assets/icons/pencil.svg";
 import styled from "styled-components";
+import { ChainIcon } from "./ChainIcon";
+import { OoTypeIcon } from "./OoTypeIcon";
 
 export function Verify() {
   return (
@@ -56,6 +58,12 @@ export function Verify() {
           </Button>
         </ActionButtonWrapper>
       </ActionsWrapper>
+      <DetailsWrapper>
+        <InfoIconsWrapper>
+          <ChainIcon chainId={1} />
+          <OoTypeIcon ooType="Optimistic Asserter" />
+        </InfoIconsWrapper>
+      </DetailsWrapper>
     </>
   );
 }
