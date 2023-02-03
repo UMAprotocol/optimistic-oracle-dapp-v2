@@ -15,3 +15,14 @@ export const InfoIconWrapper = styled.div`
 export const InfoIconText = styled.p`
   font: var(--body-xs);
 `;
+
+export const SectionTitleWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+`;
+
+export const SectionTitleText = styled.h2`
+  font: var(--body-md);
+  font-weight: 700;
+`;
