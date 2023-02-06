@@ -2,7 +2,7 @@ import { blueGrey400, navLinks, white } from "@/constants";
 import { isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import ExternalLink from "public/assets/external-link.svg";
+import ExternalLink from "public/assets/icons/external-link.svg";
 import styled, { CSSProperties } from "styled-components";
 
 export function Nav() {

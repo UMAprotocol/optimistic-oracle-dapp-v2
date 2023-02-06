@@ -24,6 +24,7 @@
     "next": "13.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-focus-on": "^3.7.0",
     "styled-components": "^5.3.6",
     "swr": "^2.0.1",
     "usehooks-ts": "^2.9.1",

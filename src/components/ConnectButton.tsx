@@ -1,7 +1,7 @@
 import { blueGrey600, walletsAndConnectors } from "@/constants";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import NextImage from "next/image";
-import Chevron from "public/assets/chevron.svg";
+import Chevron from "public/assets/icons/chevron.svg";
 import { useEffect, useState } from "react";
 import styled, { CSSProperties } from "styled-components";
 import { useAccount } from "wagmi";

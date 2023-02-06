@@ -1,5 +1,5 @@
 import { Page } from "@/types";
-import Box from "public/assets/box.svg";
+import Box from "public/assets/icons/box.svg";
 import styled from "styled-components";
 
 export function Title({ page }: { page: Page }) {

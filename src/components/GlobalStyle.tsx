@@ -9,9 +9,11 @@ import {
   bodySm,
   bodyXl,
   bodyXs,
+  darkText,
   desktopHeaderHeight,
   desktopNavBarHeight,
   desktopPageWidth,
+  desktopPanelWidth,
   grey100,
   grey400,
   grey50,
@@ -21,6 +23,7 @@ import {
   headerMd,
   headerSm,
   headerXs,
+  lightText,
   red100,
   red500,
   red500Opacity15,
@@ -197,6 +200,10 @@ a:not([class]) {
 
   /*  All CSS custom properties that are intended to be global must be defined here */
 
+  * {
+      color: var(--dark-text);
+    }
+
   html {
     /* Colors */
     --white: ${white};
@@ -215,6 +222,8 @@ a:not([class]) {
     --grey-400: ${grey400};
     --grey-500: ${grey500};
     --grey-900: ${grey900};
+    --dark-text: ${darkText}; /* alias for --blue-grey-700 */
+    --light-text: ${lightText}; /* alias for --white */
     /* Fonts */
     --header-lg: ${headerLg};
     --header-md: ${headerMd};
@@ -232,6 +241,7 @@ a:not([class]) {
     --header-height: ${desktopHeaderHeight}px;
     --nav-bar-height: ${desktopNavBarHeight}px;
     --vote-ticker-height: ${voteTickerHeight}px;
+    --panel-width: ${desktopPanelWidth}px;
     /* Animation */
     --animation-duration: ${animationDuration};
     /* Shadows */

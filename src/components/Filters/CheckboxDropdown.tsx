@@ -8,8 +8,8 @@ import {
   Root,
   Trigger,
 } from "@radix-ui/react-dropdown-menu";
-import Check from "public/assets/check.svg";
-import Chevron from "public/assets/chevron.svg";
+import Check from "public/assets/icons/check.svg";
+import Chevron from "public/assets/icons/chevron.svg";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import styled, { CSSProperties } from "styled-components";
 
@@ -29,6 +29,12 @@ interface Props {
   items: Items;
   setChecked: Dispatch<SetStateAction<Items>>;
 }
+/**
+ * A dropdown menu with checkboxes.
+ * @param title The title of the dropdown.
+ * @param items The items to display in the dropdown.
+ * @param setChecked A callback to be called when the checked state of an item changes.
+ */
 export function CheckboxDropdown({ title, items, setChecked }: Props) {
   const hasItemsOtherThanAllChecked = Object.entries(items).some(
     ([name, { checked }]) => name !== "All" && checked

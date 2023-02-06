@@ -1,6 +1,6 @@
-import One from "public/assets/one.svg";
-import Three from "public/assets/three.svg";
-import Two from "public/assets/two.svg";
+import One from "public/assets/icons/one.svg";
+import Three from "public/assets/icons/three.svg";
+import Two from "public/assets/icons/two.svg";
 import styled from "styled-components";
 
 interface Props {
