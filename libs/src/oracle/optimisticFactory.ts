@@ -5,7 +5,7 @@ import { DefaultConfig, getMulticall2Address } from "./utils";
 import { state } from "./types";
 import { Emit } from "./store";
 
-export default (
+const Factory = (
   config: state.PartialConfig,
   emit: Emit,
   sortedRequests: SortedRequests = new SortedRequests()
@@ -15,3 +15,4 @@ export default (
   })({ ...config }, state.OracleType.Optimistic);
   return factory(fullConfig, emit, OptimisticOracle, sortedRequests);
 };
+export default Factory;

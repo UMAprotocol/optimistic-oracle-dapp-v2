@@ -371,9 +371,6 @@ export class StateMachine {
           );
           break;
         }
-        default: {
-          throw new Error(`Unable to handle type: ${context.type}`);
-        }
       }
       if (!next.done) {
         this.push(next);

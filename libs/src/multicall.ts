@@ -5,7 +5,7 @@ import zip from "lodash/zip";
 
 export type Call = {
   method: string;
-  args?: any[];
+  args?: unknown[];
 };
 
 export type Request = {
@@ -25,7 +25,9 @@ export interface State<MulticallType> {
 
 // Multicall class that exposes public functions to the user and recursively chains itself.  Acts immutable
 // if you store reference to the parent intsance. Children will contain mutated state.
-export class Multicall<MulticallType extends multicall.Instance> implements State<multicall.Instance> {
+export class Multicall<MulticallType extends multicall.Instance>
+  implements State<multicall.Instance>
+{
   public requests: Request[];
   public multicallClient: MulticallType;
   constructor(state: State<MulticallType>) {
@@ -44,14 +46,20 @@ export class Multicall<MulticallType extends multicall.Instance> implements Stat
     const { contractInstance, call } = request;
     return {
       target: contractInstance.address,
-      callData: contractInstance.interface.encodeFunctionData(call.method, call.args),
+      callData: contractInstance.interface.encodeFunctionData(
+        call.method,
+        call.args
+      ),
     };
   }
 
   // decode response from multicall contract
   protected decodeResponse(request: Request, response: EncodedResponse) {
     const { contractInstance, call } = request;
-    return contractInstance.interface.decodeFunctionResult(call.method, response);
+    return contractInstance.interface.decodeFunctionResult(
+      call.method,
+      response
+    );
   }
 
   // adds a new request to the queue, to be executed when read is called. Returns an instance of this class so you can chain.
@@ -71,8 +79,12 @@ export class Multicall<MulticallType extends multicall.Instance> implements Stat
   }
   // reads from the contract, returns the read results in order that requests were queued.
   public async read(_requests: Request[] = this.requests) {
-    const encodedRequests = _requests.map((request) => this.encodeRequest(request));
-    const { returnData } = await this.multicallClient.callStatic.aggregate(encodedRequests);
+    const encodedRequests = _requests.map((request) =>
+      this.encodeRequest(request)
+    );
+    const { returnData } = await this.multicallClient.callStatic.aggregate(
+      encodedRequests
+    );
     const zipped = zip(_requests, returnData);
     return zipped.map(([request, response]) => {
       if (request && response) return this.decodeResponse(request, response);

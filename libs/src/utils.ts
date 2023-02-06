@@ -7,7 +7,9 @@ export type BigNumberish = number | string | BigNumber;
 // check if a value is not null or undefined, useful for numbers which could be 0.
 // "is" syntax: https://stackoverflow.com/questions/40081332/what-does-the-is-keyword-do-in-typescript
 /* eslint-disable-next-line @typescript-eslint/ban-types */
-export function exists<T>(value: T | null | undefined): value is NonNullable<T> {
+export function exists<T>(
+  value: T | null | undefined
+): value is NonNullable<T> {
   return value !== null && value !== undefined;
 }
 
@@ -60,11 +62,16 @@ export const ConvertDecimals = (fromDecimals: number, toDecimals: number) => {
 };
 
 // async sleep
-export const sleep = (delay = 0) => new Promise((res) => setTimeout(res, delay));
+export const sleep = (delay = 0) =>
+  new Promise((res) => setTimeout(res, delay));
 
 // Loop forever but wait until execution is finished before starting next timer. Throw an error to break this
 // or add another utlity function if you need it to end on condition.
-export async function loop(fn: (...args: any[]) => any, delay: number, ...args: any[]) {
+export async function loop(
+  fn: (...args: unknown[]) => unknown,
+  delay: number,
+  ...args: unknown[]
+) {
   do {
     await fn(...args);
     await sleep(delay);
@@ -74,33 +81,39 @@ export async function loop(fn: (...args: any[]) => any, delay: number, ...args: 
 
 export type Call = [string, ...BigNumberish[]];
 export type Calls = Call[];
-export type BatchReadWithErrorsType = ReturnType<ReturnType<typeof BatchReadWithErrors>>;
-export const BatchReadWithErrors = (multicall2: Multicall2) => (contract: Contract) => async <R>(
-  calls: Calls
-): Promise<R> => {
-  // multicall batch takes array of {method} objects
-  const results = await multicall2
-    .batch(
-      contract,
-      calls.map(([method, ...args]) => ({ method, args }))
-    )
-    .readWithErrors();
-  // convert results of multicall, an array of responses, into an object keyed by contract method
-  return Object.fromEntries(
-    zip(calls, results).map(([call, result]) => {
-      if (call == null) return [];
-      const [method] = call;
-      if (!result?.result) return [method, undefined];
-      return [method, result.result[0] || result.result];
-    })
-  );
-};
+export type BatchReadWithErrorsType = ReturnType<
+  ReturnType<typeof BatchReadWithErrors>
+>;
+export const BatchReadWithErrors =
+  (multicall2: Multicall2) =>
+  (contract: Contract) =>
+  async <R>(calls: Calls): Promise<R> => {
+    // multicall batch takes array of {method} objects
+    const results = await multicall2
+      .batch(
+        contract,
+        calls.map(([method, ...args]) => ({ method, args }))
+      )
+      .readWithErrors();
+    // convert results of multicall, an array of responses, into an object keyed by contract method
+    return Object.fromEntries(
+      zip(calls, results).map(([call, result]) => {
+        if (call == null) return [];
+        const [method] = call;
+        if (!result?.result) return [method, undefined];
+        return [method, result.result[0] || result.result];
+      })
+    ) as R;
+  };
 
 /**
  * @notice Return average block-time for a period.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function averageBlockTimeSeconds(lookbackSeconds?: number, networkId?: number): Promise<number> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/require-await
+export async function averageBlockTimeSeconds(
+  lookbackSeconds?: number,
+  networkId?: number
+): Promise<number> {
   // TODO: Call an external API to get this data. Currently this value is a hard-coded estimate
   // based on the data from https://etherscan.io/chart/blocktime. ~13.5 seconds has been the average
   // since April 2016, although this value seems to spike periodically for a relatively short period of time.
@@ -120,7 +133,10 @@ export async function averageBlockTimeSeconds(lookbackSeconds?: number, networkI
   }
 }
 
-export async function estimateBlocksElapsed(seconds: number, cushionPercentage = 0.0): Promise<number> {
+export async function estimateBlocksElapsed(
+  seconds: number,
+  cushionPercentage = 0.0
+): Promise<number> {
   const cushionMultiplier = cushionPercentage + 1.0;
   const averageBlockTime = await averageBlockTimeSeconds();
   return Math.floor((seconds * cushionMultiplier) / averageBlockTime);

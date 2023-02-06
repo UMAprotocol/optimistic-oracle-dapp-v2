@@ -1,4 +1,7 @@
-import { MulticallEthers, MulticallEthers__factory } from "@uma/contracts-frontend";
+import {
+  MulticallEthers,
+  MulticallEthers__factory,
+} from "@uma/contracts-frontend";
 import type { SignerOrProvider } from "@libs/types";
 
 export type Instance = MulticallEthers;
