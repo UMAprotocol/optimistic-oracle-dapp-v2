@@ -1,6 +1,10 @@
 import { supportedChainsById } from "@/constants";
 import { ReactNode } from "react";
 
+/**
+ * Defines the shape of data that the panel needs to display.
+ * The panel is a "dumb" component, and it expects everything to already be formatted for display.
+ */
 export type PanelContent = {
   chainId: SupportedChainId;
   oracleType: OracleType;
