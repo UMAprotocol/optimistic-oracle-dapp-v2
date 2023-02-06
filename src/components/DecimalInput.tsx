@@ -53,8 +53,8 @@ export function DecimalInput({
 }
 
 const Wrapper = styled.div`
-  font: var(--text-md);
-  max-width: 510px;
+  font: var(--body-md);
+  max-width: 512px;
   &[aria-disabled="true"] {
     opacity: 0.25;
   }
@@ -62,18 +62,18 @@ const Wrapper = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  height: 45px;
-  padding-left: 15px;
-  border: 1px solid var(--black);
-  border-radius: 5px;
-  color: var(--black-opacity-50);
+  height: 44px;
+  padding-left: 16px;
+  border: 1px solid var(--blue-grey-500);
+  border-radius: 4px;
+  color: var(--dark-text);
 
   :disabled {
     cursor: not-allowed;
   }
 
   ::placeholder {
-    color: var(--black-opacity-50);
+    color: var(--blue-grey-400);
   }
 
   ::-webkit-inner-spin-button,
