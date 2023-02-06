@@ -48,8 +48,8 @@ export function Panel() {
     price,
     assertion,
     currency,
-    bond,
-    reward,
+    formattedBond,
+    formattedReward,
     formattedLivenessEndsIn,
     actionType,
     action,
@@ -62,6 +62,7 @@ export function Panel() {
   const projectIcon = projectIcons[project];
   const currencyIcon = currencyIcons[currency];
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
+  const showActionsDetails = page !== "settled";
   const hasActionButton = action !== undefined && actionType !== undefined;
   const hasInput = page === "propose";
   const valueText = getValueText();
@@ -133,39 +134,47 @@ export function Panel() {
                 />
               </InputWrapper>
             ) : (
-              <ValueWrapper>
+              <ValueWrapper
+                style={
+                  {
+                    "--margin-bottom": showActionsDetails ? "20px" : "0px",
+                  } as CSSProperties
+                }
+              >
                 <ValueText>{valueText}</ValueText>
               </ValueWrapper>
             )}
-            <ActionsInnerWrapper>
-              <ActionWrapper>
-                <ActionText>
-                  Bond
-                  <InfoIcon />
-                </ActionText>
-                <ActionText>
-                  <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
-                  {bond}
-                </ActionText>
-              </ActionWrapper>
-              <ActionWrapper>
-                <ActionText>
-                  Reward
-                  <InfoIcon />
-                </ActionText>
-                <ActionText>
-                  <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
-                  {reward}
-                </ActionText>
-              </ActionWrapper>
-              <ActionWrapper>
-                <ActionText>
-                  Challenge period ends in
-                  <InfoIcon />
-                </ActionText>
-                <ActionText>{formattedLivenessEndsIn}</ActionText>
-              </ActionWrapper>
-            </ActionsInnerWrapper>
+            {showActionsDetails && (
+              <ActionsDetailsWrapper>
+                <ActionWrapper>
+                  <ActionText>
+                    Bond
+                    <InfoIcon />
+                  </ActionText>
+                  <ActionText>
+                    <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+                    {formattedBond}
+                  </ActionText>
+                </ActionWrapper>
+                <ActionWrapper>
+                  <ActionText>
+                    Reward
+                    <InfoIcon />
+                  </ActionText>
+                  <ActionText>
+                    <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+                    {formattedReward}
+                  </ActionText>
+                </ActionWrapper>
+                <ActionWrapper>
+                  <ActionText>
+                    Challenge period ends in
+                    <InfoIcon />
+                  </ActionText>
+                  <ActionText>{formattedLivenessEndsIn}</ActionText>
+                </ActionWrapper>
+              </ActionsDetailsWrapper>
+            )}
             {hasActionButton && (
               <ActionButtonWrapper>
                 <Button
@@ -287,7 +296,7 @@ const ActionsWrapper = styled.div`
   padding-bottom: 24px;
 `;
 
-const ActionsInnerWrapper = styled.div`
+const ActionsDetailsWrapper = styled.div`
   margin-bottom: 16px;
 `;
 
@@ -330,7 +339,6 @@ const ProjectIconWrapper = styled.div``;
 const CloseIconWrapper = styled.div`
   width: 20px;
   height: 20px;
-  margin-top: 6px;
 `;
 
 const ValueWrapper = styled.div`
@@ -339,7 +347,7 @@ const ValueWrapper = styled.div`
   align-items: center;
   min-height: 44px;
   margin-top: 16px;
-  margin-bottom: 20px;
+  margin-bottom: var(--margin-bottom);
   padding-inline: 16px;
   border-radius: 4px;
   background: var(--white);
@@ -395,7 +403,7 @@ const ValueText = styled.p`
   font-weight: 600;
 `;
 
-const ActionText = styled.p`
+const ActionText = styled.span`
   display: flex;
   align-items: center;
 `;
@@ -433,6 +441,7 @@ const Link = styled(NextLink)`
 
 const CloseButton = styled.button`
   background: transparent;
+  margin-top: 6px;
 `;
 
 // icons

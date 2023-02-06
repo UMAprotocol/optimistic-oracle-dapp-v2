@@ -10,9 +10,9 @@ export type PanelContent = {
   timeUNIX: number;
   ancillaryData: string;
   decodedAncillaryData: string;
-  currency: "USDC";
-  bond: number;
-  reward: number;
+  currency: "USDC" | "ETH";
+  formattedBond: string;
+  formattedReward: string;
   formattedLivenessEndsIn: string;
   actionType: "Dispute" | "Propose" | "Settle" | undefined;
   action: (() => void) | undefined;
