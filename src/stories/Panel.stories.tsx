@@ -1,10 +1,8 @@
-import { Panel } from "@/components";
-import {
-  defaultPanelContextState,
-  PanelContext,
-  PanelContextState,
-} from "@/contexts";
+import { Button, Panel } from "@/components";
+import { PanelContext, PanelContextState } from "@/contexts";
+import { Page, PanelContent } from "@/types";
 import { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
 
 const meta: Meta<typeof Panel> = {
   component: Panel,
@@ -14,15 +12,43 @@ export default meta;
 
 type Story = StoryObj<PanelContextState>;
 
-const defaultArgs = {
-  ...defaultPanelContextState,
-  panelOpen: true,
-};
+interface Props {
+  Component: typeof Panel;
+  page: Page | undefined;
+  content: PanelContent | undefined;
+}
+function Wrapper({ Component, page, content }: Props) {
+  const [panelOpen, setPanelOpen] = useState(true);
+  const [error, setError] = useState("whoops theres an error");
+
+  if (!content) return null;
+
+  return (
+    <PanelContext.Provider
+      value={{
+        page,
+        panelOpen,
+        openPanel: () => setPanelOpen(true),
+        closePanel: () => setPanelOpen(false),
+        content: {
+          ...content,
+          error,
+          setError,
+        },
+      }}
+    >
+      <Button variant="primary" onClick={() => setPanelOpen(true)}>
+        Open panel
+      </Button>
+      <Component />
+    </PanelContext.Provider>
+  );
+}
 
 export const Verify: Story = {
   args: {
-    ...defaultArgs,
-    page: "verify",
+    panelOpen: true,
+    page: "propose",
     content: {
       chainId: 1,
       oracleType: "Optimistic Asserter",
@@ -63,11 +89,9 @@ export const Verify: Story = {
           href: "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md",
         },
       ],
+      error: "",
+      setError: () => undefined,
     },
   },
-  render: (args) => (
-    <PanelContext.Provider value={{ ...args }}>
-      <Panel />
-    </PanelContext.Provider>
-  ),
+  render: (args) => <Wrapper Component={Panel} {...args} />,
 };

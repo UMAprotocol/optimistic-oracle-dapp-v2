@@ -17,6 +17,8 @@ export type PanelContent = {
   actionType: "Dispute" | "Propose" | "Settle" | undefined;
   action: (() => void) | undefined;
   moreInformation: MoreInformationItem[];
+  error: string;
+  setError: (error: string) => void;
   // oo
   price: number | undefined;
   expiryType: ExpiryType | undefined;

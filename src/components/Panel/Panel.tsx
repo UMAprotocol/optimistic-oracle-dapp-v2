@@ -1,5 +1,5 @@
-import { Button } from "@/components";
-import { blueGrey700 } from "@/constants";
+import { Button, DecimalInput } from "@/components";
+import { blueGrey700, red500 } from "@/constants";
 import { currencyIcons, projectIcons } from "@/constants/icons";
 import { addOpacityToHsl } from "@/helpers";
 import { usePanelContext } from "@/hooks";
@@ -9,26 +9,30 @@ import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Close from "public/assets/icons/close.svg";
 import Info from "public/assets/icons/info.svg";
 import Pencil from "public/assets/icons/pencil.svg";
+import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
-import { CSSProperties, Fragment, useEffect, useRef } from "react";
+import Warning from "public/assets/icons/warning.svg";
+import { CSSProperties, Fragment, useEffect, useRef, useState } from "react";
 import { FocusOn } from "react-focus-on";
 import styled from "styled-components";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
 
+const overlayVisibleColor = addOpacityToHsl(blueGrey700, 0.75);
+const overlayHiddenColor = addOpacityToHsl(blueGrey700, 0);
+const errorBackgroundColor = addOpacityToHsl(red500, 0.05);
+
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const contentRef = useRef<HTMLDivElement>(null);
-  const overlayVisibleColor = addOpacityToHsl(blueGrey700, 0.75);
-  const overlayHiddenColor = addOpacityToHsl(blueGrey700, 0);
-  const open = panelOpen;
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    if (open) {
+    if (panelOpen) {
       contentRef?.current?.scrollTo({ top: 0 });
     }
-  }, [open]);
+  }, [panelOpen]);
 
   if (!content) return null;
 
@@ -51,14 +55,18 @@ export function Panel() {
     action,
     expiryType,
     moreInformation,
+    error,
+    setError,
   } = content;
 
   const projectIcon = projectIcons[project];
   const currencyIcon = currencyIcons[currency];
+  const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const hasActionButton = action !== undefined && actionType !== undefined;
   const hasInput = page === "propose";
   const valueText = getValueText();
   const actionsTitle = getActionsTitle();
+  const isError = error !== "";
 
   function getValueText() {
     if (assertion !== undefined) return assertion ? "True" : "False";
@@ -74,7 +82,7 @@ export function Panel() {
   return (
     <>
       <AnimatePresence>
-        {open && (
+        {panelOpen && (
           <Overlay
             onClick={closePanel}
             initial={{ backgroundColor: overlayHiddenColor }}
@@ -84,7 +92,7 @@ export function Panel() {
         )}
       </AnimatePresence>
       <FocusOn
-        enabled={open}
+        enabled={panelOpen}
         onClickOutside={closePanel}
         onEscapeKey={closePanel}
         preventScrollOnFocus
@@ -92,11 +100,11 @@ export function Panel() {
         <Content
           ref={contentRef}
           role="dialog"
-          aria-modal={open}
+          aria-modal={panelOpen}
           aria-labelledby="panel-title"
           style={
             {
-              "--right": open ? 0 : "var(--panel-width)",
+              "--right": panelOpen ? 0 : "var(--panel-width)",
             } as CSSProperties
           }
         >
@@ -111,16 +119,24 @@ export function Panel() {
           </TitleWrapper>
           <ActionsWrapper>
             <SectionTitleWrapper>
-              <PencilIcon />
+              {actionsIcon}
               <SectionTitle>{actionsTitle}</SectionTitle>
             </SectionTitleWrapper>
-            <ValueWrapper>
-              {hasInput ? (
-                <input value="" />
-              ) : (
+            {hasInput ? (
+              <InputWrapper>
+                <DecimalInput
+                  value={inputValue}
+                  onInput={setInputValue}
+                  disabled={isError}
+                  addErrorMessage={setError}
+                  removeErrorMessage={() => setError("")}
+                />
+              </InputWrapper>
+            ) : (
+              <ValueWrapper>
                 <ValueText>{valueText}</ValueText>
-              )}
-            </ValueWrapper>
+              </ValueWrapper>
+            )}
             <ActionsInnerWrapper>
               <ActionWrapper>
                 <ActionText>
@@ -152,10 +168,20 @@ export function Panel() {
             </ActionsInnerWrapper>
             {hasActionButton && (
               <ActionButtonWrapper>
-                <Button variant="primary" onClick={action} width="100%">
+                <Button
+                  variant="primary"
+                  onClick={action}
+                  width="min(100%, 512px)"
+                >
                   {actionType}
                 </Button>
               </ActionButtonWrapper>
+            )}
+            {isError && (
+              <ErrorWrapper>
+                <WarningIcon />
+                <ErrorText>{error}</ErrorText>
+              </ErrorWrapper>
             )}
           </ActionsWrapper>
           <InfoIconsWrapper>
@@ -308,6 +334,7 @@ const CloseIconWrapper = styled.div`
 `;
 
 const ValueWrapper = styled.div`
+  width: min(100%, 512px);
   display: grid;
   align-items: center;
   min-height: 44px;
@@ -318,8 +345,25 @@ const ValueWrapper = styled.div`
   background: var(--white);
 `;
 
+const InputWrapper = styled.div`
+  margin-top: 16px;
+  margin-bottom: 20px;
+`;
+
 const CurrencyIconWrapper = styled.div`
   margin-right: 8px;
+`;
+
+const ErrorWrapper = styled.div`
+  width: min(100%, 512px);
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  padding-inline: 16px;
+  padding-block: 12px;
+  background: ${errorBackgroundColor};
+  border: 1px solid var(--red-500);
+  border-radius: 2px;
 `;
 
 // titles
@@ -369,6 +413,11 @@ const TimeFormat = styled.span`
   margin-right: 32px;
 `;
 
+const ErrorText = styled.p`
+  font: var(--body-sm);
+  color: var(--red-500);
+`;
+
 // interactive elements
 
 const Link = styled(NextLink)`
@@ -400,3 +449,7 @@ const InfoIcon = styled(Info)`
 const TimestampIcon = styled(Timestamp)``;
 
 const AncillaryDataIcon = styled(AncillaryData)``;
+
+const WarningIcon = styled(Warning)``;
+
+const SettledIcon = styled(Settled)``;
