@@ -11,7 +11,7 @@ export enum RequestState {
 export type RequestKey = {
   requester: string;
   identifier: string;
-  timestamp: number;
+  timestamp: string;
   ancillaryData: string;
 };
 
@@ -73,13 +73,11 @@ export type Handlers = {
   // errors array indexes into server list. use this to determine which servers are failing
   errors?: (errors: Error[]) => void;
 };
-// this is the interface to implement a server, servers gather information about requests/assertions from any source
-export type Service = (handlers: Handlers) => {
-  start: () => void;
-  stop: () => void;
-  tick: () => void;
+
+export type Service = {
+  tick: () => Promise<void>;
 };
-export type Services = Service[];
-// This is the client to consume data on the frontend, you must configure an array of servers and provide handlers
-// to handle data coming in from servers
-export type Client = (services: Services, handlers: Handlers) => void;
+
+// this is the interface to implement a server, servers gather information about requests/assertions from any source
+export type ServiceFactory = (handlers: Handlers) => Service;
+export type ServiceFactories = ServiceFactory[];
