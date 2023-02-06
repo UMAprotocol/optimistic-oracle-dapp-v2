@@ -1,11 +1,13 @@
 import { ethers } from "ethers";
-import { capitalizeFirstLetter } from "@/helpers";
 
 export const formatEther = ethers.utils.formatEther;
 
 export const parseEther = ethers.utils.parseEther;
 
-// This catches any potential errors form parsing an unknown string value, returns 0 if error happens.
+/** Catches any potential errors form parsing an unknown string value, returns 0 if error happens.
+ * @param value - the value to parse
+ * @param decimals - the number of decimals to parse to, defaults to 18
+ */
 export function parseEtherSafe(value: string, decimals = 18): ethers.BigNumber {
   try {
     // previously we were casting this to number, and using tofixed. this does not work because casting to
@@ -25,12 +27,6 @@ export const toUtf8String = ethers.utils.toUtf8String;
 export const formatBytes32String = ethers.utils.formatBytes32String;
 
 export const commify = ethers.utils.commify;
-
-export const formatTransactionError = (error: Error) => {
-  // ethers transactions put all call data and debug data between parens, so we will filter it out
-  const message = error.message.split("(")[0] || error.message;
-  return capitalizeFirstLetter(message);
-};
 
 export const zeroAddress = ethers.constants.AddressZero;
 

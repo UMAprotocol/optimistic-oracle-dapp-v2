@@ -3,6 +3,11 @@ import Clock from "public/assets/icons/clock.svg";
 import styled from "styled-components";
 import { InfoIconText, InfoIconWrapper } from "./styles";
 
+/**
+ * Displays an icon for the given expiry type.
+ * @param expiryType The expiry type to display an icon for.
+ * @returns The icon for the given expiry type, or null if the expiry type is not supported.
+ */
 export function ExpiryTypeIcon({
   expiryType,
 }: {

@@ -1,6 +1,5 @@
 import { Button, DecimalInput } from "@/components";
-import { blueGrey700, red500 } from "@/constants";
-import { currencyIcons, projectIcons } from "@/constants/icons";
+import { blueGrey700, currencyIcons, projectIcons, red500 } from "@/constants";
 import { addOpacityToHsl } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import { AnimatePresence, motion } from "framer-motion";
@@ -23,11 +22,18 @@ const overlayVisibleColor = addOpacityToHsl(blueGrey700, 0.75);
 const overlayHiddenColor = addOpacityToHsl(blueGrey700, 0);
 const errorBackgroundColor = addOpacityToHsl(red500, 0.05);
 
+/**
+ * A panel that slides in from the right.
+ * The panel adapts to the page it is used on.
+ * @see `PanelContext`
+ * @see `PanelContent`
+ */
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const [inputValue, setInputValue] = useState("");
 
+  // Scroll to top when panel opens
   useEffect(() => {
     if (panelOpen) {
       contentRef?.current?.scrollTo({ top: 0 });
@@ -76,8 +82,17 @@ export function Panel() {
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
-    if (oracleType === "Optimistic Asserter") return "Assertion";
-    return "Request";
+    if (oracleType === "Optimistic Asserter")
+      return (
+        <>
+          Assertion <span>(proposal)</span>
+        </>
+      );
+    return (
+      <>
+        Request <span>(price)</span>
+      </>
+    );
   }
 
   return (
@@ -385,6 +400,10 @@ const Title = styled.h1`
 const SectionTitle = styled.h2`
   font: var(--body-md);
   font-weight: 700;
+
+  span {
+    font-weight: 400;
+  }
 `;
 
 const SectionSubTitle = styled.h3`

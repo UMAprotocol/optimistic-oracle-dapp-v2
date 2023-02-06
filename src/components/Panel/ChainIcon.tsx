@@ -12,6 +12,12 @@ import styled from "styled-components";
 import { IconWrapper } from "../IconWrapper";
 import { InfoIconText, InfoIconWrapper } from "./styles";
 
+/**
+ * Displays an icon for the given chain ID.
+ * @param chainId The chain ID to display an icon for.
+ * @returns The icon for the given chain ID, or null if the chain ID is not supported.
+ * @see supportedChainsById
+ */
 export function ChainIcon({
   chainId,
 }: {

@@ -11,6 +11,17 @@ interface Props {
   maxDecimals?: number;
   allowNegative?: boolean;
 }
+/**
+ * A component for entering decimal values.
+ * @param value The current value of the input.
+ * @param onInput A callback to be called when the input value changes.
+ * @param addErrorMessage A callback to be called when an error message should be displayed.
+ * @param removeErrorMessage A callback to be called when an error message should be removed.
+ * @param disabled Whether the input should be disabled.
+ * @param placeholder The placeholder text to display when the input is empty.
+ * @param maxDecimals The maximum number of decimal places to allow.
+ * @param allowNegative Whether to allow negative values.
+ */
 export function DecimalInput({
   value,
   onInput,
