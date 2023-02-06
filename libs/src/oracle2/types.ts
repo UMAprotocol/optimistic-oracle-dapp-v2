@@ -74,12 +74,12 @@ export type Handlers = {
   errors?: (errors: Error[]) => void;
 };
 // this is the interface to implement a server, servers gather information about requests/assertions from any source
-export type Server = (handlers: Handlers) => {
+export type Service = (handlers: Handlers) => {
   start: () => void;
   stop: () => void;
   tick: () => void;
 };
-export type Servers = Server[];
+export type Services = Service[];
 // This is the client to consume data on the frontend, you must configure an array of servers and provide handlers
 // to handle data coming in from servers
-export type Client = (servers: Servers, handlers: Handlers) => void;
+export type Client = (services: Services, handlers: Handlers) => void;

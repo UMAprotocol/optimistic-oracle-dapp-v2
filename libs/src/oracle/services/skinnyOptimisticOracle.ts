@@ -1,5 +1,5 @@
 import assert from "assert";
-import {skinnyOptimisticOracle} from "@libs/clients"
+import { skinnyOptimisticOracle } from "@libs/clients";
 import {
   BigNumberish,
   Provider,
@@ -125,6 +125,7 @@ export class SkinnyOptimisticOracle implements OracleInterface {
     const { requests = {} } = skinnyOptimisticOracle.getEventState(this.events);
     Object.values(requests).map((request) => this.upsertRequest(request));
   };
+  // eslint-disable-next-line @typescript-eslint/require-await
   async fetchRequest(key: RequestKey): Promise<Request> {
     // skinny oo does not have a way to query request data from contract, can only find this though events.
     return this.getRequest(key);

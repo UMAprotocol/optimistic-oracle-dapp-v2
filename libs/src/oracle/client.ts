@@ -12,7 +12,7 @@ import {
 } from "./services/statemachines";
 import { toWei } from "./utils";
 import { NewOracle } from "./types/interfaces";
-import { loop } from "@libs/utils"
+import { loop } from "@libs/utils";
 
 export class Client {
   private intervalStarted = false;

@@ -13,7 +13,9 @@ export function connect(address: string, provider: SignerOrProvider): Instance {
   return Factory.connect(address, provider);
 }
 
-export const contractInterface = new utils.Interface(getSkinnyOptimisticOracleAbi());
+export const contractInterface = new utils.Interface(
+  getSkinnyOptimisticOracleAbi()
+);
 
 export type RequestPrice = GetEventType<Instance, "RequestPrice">;
 export type ProposePrice = GetEventType<Instance, "ProposePrice">;
@@ -72,15 +74,23 @@ export interface EventState {
   requests?: Record<string, Request>;
 }
 
-export function requestId(request: Omit<RequestKey, "timestamp"> & { timestamp: BigNumberish }): string {
+export function requestId(
+  request: Omit<RequestKey, "timestamp"> & { timestamp: BigNumberish }
+): string {
   // if enabling sorting, put timestamp first
-  return [request.timestamp.toString(), request.identifier, request.requester, request.ancillaryData].join("!");
+  return [
+    request.timestamp.toString(),
+    request.identifier,
+    request.requester,
+    request.ancillaryData,
+  ].join("!");
 }
 export function reduceEvents(state: EventState, event: Event): EventState {
   switch (event.event) {
     case "RequestPrice": {
       const typedEvent = event as RequestPrice;
-      const { requester, identifier, timestamp, ancillaryData, request } = typedEvent.args;
+      const { requester, identifier, timestamp, ancillaryData, request } =
+        typedEvent.args;
       const id = requestId(typedEvent.args);
       if (!state.requests) state.requests = {};
       state.requests[id] = {
@@ -99,7 +109,8 @@ export function reduceEvents(state: EventState, event: Event): EventState {
     }
     case "ProposePrice": {
       const typedEvent = event as ProposePrice;
-      const { requester, identifier, timestamp, ancillaryData, request } = typedEvent.args;
+      const { requester, identifier, timestamp, ancillaryData, request } =
+        typedEvent.args;
       const id = requestId(typedEvent.args);
       if (!state.requests) state.requests = {};
       state.requests[id] = {
@@ -117,7 +128,8 @@ export function reduceEvents(state: EventState, event: Event): EventState {
     }
     case "DisputePrice": {
       const typedEvent = event as DisputePrice;
-      const { requester, identifier, timestamp, ancillaryData, request } = typedEvent.args;
+      const { requester, identifier, timestamp, ancillaryData, request } =
+        typedEvent.args;
       const id = requestId(typedEvent.args);
       if (!state.requests) state.requests = {};
       state.requests[id] = {
@@ -135,7 +147,8 @@ export function reduceEvents(state: EventState, event: Event): EventState {
     }
     case "Settle": {
       const typedEvent = event as Settle;
-      const { requester, identifier, timestamp, ancillaryData, request } = typedEvent.args;
+      const { requester, identifier, timestamp, ancillaryData, request } =
+        typedEvent.args;
       const id = requestId(typedEvent.args);
       if (!state.requests) state.requests = {};
       state.requests[id] = {
@@ -154,6 +167,9 @@ export function reduceEvents(state: EventState, event: Event): EventState {
   }
   return state;
 }
-export function getEventState(events: Event[], eventState: EventState = {}): EventState {
+export function getEventState(
+  events: Event[],
+  eventState: EventState = {}
+): EventState {
   return events.reduce(reduceEvents, eventState);
 }
