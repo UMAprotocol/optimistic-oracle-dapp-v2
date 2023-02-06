@@ -1,4 +1,4 @@
-import {optimisticOracleV2} from "@libs/clients"
+import { optimisticOracleV2 } from "@libs/clients";
 import {
   BigNumberish,
   Provider,

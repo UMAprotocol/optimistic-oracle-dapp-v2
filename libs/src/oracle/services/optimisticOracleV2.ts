@@ -19,7 +19,7 @@ import {
   eventKey,
   isUnique,
 } from "../utils";
-import {optimisticOracleV2} from "@libs/clients"
+import { optimisticOracleV2 } from "@libs/clients";
 
 const { connect, getEventState } = optimisticOracleV2;
 
