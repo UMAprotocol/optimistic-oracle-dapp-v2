@@ -1,17 +1,16 @@
 import { Button } from "@/components";
 import { blueGrey700 } from "@/constants";
-import { projectIcons } from "@/constants/projects/icons";
+import { currencyIcons, projectIcons } from "@/constants/icons";
 import { addOpacityToHsl } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Close from "public/assets/icons/close.svg";
-import USDC from "public/assets/icons/currencies/usdc.svg";
 import Info from "public/assets/icons/info.svg";
 import Pencil from "public/assets/icons/pencil.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
-import { CSSProperties, useEffect, useRef } from "react";
+import { CSSProperties, Fragment, useEffect, useRef } from "react";
 import { FocusOn } from "react-focus-on";
 import styled from "styled-components";
 import { ChainIcon } from "./ChainIcon";
@@ -33,9 +32,44 @@ export function Panel() {
 
   if (!content) return null;
 
-  const { title, project } = content;
+  const {
+    chainId,
+    oracleType,
+    title,
+    project,
+    ancillaryData,
+    decodedAncillaryData,
+    timeUNIX,
+    timeUTC,
+    price,
+    assertion,
+    currency,
+    bond,
+    reward,
+    formattedLivenessEndsIn,
+    actionType,
+    action,
+    expiryType,
+    moreInformation,
+  } = content;
 
   const projectIcon = projectIcons[project];
+  const currencyIcon = currencyIcons[currency];
+  const hasActionButton = action !== undefined && actionType !== undefined;
+  const hasInput = page === "propose";
+  const valueText = getValueText();
+  const actionsTitle = getActionsTitle();
+
+  function getValueText() {
+    if (assertion !== undefined) return assertion ? "True" : "False";
+    return price;
+  }
+
+  function getActionsTitle() {
+    if (page === "settled") return "Settled as";
+    if (oracleType === "Optimistic Asserter") return "Assertion";
+    return "Request";
+  }
 
   return (
     <>
@@ -78,54 +112,56 @@ export function Panel() {
           <ActionsWrapper>
             <SectionTitleWrapper>
               <PencilIcon />
-              <SectionTitle>Assertion</SectionTitle>
+              <SectionTitle>{actionsTitle}</SectionTitle>
             </SectionTitleWrapper>
             <ValueWrapper>
-              <ValueText>True</ValueText>
+              {hasInput ? (
+                <input value="" />
+              ) : (
+                <ValueText>{valueText}</ValueText>
+              )}
             </ValueWrapper>
             <ActionsInnerWrapper>
               <ActionWrapper>
                 <ActionText>
-                  Dispute Bond
+                  Bond
                   <InfoIcon />
                 </ActionText>
                 <ActionText>
-                  <USDCIcon />
-                  $500
+                  <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+                  {bond}
                 </ActionText>
               </ActionWrapper>
               <ActionWrapper>
                 <ActionText>
-                  Dispute Reward
+                  Reward
                   <InfoIcon />
                 </ActionText>
                 <ActionText>
-                  <USDCIcon />
-                  $500
+                  <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+                  {reward}
                 </ActionText>
               </ActionWrapper>
               <ActionWrapper>
                 <ActionText>
-                  Challenge period left
+                  Challenge period ends in
                   <InfoIcon />
                 </ActionText>
-                <ActionText>53 min 11 sec</ActionText>
+                <ActionText>{formattedLivenessEndsIn}</ActionText>
               </ActionWrapper>
             </ActionsInnerWrapper>
-            <ActionButtonWrapper>
-              <Button
-                variant="primary"
-                onClick={() => alert("action")}
-                width="100%"
-              >
-                Dispute
-              </Button>
-            </ActionButtonWrapper>
+            {hasActionButton && (
+              <ActionButtonWrapper>
+                <Button variant="primary" onClick={action} width="100%">
+                  {actionType}
+                </Button>
+              </ActionButtonWrapper>
+            )}
           </ActionsWrapper>
           <InfoIconsWrapper>
-            <ChainIcon chainId={1} />
-            <OoTypeIcon ooType="Optimistic Asserter" />
-            <ExpiryTypeIcon expiryType="Event-based" />
+            <ChainIcon chainId={chainId} />
+            <OoTypeIcon ooType={oracleType} />
+            {expiryType && <ExpiryTypeIcon expiryType={expiryType} />}
           </InfoIconsWrapper>
           <DetailsWrapper>
             <DetailWrapper>
@@ -134,10 +170,10 @@ export function Panel() {
                 <SectionTitle>Timestamp</SectionTitle>
               </SectionTitleWrapper>
               <Time>
-                <TimeFormat>UTC</TimeFormat> Nov 17 2022 23:00:00{" "}
+                <TimeFormat>UTC</TimeFormat> {timeUTC}
               </Time>
               <Time>
-                <TimeFormat>UNIX</TimeFormat> 1234542652123
+                <TimeFormat>UNIX</TimeFormat> {timeUNIX}
               </Time>
             </DetailWrapper>
             <DetailWrapper>
@@ -146,44 +182,23 @@ export function Panel() {
                 <SectionTitle>Ancillary Data</SectionTitle>
               </SectionTitleWrapper>
               <SectionSubTitle>String</SectionSubTitle>
-              <DetailText>
-                q: title: Did Euler get hacked? , description: Was there a hack,
-                bug, user error, or malfeasance resulting in a loss or lock-up
-                of tokens in Euler (https://app.euler.finance/) at any point
-                after Ethereum Mainnet block number 16175802? This will revert
-                if a non-YES answer is proposed.
-              </DetailText>
+              <DetailText>{decodedAncillaryData}</DetailText>
               <SectionSubTitle>Bytes</SectionSubTitle>
-              <DetailText>
-                0x713a207469746c653a204469642045756c657220676574206861636b65643f202c206465736372697074696f6e3a205761732074686572652061206861636b2c206275672c2075736572206572726f722c206f72206d616c66656173616e636520726573756c74696e6720696e2061206c6f7373206f72206c6f636b2d7570206f6620746f6b656e7320696e2045756c6572202868747470733a2f2f6170702e65756c65722e6669
-              </DetailText>
+              <DetailText>{ancillaryData}</DetailText>
             </DetailWrapper>
             <DetailWrapper>
               <SectionTitleWrapper>
                 <AncillaryDataIcon />
                 <SectionTitle>More information</SectionTitle>
               </SectionTitleWrapper>
-              <SectionSubTitle>Requester</SectionSubTitle>
-              <Link
-                href="https://goerli.etherscan.io/address/0xF40C3EF015B699cc70088c35efA2cC96aF5F8554"
-                target="_blank"
-              >
-                0xF40C3EF015B699cc70088c35efA2cC96aF5F8554
-              </Link>
-              <SectionSubTitle>Identifier</SectionSubTitle>
-              <Link
-                href="https://docs.umaproject.org/resources/approved-price-identifiers"
-                target="_blank"
-              >
-                0xB40C3EF015B6919cc70088cF87
-              </Link>
-              <SectionSubTitle>UMIP</SectionSubTitle>
-              <Link
-                href="https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md"
-                target="_blank"
-              >
-                UMIP-107
-              </Link>
+              {moreInformation.map(({ title, href, text }) => (
+                <Fragment key={title}>
+                  <SectionSubTitle>{title}</SectionSubTitle>
+                  <Link href={href} target="_blank">
+                    {text}
+                  </Link>
+                </Fragment>
+              ))}
             </DetailWrapper>
           </DetailsWrapper>
         </Content>
@@ -303,6 +318,10 @@ const ValueWrapper = styled.div`
   background: var(--white);
 `;
 
+const CurrencyIconWrapper = styled.div`
+  margin-right: 8px;
+`;
+
 // titles
 
 const Title = styled.h1`
@@ -376,11 +395,6 @@ const PencilIcon = styled(Pencil)``;
 const InfoIcon = styled(Info)`
   display: inline-block;
   margin-left: 8px;
-`;
-
-const USDCIcon = styled(USDC)`
-  display: inline-block;
-  margin-right: 8px;
 `;
 
 const TimestampIcon = styled(Timestamp)``;

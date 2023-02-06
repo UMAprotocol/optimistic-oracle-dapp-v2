@@ -1,5 +1,5 @@
 import { supportedChainsById } from "@/constants";
-import { SupportedChainIds } from "@/types";
+import { SupportedChainId } from "@/types";
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
 import Avalanche from "public/assets/icons/chains/avax.svg";
 import Boba from "public/assets/icons/chains/boba.svg";
@@ -15,7 +15,7 @@ import { InfoIconText, InfoIconWrapper } from "./styles";
 export function ChainIcon({
   chainId,
 }: {
-  chainId: SupportedChainIds | undefined;
+  chainId: SupportedChainId | undefined;
 }) {
   if (!chainId) return null;
 

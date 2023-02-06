@@ -1,3 +1,3 @@
 export * from "./misc";
-export * from "./oracle";
+export * from "./ui";
 export * from "./queries";
