@@ -1,14 +1,24 @@
 import { Button } from "@/components";
-import { Request } from "@/types";
+import { usePanelContext } from "@/hooks";
+import { OracleQueryUI, Page } from "@/types";
 import { TD } from "./style";
 
-export function MoreDetailsCell({ request }: { request: Request }) {
+export function MoreDetailsCell({
+  row,
+  page,
+}: {
+  row: OracleQueryUI;
+  page: Page;
+}) {
+  const { openPanel } = usePanelContext();
+
+  function onClick() {
+    openPanel(row, page);
+  }
+
   return (
     <TD>
-      <Button
-        onClick={() => alert(JSON.stringify(request))}
-        label="More details"
-      />
+      <Button onClick={onClick}>More details</Button>
     </TD>
   );
 }

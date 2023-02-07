@@ -1,6 +1,6 @@
 import { Button, DecimalInput } from "@/components";
 import { blueGrey700, currencyIcons, projectIcons, red500 } from "@/constants";
-import { addOpacityToHsl } from "@/helpers";
+import { addOpacityToHsl, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
@@ -66,19 +66,14 @@ export function Panel() {
   } = content;
 
   const projectIcon = projectIcons[project];
-  const currencyIcon = currencyIcons[currency];
+  const currencyIcon = currency ? currencyIcons[currency] : undefined;
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
   const hasActionButton = action !== undefined && actionType !== undefined;
   const hasInput = page === "propose";
-  const valueText = getValueText();
+  const valueText = getValueText({ price, assertion });
   const actionsTitle = getActionsTitle();
   const isError = error !== "";
-
-  function getValueText() {
-    if (assertion !== undefined) return assertion ? "True" : "False";
-    return price;
-  }
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";

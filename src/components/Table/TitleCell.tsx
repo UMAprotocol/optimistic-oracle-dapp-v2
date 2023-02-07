@@ -1,5 +1,4 @@
-import { Request } from "@/types";
-import { format } from "date-fns";
+import { OracleQueryUI } from "@/types";
 import Cozy from "public/assets/icons/projects/cozy.svg";
 import Polymarket from "public/assets/icons/projects/polymarket.svg";
 import StakeCom from "public/assets/icons/projects/stake.com.svg";
@@ -7,7 +6,12 @@ import Uma from "public/assets/icons/projects/uma.svg";
 import styled from "styled-components";
 import { TD } from "./style";
 
-export function TitleCell({ title, project, chain, time }: Request) {
+export function TitleCell({
+  title,
+  project,
+  chainName,
+  timeFormatted,
+}: OracleQueryUI) {
   const projectIcons = {
     UMA: <UmaIcon />,
     Polymarket: <PolymarketIcon />,
@@ -17,8 +21,6 @@ export function TitleCell({ title, project, chain, time }: Request) {
 
   const projectIcon = project ? projectIcons[project] : <UmaIcon />;
 
-  const date = format(new Date(time.mul(1000).toNumber()), "Pp");
-
   return (
     <TitleTD>
       <TitleWrapper>
@@ -26,7 +28,7 @@ export function TitleCell({ title, project, chain, time }: Request) {
         <TextWrapper>
           <TitleHeader>{title}</TitleHeader>
           <TitleText>
-            {project} | {date} | {chain}
+            {project} | {timeFormatted} | {chainName}
           </TitleText>
         </TextWrapper>
       </TitleWrapper>

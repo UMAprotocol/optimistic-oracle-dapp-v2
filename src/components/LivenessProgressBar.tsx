@@ -1,17 +1,20 @@
 import { darkText, red500 } from "@/constants";
 import { Indicator, Root } from "@radix-ui/react-progress";
 import { intervalToDuration } from "date-fns";
-import { BigNumber } from "ethers";
 import { useState } from "react";
 import styled, { css, CSSProperties } from "styled-components";
 import { useInterval } from "usehooks-ts";
 
 interface Props {
-  /** Time the request or assertion was made */
-  startTime: BigNumber;
-  /** Time the request or assertion will expire */
-  endTime: BigNumber;
+  startTime: number;
+  endTime: number;
 }
+/**
+ * A progress bar that shows the time remaining until a request or assertion
+ * expires.
+ * @param startTime Time the request or assertion was made in milliseconds
+ * @param endTime Time the request or assertion will expire in milliseconds
+ */
 export function LivenessProgressBar({ startTime, endTime }: Props) {
   const [now, setNow] = useState(new Date());
 
@@ -19,12 +22,10 @@ export function LivenessProgressBar({ startTime, endTime }: Props) {
     setNow(new Date());
   }, 1000);
 
-  const startTimeMilliseconds = startTime.toNumber() * 1000;
-  const endTimeMilliseconds = endTime.toNumber() * 1000;
-  const endTimeAsDate = new Date(endTimeMilliseconds);
-  const totalTime = endTimeMilliseconds - startTimeMilliseconds;
+  const endTimeAsDate = new Date(endTime);
+  const totalTime = endTime - startTime;
   const currentTime = now.getTime();
-  const progress = currentTime - startTimeMilliseconds;
+  const progress = currentTime - startTime;
   const percent = Math.round((progress / totalTime) * 100);
   const timeRemaining = intervalToDuration({
     start: now,

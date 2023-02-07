@@ -25,15 +25,15 @@ export const supportedChains = [
 ];
 
 export const supportedChainsById = {
-  1: "Ethereum",
-  5: "Görli",
-  10: "Optimism",
-  100: "Gnosis",
-  137: "Polygon",
-  288: "Boba",
-  416: "SX",
-  43114: "Avalanche",
-  42161: "Arbitrum",
+  1: "Ethereum" as const,
+  5: "Görli" as const,
+  10: "Optimism" as const,
+  100: "Gnosis" as const,
+  137: "Polygon" as const,
+  288: "Boba" as const,
+  416: "SX" as const,
+  43114: "Avalanche" as const,
+  42161: "Arbitrum" as const,
 };
 
 export const walletsAndConnectors = getDefaultWallets({

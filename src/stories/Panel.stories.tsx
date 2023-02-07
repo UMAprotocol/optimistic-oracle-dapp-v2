@@ -1,9 +1,9 @@
 import { Button, Panel } from "@/components";
 import { PanelContext, PanelContextState } from "@/contexts";
-import { Page, PanelContent } from "@/types";
+import { OracleQueryUI, Page } from "@/types";
 import { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { makeMockPanelContent } from "./mocks";
+import { makeMockOracleQueryUI } from "./mocks";
 
 const meta: Meta<typeof Panel> = {
   component: Panel,
@@ -16,7 +16,7 @@ type Story = StoryObj<PanelContextState>;
 interface Props {
   Component: typeof Panel;
   page: Page | undefined;
-  content: PanelContent | undefined;
+  content: OracleQueryUI | undefined;
 }
 function Wrapper({ Component, page, content }: Props) {
   const [panelOpen, setPanelOpen] = useState(true);
@@ -54,7 +54,7 @@ export const VerifyWithDispute: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       actionType: "Dispute",
       action: () => alert("Dispute!!!"),
     }),
@@ -65,7 +65,7 @@ export const VerifyWithSettle: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       actionType: "Settle",
       action: () => alert("Settle!!!"),
     }),
@@ -76,7 +76,7 @@ export const Propose: Story = {
   ...Template,
   args: {
     page: "propose",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       actionType: "Propose",
       action: () => alert("Propose!!!"),
     }),
@@ -87,7 +87,7 @@ export const Settled: Story = {
   ...Template,
   args: {
     page: "settled",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       action: undefined,
       actionType: undefined,
     }),
@@ -98,7 +98,7 @@ export const WithError: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       error: "Something went wrong",
     }),
   },
@@ -108,7 +108,7 @@ export const WithDifferentProject: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       project: "Polymarket",
     }),
   },
@@ -118,7 +118,7 @@ export const WithDifferentInfoIcons: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       oracleType: "Skinny Optimistic Oracle",
       chainId: 137,
       expiryType: "Time-based",
@@ -130,7 +130,7 @@ export const WithDifferentCurrency: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       currency: "ETH",
     }),
   },
@@ -140,7 +140,7 @@ export const WithPrice: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockPanelContent({
+    content: makeMockOracleQueryUI({
       oracleType: "Optimistic Oracle",
       price: 200,
       assertion: undefined,

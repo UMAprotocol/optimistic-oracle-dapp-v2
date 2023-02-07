@@ -1,5 +1,6 @@
-import { PanelContent } from "@/types";
+import { OracleQueryUI } from "@/types";
 import { MockConnector } from "@wagmi/core/connectors/mock";
+import { addMinutes, format } from "date-fns";
 import { Wallet } from "ethers";
 import { createClient } from "wagmi";
 import { chains, provider } from "../pages/_app";
@@ -23,9 +24,11 @@ export const mockWagmiClient = createClient({
   ],
 });
 
-export function makeMockPanelContent(input?: Partial<PanelContent>) {
-  const defaultMockContent: PanelContent = {
+export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
+  const defaultMockOracleQueryUI: OracleQueryUI = {
+    id: `mock-id-${Math.random()}`,
     chainId: 1,
+    chainName: "Ethereum",
     oracleType: "Optimistic Asserter",
     project: "UMA",
     title:
@@ -38,11 +41,14 @@ export function makeMockPanelContent(input?: Partial<PanelContent>) {
     if a non-YES answer is proposed.`,
     timeUNIX: Math.floor(Date.now() / 1000),
     timeUTC: new Date().toUTCString(),
+    timeMilliseconds: Date.now(),
+    timeFormatted: format(new Date(), "Pp"),
     assertion: true,
     price: undefined,
     currency: "USDC",
     formattedBond: "50,000",
     formattedReward: "250,000",
+    livenessEndsMilliseconds: addMinutes(new Date(), 53).getTime(),
     formattedLivenessEndsIn: "53 min 11 sec",
     actionType: "Dispute",
     action: () => alert("Dispute or propose or settle"),
@@ -69,7 +75,7 @@ export function makeMockPanelContent(input?: Partial<PanelContent>) {
   };
 
   return {
-    ...defaultMockContent,
+    ...defaultMockOracleQueryUI,
     ...input,
   };
 }

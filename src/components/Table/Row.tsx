@@ -1,26 +1,26 @@
-import { Page, Request } from "@/types";
+import { OracleQueryUI, Page } from "@/types";
 import styled from "styled-components";
 import { MoreDetailsCell } from "./MoreDetailsCell";
-import { ProposeRow } from "./ProposeRow";
-import { SettledRow } from "./SettledRow";
+import { ProposeCells } from "./ProposeCells";
+import { SettledCells } from "./SettledCells";
 import { TR } from "./style";
 import { TitleCell } from "./TitleCell";
-import { VerifyRow } from "./VerifyRow";
+import { VerifyCells } from "./VerifyCells";
 
-export function Row({ page, request }: { page: Page; request: Request }) {
+export function Row({ page, row }: { page: Page; row: OracleQueryUI }) {
   const rows = {
-    verify: <VerifyRow {...request} />,
-    propose: <ProposeRow {...request} />,
-    settled: <SettledRow {...request} />,
+    verify: <VerifyCells {...row} />,
+    propose: <ProposeCells {...row} />,
+    settled: <SettledCells {...row} />,
   };
 
-  const row = rows[page];
+  const rowComponent = rows[page];
 
   return (
     <_TR>
-      <TitleCell {...request} />
-      {row}
-      <MoreDetailsCell request={request} />
+      <TitleCell {...row} />
+      {rowComponent}
+      <MoreDetailsCell row={row} page={page} />
     </_TR>
   );
 }

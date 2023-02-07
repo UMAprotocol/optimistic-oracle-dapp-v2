@@ -75,3 +75,19 @@ export function bigNumberFromFloatString(value: string | undefined) {
   const truncated = truncateDecimals(value, 18);
   return BigNumber.from(parseEther(truncated));
 }
+
+/**
+ * Returns a display value for a given price or assertion.
+ * React does not show boolean values, so we must convert assertions to strings.
+ * Otherwise we return the price as a number.
+ */
+export function getValueText({
+  price,
+  assertion,
+}: {
+  price?: number;
+  assertion?: boolean;
+}) {
+  if (assertion !== undefined) return assertion ? "True" : "False";
+  return price;
+}

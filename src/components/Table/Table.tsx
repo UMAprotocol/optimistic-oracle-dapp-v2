@@ -1,48 +1,20 @@
-import { Page, Request } from "@/types";
-import { useEffect, useRef, useState } from "react";
-import styled, { CSSProperties } from "styled-components";
-import { useIsClient } from "usehooks-ts";
+import { OracleQueryUI, Page } from "@/types";
+import styled from "styled-components";
 import { Headers } from "./Headers";
 import { Row } from "./Row";
 
 interface Props {
   page: Page;
-  requests: Request[];
+  rows: OracleQueryUI[];
 }
-export function Table({ page, requests }: Props) {
-  const tableRef = useRef<HTMLTableElement>(null);
-  const [tableWidth, setTableWidth] = useState(0);
-  const isClient = useIsClient();
-
-  useEffect(() => {
-    if (!isClient) return;
-
-    updateTableWidth();
-
-    window.addEventListener("resize", updateTableWidth);
-
-    function updateTableWidth() {
-      if (tableRef.current) {
-        setTableWidth(tableRef.current.offsetWidth);
-      }
-    }
-
-    return () => {
-      window.removeEventListener("resize", updateTableWidth);
-    };
-  }, [isClient]);
-
-  const style = {
-    "--table-width": `${tableWidth}px`,
-  } as CSSProperties;
-
+export function Table({ page, rows }: Props) {
   return (
-    <Wrapper style={style}>
-      <_Table ref={tableRef}>
+    <Wrapper>
+      <_Table>
         <Headers page={page} />
         <TBody>
-          {requests.map((request) => (
-            <Row key={request.id} page={page} request={request} />
+          {rows.map((row) => (
+            <Row key={row.id} page={page} row={row} />
           ))}
         </TBody>
       </_Table>
