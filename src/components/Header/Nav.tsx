@@ -10,8 +10,6 @@ export function Nav() {
 
   const router = useRouter();
 
-  console.log(router.pathname);
-
   function isActive(href: string) {
     return router.pathname === href;
   }
