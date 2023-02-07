@@ -46,7 +46,9 @@ const TitleWrapper = styled.div`
   text-overflow: ellipsis;
 `;
 
-const TitleHeader = styled.h3``;
+const TitleHeader = styled.h3`
+  transition: color var(--animation-duration);
+`;
 
 const IconWrapper = styled.div``;
 

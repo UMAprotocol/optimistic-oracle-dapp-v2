@@ -11,21 +11,21 @@ type Story = StoryObj<typeof LivenessProgressBar>;
 
 export const WithHoursRemaining: Story = {
   args: {
-    startTime: Math.floor(Date.now() / 1000) - 10_000,
-    endTime: Math.floor(Date.now() / 1000) + 10_000,
+    startTime: Date.now() - 10_000_000,
+    endTime: Date.now() + 10_000_000,
   },
 };
 
 export const WithMinutesRemaining: Story = {
   args: {
-    startTime: Math.floor(Date.now() / 1000) - 1000,
-    endTime: Math.floor(Date.now() / 1000) + 1000,
+    startTime: Date.now() - 1_000_000,
+    endTime: Date.now() + 1_000_000,
   },
 };
 
 export const WithSecondsRemaining: Story = {
   args: {
-    startTime: Math.floor(Date.now() / 1000) - 10,
-    endTime: Math.floor(Date.now() / 1000) + 10,
+    startTime: Date.now() - 10_000,
+    endTime: Date.now() + 10_000,
   },
 };
