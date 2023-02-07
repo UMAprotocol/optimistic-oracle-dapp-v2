@@ -7,7 +7,6 @@ import {
   white,
 } from "@/constants";
 import { PanelProvider } from "@/contexts";
-import oracle from "@/helpers/oracleSdk";
 import "@/styles/fonts.css";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -15,8 +14,22 @@ import type { AppProps } from "next/app";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
+import { Client, OracleType } from "@libs/oracle2";
+import { gql } from "@libs/oracle2/services";
 
-oracle && console.log("oracle client loaded");
+const gqlService = gql.Factory([
+  {
+    url: "https://api.thegraph.com/subgraphs/name/md0x/goerli-oo-staging",
+    type: OracleType.Optimistic,
+    chainId: 5,
+  },
+]);
+
+// example of using the client. hoook this up in a context / reducer
+Client([gqlService], {
+  requests: (requests) => console.log(requests),
+  errors: (errors) => console.error(errors),
+});
 
 export const { chains, provider } = configureChains(supportedChains, [
   infuraProvider({ apiKey: infuraId }),
