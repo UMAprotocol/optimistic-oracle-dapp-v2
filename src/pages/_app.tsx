@@ -14,16 +14,10 @@ import type { AppProps } from "next/app";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
-import { Client, OracleType } from "@libs/oracle2";
+import { Client } from "@libs/oracle2";
 import { gql } from "@libs/oracle2/services";
 
-const gqlService = gql.Factory([
-  {
-    url: "https://api.thegraph.com/subgraphs/name/md0x/goerli-oo-staging",
-    type: OracleType.Optimistic,
-    chainId: 5,
-  },
-]);
+const gqlService = gql.Factory(config.subgraphs);
 
 // example of using the client. hoook this up in a context / reducer
 Client([gqlService], {

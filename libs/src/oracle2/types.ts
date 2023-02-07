@@ -1,11 +1,11 @@
 export enum RequestState {
-  Invalid = 0, // Never requested.
-  Requested, // Requested, no other actions taken.
-  Proposed, // Proposed, but not expired or disputed yet.
-  Expired, // Proposed, not disputed, past liveness.
-  Disputed, // Disputed, but no DVM price returned yet.
-  Resolved, // Disputed and DVM price is available.
-  Settled, // Final price has been set in the contract (can get here from Expired or Resolved).
+  Invalid = "Invalid", // Never requested.
+  Requested = "Requested", // Requested, no other actions taken.
+  Proposed = "Proposed", // Proposed, but not expired or disputed yet.
+  Expired = "Expired", // Proposed, not disputed, past liveness.
+  Disputed = "Disputed", // Disputed, but no DVM price returned yet.
+  Resolved = "Resolved", // Disputed and DVM price is available.
+  Settled = "Settled", // Final price has been set in the contract (can get here from Expired or Resolved).
 }
 /// data needed to identify oracle requests
 export type RequestKey = {
@@ -47,6 +47,10 @@ export type Request = RequestKey & {
     proposeBlockNumber: number;
     disputeBlockNumber: number;
     settleBlockNumber: number;
+    requestLogIndex: number;
+    proposeLogIndex: number;
+    disputeLogIndex: number;
+    settleLogIndex: number;
     // oo v2 fields moved here from settings object
     bond: string;
     customLiveness: string;

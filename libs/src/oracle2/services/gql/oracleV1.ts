@@ -16,6 +16,23 @@ export type OptimisticPriceRequest = {
   settlementPrice: string;
   settlementPayout: string;
   settlementRecipient: string;
+  state: string;
+  requestTimestamp: string;
+  requestBlockNumber: number;
+  requestHash: string;
+  requestLogIndex: number;
+  proposalTimestamp: string;
+  proposalBlockNumber: number;
+  proposalHash: string;
+  proposalLogIndex: number;
+  disputeTimestamp: string;
+  disputeBlockNumber: number;
+  disputeHash: string;
+  disputeLogIndex: number;
+  settlementTimestamp: string;
+  settlementBlockNumber: number;
+  settlementHash: string;
+  settlementLogIndex: number;
 };
 export type OptimisticPriceRequests = OptimisticPriceRequest[];
 export type OptimisticPriceRequestsQuery = {
@@ -42,6 +59,23 @@ export const getRequests = async (
         settlementPrice
         settlementPayout
         settlementRecipient
+        state
+        requestTimestamp
+        requestBlockNumber
+        requestHash
+        requestLogIndex
+        proposalTimestamp
+        proposalBlockNumber
+        proposalHash
+        proposalLogIndex
+        disputeTimestamp
+        disputeBlockNumber
+        disputeHash
+        disputeLogIndex
+        settlementTimestamp
+        settlementBlockNumber
+        settlementHash
+        settlementLogIndex
       }
     }
   `;
