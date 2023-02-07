@@ -1,6 +1,10 @@
-import { Calls, BatchReadWithErrorsType,BatchReadWithErrors } from "@libs/utils";
-import {erc20 } from "@libs/clients"
-import Multicall2 from "@libs/multicall2"
+import {
+  Calls,
+  BatchReadWithErrorsType,
+  BatchReadWithErrors,
+} from "@libs/utils";
+import { erc20 } from "@libs/clients";
+import Multicall2 from "@libs/multicall2";
 import {
   Provider,
   Signer,
@@ -9,12 +13,7 @@ import {
 } from "../types/ethers";
 import { Erc20Props } from "../types/state";
 
-const batchProps: Calls = [
-  ["symbol"],
-  ["name"],
-  ["decimals"],
-  ["totalSupply"],
-];
+const batchProps: Calls = [["symbol"], ["name"], ["decimals"], ["totalSupply"]];
 export class Erc20 {
   public contract: erc20.Instance;
   constructor(protected provider: Provider, public readonly address: string) {

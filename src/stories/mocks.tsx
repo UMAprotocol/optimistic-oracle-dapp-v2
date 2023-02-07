@@ -1,6 +1,6 @@
-import { Oracle, Project, Status, Type } from "@/types";
+import { PanelContent } from "@/types";
 import { MockConnector } from "@wagmi/core/connectors/mock";
-import { BigNumber, Wallet } from "ethers";
+import { Wallet } from "ethers";
 import { createClient } from "wagmi";
 import { chains, provider } from "../pages/_app";
 
@@ -23,125 +23,53 @@ export const mockWagmiClient = createClient({
   ],
 });
 
-const mockProjects: Project[] = [
-  "UMA",
-  "Polymarket",
-  "Stake.com",
-  "Cozy Finance",
-];
-
-const mockTypes: Type[] = ["Event-Based", "Time-Based"];
-
-const mockStatuses: Status[] = ["verify", "propose", "settled"];
-
-const mockOracles: Oracle[] = [
-  "Optimistic Asserter",
-  "Optimistic Oracle",
-  "Optimistic Oracle V2",
-  "Skinny Optimistic Oracle",
-];
-
-const mockChains = ["Ethereum", "Polygon", "Optimism"];
-
-type MockRequestInput = {
-  index: number;
-  _identifier?: string;
-  _ancillaryData?: string;
-  _decodedIdentifier?: string;
-  _decodedAncillaryData?: string;
-  _time?: BigNumber;
-  _title?: string;
-  _project?: Project;
-  _chain?: string;
-  _type?: Type;
-  _status?: Status;
-  _challengePeriodEnd?: BigNumber;
-  _proposal?: string;
-  _settledAs?: string;
-  _bond?: BigNumber;
-  _reward?: BigNumber;
-  _oracle?: Oracle;
-  _proposerAddress?: string;
-  _asserterAddress?: string;
-  _oracleAddress?: string;
-  _umip?: number;
-};
-export function makeMockRequest({
-  index,
-  _identifier,
-  _decodedIdentifier,
-  _ancillaryData,
-  _decodedAncillaryData,
-  _time,
-  _title,
-  _project,
-  _chain,
-  _type,
-  _status,
-  _challengePeriodEnd,
-  _proposal,
-  _settledAs,
-  _bond,
-  _reward,
-  _oracle,
-  _proposerAddress,
-  _asserterAddress,
-  _oracleAddress,
-  _umip,
-}: MockRequestInput) {
-  const identifier = _identifier ?? `0x${index}`;
-  const ancillaryData = _ancillaryData ?? `0x${index}`;
-  const decodedIdentifier = _decodedIdentifier ?? `IDENTIFIER_${index}`;
-  const decodedAncillaryData =
-    _decodedAncillaryData ?? `ANCILLARY_DATA_${index}`;
-  const time =
-    _time ?? BigNumber.from(Math.floor(Date.now() / 1000)).add(index);
-  const title =
-    _title ??
-    `Nice long dummy text title that will cause overflow number #${index}`;
-  const project = _project ?? mockProjects[index % mockProjects.length];
-  const chain = _chain ?? mockChains[index % mockChains.length];
-  const type = _type ?? mockTypes[index % mockTypes.length];
-  const status = _status ?? mockStatuses[index % mockStatuses.length];
-  const challengePeriodEnd = _challengePeriodEnd ?? time.add(1000);
-  const proposal = _proposal ?? `PROPOSAL_${index}`;
-  const settledAs = _settledAs ?? `SETTLED_AS_${index}`;
-  const bond = _bond ?? BigNumber.from(1000).add(index);
-  const reward = _reward ?? BigNumber.from(1000).add(index);
-  const oracle = _oracle ?? mockOracles[index % mockOracles.length];
-  const proposerAddress = _proposerAddress ?? `0x${index}`;
-  const asserterAddress = _asserterAddress ?? `0x${index}`;
-  const oracleAddress = _oracleAddress ?? `0x${index}`;
-  const id = `${identifier}-${ancillaryData}-${time.toString()}`;
-  const umip = _umip ?? index;
+export function makeMockPanelContent(input?: Partial<PanelContent>) {
+  const defaultMockContent: PanelContent = {
+    chainId: 1,
+    oracleType: "Optimistic Asserter",
+    project: "UMA",
+    title:
+      "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",
+    ancillaryData: `0x713a207469746c653a204469642045756c657220676574206861636b65643f202c206465736372697074696f6e3a205761732074686572652061206861636b2c206275672c2075736572206572726f722c206f72206d616c66656173616e636520726573756c74696e6720696e2061206c6f7373206f72206c6f636b2d7570206f6620746f6b656e7320696e2045756c6572202868747470733a2f2f6170702e65756c65722e6669`,
+    decodedAncillaryData: `q: title: Did Euler get hacked? , description: Was there a hack,
+    bug, user error, or malfeasance resulting in a loss or lock-up
+    of tokens in Euler (https://app.euler.finance/) at any point
+    after Ethereum Mainnet block number 16175802? This will revert
+    if a non-YES answer is proposed.`,
+    timeUNIX: Math.floor(Date.now() / 1000),
+    timeUTC: new Date().toUTCString(),
+    assertion: true,
+    price: undefined,
+    currency: "USDC",
+    formattedBond: "50,000",
+    formattedReward: "250,000",
+    formattedLivenessEndsIn: "53 min 11 sec",
+    actionType: "Dispute",
+    action: () => alert("Dispute or propose or settle"),
+    expiryType: "Event-based",
+    moreInformation: [
+      {
+        title: "Requester",
+        href: "https://goerli.etherscan.io/address/0xF40C3EF015B699cc70088c35efA2cC96aF5F8554",
+        text: "0xF40C3EF015B699cc70088c35efA2cC96aF5F8554",
+      },
+      {
+        title: "Identifier",
+        href: "https://docs.umaproject.org/resources/approved-price-identifiers",
+        text: "0xB40C3EF015B6919cc70088cF87",
+      },
+      {
+        title: "UMIP",
+        text: "UMIP-107",
+        href: "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md",
+      },
+    ],
+    error: "",
+    setError: () => undefined,
+  };
 
   return {
-    id,
-    identifier,
-    ancillaryData,
-    decodedIdentifier,
-    decodedAncillaryData,
-    time,
-    title,
-    project,
-    chain,
-    type,
-    status,
-    challengePeriodEnd,
-    proposal,
-    settledAs,
-    bond,
-    reward,
-    oracle,
-    proposerAddress,
-    asserterAddress,
-    oracleAddress,
-    umip,
+    ...defaultMockContent,
+    ...input,
   };
-}
-
-export function makeMockRequests(count: number) {
-  return Array.from({ length: count }, (_, index) =>
-    makeMockRequest({ index })
-  );
 }

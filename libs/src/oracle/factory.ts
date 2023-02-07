@@ -17,7 +17,7 @@ const EventHandler =
   (state: State, prev: State) =>
     publicEmit(oracleType, state, prev);
 
-export default (
+const Factory = (
   configTable: PartialConfigTable,
   emit: PublicEmit
 ): ClientTable => {
@@ -59,3 +59,5 @@ export default (
     })
   );
 };
+
+export default Factory;

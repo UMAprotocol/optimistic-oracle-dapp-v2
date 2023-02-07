@@ -6,6 +6,8 @@ import {
   walletsAndConnectors,
   white,
 } from "@/constants";
+import { PanelProvider } from "@/contexts";
+import oracle from "@/helpers/oracleSdk";
 import "@/styles/fonts.css";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -13,7 +15,6 @@ import type { AppProps } from "next/app";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
-import oracle from "@/helpers/oracleSdk";
 
 oracle && console.log("oracle client loaded");
 
@@ -41,8 +42,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
-        <GlobalStyle />
-        <Component {...pageProps} />
+        <PanelProvider>
+          <GlobalStyle />
+          <Component {...pageProps} />
+        </PanelProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

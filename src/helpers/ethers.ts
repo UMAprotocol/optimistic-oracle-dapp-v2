@@ -1,0 +1,39 @@
+import { ethers } from "ethers";
+
+export const formatEther = ethers.utils.formatEther;
+
+export const parseEther = ethers.utils.parseEther;
+
+/** Catches any potential errors form parsing an unknown string value, returns 0 if error happens.
+ * @param value - the value to parse
+ * @param decimals - the number of decimals to parse to, defaults to 18
+ */
+export function parseEtherSafe(value: string, decimals = 18): ethers.BigNumber {
+  try {
+    // previously we were casting this to number, and using tofixed. this does not work because casting to
+    // number may change the value. this was affecting the "max" button when decimals of user was very long.
+    return ethers.utils.parseUnits(value, decimals);
+  } catch (err) {
+    return ethers.BigNumber.from(0);
+  }
+}
+
+export const solidityKeccak256 = ethers.utils.solidityKeccak256;
+
+export const randomBytes = ethers.utils.randomBytes;
+
+export const toUtf8String = ethers.utils.toUtf8String;
+
+export const formatBytes32String = ethers.utils.formatBytes32String;
+
+export const commify = ethers.utils.commify;
+
+export const zeroAddress = ethers.constants.AddressZero;
+
+export const getAddress = ethers.utils.getAddress;
+
+export const isAddress = ethers.utils.isAddress;
+
+export const oneEth = ethers.BigNumber.from("1000000000000000000");
+
+export const maximumApprovalAmount = ethers.constants.MaxUint256;

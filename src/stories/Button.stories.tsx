@@ -11,7 +11,7 @@ type Story = StoryObj<typeof Button>;
 
 const asButtonArgs = {
   variant: "primary" as const,
-  label: "Button",
+  children: "Button",
   onClick: () => alert("Button clicked"),
   href: undefined,
 };
@@ -53,7 +53,7 @@ export const AsButtonTertiary: Story = {
 
 const asLinkArgs = {
   variant: "primary" as const,
-  label: "Link",
+  children: "Link",
   href: "https://google.com",
   onClick: undefined,
 };
