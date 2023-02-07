@@ -1,4 +1,4 @@
-import { defaultApy } from "@/constants";
+import { config } from "@/constants";
 import { VotingInfo } from "@/types";
 import useSWR from "swr";
 
@@ -9,7 +9,7 @@ async function getVotingInfo() {
 
 export function useVotingInfo() {
   const fallbackData = {
-    apy: defaultApy,
+    apy: config.defaultApy,
     activeRequests: 0,
     phase: "commit" as const,
   };
