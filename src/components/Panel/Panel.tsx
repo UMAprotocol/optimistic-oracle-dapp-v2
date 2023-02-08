@@ -40,8 +40,6 @@ export function Panel() {
     }
   }, [panelOpen]);
 
-  if (!content) return null;
-
   const {
     chainId,
     oracleType,
@@ -63,9 +61,9 @@ export function Panel() {
     moreInformation,
     error,
     setError,
-  } = content;
+  } = content ?? {};
 
-  const projectIcon = projectIcons[project];
+  const projectIcon = project ? projectIcons[project] : undefined;
   const currencyIcon = currency ? currencyIcons[currency] : undefined;
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
@@ -133,7 +131,7 @@ export function Panel() {
               {actionsIcon}
               <SectionTitle>{actionsTitle}</SectionTitle>
             </SectionTitleWrapper>
-            {hasInput ? (
+            {hasInput && setError ? (
               <InputWrapper>
                 <DecimalInput
                   value={inputValue}
@@ -236,7 +234,7 @@ export function Panel() {
                 <AncillaryDataIcon />
                 <SectionTitle>More information</SectionTitle>
               </SectionTitleWrapper>
-              {moreInformation.map(({ title, href, text }) => (
+              {moreInformation?.map(({ title, href, text }) => (
                 <Fragment key={title}>
                   <SectionSubTitle>{title}</SectionSubTitle>
                   <Link href={href} target="_blank">

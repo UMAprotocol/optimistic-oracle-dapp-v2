@@ -1,3 +1,4 @@
+import { usePanelContext } from "@/hooks";
 import { OracleQueryUI, Page } from "@/types";
 import Clickable from "public/assets/icons/clickable.svg";
 import styled from "styled-components";
@@ -8,6 +9,8 @@ import { TitleCell } from "./TitleCell";
 import { VerifyCells } from "./VerifyCells";
 
 export function Row({ page, row }: { page: Page; row: OracleQueryUI }) {
+  const { openPanel } = usePanelContext();
+
   const rows = {
     verify: <VerifyCells {...row} />,
     propose: <ProposeCells {...row} />,
@@ -16,8 +19,12 @@ export function Row({ page, row }: { page: Page; row: OracleQueryUI }) {
 
   const rowComponent = rows[page];
 
+  function onClick() {
+    openPanel(row, page);
+  }
+
   return (
-    <_TR>
+    <_TR onClick={onClick}>
       <TitleCell {...row} />
       {rowComponent}
       <TD>

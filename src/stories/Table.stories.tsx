@@ -1,9 +1,18 @@
-import { Table } from "@/components";
+import { Panel, Table } from "@/components";
+import { PanelProvider } from "@/contexts";
 import { Meta, StoryObj } from "@storybook/react";
 import { makeMockOracleQueryUI } from "./mocks";
 
 const meta: Meta<typeof Table> = {
   component: Table,
+  decorators: [
+    (Story) => (
+      <PanelProvider>
+        <Panel />
+        <Story />
+      </PanelProvider>
+    ),
+  ],
 };
 
 export default meta;
