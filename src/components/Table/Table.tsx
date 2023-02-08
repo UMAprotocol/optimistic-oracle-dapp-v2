@@ -29,6 +29,7 @@ const Wrapper = styled.div`
 `;
 
 const _Table = styled.table`
+  --gap: clamp(8px, 1.5vw, 20px);
   width: 100%;
   max-width: var(--page-width);
   margin-inline: auto;

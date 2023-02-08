@@ -33,12 +33,11 @@ const TitleTD = styled(TD)``;
 const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding-left: 20px;
+  gap: var(--gap);
 `;
 
 const TitleHeader = styled.h3`
-  max-width: 500px;
+  max-width: min(500px, 50vw);
   font: var(--body-sm);
   font-weight: 600;
   transition: color var(--animation-duration);

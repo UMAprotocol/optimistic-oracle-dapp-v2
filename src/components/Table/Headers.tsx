@@ -36,8 +36,10 @@ export function Headers({ page }: { page: Page }) {
 const THead = styled.thead``;
 
 const TH = styled.th`
+  white-space: nowrap;
   text-align: left;
   font: var(--body-sm);
   color: var(--blue-grey-700);
+  padding-inline: var(--gap);
   padding-bottom: 4px;
 `;
