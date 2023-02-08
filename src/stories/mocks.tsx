@@ -29,7 +29,7 @@ export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
     id: `mock-id-${Math.random()}`,
     chainId: 1,
     chainName: "Ethereum",
-    oracleType: "Optimistic Asserter",
+    oracleType: "Optimistic Oracle",
     project: "UMA",
     title:
       "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",
@@ -78,4 +78,30 @@ export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
     ...defaultMockOracleQueryUI,
     ...input,
   };
+}
+
+export function makeMockOracleQueryUIs({
+  count,
+  inputs = [],
+  inputForAll,
+}: {
+  count: number;
+  inputs?: Partial<OracleQueryUI>[];
+  inputForAll?: Partial<OracleQueryUI>;
+}) {
+  const defaultMocks = Array.from({ length: count }, () =>
+    makeMockOracleQueryUI()
+  );
+
+  if (inputForAll) {
+    defaultMocks.forEach((mock) => {
+      Object.assign(mock, inputForAll);
+    });
+  }
+
+  defaultMocks.forEach((mock, i) => {
+    Object.assign(mock, inputs[i]);
+  });
+
+  return defaultMocks;
 }

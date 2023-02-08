@@ -1,4 +1,4 @@
-import { supportedChainsById } from "@/constants";
+import { supportedChainsById, supportedCurrencies } from "@/constants";
 import { ReactNode } from "react";
 
 /**
@@ -51,7 +51,9 @@ export type ExpiryType = "Event-based" | "Time-based";
 
 export type Project = "UMA" | "Polymarket" | "Cozy Finance";
 
-export type SupportedCurrency = "USDC" | "ETH";
+export type SupportedCurrencies = typeof supportedCurrencies;
+
+export type SupportedCurrency = SupportedCurrencies[number];
 
 export type MoreInformationItem = {
   title: string;
