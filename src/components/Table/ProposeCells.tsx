@@ -1,4 +1,6 @@
+import { currencyIcons } from "@/constants";
 import { OracleQueryUI } from "@/types";
+import styled from "styled-components";
 import { TD, Text } from "./style";
 
 export function ProposeCells({
@@ -7,21 +9,29 @@ export function ProposeCells({
   formattedReward,
   currency,
 }: OracleQueryUI) {
+  const currencyIcon = currency ? currencyIcons[currency] : undefined;
   return (
     <>
       <TD>
-        <Text>{oracleType}</Text>
+        <_Text>{oracleType}</_Text>
       </TD>
       <TD>
-        <Text>
-          {currency} {formattedBond?.toString()}
-        </Text>
+        <_Text>
+          {currencyIcon && currencyIcon} {formattedBond?.toString()}{" "}
+          {!currencyIcon && currency}
+        </_Text>
       </TD>
       <TD>
-        <Text>
-          {currency} {formattedReward?.toString()}
-        </Text>
+        <_Text>
+          {currencyIcon && currencyIcon} {formattedReward?.toString()}{" "}
+          {!currencyIcon && currency}
+        </_Text>
       </TD>
     </>
   );
 }
+
+const _Text = styled(Text)`
+  display: flex;
+  gap: 4px;
+`;
