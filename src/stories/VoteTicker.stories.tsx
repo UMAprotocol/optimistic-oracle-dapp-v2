@@ -1,8 +1,9 @@
 import { VoteTicker } from "@/components/Header/VoteTicker";
-import { defaultApy } from "@/constants";
+import { config } from "@/constants";
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
 
+const { defaultApy } = config;
 const meta: Meta<typeof VoteTicker> = {
   component: VoteTicker,
 };

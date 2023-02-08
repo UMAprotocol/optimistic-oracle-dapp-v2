@@ -1,6 +1,6 @@
 import { GlobalStyle } from "@/components";
 import {
-  infuraId,
+  config,
   red500,
   supportedChains,
   walletsAndConnectors,
@@ -32,7 +32,7 @@ Client([gqlService], {
 });
 
 export const { chains, provider } = configureChains(supportedChains, [
-  infuraProvider({ apiKey: infuraId }),
+  infuraProvider({ apiKey: config.infuraId }),
   publicProvider(),
 ]);
 
