@@ -43,7 +43,10 @@ const TitleHeader = styled.h3`
   transition: color var(--animation-duration);
 `;
 
-const IconWrapper = styled.div``;
+const IconWrapper = styled.div`
+  width: clamp(24px, 3vw, 40px);
+  aspect-ratio: 1;
+`;
 
 const TextWrapper = styled.div``;
 
