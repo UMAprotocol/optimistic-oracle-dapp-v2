@@ -69,7 +69,8 @@ const barStyle = css`
   position: relative;
   overflow: hidden;
   background: var(--grey-500);
-  width: min(160px, 100%);
+  width: 100%;
+  min-width: 160px;
   height: 3px;
   border-radius: 2px;
 

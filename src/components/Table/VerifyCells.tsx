@@ -1,7 +1,7 @@
 import { getValueText } from "@/helpers";
 import { OracleQueryUI } from "@/types";
 import { LivenessProgressBar } from "../LivenessProgressBar";
-import { TD } from "./style";
+import { TD, Text } from "./style";
 
 export function VerifyCells({
   price,
@@ -13,7 +13,9 @@ export function VerifyCells({
 
   return (
     <>
-      <TD>{proposedValue}</TD>
+      <TD>
+        <Text>{proposedValue}</Text>
+      </TD>
       <TD>
         <LivenessProgressBar
           startTime={timeMilliseconds}

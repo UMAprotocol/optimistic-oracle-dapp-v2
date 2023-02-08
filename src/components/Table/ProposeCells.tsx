@@ -1,5 +1,5 @@
 import { OracleQueryUI } from "@/types";
-import { TD } from "./style";
+import { TD, Text } from "./style";
 
 export function ProposeCells({
   oracleType,
@@ -9,13 +9,18 @@ export function ProposeCells({
 }: OracleQueryUI) {
   return (
     <>
-      <TD>{oracleType}</TD>
       <TD>
-        {currency} {formattedBond?.toString()}
+        <Text>{oracleType}</Text>
       </TD>
       <TD>
-        {currency}
-        {formattedReward?.toString()}
+        <Text>
+          {currency} {formattedBond?.toString()}
+        </Text>
+      </TD>
+      <TD>
+        <Text>
+          {currency} {formattedReward?.toString()}
+        </Text>
       </TD>
     </>
   );

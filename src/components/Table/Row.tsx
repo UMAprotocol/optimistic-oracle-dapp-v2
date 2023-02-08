@@ -30,7 +30,6 @@ export function Row({ page, row }: { page: Page; row: OracleQueryUI }) {
 const ClickableIcon = styled(Clickable)`
   transition: fill var(--animation-duration);
 
-  circle,
   path {
     transition: stroke var(--animation-duration);
   }
@@ -39,6 +38,7 @@ const ClickableIcon = styled(Clickable)`
 const _TR = styled(TR)`
   height: 80px;
   border-radius: 4px;
+  cursor: pointer;
 
   & :first-child {
     border-top-left-radius: 4px;
@@ -58,7 +58,6 @@ const _TR = styled(TR)`
     ${ClickableIcon} {
       fill: var(--red-500);
 
-      circle,
       path {
         stroke: var(--white);
       }
