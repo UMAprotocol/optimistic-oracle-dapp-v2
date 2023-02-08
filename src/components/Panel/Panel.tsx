@@ -160,8 +160,10 @@ export function Panel() {
                     <InfoIcon />
                   </ActionText>
                   <ActionText>
-                    <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
-                    {formattedBond}
+                    {currencyIcon && (
+                      <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+                    )}
+                    {formattedBond} {!currencyIcon && currency}
                   </ActionText>
                 </ActionWrapper>
                 <ActionWrapper>
@@ -170,8 +172,10 @@ export function Panel() {
                     <InfoIcon />
                   </ActionText>
                   <ActionText>
-                    <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
-                    {formattedReward}
+                    {currencyIcon && (
+                      <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+                    )}
+                    {formattedReward} {!currencyIcon && currency}
                   </ActionText>
                 </ActionWrapper>
                 <ActionWrapper>

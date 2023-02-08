@@ -10,6 +10,7 @@ export function ProposeCells({
   currency,
 }: OracleQueryUI) {
   const currencyIcon = currency ? currencyIcons[currency] : undefined;
+
   return (
     <>
       <TD>

@@ -11,7 +11,8 @@ export function TitleCell({
   timeFormatted,
   expiryType,
 }: OracleQueryUI) {
-  const projectIcon = project ? projectIcons[project] : <UmaIcon />;
+  const projectIcon =
+    project && project in projectIcons ? projectIcons[project] : <UmaIcon />;
 
   return (
     <TitleTD>

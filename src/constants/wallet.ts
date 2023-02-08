@@ -40,3 +40,5 @@ export const walletsAndConnectors = getDefaultWallets({
   appName: "Optimistic Oracle dApp V2",
   chains: supportedChains,
 });
+
+export const supportedCurrencies = ["USDC", "ETH", "RY"] as const;
