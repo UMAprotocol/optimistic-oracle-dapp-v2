@@ -70,7 +70,6 @@ const barStyle = css`
   overflow: hidden;
   background: var(--grey-500);
   width: 100%;
-  min-width: 160px;
   height: 3px;
   border-radius: 2px;
 
