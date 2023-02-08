@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { CheckboxDropdown, Items } from "./CheckboxDropdown";
+import { CheckboxDropdown, Items } from "../Dropdown/CheckboxDropdown";
 import { Search } from "./Search";
 
 export function Filters() {

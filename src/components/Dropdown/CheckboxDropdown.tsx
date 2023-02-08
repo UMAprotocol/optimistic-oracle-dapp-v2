@@ -1,17 +1,13 @@
 import { blueGrey700, white } from "@/constants";
 import {
   CheckboxItem,
-  Content,
   DropdownMenuCheckboxItemProps,
   ItemIndicator,
-  Portal,
-  Root,
-  Trigger,
 } from "@radix-ui/react-dropdown-menu";
 import Check from "public/assets/icons/check.svg";
-import Chevron from "public/assets/icons/chevron.svg";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import styled, { CSSProperties } from "styled-components";
+import { ChevronIcon, Content, Portal, Root, Trigger } from "./style";
 
 type CheckedState = DropdownMenuCheckboxItemProps["checked"];
 
@@ -85,11 +81,11 @@ export function CheckboxDropdown({ title, items, setChecked }: Props) {
 
   return (
     <Root>
-      <_Trigger>
+      <Trigger>
         {title} <ChevronIcon />
-      </_Trigger>
+      </Trigger>
       <Portal>
-        <_Content>
+        <Content>
           {Object.entries(items).map(([name, { count, checked }]) => (
             <_CheckboxItem
               key={name}
@@ -115,19 +111,11 @@ export function CheckboxDropdown({ title, items, setChecked }: Props) {
               <ItemCount>{count}</ItemCount>
             </_CheckboxItem>
           ))}
-        </_Content>
+        </Content>
       </Portal>
     </Root>
   );
 }
-
-const ChevronIcon = styled(Chevron)`
-  path {
-    stroke: currentColor;
-    fill: var(--white);
-  }
-  transition: transform var(--animation-duration);
-`;
 
 const NameAndBoxWrapper = styled.div`
   display: flex;
@@ -152,27 +140,6 @@ const Box = styled.div`
   transition: background var(--animation-duration);
 `;
 
-const _Trigger = styled(Trigger)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 220px;
-  min-height: 45px;
-  background: var(--white);
-  font: var(--body-sm);
-  color: var(--blue-grey-500);
-  text-align: left;
-  border: 1px solid var(--blue-grey-400);
-  border-radius: 24px;
-  padding-left: 18px;
-  padding-right: 22px;
-  &[data-state="open"] {
-    ${ChevronIcon} {
-      transform: rotate(180deg);
-    }
-  }
-`;
-
 const _CheckboxItem = styled(CheckboxItem)`
   display: flex;
   justify-content: space-between;
@@ -188,17 +155,4 @@ const _CheckboxItem = styled(CheckboxItem)`
       border: 1px solid var(--blue-grey-400);
     }
   }
-`;
-
-const _Content = styled(Content)`
-  font: var(--body-sm);
-  color: var(--blue-grey-500);
-  min-width: 220px;
-  margin-top: 4px;
-  padding-top: 8px;
-  padding-left: 16px;
-  padding-right: 24px;
-  padding-bottom: 16px;
-  border: 1px solid var(--blue-grey-400);
-  border-radius: 4px;
 `;
