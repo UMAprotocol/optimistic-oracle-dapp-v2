@@ -12,6 +12,12 @@ interface Props {
   selected: Item;
   onSelect: (item: Item) => void;
 }
+/**
+ * Dropdown menu with radio items
+ * @param items - the items to show in the dropdown
+ * @param selected - the selected item
+ * @param onSelect - the callback to call when an item is selected
+ */
 export function RadioDropdown({ items, selected, onSelect }: Props) {
   return (
     <Root modal={false}>
