@@ -30,10 +30,12 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
   const lastPageNumber = numberOfPages;
   const defaultNumberOfButtons = 4;
   const hasMorePagesThanButtons = numberOfPages >= defaultNumberOfButtons;
-  const showFirstButton = hasMorePagesThanButtons;
-  const showLastButton = hasMorePagesThanButtons;
   const numberOfButtons = getNumberOfButtons();
   const numbersPastMax = pageNumber - numberOfButtons;
+  const isLastPastNumbers =
+    2 * numberOfButtons + numbersPastMax >= numberOfPages;
+  const showFirstButton = hasMorePagesThanButtons;
+  const showLastButton = hasMorePagesThanButtons && !isLastPastNumbers;
   const buttonNumbers = makeButtonNumbers();
 
   useEffect(() => {
@@ -75,13 +77,10 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
       return Array.from({ length: numberOfPages }, (_, i) => i + 1);
     }
 
-    const isLastPastNumbers =
-      2 * numberOfButtons + numbersPastMax >= numberOfPages;
-
     if (isLastPastNumbers) {
       return Array.from(
         { length: numberOfButtons },
-        (_, i) => lastPageNumber - numberOfButtons + i
+        (_, i) => lastPageNumber - numberOfButtons + i + 1
       );
     }
 
