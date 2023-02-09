@@ -19,6 +19,7 @@ export enum OracleType {
   Optimistic = "Optimistic",
   Skinny = "Skinny",
   OptimisticV2 = "OptimisticV2",
+  Asserter = "Asserter",
 }
 export type Request = RequestKey & {
   id: string;
@@ -66,7 +67,37 @@ export type Requests = Request[];
 // TODO: fill this out in future pr
 export type Assertion = {
   id: string;
-};
+  oracleType: OracleType;
+  chainId: number;
+} & Partial<{
+  assertionId: string;
+  domainId: string;
+  claim: string;
+  asserter: string;
+  callbackRecipient: string;
+  escalationManager: string;
+  caller: string;
+  expirationTime: string;
+  currency: string;
+  bond: string;
+  disputer: string;
+  settlementPayout: string;
+  settlementRecipient: string;
+  settlementResolution: string;
+  assertionTimestamp: string;
+  assertionBlockNumber: number;
+  assertionHash: string;
+  assertionLogIndex: string;
+  disputeTimestamp: string;
+  disputeBlockNumber: number;
+  disputeHash: string;
+  disputeLogIndex: string;
+  settlementTimestamp: string;
+  settlementBlockNumber: number;
+  settlementHash: string;
+  settlementLogIndex: string;
+}>;
+
 export type Assertions = Assertion[];
 
 // This is the data transfer interface from client to view. Use this in a context or reducer to
