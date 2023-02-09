@@ -29,14 +29,19 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
   const numberOfPages = Math.ceil(numberOfEntries / resultsPerPage);
   const lastPageNumber = numberOfPages;
   const defaultNumberOfButtons = 4;
-  const hasMorePagesThanButtons = numberOfPages >= defaultNumberOfButtons;
   const numberOfButtons = getNumberOfButtons();
+  const hasMorePagesThanButtons = numberOfPages > numberOfButtons;
   const numbersPastMax = pageNumber - numberOfButtons;
-  const isLastPastNumbers =
-    2 * numberOfButtons + numbersPastMax >= numberOfPages;
+  const isLastNumbers = 2 * numberOfButtons + numbersPastMax > numberOfPages;
+  const isFirstNumbers = numbersPastMax <= 0;
   const showFirstButton = hasMorePagesThanButtons;
-  const showLastButton = hasMorePagesThanButtons && !isLastPastNumbers;
+  const showLastButton =
+    hasMorePagesThanButtons &&
+    !isLastNumbers &&
+    lastPageNumber - 1 !== numberOfButtons;
   const buttonNumbers = makeButtonNumbers();
+
+  console.log({ numberOfButtons, numberOfPages, buttonNumbers, pageNumber });
 
   useEffect(() => {
     updateEntries();
@@ -54,7 +59,15 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
 
   function getNumberOfButtons() {
     if (wrapperWidth >= buttonsWrapperWidth) {
-      return hasMorePagesThanButtons ? defaultNumberOfButtons : numberOfPages;
+      if (numberOfPages === defaultNumberOfButtons + 1) {
+        return defaultNumberOfButtons + 1;
+      }
+      if (numberOfPages < defaultNumberOfButtons) {
+        return numberOfPages;
+      }
+      if (numberOfPages > defaultNumberOfButtons) {
+        return defaultNumberOfButtons;
+      }
     }
 
     const buttonWidth = 40;
@@ -77,10 +90,10 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
       return Array.from({ length: numberOfPages }, (_, i) => i + 1);
     }
 
-    if (isLastPastNumbers) {
+    if (isLastNumbers) {
       return Array.from(
-        { length: numberOfButtons },
-        (_, i) => lastPageNumber - numberOfButtons + i + 1
+        { length: numberOfButtons + 1 },
+        (_, i) => lastPageNumber - numberOfButtons + i
       );
     }
 
@@ -94,21 +107,35 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
     );
   }
 
+  function updateEntriesForPageNumber(newPageNumber: number) {
+    updateEntries({ newPageNumber });
+  }
+
+  function updateResultsPerPage(newResultsPerPage: number) {
+    setResultsPerPage(newResultsPerPage);
+    const newPageNumber = Math.ceil(
+      (pageNumber * resultsPerPage) / newResultsPerPage
+    );
+    setEntriesToShow(getEntriesForPage({ newPageNumber, newResultsPerPage }));
+    setPageNumber(newPageNumber);
+  }
+
   function updateEntries(params?: {
     newPageNumber?: number;
     newResultsPerPage?: number;
   }) {
     const newPageNumber = params?.newPageNumber ?? pageNumber;
     const newResultsPerPage = params?.newResultsPerPage ?? resultsPerPage;
+
     setEntriesToShow(getEntriesForPage({ newPageNumber, newResultsPerPage }));
   }
 
   function getEntriesForPage({
-    newPageNumber,
-    newResultsPerPage,
+    newPageNumber = pageNumber,
+    newResultsPerPage = resultsPerPage,
   }: {
-    newPageNumber: number;
-    newResultsPerPage: number;
+    newPageNumber?: number;
+    newResultsPerPage?: number;
   }) {
     const startIndex = (newPageNumber - 1) * newResultsPerPage;
     const endIndex = startIndex + newResultsPerPage;
@@ -121,29 +148,29 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
 
   function goToPage(number: number) {
     setPageNumber(number);
-    updateEntries({ newPageNumber: number });
+    updateEntriesForPageNumber(number);
   }
 
   function nextPage() {
     const newPageNumber = pageNumber + 1;
     setPageNumber(newPageNumber);
-    updateEntries({ newPageNumber });
+    updateEntriesForPageNumber(newPageNumber);
   }
 
   function prevPage() {
     const newPageNumber = pageNumber - 1;
     setPageNumber(newPageNumber);
-    updateEntries({ newPageNumber });
+    updateEntriesForPageNumber(newPageNumber);
   }
 
   function firstPage() {
     setPageNumber(1);
-    updateEntries({ newPageNumber: 1 });
+    updateEntriesForPageNumber(1);
   }
 
   function lastPage() {
     setPageNumber(lastPageNumber);
-    updateEntries({ newPageNumber: lastPageNumber });
+    updateEntriesForPageNumber(lastPageNumber);
   }
 
   const resultsPerPageOptions = [
@@ -151,11 +178,6 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
     { value: 20, label: "20 results" },
     { value: 50, label: "50 results" },
   ];
-
-  function updateResultsPerPage(newResultsPerPage: number) {
-    setResultsPerPage(newResultsPerPage);
-    updateEntries({ newResultsPerPage });
-  }
 
   function getSelectedResultsPerPage() {
     return (
@@ -175,13 +197,16 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
       </ResultsPerPageWrapper>
       <ButtonsWrapper ref={buttonsWrapperRef}>
         {showFirstButton && (
-          <PageButton
-            onClick={firstPage}
-            disabled={pageNumber === 1}
-            $isActive={isActive(1)}
-          >
-            1
-          </PageButton>
+          <>
+            <PageButton
+              onClick={firstPage}
+              disabled={pageNumber === 1}
+              $isActive={isActive(1)}
+            >
+              1
+            </PageButton>
+            {!isFirstNumbers && <Ellipsis>...</Ellipsis>}
+          </>
         )}
         {buttonNumbers.map((buttonNumber) => (
           <PageButton
@@ -230,7 +255,7 @@ const ResultsPerPageWrapper = styled.div`
   width: 120px;
 `;
 
-const ButtonsWrapper = styled.div`
+const ButtonsWrapper = styled.nav`
   display: flex;
   gap: min(8px, 1vw);
 `;
