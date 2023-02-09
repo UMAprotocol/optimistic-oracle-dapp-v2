@@ -1,6 +1,5 @@
 import { Page } from "@/types";
 import styled from "styled-components";
-import { TR } from "./style";
 
 export function Headers({ page }: { page: Page }) {
   const verify = [
@@ -34,6 +33,8 @@ export function Headers({ page }: { page: Page }) {
   );
 }
 const THead = styled.thead``;
+
+const TR = styled.tr``;
 
 const TH = styled.th`
   white-space: nowrap;

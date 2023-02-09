@@ -4,13 +4,15 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Pagination } from "../Pagination";
 import { Headers } from "./Headers";
+import { LoadingRow } from "./LoadingRow";
 import { Row } from "./Row";
 
 interface Props {
   page: Page;
   rows: OracleQueryUI[];
+  isLoading: boolean;
 }
-export function Table({ page, rows }: Props) {
+export function Table({ page, rows, isLoading }: Props) {
   const [rowsToShow, setRowsToShow] = useState(rows);
 
   return (
@@ -18,12 +20,22 @@ export function Table({ page, rows }: Props) {
       <_Table>
         <Headers page={page} />
         <TBody>
-          {rowsToShow.map((row) => (
-            <Row key={row.id} page={page} row={row} />
-          ))}
+          {isLoading ? (
+            <>
+              {Array.from({ length: defaultResultsPerPage }).map((_, i) => (
+                <LoadingRow key={i} page={page} />
+              ))}
+            </>
+          ) : (
+            <>
+              {rowsToShow.map((row) => (
+                <Row key={row.id} page={page} row={row} />
+              ))}
+            </>
+          )}
         </TBody>
       </_Table>
-      {rows.length > defaultResultsPerPage && (
+      {rows.length > defaultResultsPerPage && !isLoading && (
         <PaginationWrapper>
           <Pagination entries={rows} setEntriesToShow={setRowsToShow} />
         </PaginationWrapper>

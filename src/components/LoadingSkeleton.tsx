@@ -21,12 +21,12 @@ export function LoadingSkeleton({
   highlightColor,
   width,
   height,
-  borderRadius = 4,
-  inline = true,
+  borderRadius = 16,
+  inline = false,
   duration,
 }: Props) {
   const whiteOpacity10 = addOpacityToHsl(white, 0.1);
-  const grey400Opacity10 = addOpacityToHsl(grey400, 0.1);
+  const grey400Opacity10 = addOpacityToHsl(grey400, 0.5);
 
   function getBaseColor() {
     if (baseColor) return baseColor;

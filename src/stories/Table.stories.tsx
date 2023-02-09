@@ -112,3 +112,27 @@ export const WithPagination: Story = {
     }),
   },
 };
+
+export const ProposeLoading: Story = {
+  args: {
+    page: "propose",
+    rows: [],
+    isLoading: true,
+  },
+};
+
+export const VerifyLoading: Story = {
+  args: {
+    page: "verify",
+    rows: [],
+    isLoading: true,
+  },
+};
+
+export const SettledLoading: Story = {
+  args: {
+    page: "settled",
+    rows: [],
+    isLoading: true,
+  },
+};
