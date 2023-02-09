@@ -36,14 +36,15 @@ export const Trigger = styled(RadixDropdown.Trigger)`
 `;
 
 export const Content = styled(RadixDropdown.Content)`
-  font: var(--body-sm);
-  color: var(--blue-grey-500);
   min-width: 220px;
   margin-top: 4px;
   padding-top: 8px;
   padding-left: 16px;
   padding-right: 24px;
   padding-bottom: 16px;
+  font: var(--body-sm);
+  color: var(--blue-grey-500);
+  background: var(--white);
   border: 1px solid var(--blue-grey-400);
   border-radius: 4px;
 `;

@@ -14,7 +14,7 @@ interface Props {
 }
 export function RadioDropdown({ items, selected, onSelect }: Props) {
   return (
-    <Root>
+    <Root modal={false}>
       <_Trigger>
         {selected.label} <ChevronIcon />
       </_Trigger>

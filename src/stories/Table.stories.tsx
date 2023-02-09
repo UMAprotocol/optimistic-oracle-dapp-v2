@@ -1,7 +1,7 @@
 import { Panel, Table } from "@/components";
 import { PanelProvider } from "@/contexts";
 import { Meta, StoryObj } from "@storybook/react";
-import { makeMockOracleQueryUIs } from "./mocks";
+import { makeMockOracleQueryUIs, makeRandomTitle } from "./mocks";
 
 const meta: Meta<typeof Table> = {
   component: Table,
@@ -97,6 +97,18 @@ export const Settled: Story = {
           oracleType: "Skinny Optimistic Oracle",
         },
       ],
+    }),
+  },
+};
+
+export const WithPagination: Story = {
+  args: {
+    page: "propose",
+    rows: makeMockOracleQueryUIs({
+      count: 100,
+      inputs: Array.from({ length: 100 }, () => ({
+        title: makeRandomTitle(),
+      })),
     }),
   },
 };

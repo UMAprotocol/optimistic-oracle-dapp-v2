@@ -1,5 +1,8 @@
+import { defaultResultsPerPage } from "@/constants";
 import { OracleQueryUI, Page } from "@/types";
+import { useState } from "react";
 import styled from "styled-components";
+import { Pagination } from "../Pagination";
 import { Headers } from "./Headers";
 import { Row } from "./Row";
 
@@ -8,16 +11,23 @@ interface Props {
   rows: OracleQueryUI[];
 }
 export function Table({ page, rows }: Props) {
+  const [rowsToShow, setRowsToShow] = useState(rows);
+
   return (
     <Wrapper>
       <_Table>
         <Headers page={page} />
         <TBody>
-          {rows.map((row) => (
+          {rowsToShow.map((row) => (
             <Row key={row.id} page={page} row={row} />
           ))}
         </TBody>
       </_Table>
+      {rows.length > defaultResultsPerPage && (
+        <PaginationWrapper>
+          <Pagination entries={rows} setEntriesToShow={setRowsToShow} />
+        </PaginationWrapper>
+      )}
     </Wrapper>
   );
 }
@@ -38,4 +48,9 @@ const _Table = styled.table`
 
 const TBody = styled.tbody`
   background: var(--white);
+`;
+
+const PaginationWrapper = styled.div`
+  max-width: var(--page-width);
+  margin-inline: auto;
 `;

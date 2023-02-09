@@ -80,7 +80,7 @@ export function CheckboxDropdown({ title, items, setChecked }: Props) {
   }
 
   return (
-    <Root>
+    <Root modal={false}>
       <Trigger>
         {title} <ChevronIcon />
       </Trigger>

@@ -105,3 +105,31 @@ export function makeMockOracleQueryUIs({
 
   return defaultMocks;
 }
+
+export function makeRandomTitle() {
+  const words = [
+    "fun",
+    "random",
+    "title",
+    "for",
+    "a",
+    "mock",
+    "oracle",
+    "query",
+    "ui",
+    "component",
+    "in",
+    "storybook",
+    "and",
+    "react",
+    "typescript",
+    "nextjs",
+  ];
+
+  const randomWords = Array.from(
+    { length: words.length },
+    () => words[Math.floor(Math.random() * words.length)]
+  ).join(" ");
+
+  return randomWords + ` ${Math.random() * 10000000}`;
+}
