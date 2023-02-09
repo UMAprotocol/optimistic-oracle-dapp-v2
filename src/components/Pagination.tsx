@@ -15,6 +15,11 @@ interface Props<Entry> {
   entries: Entry[];
   setEntriesToShow: (entries: Entry[]) => void;
 }
+/**
+ * Handles pagination for a list of entries
+ * @param entries - the entries to paginate (not the entries to show)
+ * @param setEntriesToShow - the function to call when the entries to show change
+ */
 export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
   const [pageNumber, setPageNumber] = useState(1);
   const [resultsPerPage, setResultsPerPage] = useState(defaultResultsPerPage);

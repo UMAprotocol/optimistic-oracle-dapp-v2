@@ -12,6 +12,12 @@ interface Props {
   rows: OracleQueryUI[];
   isLoading: boolean;
 }
+/**
+ * Table for showing oracle queries
+ * @param page - the page of the app, used to determine which columns to show
+ * @param rows - the rows to show in the table
+ * @param isLoading - whether the table is loading
+ */
 export function Table({ page, rows, isLoading }: Props) {
   const [rowsToShow, setRowsToShow] = useState(rows);
 
@@ -20,6 +26,7 @@ export function Table({ page, rows, isLoading }: Props) {
       <_Table>
         <Headers page={page} />
         <TBody>
+          {/* When the data is still loading, we show 10 dummy rows with loading skeletons */}
           {isLoading ? (
             <>
               {Array.from({ length: defaultResultsPerPage }).map((_, i) => (
@@ -64,5 +71,6 @@ const TBody = styled.tbody`
 
 const PaginationWrapper = styled.div`
   max-width: var(--page-width);
+  margin-top: 32px;
   margin-inline: auto;
 `;
