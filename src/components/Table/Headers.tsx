@@ -1,6 +1,10 @@
 import { Page } from "@/types";
 import styled from "styled-components";
 
+/**
+ * Table headers
+ * @param page - the page of the app, used to determine which columns to show
+ */
 export function Headers({ page }: { page: Page }) {
   const verify = [
     "Query/Statement",

@@ -14,6 +14,11 @@ import {
   TR,
 } from "./style";
 
+/**
+ * Loading row for the table
+ * This is shown when the data is still loading
+ * @param page - the page of the app, used to determine which columns to show
+ */
 export function LoadingRow({ page }: { page: Page }) {
   return (
     <TR>
