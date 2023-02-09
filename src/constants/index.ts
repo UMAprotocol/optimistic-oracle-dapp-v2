@@ -1,6 +1,7 @@
 export * from "./env";
 export * from "./icons";
 export * from "./misc/links";
+export * from "./misc/pagination";
 export * from "./misc/siteMetaData";
 export * from "./misc/timeUnits";
 export * from "./styles/breakpoints";

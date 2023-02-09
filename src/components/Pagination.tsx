@@ -12,10 +12,11 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useWindowSize } from "usehooks-ts";
 
-interface Props {
-  numberOfEntries: number;
+interface Props<Entry> {
+  entries: Entry[];
+  setEntriesToShow: (entries: Entry[]) => void;
 }
-export function Pagination({ numberOfEntries }: Props) {
+export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
   const [pageNumber, setPageNumber] = useState(1);
   const [resultsPerPage, setResultsPerPage] = useState(defaultResultsPerPage);
   const { width } = useWindowSize();
@@ -24,6 +25,7 @@ export function Pagination({ numberOfEntries }: Props) {
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const buttonsWrapperRef = useRef<HTMLDivElement>(null);
+  const numberOfEntries = entries.length;
   const numberOfPages = Math.ceil(numberOfEntries / resultsPerPage);
   const lastPageNumber = numberOfPages;
   const defaultNumberOfButtons = 4;
@@ -33,6 +35,11 @@ export function Pagination({ numberOfEntries }: Props) {
   const numberOfButtons = getNumberOfButtons();
   const numbersPastMax = pageNumber - numberOfButtons;
   const buttonNumbers = makeButtonNumbers();
+
+  useEffect(() => {
+    updateEntries();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -88,28 +95,56 @@ export function Pagination({ numberOfEntries }: Props) {
     );
   }
 
+  function updateEntries(params?: {
+    newPageNumber?: number;
+    newResultsPerPage?: number;
+  }) {
+    const newPageNumber = params?.newPageNumber ?? pageNumber;
+    const newResultsPerPage = params?.newResultsPerPage ?? resultsPerPage;
+    setEntriesToShow(getEntriesForPage({ newPageNumber, newResultsPerPage }));
+  }
+
+  function getEntriesForPage({
+    newPageNumber,
+    newResultsPerPage,
+  }: {
+    newPageNumber: number;
+    newResultsPerPage: number;
+  }) {
+    const startIndex = (newPageNumber - 1) * newResultsPerPage;
+    const endIndex = startIndex + newResultsPerPage;
+    return entries.slice(startIndex, endIndex);
+  }
+
   function isActive(buttonNumber: number) {
     return buttonNumber === pageNumber;
   }
 
   function goToPage(number: number) {
     setPageNumber(number);
+    updateEntries({ newPageNumber: number });
   }
 
   function nextPage() {
-    setPageNumber((prev) => prev + 1);
+    const newPageNumber = pageNumber + 1;
+    setPageNumber(newPageNumber);
+    updateEntries({ newPageNumber });
   }
 
   function prevPage() {
-    setPageNumber((prev) => prev - 1);
+    const newPageNumber = pageNumber - 1;
+    setPageNumber(newPageNumber);
+    updateEntries({ newPageNumber });
   }
 
   function firstPage() {
     setPageNumber(1);
+    updateEntries({ newPageNumber: 1 });
   }
 
   function lastPage() {
     setPageNumber(lastPageNumber);
+    updateEntries({ newPageNumber: lastPageNumber });
   }
 
   const resultsPerPageOptions = [
@@ -117,6 +152,11 @@ export function Pagination({ numberOfEntries }: Props) {
     { value: 20, label: "20 results" },
     { value: 50, label: "50 results" },
   ];
+
+  function updateResultsPerPage(newResultsPerPage: number) {
+    setResultsPerPage(newResultsPerPage);
+    updateEntries({ newResultsPerPage });
+  }
 
   function getSelectedResultsPerPage() {
     return (
@@ -127,55 +167,50 @@ export function Pagination({ numberOfEntries }: Props) {
 
   return (
     <Wrapper ref={wrapperRef}>
-      <Wrapper ref={wrapperRef}>
-        <ResultsPerPageWrapper>
-          <RadioDropdown
-            items={resultsPerPageOptions}
-            selected={getSelectedResultsPerPage()}
-            onSelect={(option) => setResultsPerPage(Number(option.value))}
-          />
-        </ResultsPerPageWrapper>
-        <ButtonsWrapper ref={buttonsWrapperRef}>
-          {showFirstButton && (
-            <PageButton
-              onClick={firstPage}
-              disabled={pageNumber === 1}
-              $isActive={isActive(1)}
-            >
-              1
-            </PageButton>
-          )}
-          {buttonNumbers.map((buttonNumber) => (
-            <PageButton
-              key={buttonNumber}
-              onClick={() => goToPage(buttonNumber)}
-              $isActive={isActive(buttonNumber)}
-            >
-              {buttonNumber}
-            </PageButton>
-          ))}
-          {showLastButton && (
-            <>
-              <Ellipsis>...</Ellipsis>
-              <PageButton
-                onClick={lastPage}
-                $isActive={isActive(lastPageNumber)}
-              >
-                {lastPageNumber}
-              </PageButton>
-            </>
-          )}
-          <PreviousPageButton onClick={prevPage} disabled={pageNumber === 1}>
-            <PreviousPage />
-          </PreviousPageButton>
-          <NextPageButton
-            onClick={nextPage}
-            disabled={pageNumber === lastPageNumber}
+      <ResultsPerPageWrapper>
+        <RadioDropdown
+          items={resultsPerPageOptions}
+          selected={getSelectedResultsPerPage()}
+          onSelect={(option) => updateResultsPerPage(Number(option.value))}
+        />
+      </ResultsPerPageWrapper>
+      <ButtonsWrapper ref={buttonsWrapperRef}>
+        {showFirstButton && (
+          <PageButton
+            onClick={firstPage}
+            disabled={pageNumber === 1}
+            $isActive={isActive(1)}
           >
-            <NextPage />
-          </NextPageButton>
-        </ButtonsWrapper>
-      </Wrapper>
+            1
+          </PageButton>
+        )}
+        {buttonNumbers.map((buttonNumber) => (
+          <PageButton
+            key={buttonNumber}
+            onClick={() => goToPage(buttonNumber)}
+            $isActive={isActive(buttonNumber)}
+          >
+            {buttonNumber}
+          </PageButton>
+        ))}
+        {showLastButton && (
+          <>
+            <Ellipsis>...</Ellipsis>
+            <PageButton onClick={lastPage} $isActive={isActive(lastPageNumber)}>
+              {lastPageNumber}
+            </PageButton>
+          </>
+        )}
+        <PreviousPageButton onClick={prevPage} disabled={pageNumber === 1}>
+          <PreviousPage />
+        </PreviousPageButton>
+        <NextPageButton
+          onClick={nextPage}
+          disabled={pageNumber === lastPageNumber}
+        >
+          <NextPage />
+        </NextPageButton>
+      </ButtonsWrapper>
     </Wrapper>
   );
 }
