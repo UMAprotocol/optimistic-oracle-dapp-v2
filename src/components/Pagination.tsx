@@ -210,7 +210,7 @@ const Wrapper = styled.div`
 
   @media ${mobileAndUnder} {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     align-items: start;
   }
 `;
@@ -229,15 +229,15 @@ const BaseButton = styled.button`
   min-width: 32px;
   display: grid;
   place-items: center;
-  font: var(--text-sm);
-  color: var(--grey-800);
+  font: var(--body-sm);
   background: transparent;
-  border-radius: 5px;
-  transition: color 200ms, background 200ms;
+  border-radius: 4px;
+  transition: color var(--animation-duration),
+    background var(--animation-duration);
 `;
 
 const PageButton = styled(BaseButton)<{ $isActive: boolean }>`
-  border: 1px solid var(--grey-800);
+  border: 1px solid var(--blue-grey-500);
   color: ${({ $isActive }) => ($isActive ? white : blueGrey500)};
   background: ${({ $isActive }) => ($isActive ? blueGrey500 : "transparent")};
   &:hover {
@@ -262,6 +262,5 @@ const NextPageButton = styled(NavigationButton)``;
 const Ellipsis = styled.span`
   height: min-content;
   margin-top: auto;
-  font: var(--text-sm);
-  color: var(--grey-800);
+  font: var(--body-sm);
 `;

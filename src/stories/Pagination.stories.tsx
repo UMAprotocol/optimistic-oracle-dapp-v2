@@ -66,6 +66,7 @@ export const TestInteractions: Story = {
     await waitFor(() => userEvent.click(resultsPerPageDropdownButton));
     const resultsPerPage50 = canvas.getByText("50 results");
     await waitFor(() => userEvent.click(resultsPerPage50));
+    // there should be 50 entries
     expect(canvas.getAllByTestId("entry").length).toBe(50);
   },
 };

@@ -36,6 +36,7 @@ export function RadioDropdown({ items, selected, onSelect }: Props) {
 }
 
 const _Trigger = styled(Trigger)`
+  min-height: 40px;
   border-radius: 4px;
   min-width: 128px;
   width: fit-content;
