@@ -8,9 +8,8 @@ import {
 import { addOpacityToHsl } from "@/helpers";
 import PreviousPage from "public/assets/icons/left-chevron.svg";
 import NextPage from "public/assets/icons/right-chevron.svg";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useWindowSize } from "usehooks-ts";
 
 interface Props<Entry> {
   entries: Entry[];
@@ -19,12 +18,6 @@ interface Props<Entry> {
 export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
   const [pageNumber, setPageNumber] = useState(1);
   const [resultsPerPage, setResultsPerPage] = useState(defaultResultsPerPage);
-  const { width } = useWindowSize();
-  const [wrapperWidth, setWrapperWidth] = useState(0);
-  const [buttonsWrapperWidth, setButtonsWrapperWidth] = useState(0);
-
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const buttonsWrapperRef = useRef<HTMLDivElement>(null);
   const numberOfEntries = entries.length;
   const numberOfPages = Math.ceil(numberOfEntries / resultsPerPage);
   const lastPageNumber = numberOfPages;
@@ -41,48 +34,19 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
     lastPageNumber - 1 !== numberOfButtons;
   const buttonNumbers = makeButtonNumbers();
 
-  console.log({ numberOfButtons, numberOfPages, buttonNumbers, pageNumber });
-
   useEffect(() => {
     updateEntries();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (wrapperRef.current) {
-      setWrapperWidth(wrapperRef.current.offsetWidth);
-    }
-    if (buttonsWrapperRef.current) {
-      setButtonsWrapperWidth(buttonsWrapperRef.current.offsetWidth);
-    }
-  }, [buttonsWrapperRef, width]);
-
   function getNumberOfButtons() {
-    if (wrapperWidth >= buttonsWrapperWidth) {
-      if (numberOfPages === defaultNumberOfButtons + 1) {
-        return defaultNumberOfButtons + 1;
-      }
-      if (numberOfPages < defaultNumberOfButtons) {
-        return numberOfPages;
-      }
-      if (numberOfPages > defaultNumberOfButtons) {
-        return defaultNumberOfButtons;
-      }
+    if (numberOfPages === defaultNumberOfButtons + 1) {
+      return defaultNumberOfButtons + 1;
     }
-
-    const buttonWidth = 40;
-    const nextAndBackButtonsWidth = 2 * buttonWidth;
-    const firstAndLastButtonsWidth = 2 * buttonWidth;
-    const ellipsisWidth = 8;
-
-    const availableSpace =
-      wrapperWidth -
-      nextAndBackButtonsWidth -
-      (hasMorePagesThanButtons ? firstAndLastButtonsWidth + ellipsisWidth : 0);
-
-    const numberOfButtonsThatFit = Math.floor(availableSpace / buttonWidth);
-
-    return numberOfButtonsThatFit;
+    if (numberOfPages < defaultNumberOfButtons) {
+      return numberOfPages;
+    }
+    return defaultNumberOfButtons;
   }
 
   function makeButtonNumbers() {
@@ -116,7 +80,7 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
     const newPageNumber = Math.ceil(
       (pageNumber * resultsPerPage) / newResultsPerPage
     );
-    setEntriesToShow(getEntriesForPage({ newPageNumber, newResultsPerPage }));
+    updateEntries({ newPageNumber, newResultsPerPage });
     setPageNumber(newPageNumber);
   }
 
@@ -187,7 +151,7 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
   }
 
   return (
-    <Wrapper ref={wrapperRef}>
+    <Wrapper>
       <ResultsPerPageWrapper>
         <RadioDropdown
           items={resultsPerPageOptions}
@@ -195,7 +159,7 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
           onSelect={(option) => updateResultsPerPage(Number(option.value))}
         />
       </ResultsPerPageWrapper>
-      <ButtonsWrapper ref={buttonsWrapperRef}>
+      <ButtonsWrapper>
         {showFirstButton && (
           <>
             <PageButton
