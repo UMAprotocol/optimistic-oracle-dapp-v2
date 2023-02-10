@@ -60,3 +60,11 @@ export type MoreInformationItem = {
   text: string;
   href: string;
 };
+
+export type ErrorMessage = {
+  text: string;
+  link?: {
+    text: string;
+    href: string;
+  };
+};

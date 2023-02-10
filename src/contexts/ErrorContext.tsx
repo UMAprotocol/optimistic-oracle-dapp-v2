@@ -1,12 +1,5 @@
+import { ErrorMessage } from "@/types";
 import { createContext, ReactNode, useState } from "react";
-
-type ErrorMessage = {
-  text: string;
-  link?: {
-    text: string;
-    href: string;
-  };
-};
 
 export interface ErrorContextState {
   errorMessages: ErrorMessage[];
