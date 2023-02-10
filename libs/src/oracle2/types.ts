@@ -1,17 +1,17 @@
 export enum RequestState {
-  Invalid = 0, // Never requested.
-  Requested, // Requested, no other actions taken.
-  Proposed, // Proposed, but not expired or disputed yet.
-  Expired, // Proposed, not disputed, past liveness.
-  Disputed, // Disputed, but no DVM price returned yet.
-  Resolved, // Disputed and DVM price is available.
-  Settled, // Final price has been set in the contract (can get here from Expired or Resolved).
+  Invalid = "Invalid", // Never requested.
+  Requested = "Requested", // Requested, no other actions taken.
+  Proposed = "Proposed", // Proposed, but not expired or disputed yet.
+  Expired = "Expired", // Proposed, not disputed, past liveness.
+  Disputed = "Disputed", // Disputed, but no DVM price returned yet.
+  Resolved = "Resolved", // Disputed and DVM price is available.
+  Settled = "Settled", // Final price has been set in the contract (can get here from Expired or Resolved).
 }
 /// data needed to identify oracle requests
 export type RequestKey = {
   requester: string;
   identifier: string;
-  timestamp: number;
+  timestamp: string;
   ancillaryData: string;
 };
 
@@ -47,6 +47,10 @@ export type Request = RequestKey & {
     proposeBlockNumber: number;
     disputeBlockNumber: number;
     settleBlockNumber: number;
+    requestLogIndex: number;
+    proposeLogIndex: number;
+    disputeLogIndex: number;
+    settleLogIndex: number;
     // oo v2 fields moved here from settings object
     bond: string;
     customLiveness: string;
@@ -73,13 +77,11 @@ export type Handlers = {
   // errors array indexes into server list. use this to determine which servers are failing
   errors?: (errors: Error[]) => void;
 };
-// this is the interface to implement a server, servers gather information about requests/assertions from any source
-export type Service = (handlers: Handlers) => {
-  start: () => void;
-  stop: () => void;
-  tick: () => void;
+
+export type Service = {
+  tick: () => Promise<void>;
 };
-export type Services = Service[];
-// This is the client to consume data on the frontend, you must configure an array of servers and provide handlers
-// to handle data coming in from servers
-export type Client = (services: Services, handlers: Handlers) => void;
+
+// this is the interface to implement a server, servers gather information about requests/assertions from any source
+export type ServiceFactory = (handlers: Handlers) => Service;
+export type ServiceFactories = ServiceFactory[];

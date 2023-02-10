@@ -1,13 +1,12 @@
 import { GlobalStyle } from "@/components";
 import {
-  infuraId,
+  config,
   red500,
   supportedChains,
   walletsAndConnectors,
   white,
 } from "@/constants";
 import { PanelProvider } from "@/contexts";
-import oracle from "@/helpers/oracleSdk";
 import "@/styles/fonts.css";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -15,11 +14,19 @@ import type { AppProps } from "next/app";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
+import { Client } from "@libs/oracle2";
+import { gql } from "@libs/oracle2/services";
 
-oracle && console.log("oracle client loaded");
+const gqlService = gql.Factory(config.subgraphs);
+
+// example of using the client. hoook this up in a context / reducer
+Client([gqlService], {
+  requests: (requests) => console.log(requests),
+  errors: (errors) => console.error(errors),
+});
 
 export const { chains, provider } = configureChains(supportedChains, [
-  infuraProvider({ apiKey: infuraId }),
+  infuraProvider({ apiKey: config.infuraId }),
   publicProvider(),
 ]);
 
