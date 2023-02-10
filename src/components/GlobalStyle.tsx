@@ -14,6 +14,7 @@ import {
   desktopNavBarHeight,
   desktopPageWidth,
   desktopPanelWidth,
+  family,
   grey100,
   grey400,
   grey50,
@@ -201,6 +202,7 @@ a:not([class]) {
   /*  All CSS custom properties that are intended to be global must be defined here */
 
   * {
+      font-family: ${family};
       color: var(--dark-text);
     }
 

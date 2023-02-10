@@ -6,28 +6,36 @@ import styled from "styled-components";
 export function ErrorMessage({ text, link }: ErrorMessageType) {
   const isEthersError = ethersErrorCodes.some((code) => text.includes(code));
 
-  const [firstPart, secondPart] = text.split("[");
+  function ethersErrorLink() {
+    if (!isEthersError) return null;
 
-  const ethersErrorLink = secondPart
-    .replace("See:", "")
-    .replace("]", "")
-    .trim();
+    const [firstPart, secondPart] = text.split("[");
+
+    const ethersErrorLink = secondPart
+      .replace("See:", "")
+      .replace("]", "")
+      .trim();
+
+    return (
+      <span>
+        {firstPart.trim()}.{" "}
+        <Link href={ethersErrorLink} target="_blank">
+          Learn more.
+        </Link>
+      </span>
+    );
+  }
 
   return (
     <Wrapper>
       {isEthersError ? (
-        <span>
-          {firstPart}.{" "}
-          <Link href={ethersErrorLink} target="_blank">
-            Learn more.
-          </Link>
-        </span>
+        <>{ethersErrorLink()}</>
       ) : (
         <span>
           {text}.{" "}
           {link && (
             <Link href={link.href} target="_blank">
-              {link.text}
+              {link.text}.
             </Link>
           )}
         </span>
@@ -38,9 +46,15 @@ export function ErrorMessage({ text, link }: ErrorMessageType) {
 
 export const Wrapper = styled.p`
   font: var(--text-md);
+  color: var(--light-text);
+
+  span {
+    font: inherit;
+    color: inherit;
+  }
 
   @media ${mobileAndUnder} {
-    font: var(--text-xs);
+    font: var(--body-xs);
   }
 `;
 
@@ -48,4 +62,9 @@ const Link = styled(NextLink)`
   font: inherit;
   color: inherit;
   text-decoration: underline;
+  transition: opacity var(--animation-duration);
+
+  &:hover {
+    opacity: 0.75;
+  }
 `;

@@ -10,9 +10,15 @@ export function ErrorBanner() {
 
   if (!errorMessages.length) return null;
 
+  const uniqueErrorMessages = errorMessages.filter(
+    (errorMessage, index) =>
+      errorMessages.findIndex((error) => error.text === errorMessage.text) ===
+      index
+  );
+
   return (
     <Wrapper>
-      {errorMessages.map((errorMessage) => (
+      {uniqueErrorMessages.map((errorMessage) => (
         <ErrorMessageWrapper key={errorMessage.text}>
           <WarningIcon />
           <ErrorMessage {...errorMessage} />
@@ -27,27 +33,25 @@ export function ErrorBanner() {
 
 export const Wrapper = styled.div`
   background: var(--red-500);
-  min-height: 60px;
   max-width: 100vw;
   color: var(--light-text);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-block: 15px;
+  padding-block: 16px;
 `;
 
 export const ErrorMessageWrapper = styled.div`
   width: 100%;
   max-width: var(--page-width);
-  padding-inline: var(--page-padding);
   position: relative;
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding-block: 5px;
+  gap: 12px;
+  padding-block: 4px;
   &:not(:last-child) {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 
   @media ${tabletAndUnder} {
@@ -61,20 +65,19 @@ export const CloseIcon = styled(Close)`
   }
 `;
 
-export const WarningIcon = styled(Warning)``;
+export const WarningIcon = styled(Warning)`
+  path {
+    fill: var(--white);
+    stroke: var(--red-500);
+  }
+`;
 
 export const CloseButton = styled.button`
-  --icon-height: 15px;
-  --icon-offset: 12px;
-  --icon-start-right: var(--page-padding);
-  --right: calc(var(--icon-start-right) + var(--icon-offset));
+  --icon-size: 16px;
+  width: var(--icon-size);
+  height: var(--icon-size);
   position: absolute;
-  top: calc(var(--height) - var(--icon-height) / 2px);
-  right: var(--right);
-  fill: var(--white);
+  top: calc(50% - var(--icon-size) / 2);
+  right: 0;
   background: transparent;
-
-  @media ${tabletAndUnder} {
-    --icon-start-right: 0px;
-  }
 `;

@@ -23,6 +23,7 @@ export function ErrorProvider({ children }: { children: ReactNode }) {
   const [errorMessages, setErrorMessages] = useState<ErrorMessage[]>([]);
 
   function addErrorMessage(errorMessage: ErrorMessage) {
+    if (errorMessage.text === "") return;
     setErrorMessages([...errorMessages, errorMessage]);
   }
 
