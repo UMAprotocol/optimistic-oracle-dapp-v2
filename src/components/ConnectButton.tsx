@@ -2,11 +2,11 @@ import { blueGrey600, walletsAndConnectors } from "@/constants";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import NextImage from "next/image";
 import Chevron from "public/assets/icons/chevron.svg";
-import { useEffect, useState } from "react";
+import { HTMLAttributes, useEffect, useState } from "react";
 import styled, { CSSProperties } from "styled-components";
 import { useAccount } from "wagmi";
 
-export function ConnectButton() {
+export function ConnectButton(attrs: HTMLAttributes<HTMLDivElement>) {
   const { connector } = useAccount();
   const [walletIcon, setWalletIcon] = useState("");
 
@@ -59,7 +59,7 @@ export function ConnectButton() {
         } as CSSProperties;
 
         return (
-          <Wrapper aria-hidden={!ready} style={wrapperStyle}>
+          <Wrapper aria-hidden={!ready} style={wrapperStyle} {...attrs}>
             {(() => {
               if (!connected) {
                 return (
