@@ -16,11 +16,12 @@ export type RequestKey = {
 };
 
 export enum OracleType {
-  Optimistic = "Optimistic",
-  Skinny = "Skinny",
-  OptimisticV2 = "OptimisticV2",
-  Asserter = "Asserter",
+  Optimistic = "Optimistic Oracle",
+  OptimisticV2 = "Optimistic Oracle V2",
+  Skinny = "Skinny Optimistic Oracle",
+  Asserter = "Optimistic Asserter",
 }
+
 export type Request = RequestKey & {
   id: string;
   oracleType: OracleType;

@@ -1,5 +1,11 @@
 import { supportedChainsById, supportedCurrencies } from "@/constants";
 import { ReactNode } from "react";
+export type ActionType =
+  | "Dispute"
+  | "Propose"
+  | "Settle"
+  | "Invalid"
+  | "Requested";
 
 /**
  * Defines the shape of data required by the UI to render a price request or a an assertion.
@@ -18,15 +24,15 @@ export type OracleQueryUI = {
   timeUNIX: number;
   timeMilliseconds: number;
   timeFormatted: string;
-  livenessEndsMilliseconds: number;
-  formattedLivenessEndsIn: string;
-  actionType: "Dispute" | "Propose" | "Settle" | undefined;
+  livenessEndsMilliseconds: number | undefined;
+  formattedLivenessEndsIn: string | undefined;
+  actionType: ActionType | undefined;
   action: (() => void) | undefined;
   moreInformation: MoreInformationItem[];
   error: string;
   setError: (error: string) => void;
   // oo
-  price: number | undefined;
+  price: string | undefined;
   expiryType: ExpiryType | undefined;
   currency: SupportedCurrency | undefined;
   formattedBond: string | undefined;

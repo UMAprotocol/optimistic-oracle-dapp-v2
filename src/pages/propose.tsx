@@ -1,5 +1,11 @@
-import { Layout } from "@/components";
+import { Layout, Table } from "@/components";
+import { useOracleDataContext } from "@/hooks";
 
 export default function Propose() {
-  return <Layout>rest of page</Layout>;
+  const { propose } = useOracleDataContext();
+  return (
+    <Layout>
+      <Table rows={propose} isLoading={false} page="propose" />
+    </Layout>
+  );
 }
