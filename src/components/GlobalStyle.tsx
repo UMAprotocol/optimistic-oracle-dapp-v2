@@ -25,6 +25,7 @@ import {
   headerSm,
   headerXs,
   lightText,
+  pagePadding,
   red100,
   red500,
   red500Opacity15,
@@ -247,6 +248,7 @@ a:not([class]) {
     --nav-bar-height: ${desktopNavBarHeight}px;
     --vote-ticker-height: ${voteTickerHeight}px;
     --panel-width: ${desktopPanelWidth}px;
+    --page-padding: ${pagePadding}px;
     /* Animation */
     --animation-duration: ${animationDuration};
     /* Shadows */

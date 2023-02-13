@@ -21,6 +21,7 @@ export function Header({ page }: { page: Page }) {
 const OuterWrapper = styled.header`
   min-height: var(--header-height);
   background: var(--blue-grey-700);
+  padding-inline: var(--page-padding);
   padding-top: 16px;
   padding-bottom: 40px;
 `;

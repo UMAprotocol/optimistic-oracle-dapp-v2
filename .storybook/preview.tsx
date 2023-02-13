@@ -10,7 +10,7 @@ initialize();
 export const parameters: Parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   viewport: {
-    defaultViewport: "desktop",
+    defaultViewport: "smallMobile",
     viewports: {
       smallMobile: {
         name: "Small Mobile",

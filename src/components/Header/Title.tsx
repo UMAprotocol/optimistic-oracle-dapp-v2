@@ -1,3 +1,4 @@
+import { headerMdFluid, headerSmFluid, mobileAndUnder } from "@/constants";
 import { Page } from "@/types";
 import Propose from "public/assets/icons/pages/propose.svg";
 import Settled from "public/assets/icons/pages/settled.svg";
@@ -40,7 +41,7 @@ export function Title({ page }: { page: Page }) {
 
   return (
     <Wrapper>
-      {icon}
+      <IconWrapper>{icon}</IconWrapper>
       <TextWrapper>
         <TitleText>{pageTitle}</TitleText>
         {page === "settled" && (
@@ -57,7 +58,13 @@ export function Title({ page }: { page: Page }) {
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: clamp(0.5rem, calc(0.17rem + 1.63vw), 1.5rem);
+`;
+
+const IconWrapper = styled.div`
+  --icon-size: clamp(1.75rem, calc(1.22rem + 2.65vw), 3.38rem);
+  width: var(--icon-size);
+  height: var(--icon-size);
 `;
 
 const VerifyIcon = styled(Verify)``;
@@ -69,14 +76,17 @@ const SettledIcon = styled(Settled)``;
 const TextWrapper = styled.div``;
 
 const TitleText = styled.h1`
-  font: var(--header-md);
-  font-size: 52px;
-  line-height: 72px;
   color: var(--white);
 
   strong {
     font-weight: inherit;
     color: var(--red-500);
+  }
+
+  ${headerMdFluid}
+
+  @media ${mobileAndUnder} {
+    ${headerSmFluid}
   }
 `;
 

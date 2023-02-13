@@ -7,3 +7,5 @@ export const desktopNavBarHeight = 40;
 export const voteTickerHeight = 48;
 
 export const desktopPanelWidth = 570;
+
+export const pagePadding = 16;
