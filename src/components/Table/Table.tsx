@@ -29,7 +29,7 @@ export function Table({ page, rows, isLoading }: Props) {
           {/* When the data is still loading, we show 10 dummy rows with loading skeletons */}
           {isLoading ? (
             <>
-              {Array.from({ length: defaultResultsPerPage }).map((_, i) => (
+              {Array.from({ length: 3 }).map((_, i) => (
                 <LoadingRow key={i} page={page} />
               ))}
             </>

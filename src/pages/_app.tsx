@@ -19,7 +19,7 @@ import { publicProvider } from "wagmi/providers/public";
 
 const gqlService = gql.Factory(config.subgraphs);
 
-// example of using the client. hoook this up in a context / reducer
+// example of using the client. hook this up in a context / reducer
 Client([gqlService], {
   requests: (requests) => console.log(requests),
   errors: (errors) => console.error(errors),
