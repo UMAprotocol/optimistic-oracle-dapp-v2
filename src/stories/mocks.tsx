@@ -1,5 +1,6 @@
-import { PanelContent } from "@/types";
+import { OracleQueryUI } from "@/types";
 import { MockConnector } from "@wagmi/core/connectors/mock";
+import { addMinutes, format } from "date-fns";
 import { Wallet } from "ethers";
 import { createClient } from "wagmi";
 import { chains, provider } from "../pages/_app";
@@ -23,10 +24,12 @@ export const mockWagmiClient = createClient({
   ],
 });
 
-export function makeMockPanelContent(input?: Partial<PanelContent>) {
-  const defaultMockContent: PanelContent = {
+export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
+  const defaultMockOracleQueryUI: OracleQueryUI = {
+    id: `mock-id-${Math.random()}`,
     chainId: 1,
-    oracleType: "Optimistic Asserter",
+    chainName: "Ethereum",
+    oracleType: "Optimistic Oracle",
     project: "UMA",
     title:
       "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",
@@ -38,11 +41,14 @@ export function makeMockPanelContent(input?: Partial<PanelContent>) {
     if a non-YES answer is proposed.`,
     timeUNIX: Math.floor(Date.now() / 1000),
     timeUTC: new Date().toUTCString(),
+    timeMilliseconds: Date.now(),
+    timeFormatted: format(new Date(), "Pp"),
     assertion: true,
     price: undefined,
     currency: "USDC",
     formattedBond: "50,000",
     formattedReward: "250,000",
+    livenessEndsMilliseconds: addMinutes(new Date(), 53).getTime(),
     formattedLivenessEndsIn: "53 min 11 sec",
     actionType: "Dispute",
     action: () => alert("Dispute or propose or settle"),
@@ -69,7 +75,61 @@ export function makeMockPanelContent(input?: Partial<PanelContent>) {
   };
 
   return {
-    ...defaultMockContent,
+    ...defaultMockOracleQueryUI,
     ...input,
   };
+}
+
+export function makeMockOracleQueryUIs({
+  count,
+  inputs = [],
+  inputForAll,
+}: {
+  count: number;
+  inputs?: Partial<OracleQueryUI>[];
+  inputForAll?: Partial<OracleQueryUI>;
+}) {
+  const defaultMocks = Array.from({ length: count }, () =>
+    makeMockOracleQueryUI()
+  );
+
+  if (inputForAll) {
+    defaultMocks.forEach((mock) => {
+      Object.assign(mock, inputForAll);
+    });
+  }
+
+  defaultMocks.forEach((mock, i) => {
+    Object.assign(mock, inputs[i]);
+  });
+
+  return defaultMocks;
+}
+
+export function makeRandomTitle() {
+  const words = [
+    "fun",
+    "random",
+    "title",
+    "for",
+    "a",
+    "mock",
+    "oracle",
+    "query",
+    "ui",
+    "component",
+    "in",
+    "storybook",
+    "and",
+    "react",
+    "typescript",
+    "nextjs",
+  ];
+
+  const randomWords = Array.from(
+    { length: words.length },
+    () => words[Math.floor(Math.random() * words.length)]
+  ).join(" ");
+
+  return randomWords + ` ${Math.random() * 10000000}`;
 }

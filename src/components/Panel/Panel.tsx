@@ -1,6 +1,6 @@
 import { Button, DecimalInput } from "@/components";
 import { blueGrey700, currencyIcons, projectIcons, red500 } from "@/constants";
-import { addOpacityToHsl } from "@/helpers";
+import { addOpacityToHsl, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
@@ -40,8 +40,6 @@ export function Panel() {
     }
   }, [panelOpen]);
 
-  if (!content) return null;
-
   const {
     chainId,
     oracleType,
@@ -63,22 +61,17 @@ export function Panel() {
     moreInformation,
     error,
     setError,
-  } = content;
+  } = content ?? {};
 
-  const projectIcon = projectIcons[project];
-  const currencyIcon = currencyIcons[currency];
+  const projectIcon = project ? projectIcons[project] : undefined;
+  const currencyIcon = currency ? currencyIcons[currency] : undefined;
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
   const hasActionButton = action !== undefined && actionType !== undefined;
   const hasInput = page === "propose";
-  const valueText = getValueText();
+  const valueText = getValueText({ price, assertion });
   const actionsTitle = getActionsTitle();
   const isError = error !== "";
-
-  function getValueText() {
-    if (assertion !== undefined) return assertion ? "True" : "False";
-    return price;
-  }
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
@@ -138,7 +131,7 @@ export function Panel() {
               {actionsIcon}
               <SectionTitle>{actionsTitle}</SectionTitle>
             </SectionTitleWrapper>
-            {hasInput ? (
+            {hasInput && setError ? (
               <InputWrapper>
                 <DecimalInput
                   value={inputValue}
@@ -167,8 +160,10 @@ export function Panel() {
                     <InfoIcon />
                   </ActionText>
                   <ActionText>
-                    <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
-                    {formattedBond}
+                    {currencyIcon && (
+                      <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+                    )}
+                    {formattedBond} {!currencyIcon && currency}
                   </ActionText>
                 </ActionWrapper>
                 <ActionWrapper>
@@ -177,8 +172,10 @@ export function Panel() {
                     <InfoIcon />
                   </ActionText>
                   <ActionText>
-                    <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
-                    {formattedReward}
+                    {currencyIcon && (
+                      <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+                    )}
+                    {formattedReward} {!currencyIcon && currency}
                   </ActionText>
                 </ActionWrapper>
                 <ActionWrapper>
@@ -241,7 +238,7 @@ export function Panel() {
                 <AncillaryDataIcon />
                 <SectionTitle>More information</SectionTitle>
               </SectionTitleWrapper>
-              {moreInformation.map(({ title, href, text }) => (
+              {moreInformation?.map(({ title, href, text }) => (
                 <Fragment key={title}>
                   <SectionSubTitle>{title}</SectionSubTitle>
                   <Link href={href} target="_blank">

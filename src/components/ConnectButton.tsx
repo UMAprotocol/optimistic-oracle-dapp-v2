@@ -116,6 +116,7 @@ const Image = styled(NextImage)`
 `;
 
 const ButtonInnerWrapper = styled.div`
+  color: inherit;
   display: flex;
   gap: 20px;
 `;

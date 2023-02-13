@@ -127,9 +127,11 @@ const ClockWrapper = styled.div`
 
 const TextWrapper = styled.div`
   font: var(--body-sm);
+  color: var(--blue-grey-300);
 `;
 
 const TimeRemaining = styled.span`
+  color: inherit;
   display: inline-block;
   color: var(--white);
   margin-left: 4px;
@@ -138,12 +140,14 @@ const TimeRemaining = styled.span`
 `;
 
 const DesktopText = styled.span`
+  color: inherit;
   @media ${mobileAndUnder} {
     display: none;
   }
 `;
 
 const MobileText = styled.span`
+  color: inherit;
   display: none;
   @media ${mobileAndUnder} {
     display: inline;
@@ -158,6 +162,7 @@ const NumVotes = styled.div`
   background: var(--blue-grey-500);
   border-radius: 14px;
   font: var(--body-sm);
+  color: inherit;
 
   @media ${mobileAndUnder} {
     display: none;
@@ -167,6 +172,7 @@ const NumVotes = styled.div`
 const MoreDetailsWrapper = styled.div``;
 
 const MoreDetailsText = styled.span`
+  color: var(--blue-grey-300);
   @media ${mobileAndUnder} {
     display: none;
   }

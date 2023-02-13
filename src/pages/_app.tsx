@@ -28,7 +28,7 @@ export const wagmiClient = createClient({
   provider,
 });
 
-const rainbowKitTheme = darkTheme({
+export const rainbowKitTheme = darkTheme({
   accentColor: red500,
   accentColorForeground: white,
   borderRadius: "small",

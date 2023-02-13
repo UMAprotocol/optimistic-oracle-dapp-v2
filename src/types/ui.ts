@@ -1,22 +1,24 @@
-import { supportedChainsById } from "@/constants";
+import { supportedChainsById, supportedCurrencies } from "@/constants";
 import { ReactNode } from "react";
 
 /**
- * Defines the shape of data that the panel needs to display.
- * The panel is a "dumb" component, and it expects everything to already be formatted for display.
+ * Defines the shape of data required by the UI to render a price request or a an assertion.
+ * All of the UI components are "dumb", i.e they expect the data to be available, correct, and formatted when they receive it.
  */
-export type PanelContent = {
+export type OracleQueryUI = {
+  id: string;
   chainId: SupportedChainId;
+  chainName: SupportedChainName;
   oracleType: OracleType;
   project: Project;
   title: ReactNode;
-  timeUTC: string;
-  timeUNIX: number;
   ancillaryData: string;
   decodedAncillaryData: string;
-  currency: "USDC" | "ETH";
-  formattedBond: string;
-  formattedReward: string;
+  timeUTC: string;
+  timeUNIX: number;
+  timeMilliseconds: number;
+  timeFormatted: string;
+  livenessEndsMilliseconds: number;
   formattedLivenessEndsIn: string;
   actionType: "Dispute" | "Propose" | "Settle" | undefined;
   action: (() => void) | undefined;
@@ -26,6 +28,9 @@ export type PanelContent = {
   // oo
   price: number | undefined;
   expiryType: ExpiryType | undefined;
+  currency: SupportedCurrency | undefined;
+  formattedBond: string | undefined;
+  formattedReward: string | undefined;
   // oa
   assertion: boolean | undefined;
 };
@@ -36,11 +41,19 @@ export type OracleType =
   | "Skinny Optimistic Oracle"
   | "Optimistic Asserter";
 
-export type SupportedChainId = keyof typeof supportedChainsById;
+export type SupportedChainsById = typeof supportedChainsById;
+
+export type SupportedChainId = keyof SupportedChainsById;
+
+export type SupportedChainName = SupportedChainsById[SupportedChainId];
 
 export type ExpiryType = "Event-based" | "Time-based";
 
 export type Project = "UMA" | "Polymarket" | "Cozy Finance";
+
+export type SupportedCurrencies = typeof supportedCurrencies;
+
+export type SupportedCurrency = SupportedCurrencies[number];
 
 export type MoreInformationItem = {
   title: string;
