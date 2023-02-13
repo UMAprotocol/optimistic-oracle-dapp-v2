@@ -10,7 +10,7 @@ import Polygon from "public/assets/icons/chains/polygon.svg";
 import SX from "public/assets/icons/chains/sx.svg";
 import styled from "styled-components";
 import { IconWrapper } from "../IconWrapper";
-import { InfoIconText, InfoIconWrapper } from "./styles";
+import { InfoIconText, InfoIconWrapper } from "./style";
 
 /**
  * Displays an icon for the given chain ID.

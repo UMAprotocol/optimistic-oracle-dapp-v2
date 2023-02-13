@@ -1,5 +1,5 @@
 import { ConnectButton } from "@/components";
-import { tabletAndUnder } from "@/constants";
+import { hideOnTabletAndUnder } from "@/helpers";
 import Logo from "public/assets/logo.svg";
 import styled from "styled-components";
 import { Nav } from "./Nav";
@@ -11,23 +11,15 @@ export function NavBar() {
         <LogoIcon />
         <HomeButtonText>ORACLE</HomeButtonText>
       </HomeButton>
-      <_Nav />
-      <_ConnectButton />
+      <NavWrapper>
+        <Nav />
+      </NavWrapper>
+      <ConnectButtonWrapper>
+        <ConnectButton />
+      </ConnectButtonWrapper>
     </Wrapper>
   );
 }
-
-const _Nav = styled(Nav)`
-  @media ${tabletAndUnder} {
-    display: none;
-  }
-`;
-
-const _ConnectButton = styled(ConnectButton)`
-  @media ${tabletAndUnder} {
-    display: none;
-  }
-`;
 
 const Wrapper = styled.div`
   height: var(--nav-bar-height);
@@ -37,6 +29,14 @@ const Wrapper = styled.div`
   font: var(--body-sm);
   font-size: 14px;
   color: var(--white);
+`;
+
+const NavWrapper = styled.div`
+  ${hideOnTabletAndUnder}
+`;
+
+const ConnectButtonWrapper = styled.div`
+  ${hideOnTabletAndUnder}
 `;
 
 const LogoIcon = styled(Logo)``;

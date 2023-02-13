@@ -1,5 +1,7 @@
+import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { commify, formatEther, parseEther } from "@/helpers";
 import { BigNumber } from "ethers";
+import { css } from "styled-components";
 
 /**
  * Adds an opacity value to an hsl string
@@ -91,3 +93,15 @@ export function getValueText({
   if (assertion !== undefined) return assertion ? "True" : "False";
   return price;
 }
+
+export const hideOnTabletAndUnder = css`
+  @media ${tabletAndUnder} {
+    display: none;
+  }
+`;
+
+export const hideOnMobileAndUnder = css`
+  @media ${mobileAndUnder} {
+    display: none;
+  }
+`;

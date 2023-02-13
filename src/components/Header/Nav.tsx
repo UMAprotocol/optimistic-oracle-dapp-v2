@@ -3,10 +3,9 @@ import { isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import ExternalLink from "public/assets/icons/external-link.svg";
-import { HTMLAttributes } from "react";
 import styled, { CSSProperties } from "styled-components";
 
-export function Nav(attrs: HTMLAttributes<HTMLDivElement>) {
+export function Nav() {
   // todo: add closePanel on routeChangeStart once panel is implemented
 
   const router = useRouter();
@@ -16,7 +15,7 @@ export function Nav(attrs: HTMLAttributes<HTMLDivElement>) {
   }
 
   return (
-    <Wrapper {...attrs}>
+    <Wrapper>
       <NavItems>
         {navLinks.map(({ title, href }) => (
           <NavItem key={href}>
