@@ -1,5 +1,6 @@
 import { Button, ErrorBanner } from "@/components";
 import { ErrorContext, ErrorContextState } from "@/contexts";
+import { parseEthersError } from "@/helpers";
 import { ErrorMessage } from "@/types";
 import { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
@@ -193,9 +194,9 @@ export const EthersErrorMessage: Story = {
   ...Template,
   args: {
     errorMessages: [
-      {
-        text: `Error: overflow [See: https://links.ethers.org/v5-errors-NUMERIC_FAULT-overflow]`,
-      },
+      parseEthersError(
+        "Error: overflow [See: https://links.ethers.org/v5-errors-NUMERIC_FAULT-overflow]"
+      ),
     ],
   },
 };
