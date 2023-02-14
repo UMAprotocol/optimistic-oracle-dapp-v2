@@ -65,14 +65,20 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
       </Nav>
       <SocialLinksWrapper>
         {socialLinks.map(({ href, label }) => (
-          <SocialLink href={href} target="_blank" key={href}>
+          <SocialLink
+            href={href}
+            target="_blank"
+            key={href}
+            aria-label={`${label} link`}
+          >
             {socialIcons[label]}
           </SocialLink>
         ))}
       </SocialLinksWrapper>
       <PoweredByUmaWrapper>
-        <PoweredByUmaText>Powered by</PoweredByUmaText>
-        <LogoIcon />
+        <PoweredByUmaText>
+          Powered by <LogoIcon />
+        </PoweredByUmaText>
       </PoweredByUmaWrapper>
     </Base>
   );
@@ -119,17 +125,42 @@ const Link = styled(NextLink)`
   }
 `;
 
-const SocialLink = styled(NextLink)``;
+const SocialLink = styled(NextLink)`
+  transition: opacity var(--animation-duration);
+
+  &:hover {
+    opacity: 0.75;
+  }
+`;
 
 const ExternalLinkIcon = styled(ExternalLink)``;
 
-const SocialLinksWrapper = styled.div``;
+const SocialLinksWrapper = styled.div`
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 72px;
+`;
 
-const PoweredByUmaWrapper = styled.div``;
+const PoweredByUmaWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+`;
 
-const PoweredByUmaText = styled.p``;
+const PoweredByUmaText = styled.p`
+  font: var(--body-xs);
+  color: var(--red-500);
+`;
 
-const LogoIcon = styled(Logo)``;
+const LogoIcon = styled(Logo)`
+  display: inline-block;
+  width: 34px;
+  margin-left: 2px;
+  path {
+    fill: var(--red-500);
+  }
+`;
 
 const DiscordIcon = styled(Discord)``;
 
