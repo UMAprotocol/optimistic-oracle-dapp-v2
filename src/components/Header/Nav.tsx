@@ -17,7 +17,7 @@ export function Nav() {
   return (
     <Wrapper>
       <NavItems>
-        {navLinks.map(({ title, href }) => (
+        {navLinks.map(({ label, href }) => (
           <NavItem key={href}>
             <Link
               href={href}
@@ -28,7 +28,7 @@ export function Nav() {
                 } as CSSProperties
               }
             >
-              {title} {isExternalLink(href) && <ExternalLinkIcon />}
+              {label} {isExternalLink(href) && <ExternalLinkIcon />}
             </Link>
           </NavItem>
         ))}

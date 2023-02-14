@@ -62,7 +62,7 @@ const Wrapper = styled.div`
 `;
 
 const IconWrapper = styled.div`
-  --icon-size: clamp(1.75rem, calc(1.22rem + 2.65vw), 3.38rem);
+  --icon-size: 54px;
   width: var(--icon-size);
   height: var(--icon-size);
 `;
@@ -87,6 +87,7 @@ const TitleText = styled.h1`
 
   @media ${mobileAndUnder} {
     ${headerSmFluid}
+    line-height: 1.2;
   }
 `;
 

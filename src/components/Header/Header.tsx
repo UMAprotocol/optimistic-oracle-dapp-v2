@@ -1,3 +1,4 @@
+import { mobileAndUnder } from "@/constants";
 import { Page } from "@/types";
 import styled from "styled-components";
 import { NavBar } from "./NavBar";
@@ -31,4 +32,8 @@ const InnerWrapper = styled.div`
   gap: 36px;
   max-width: var(--page-width);
   margin-inline: auto;
+
+  @media ${mobileAndUnder} {
+    gap: 24px;
+  }
 `;

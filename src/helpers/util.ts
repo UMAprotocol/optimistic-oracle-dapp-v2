@@ -105,3 +105,19 @@ export const hideOnMobileAndUnder = css`
     display: none;
   }
 `;
+
+export const showOnTabletAndUnder = css`
+  display: none;
+
+  @media ${tabletAndUnder} {
+    display: block;
+  }
+`;
+
+export const showOnMobileAndUnder = css`
+  display: none;
+
+  @media ${mobileAndUnder} {
+    display: block;
+  }
+`;

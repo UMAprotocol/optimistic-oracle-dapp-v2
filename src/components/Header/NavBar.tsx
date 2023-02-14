@@ -1,10 +1,22 @@
-import { ConnectButton } from "@/components";
-import { hideOnTabletAndUnder } from "@/helpers";
+import { ConnectButton, MobileMenu } from "@/components";
+import { hideOnTabletAndUnder, showOnTabletAndUnder } from "@/helpers";
+import Hamburger from "public/assets/icons/hamburger.svg";
 import Logo from "public/assets/logo.svg";
+import { useState } from "react";
 import styled from "styled-components";
 import { Nav } from "./Nav";
 
 export function NavBar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  function openMobileMenu() {
+    setMobileMenuOpen(true);
+  }
+
+  function closeMobileMenu() {
+    setMobileMenuOpen(false);
+  }
+
   return (
     <Wrapper>
       <HomeButton>
@@ -17,6 +29,12 @@ export function NavBar() {
       <ConnectButtonWrapper>
         <ConnectButton />
       </ConnectButtonWrapper>
+      <MobileMenuWrapper>
+        <Button onClick={openMobileMenu} aria-label="open mobile menu">
+          <HamburgerIcon />
+        </Button>
+        <MobileMenu panelOpen={mobileMenuOpen} closePanel={closeMobileMenu} />
+      </MobileMenuWrapper>
     </Wrapper>
   );
 }
@@ -39,6 +57,10 @@ const ConnectButtonWrapper = styled.div`
   ${hideOnTabletAndUnder}
 `;
 
+const MobileMenuWrapper = styled.div`
+  ${showOnTabletAndUnder}
+`;
+
 const LogoIcon = styled(Logo)``;
 
 const HomeButton = styled.button`
@@ -55,3 +77,14 @@ const HomeButton = styled.button`
 `;
 
 const HomeButtonText = styled.span``;
+
+const HamburgerIcon = styled(Hamburger)``;
+
+const Button = styled.button`
+  background: transparent;
+  transition: opacity var(--animation-duration);
+
+  &:hover {
+    opacity: 0.75;
+  }
+`;
