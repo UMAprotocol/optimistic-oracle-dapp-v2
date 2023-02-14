@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { Nav } from "./Nav";
 
 export function NavBar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   function openMobileMenu() {
     setMobileMenuOpen(true);
