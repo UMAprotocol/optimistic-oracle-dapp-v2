@@ -32,12 +32,14 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
   return (
     <Base panelOpen={panelOpen} closePanel={closePanel}>
       <AccountWrapper>
-        <AccountTitle>Account</AccountTitle>
+        <AccountTitleWrapper>
+          <AccountTitle>Account</AccountTitle>
+          <CloseButton>
+            <CloseIcon />
+          </CloseButton>
+        </AccountTitleWrapper>
         <AddressWrapper>0x12345678910111213</AddressWrapper>
         <ConnectButton />
-        <CloseButton>
-          <CloseIcon />
-        </CloseButton>
       </AccountWrapper>
       <Nav>
         <NavItems>
@@ -84,20 +86,33 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
   );
 }
 
-const AccountWrapper = styled.div``;
+const AccountWrapper = styled.div`
+  background: var(--grey-400);
+  padding-block: 20px;
+  padding-inline: 16px;
+`;
 
-const AccountTitle = styled.h1``;
+const AccountTitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const AccountTitle = styled.h1`
+  font: var(--body-sm);
+  font-weight: 700;
+`;
 
 const AddressWrapper = styled.div``;
 
 const CloseButton = styled.button`
   background: transparent;
-  margin-top: 6px;
 `;
 
 const CloseIcon = styled(Close)`
+  width: 14px;
   path {
-    fill: var(--grey-700);
+    fill: var(--blue-grey-700);
   }
 `;
 

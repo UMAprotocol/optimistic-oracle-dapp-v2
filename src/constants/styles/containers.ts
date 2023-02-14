@@ -9,3 +9,4 @@ export const voteTickerHeight = 48;
 export const desktopPanelWidth = 570;
 
 export const pagePadding = 16;
+export const pagePaddingSmall = 8;

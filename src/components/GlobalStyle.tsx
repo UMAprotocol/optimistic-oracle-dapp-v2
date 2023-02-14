@@ -26,6 +26,7 @@ import {
   headerXs,
   lightText,
   pagePadding,
+  pagePaddingSmall,
   red100,
   red500,
   red500Opacity15,
@@ -34,6 +35,7 @@ import {
   shadow1,
   shadow2,
   shadow3,
+  smallMobileAndUnder,
   subHeader,
   subHeaderSm,
   voteTickerHeight,
@@ -248,6 +250,9 @@ a:not([class]) {
     --vote-ticker-height: ${voteTickerHeight}px;
     --panel-width: min(100%, ${desktopPanelWidth}px);
     --page-padding: ${pagePadding}px;
+    @media ${smallMobileAndUnder} {
+      --page-padding: ${pagePaddingSmall}px;
+    }
     /* Animation */
     --animation-duration: ${animationDuration};
     /* Shadows */
