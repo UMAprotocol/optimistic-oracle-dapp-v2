@@ -1,5 +1,5 @@
 import { blueGrey700 } from "@/constants";
-import { addOpacityToHsl } from "@/helpers";
+import { addOpacityToHsla } from "@/helpers";
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 
@@ -8,8 +8,8 @@ interface Props {
   closePanel: () => void;
 }
 export function Overlay({ panelOpen, closePanel }: Props) {
-  const overlayVisibleColor = addOpacityToHsl(blueGrey700, 0.75);
-  const overlayHiddenColor = addOpacityToHsl(blueGrey700, 0);
+  const overlayVisibleColor = addOpacityToHsla(blueGrey700, 0.75);
+  const overlayHiddenColor = addOpacityToHsla(blueGrey700, 0);
 
   return (
     <AnimatePresence>

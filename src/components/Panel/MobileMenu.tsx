@@ -1,4 +1,3 @@
-import { ConnectButton } from "@/components";
 import { navLinks, red500, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
@@ -13,6 +12,7 @@ import Twitter from "public/assets/icons/social/twitter.svg";
 import Logo from "public/assets/logo.svg";
 import styled, { CSSProperties } from "styled-components";
 import { Base } from "./Base";
+import { ConnectButton } from "./ConnectButton";
 
 interface Props {
   panelOpen: boolean;
@@ -34,11 +34,10 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
       <AccountWrapper>
         <AccountTitleWrapper>
           <AccountTitle>Account</AccountTitle>
-          <CloseButton>
+          <CloseButton onClick={closePanel}>
             <CloseIcon />
           </CloseButton>
         </AccountTitleWrapper>
-        <AddressWrapper>0x12345678910111213</AddressWrapper>
         <ConnectButton />
       </AccountWrapper>
       <Nav>
@@ -102,8 +101,6 @@ const AccountTitle = styled.h1`
   font: var(--body-sm);
   font-weight: 700;
 `;
-
-const AddressWrapper = styled.div``;
 
 const CloseButton = styled.button`
   background: transparent;

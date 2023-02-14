@@ -9,10 +9,23 @@ import { css } from "styled-components";
  * @param opacity - a number between 0 and 1
  * @returns a string in the format of hsla(0, 0%, 0%, 0)
  */
-export function addOpacityToHsl(hsl: string, opacity: number) {
-  const betweenParens = hsl.match(/\(([^)]+)\)/)?.[1];
+export function addOpacityToHsla(hsla: string, opacity: number) {
+  const betweenParens = hsla.match(/\(([^)]+)\)/)?.[1];
   const [h, s, l] = betweenParens?.split(",") ?? [];
   return `hsla(${h}, ${s}, ${l}, ${opacity})`;
+}
+
+/**
+ * Scales the lightness of an hsla string
+ * @param hsla - a string in the format of hsla(0, 0%, 0%, 0)
+ * @param scale - a number to scale the lightness by
+ * @returns a string in the format of hsla(0, 0%, 0%, 0)
+ */
+export function scaleLightnessHsla(hsla: string, scale: number) {
+  const betweenParens = hsla.match(/\(([^)]+)\)/)?.[1];
+  const [h, s, l, a] = betweenParens?.split(",") ?? [];
+  const newLightness = Number(l.replace("%", "")) * scale;
+  return `hsl(${h}, ${s}, ${newLightness}%, ${a})`;
 }
 
 /**

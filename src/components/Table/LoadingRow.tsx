@@ -1,5 +1,5 @@
 import { red500 } from "@/constants";
-import { addOpacityToHsl } from "@/helpers";
+import { addOpacityToHsla } from "@/helpers";
 import { Page } from "@/types";
 import { LoadingSkeleton } from "../LoadingSkeleton";
 import {
@@ -29,8 +29,8 @@ export function LoadingRow({ page }: { page: Page }) {
           width={24}
           height={24}
           borderRadius="50%"
-          baseColor={addOpacityToHsl(red500, 0.1)}
-          highlightColor={addOpacityToHsl(red500, 0.2)}
+          baseColor={addOpacityToHsla(red500, 0.1)}
+          highlightColor={addOpacityToHsla(red500, 0.2)}
         />
       </TD>
     </TR>

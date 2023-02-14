@@ -5,7 +5,7 @@ import {
   mobileAndUnder,
   white,
 } from "@/constants";
-import { addOpacityToHsl } from "@/helpers";
+import { addOpacityToHsla } from "@/helpers";
 import PreviousPage from "public/assets/icons/left-chevron.svg";
 import NextPage from "public/assets/icons/right-chevron.svg";
 import { useEffect, useState } from "react";
@@ -247,13 +247,13 @@ const PageButton = styled(BaseButton)<{ $isActive: boolean }>`
   background: ${({ $isActive }) => ($isActive ? blueGrey500 : "transparent")};
   &:hover {
     ${({ $isActive }) =>
-      $isActive ? "" : `background: ${addOpacityToHsl(blueGrey500, 0.1)};`}
+      $isActive ? "" : `background: ${addOpacityToHsla(blueGrey500, 0.1)};`}
   }
 `;
 
 const NavigationButton = styled(BaseButton)`
   &:hover {
-    background: ${addOpacityToHsl(blueGrey500, 0.1)};
+    background: ${addOpacityToHsla(blueGrey500, 0.1)};
   }
   &:disabled {
     opacity: 0.5;

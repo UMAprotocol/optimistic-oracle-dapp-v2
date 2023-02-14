@@ -1,4 +1,6 @@
-import { ChangeEvent } from "react";
+import { walletsAndConnectors } from "@/constants";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 
 interface DecimalInput {
   onInput: (value: string) => void;
@@ -57,4 +59,44 @@ export function useHandleDecimalInput({
     removeErrorMessage(decimalsErrorMessage);
     onInput(value);
   };
+}
+
+/**
+ * Hook to get the icon of the currently connected wallet.
+ * @returns The icon of the currently connected wallet as a data-url that can be used as the `src` of an `img` element.
+ */
+export function useWalletIcon() {
+  const { connector } = useAccount();
+  const [walletIcon, setWalletIcon] = useState("");
+
+  const wallets = walletsAndConnectors.wallets.flatMap(
+    ({ wallets }) => wallets
+  );
+
+  const iconsAndIds = wallets.map(({ id, iconBackground, iconUrl }) => ({
+    id,
+    iconBackground,
+    iconUrl,
+  }));
+
+  useEffect(() => {
+    void findIcon();
+
+    async function findIcon() {
+      const iconUrlOrGetter = iconsAndIds.find(
+        ({ id }) => id === connector?.id
+      )?.iconUrl;
+
+      if (!iconUrlOrGetter) return;
+
+      const iconUrl =
+        typeof iconUrlOrGetter === "function"
+          ? await iconUrlOrGetter()
+          : iconUrlOrGetter;
+
+      setWalletIcon(iconUrl);
+    }
+  }, [connector, iconsAndIds, walletIcon]);
+
+  return walletIcon;
 }

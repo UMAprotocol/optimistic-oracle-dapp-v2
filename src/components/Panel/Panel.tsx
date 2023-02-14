@@ -1,6 +1,6 @@
 import { Button, DecimalInput } from "@/components";
 import { blueGrey700, currencyIcons, projectIcons, red500 } from "@/constants";
-import { addOpacityToHsl, getValueText } from "@/helpers";
+import { addOpacityToHsla, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
@@ -17,7 +17,7 @@ import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
 
-const errorBackgroundColor = addOpacityToHsl(red500, 0.05);
+const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 
 /**
  * A panel that slides in from the right.
@@ -261,7 +261,7 @@ const DetailWrapper = styled.div`
     padding-top: 22px;
   }
   &:not(:last-child) {
-    border-bottom: 1px solid ${addOpacityToHsl(blueGrey700, 0.25)};
+    border-bottom: 1px solid ${addOpacityToHsla(blueGrey700, 0.25)};
   }
 `;
 
