@@ -1,15 +1,17 @@
-import { navLinks, socialLinks } from "@/constants";
-import { isExternalLink } from "@/helpers";
+import { ConnectButton } from "@/components";
+import { navLinks, red500, socialLinks } from "@/constants";
+import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import Close from "public/assets/icons/close.svg";
+import ExternalLink from "public/assets/icons/external-link.svg";
 import Discord from "public/assets/icons/social/discord.svg";
 import Discourse from "public/assets/icons/social/discourse.svg";
 import Github from "public/assets/icons/social/github.svg";
 import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
 import Logo from "public/assets/logo.svg";
-import styled from "styled-components";
-import { ConnectButton } from "../ConnectButton";
+import styled, { CSSProperties } from "styled-components";
 import { Base } from "./Base";
 
 interface Props {
@@ -17,12 +19,14 @@ interface Props {
   closePanel: () => void;
 }
 export function MobileMenu({ panelOpen, closePanel }: Props) {
+  const router = useRouter();
+
   const socialIcons = {
-    Discord: DiscordIcon,
-    Discourse: DiscourseIcon,
-    Github: GithubIcon,
-    Medium: MediumIcon,
-    Twitter: TwitterIcon,
+    Discord: <DiscordIcon />,
+    Discourse: <DiscourseIcon />,
+    Github: <GithubIcon />,
+    Medium: <MediumIcon />,
+    Twitter: <TwitterIcon />,
   };
 
   return (
@@ -36,24 +40,34 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
         </CloseButton>
       </AccountWrapper>
       <Nav>
-        <UL>
-          {navLinks.map(({ href, label }) => (
-            <LI key={href}>
+        <NavItems>
+          {navLinks.map(({ label, href }) => (
+            <NavItem key={href}>
               <Link
                 href={href}
                 target={isExternalLink(href) ? "_blank" : undefined}
+                style={
+                  {
+                    "--active-indicator-color": isActiveRoute(
+                      router.pathname,
+                      href
+                    )
+                      ? red500
+                      : "transparent",
+                  } as CSSProperties
+                }
               >
-                {label}
+                {label} {isExternalLink(href) && <ExternalLinkIcon />}
               </Link>
-            </LI>
+            </NavItem>
           ))}
-        </UL>
+        </NavItems>
       </Nav>
       <SocialLinksWrapper>
         {socialLinks.map(({ href, label }) => (
-          <Link href={href} target="_blank" key={href}>
+          <SocialLink href={href} target="_blank" key={href}>
             {socialIcons[label]}
-          </Link>
+          </SocialLink>
         ))}
       </SocialLinksWrapper>
       <PoweredByUmaWrapper>
@@ -75,15 +89,39 @@ const CloseButton = styled.button`
   margin-top: 6px;
 `;
 
-const CloseIcon = styled(Close)``;
+const CloseIcon = styled(Close)`
+  path {
+    fill: var(--grey-700);
+  }
+`;
 
 const Nav = styled.nav``;
 
-const UL = styled.ul``;
+const NavItems = styled.ul``;
 
-const LI = styled.li``;
+const NavItem = styled.li``;
 
-const Link = styled(NextLink)``;
+const Link = styled(NextLink)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding-inline: 16px;
+  font: var(--body-sm);
+  color: var(--dark-text);
+  border-left: 3px solid var(--active-indicator-color);
+  border-bottom: 2px solid var(--grey-50);
+  text-decoration: none;
+  transition: background var(--animation-duration);
+
+  &:hover {
+    background: var(--grey-50);
+  }
+`;
+
+const SocialLink = styled(NextLink)``;
+
+const ExternalLinkIcon = styled(ExternalLink)``;
 
 const SocialLinksWrapper = styled.div``;
 

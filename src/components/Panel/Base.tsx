@@ -1,5 +1,6 @@
 import { Root as Portal } from "@radix-ui/react-portal";
-import { ReactNode } from "react";
+import { useRouter } from "next/router";
+import { ReactNode, useEffect } from "react";
 import { useIsClient } from "usehooks-ts";
 import { Content } from "./Content";
 import { Overlay } from "./Overlay";
@@ -10,7 +11,17 @@ interface Props {
   closePanel: () => void;
 }
 export function Base({ children, panelOpen, closePanel }: Props) {
+  const router = useRouter();
   const isClient = useIsClient();
+
+  useEffect(() => {
+    router.events.on("routeChangeStart", closePanel);
+
+    return () => {
+      router.events.off("routeChangeStart", closePanel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!isClient) return null;
 

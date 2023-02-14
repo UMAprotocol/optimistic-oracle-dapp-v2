@@ -246,7 +246,7 @@ a:not([class]) {
     --header-height: ${desktopHeaderHeight}px;
     --nav-bar-height: ${desktopNavBarHeight}px;
     --vote-ticker-height: ${voteTickerHeight}px;
-    --panel-width: ${desktopPanelWidth}px;
+    --panel-width: min(100%, ${desktopPanelWidth}px);
     --page-padding: ${pagePadding}px;
     /* Animation */
     --animation-duration: ${animationDuration};

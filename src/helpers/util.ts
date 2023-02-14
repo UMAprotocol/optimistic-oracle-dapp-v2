@@ -94,6 +94,16 @@ export function getValueText({
   return price;
 }
 
+/**
+ * Determines if a route is active.
+ * @param pathname - the current pathname
+ * @param href - the route to check
+ * @returns true if the route is active, false otherwise
+ */
+export function isActiveRoute(pathname: string, href: string) {
+  return pathname === href;
+}
+
 export const hideOnTabletAndUnder = css`
   @media ${tabletAndUnder} {
     display: none;

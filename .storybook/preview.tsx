@@ -1,16 +1,16 @@
-import "@rainbow-me/rainbowkit/styles.css";
 import { Decorator, Parameters } from "@storybook/react";
 import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
 import { GlobalStyle } from "../src/components/GlobalStyle";
 import "../src/styles/fonts.css";
+import "./rainbow.css";
 
 initialize();
 
 export const parameters: Parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   viewport: {
-    defaultViewport: "smallMobile",
+    defaultViewport: "desktop",
     viewports: {
       smallMobile: {
         name: "Small Mobile",
