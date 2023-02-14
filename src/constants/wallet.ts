@@ -42,3 +42,14 @@ export const walletsAndConnectors = getDefaultWallets({
 });
 
 export const supportedCurrencies = ["USDC", "ETH", "RY"] as const;
+
+export const ethersErrorCodes = [
+  "CALL_EXCEPTION",
+  "INSUFFICIENT_FUNDS",
+  "MISSING_NEW",
+  "NONCE_EXPIRED",
+  "NUMERIC_FAULT",
+  "REPLACEMENT_UNDERPRICED",
+  "TRANSACTION_REPLACED",
+  "UNPREDICTABLE_GAS_LIMIT",
+];

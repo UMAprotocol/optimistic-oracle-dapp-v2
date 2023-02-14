@@ -2,6 +2,8 @@ export { Button } from "./Button";
 export { ConnectButton } from "./ConnectButton";
 export { DecimalInput } from "./DecimalInput";
 export { RadioDropdown } from "./Dropdown/RadioDropdown";
+export { ErrorBanner } from "./ErrorBanner";
+export { ErrorMessage as ErrorMessage } from "./ErrorMessage";
 export { Filters } from "./Filters/Filters";
 export { GlobalStyle } from "./GlobalStyle";
 export { Header } from "./Header/Header";

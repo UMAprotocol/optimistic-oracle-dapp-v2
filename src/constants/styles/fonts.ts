@@ -2,7 +2,7 @@ import { css } from "styled-components";
 
 const weight = 400;
 
-const family = "'Halyard Display', sans-serif";
+export const family = "'Halyard Display', sans-serif";
 
 export const subHeader = `${weight} ${16 / 16}rem/19px ${family}`;
 export const subHeaderSm = `${weight} ${12 / 16}rem/16px ${family}`;

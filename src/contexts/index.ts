@@ -1,4 +1,10 @@
 export {
+  defaultErrorContextState,
+  ErrorContext,
+  ErrorProvider,
+} from "./ErrorContext";
+export type { ErrorContextState } from "./ErrorContext";
+export {
   defaultPanelContextState,
   PanelContext,
   PanelProvider,
