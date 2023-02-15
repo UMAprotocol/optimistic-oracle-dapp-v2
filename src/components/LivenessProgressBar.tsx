@@ -37,7 +37,7 @@ export function LivenessProgressBar({ startTime, endTime }: Props) {
   }${seconds ?? 0} s`;
   const isTextRed = !hours || hours === 0;
 
-  if (endTimeAsDate < now) return null;
+  const isEnded = endTimeAsDate < now;
 
   return (
     <Wrapper>
@@ -48,7 +48,7 @@ export function LivenessProgressBar({ startTime, endTime }: Props) {
           } as CSSProperties
         }
       >
-        {timeRemainingString}
+        {isEnded ? "Ended" : timeRemainingString}
       </Text>
       <_Root value={percent}>
         <_Indicator style={{ transform: `translateX(-${100 - percent}%)` }} />
