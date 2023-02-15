@@ -12,6 +12,7 @@ export { Header } from "./Header/Header";
 export { IconWrapper } from "./IconWrapper";
 export { Layout } from "./Layout";
 export { Pagination } from "./Pagination";
+export { MobileFilters } from "./Panel/MobileFilters";
 export { MobileMenu } from "./Panel/MobileMenu";
 export { Panel } from "./Panel/Panel";
 export { Table } from "./Table/Table";

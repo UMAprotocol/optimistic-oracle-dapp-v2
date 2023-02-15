@@ -18,7 +18,7 @@ export const Trigger = styled(RadixDropdown.Trigger)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-width: 220px;
+  width: 100%;
   min-height: 45px;
   background: var(--white);
   text-transform: capitalize;

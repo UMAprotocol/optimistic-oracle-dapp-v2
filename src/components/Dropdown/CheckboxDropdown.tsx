@@ -36,7 +36,7 @@ interface Props {
  * A dropdown menu with checkboxes.
  * @param title The title of the dropdown.
  * @param items The items to display in the dropdown.
- * @param setChecked A callback to be called when the checked state of an item changes.
+ * @param onCheckedChange A callback to be called when the checked state of an item changes.
  */
 export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
   return (

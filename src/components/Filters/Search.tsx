@@ -30,7 +30,7 @@ const SearchIconWrapper = styled.div`
 `;
 
 const Input = styled.input`
-  min-width: 426px;
+  width: 100%;
   min-height: 48px;
   padding-left: 50px;
   color: var(--blue-grey-500);

@@ -1,4 +1,5 @@
 import { CheckboxDropdown, CheckedState, Item, Items } from "@/components";
+import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import { cloneDeep } from "lodash";
 import Close from "public/assets/icons/close.svg";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -149,47 +150,52 @@ export function Filters({ types, projects, chains }: Props) {
   return (
     <OuterWrapper>
       <InnerWrapper>
-        <InputsWrapper>
+        <DesktopOnly>
+          <InputsWrapper>
+            <Search />
+            {Object.entries(filters).map(([filter, items]) => (
+              <CheckboxDropdown
+                key={filter}
+                title={filter}
+                items={items}
+                onCheckedChange={({ ...args }) =>
+                  onCheckedChange({ ...args, filter: filter as Filter })
+                }
+              />
+            ))}
+          </InputsWrapper>
+          <CheckedFiltersWrapper>
+            {checkedFilters.map(({ filter, checked }) => (
+              <>
+                {checked.map((name) => (
+                  <CheckedFilter key={name}>
+                    {name}
+                    <RemoveFilterButton
+                      onClick={() => uncheckFilter(filter, name)}
+                      aria-label="Remove filter"
+                    >
+                      <CloseIcon />
+                    </RemoveFilterButton>
+                  </CheckedFilter>
+                ))}
+              </>
+            ))}
+            {hasCheckedFilters && (
+              <Button
+                variant="secondary"
+                onClick={resetCheckedFilters}
+                width={100}
+                height={30}
+                fontSize={14}
+              >
+                Clear filters
+              </Button>
+            )}
+          </CheckedFiltersWrapper>
+        </DesktopOnly>
+        <MobileOnly>
           <Search />
-          {Object.entries(filters).map(([filter, items]) => (
-            <CheckboxDropdown
-              key={filter}
-              title={filter}
-              items={items}
-              onCheckedChange={({ ...args }) =>
-                onCheckedChange({ ...args, filter: filter as Filter })
-              }
-            />
-          ))}
-        </InputsWrapper>
-        <CheckedFiltersWrapper>
-          {checkedFilters.map(({ filter, checked }) => (
-            <>
-              {checked.map((name) => (
-                <CheckedFilter key={name}>
-                  {name}
-                  <RemoveFilterButton
-                    onClick={() => uncheckFilter(filter, name)}
-                    aria-label="Remove filter"
-                  >
-                    <CloseIcon />
-                  </RemoveFilterButton>
-                </CheckedFilter>
-              ))}
-            </>
-          ))}
-          {hasCheckedFilters && (
-            <Button
-              variant="secondary"
-              onClick={resetCheckedFilters}
-              width={100}
-              height={30}
-              fontSize={14}
-            >
-              Clear filters
-            </Button>
-          )}
-        </CheckedFiltersWrapper>
+        </MobileOnly>
       </InnerWrapper>
     </OuterWrapper>
   );
@@ -202,15 +208,23 @@ const OuterWrapper = styled.div`
   align-items: center;
 `;
 
+const DesktopOnly = styled.div`
+  ${hideOnMobileAndUnder}
+`;
+
+const MobileOnly = styled.div`
+  ${showOnMobileAndUnder}
+`;
+
 const InnerWrapper = styled.div`
-  display: grid;
-  max-width: var(--page-width);
+  width: var(--page-width);
   margin-inline: auto;
 `;
 
 const InputsWrapper = styled.div`
-  display: flex;
+  display: grid;
   gap: 18px;
+  grid-template-columns: 2fr repeat(3, 1fr);
 `;
 
 const CheckedFiltersWrapper = styled.div`
