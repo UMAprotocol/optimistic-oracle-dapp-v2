@@ -151,27 +151,16 @@ export function Filters({ types, projects, chains }: Props) {
       <InnerWrapper>
         <InputsWrapper>
           <Search />
-          <CheckboxDropdown
-            title="Types"
-            items={checkedTypes}
-            onCheckedChange={({ ...args }) =>
-              onCheckedChange({ ...args, filter: "types" })
-            }
-          />
-          <CheckboxDropdown
-            title="Projects"
-            items={checkedProjects}
-            onCheckedChange={({ ...args }) =>
-              onCheckedChange({ ...args, filter: "projects" })
-            }
-          />
-          <CheckboxDropdown
-            title="Chains"
-            items={checkedChains}
-            onCheckedChange={({ ...args }) =>
-              onCheckedChange({ ...args, filter: "chains" })
-            }
-          />
+          {Object.entries(filters).map(([filter, items]) => (
+            <CheckboxDropdown
+              key={filter}
+              title={filter}
+              items={items}
+              onCheckedChange={({ ...args }) =>
+                onCheckedChange({ ...args, filter: filter as Filter })
+              }
+            />
+          ))}
         </InputsWrapper>
         <CheckedFiltersWrapper>
           {checkedFilters.map(({ filter, checked }) => (

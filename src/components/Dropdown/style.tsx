@@ -21,6 +21,7 @@ export const Trigger = styled(RadixDropdown.Trigger)`
   min-width: 220px;
   min-height: 45px;
   background: var(--white);
+  text-transform: capitalize;
   font: var(--body-sm);
   color: var(--blue-grey-500);
   text-align: left;
