@@ -29,3 +29,10 @@ export const WithSecondsRemaining: Story = {
     endTime: Date.now() + 10_000,
   },
 };
+
+export const WithNoTimeRemaining: Story = {
+  args: {
+    startTime: Date.now() - 10_000,
+    endTime: Date.now() - 1_000,
+  },
+};

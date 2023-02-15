@@ -3,9 +3,10 @@ import { useOracleDataContext } from "@/hooks";
 
 export default function Propose() {
   const { propose } = useOracleDataContext();
+
   return (
     <Layout>
-      <Table rows={propose} isLoading={false} page="propose" />
+      <Table rows={propose} isLoading={propose.length === 0} page="propose" />
     </Layout>
   );
 }
