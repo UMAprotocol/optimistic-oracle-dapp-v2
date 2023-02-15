@@ -6,7 +6,7 @@ export default function Propose() {
 
   return (
     <Layout>
-      <Table rows={settled} isLoading={false} page="propose" />
+      <Table rows={settled} isLoading={false} page="settled" />
     </Layout>
   );
 }
