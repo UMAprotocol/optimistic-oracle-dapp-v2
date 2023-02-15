@@ -1,6 +1,5 @@
 import { mobileAndUnder } from "@/constants";
 import { useVotingInfo } from "@/hooks";
-import { motion } from "framer-motion";
 import NextLink from "next/link";
 import Clock from "public/assets/icons/clock.svg";
 import UpRightArrow from "public/assets/icons/up-right-arrow.svg";
@@ -36,11 +35,7 @@ export function VoteTicker() {
   }, 1000);
 
   return (
-    <Wrapper
-      initial={{ opacity: 0, translateY: "-20px" }}
-      animate={{ opacity: 1, translateY: "0%" }}
-      transition={{ duration: 0.3, delay: 0.8 }}
-    >
+    <Wrapper>
       <VoteDetails>
         <ClockWrapper>
           <ClockIcon />
@@ -79,7 +74,7 @@ export function VoteTicker() {
   );
 }
 
-const Wrapper = styled(motion.div)`
+const Wrapper = styled.div`
   height: var(--vote-ticker-height);
   display: flex;
   justify-content: space-between;
