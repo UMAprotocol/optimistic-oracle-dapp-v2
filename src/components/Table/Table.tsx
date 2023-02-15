@@ -1,6 +1,6 @@
 import { defaultResultsPerPage } from "@/constants";
 import { OracleQueryUI, Page } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Pagination } from "../Pagination";
 import { Headers } from "./Headers";
@@ -21,15 +21,21 @@ interface Props {
 export function Table({ page, rows, isLoading }: Props) {
   const [rowsToShow, setRowsToShow] = useState(rows);
 
+  useEffect(() => {
+    if (rows.length <= defaultResultsPerPage) {
+      setRowsToShow(rows);
+    }
+  }, [rows]);
+
   return (
     <Wrapper>
       <_Table>
         <Headers page={page} />
         <TBody>
-          {/* When the data is still loading, we show 10 dummy rows with loading skeletons */}
+          {/* When the data is still loading, we show 4 dummy rows with loading skeletons */}
           {isLoading ? (
             <>
-              {Array.from({ length: defaultResultsPerPage }).map((_, i) => (
+              {Array.from({ length: 3 }).map((_, i) => (
                 <LoadingRow key={i} page={page} />
               ))}
             </>

@@ -35,9 +35,10 @@ export function LivenessProgressBar({ startTime, endTime }: Props) {
   const timeRemainingString = `${hours && hours > 0 ? `${hours} h ` : ""}${
     minutes && minutes > 0 ? `${minutes} m ` : ""
   }${seconds ?? 0} s`;
-  const isTextRed = !hours || hours === 0;
 
-  if (endTimeAsDate < now) return null;
+  const isEnded = endTimeAsDate < now;
+
+  const isTextRed = !hours || hours === 0 || isEnded;
 
   return (
     <Wrapper>
@@ -48,7 +49,7 @@ export function LivenessProgressBar({ startTime, endTime }: Props) {
           } as CSSProperties
         }
       >
-        {timeRemainingString}
+        {isEnded ? "Ended" : timeRemainingString}
       </Text>
       <_Root value={percent}>
         <_Indicator style={{ transform: `translateX(-${100 - percent}%)` }} />

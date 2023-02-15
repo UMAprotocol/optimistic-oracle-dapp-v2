@@ -1,11 +1,21 @@
-import { Page } from "@/types";
 import { useOracleDataContext } from "@/hooks";
-import Box from "public/assets/icons/box.svg";
+import { Page } from "@/types";
+import Propose from "public/assets/icons/pages/propose.svg";
+import Settled from "public/assets/icons/pages/settled.svg";
+import Verify from "public/assets/icons/pages/verify.svg";
 import styled from "styled-components";
 
 export function Title({ page }: { page: Page }) {
+  const icons = {
+    verify: <VerifyIcon />,
+    propose: <ProposeIcon />,
+    settled: <SettledIcon />,
+  };
+
+  const icon = icons[page];
+
   const { verify, propose, settled } = useOracleDataContext();
-  // todo: get these values from the sdk when implemented
+
   const numVerifyStatements = verify.length;
   const numProposeRequests = propose.length;
   const numSettledStatements = settled.length;
@@ -32,7 +42,7 @@ export function Title({ page }: { page: Page }) {
 
   return (
     <Wrapper>
-      <BoxIcon />
+      {icon}
       <TextWrapper>
         <TitleText>{pageTitle}</TitleText>
         {page === "settled" && (
@@ -52,7 +62,11 @@ const Wrapper = styled.div`
   gap: 22px;
 `;
 
-const BoxIcon = styled(Box)``;
+const VerifyIcon = styled(Verify)``;
+
+const ProposeIcon = styled(Propose)``;
+
+const SettledIcon = styled(Settled)``;
 
 const TextWrapper = styled.div``;
 
