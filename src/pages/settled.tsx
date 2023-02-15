@@ -1,5 +1,11 @@
-import { Layout } from "@/components";
+import { Layout, Table } from "@/components";
+import { useOracleDataContext } from "@/hooks";
 
-export default function Settled() {
-  return <Layout>rest of page</Layout>;
+export default function Propose() {
+  const { settled } = useOracleDataContext();
+  return (
+    <Layout>
+      <Table rows={settled} isLoading={false} page="propose" />
+    </Layout>
+  );
 }

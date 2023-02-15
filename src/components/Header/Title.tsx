@@ -1,12 +1,14 @@
 import { Page } from "@/types";
+import { useOracleDataContext } from "@/hooks";
 import Box from "public/assets/icons/box.svg";
 import styled from "styled-components";
 
 export function Title({ page }: { page: Page }) {
+  const { verify, propose, settled } = useOracleDataContext();
   // todo: get these values from the sdk when implemented
-  const numVerifyStatements = 19;
-  const numProposeRequests = 256;
-  const numSettledStatements = 123456;
+  const numVerifyStatements = verify.length;
+  const numProposeRequests = propose.length;
+  const numSettledStatements = settled.length;
 
   const pageTitles = {
     verify: (

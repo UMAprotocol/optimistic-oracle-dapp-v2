@@ -25,6 +25,7 @@ export const supportedChains = [
 ];
 
 export const supportedChainsById = {
+  0: "Unsupported Chain" as const,
   1: "Ethereum" as const,
   5: "Görli" as const,
   10: "Optimism" as const,
