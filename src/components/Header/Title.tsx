@@ -15,7 +15,7 @@ export function Title({ page }: { page: Page }) {
   const icon = icons[page];
 
   const { verify, propose, settled } = useOracleDataContext();
-  // todo: get these values from the sdk when implemented
+
   const numVerifyStatements = verify.length;
   const numProposeRequests = propose.length;
   const numSettledStatements = settled.length;

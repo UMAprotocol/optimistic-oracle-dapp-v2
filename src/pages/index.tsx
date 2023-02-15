@@ -6,7 +6,7 @@ export default function Verify() {
 
   return (
     <Layout>
-      <Table rows={verify} isLoading={false} page="verify" />
+      <Table rows={verify} isLoading={verify.length === 0} page="verify" />
     </Layout>
   );
 }
