@@ -1,3 +1,4 @@
+import { useOracleDataContext } from "@/hooks";
 import { Page } from "@/types";
 import Propose from "public/assets/icons/pages/propose.svg";
 import Settled from "public/assets/icons/pages/settled.svg";
@@ -13,10 +14,11 @@ export function Title({ page }: { page: Page }) {
 
   const icon = icons[page];
 
+  const { verify, propose, settled } = useOracleDataContext();
   // todo: get these values from the sdk when implemented
-  const numVerifyStatements = 19;
-  const numProposeRequests = 256;
-  const numSettledStatements = 123456;
+  const numVerifyStatements = verify.length;
+  const numProposeRequests = propose.length;
+  const numSettledStatements = settled.length;
 
   const pageTitles = {
     verify: (

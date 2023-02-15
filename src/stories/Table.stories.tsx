@@ -52,7 +52,7 @@ export const Verify: Story = {
           title: "With project specified and price",
           project: "Cozy Finance",
           assertion: undefined,
-          price: 123,
+          price: "123",
         },
         {
           title: "With expiry type and weird random currency and liveness ends",
@@ -82,7 +82,7 @@ export const Settled: Story = {
           title: "With project specified and price",
           project: "Cozy Finance",
           assertion: undefined,
-          price: 123,
+          price: "123",
         },
         {
           title: "With expiry type and weird random currency and liveness ends",

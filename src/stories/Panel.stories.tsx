@@ -142,7 +142,7 @@ export const WithPrice: Story = {
     page: "verify",
     content: makeMockOracleQueryUI({
       oracleType: "Optimistic Oracle",
-      price: 200,
+      price: "200",
       assertion: undefined,
     }),
   },
