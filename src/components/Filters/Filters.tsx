@@ -52,6 +52,10 @@ export function Filters({ types, projects, chains }: Props) {
     },
   ];
 
+  const hasCheckedFilters = checkedFilters.some(
+    ({ checked }) => checked.length > 0
+  );
+
   function makeCheckboxItems(filter: FilterOptions) {
     const clone = cloneDeep(filter);
     const totalCount = Object.values(filter).reduce(
@@ -185,15 +189,17 @@ export function Filters({ types, projects, chains }: Props) {
               ))}
             </>
           ))}
-          <Button
-            variant="secondary"
-            onClick={resetCheckedFilters}
-            width={100}
-            height={30}
-            fontSize={14}
-          >
-            Clear filters
-          </Button>
+          {hasCheckedFilters && (
+            <Button
+              variant="secondary"
+              onClick={resetCheckedFilters}
+              width={100}
+              height={30}
+              fontSize={14}
+            >
+              Clear filters
+            </Button>
+          )}
         </CheckedFiltersWrapper>
       </InnerWrapper>
     </OuterWrapper>
@@ -221,10 +227,30 @@ const InputsWrapper = styled.div`
 const CheckedFiltersWrapper = styled.div`
   display: flex;
   gap: 8px;
+  margin-block: 20px;
 `;
 
-const CheckedFilter = styled.div``;
+const CheckedFilter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 112px;
+  height: 32px;
+  padding-inline: 8px;
+  background: var(--grey-400);
+  border-radius: 4px;
+  font: var(--body-xs);
+  color: var(--dark-text);
+  font-size: 14px;
+`;
 
-const RemoveFilterButton = styled.button``;
+const RemoveFilterButton = styled.button`
+  width: 10px;
+  height: 10px;
+  background: transparent;
+  path {
+    fill: var(--dark-text);
+  }
+`;
 
 const CloseIcon = styled(Close)``;
