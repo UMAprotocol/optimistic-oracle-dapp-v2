@@ -23,13 +23,12 @@ export function ConnectButton() {
         const connected = mounted && !!account && !!chain;
 
         const wrapperStyle = {
-          "--opacity": mounted ? 1 : 0,
           "--pointer-events": mounted ? "" : "none",
           "--user-select": mounted ? "" : "none",
         } as CSSProperties;
 
         return (
-          <Wrapper aria-hidden={!mounted} style={wrapperStyle}>
+          <Wrapper style={wrapperStyle}>
             {(() => {
               if (!connected) {
                 return (
@@ -77,10 +76,8 @@ const Image = styled(NextImage)`
 `;
 
 const Wrapper = styled.div`
-  opacity: var(--opacity);
   pointer-events: var(--pointer-events);
   user-select: var(--user-select);
-  transition: opacity var(--animation-duration);
 `;
 
 const AddressWrapper = styled.div`
