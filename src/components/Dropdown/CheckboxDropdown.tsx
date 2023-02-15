@@ -5,25 +5,32 @@ import {
   ItemIndicator,
 } from "@radix-ui/react-dropdown-menu";
 import Check from "public/assets/icons/check.svg";
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import { ReactNode } from "react";
 import styled, { CSSProperties } from "styled-components";
 import { ChevronIcon, Content, Portal, Root, Trigger } from "./style";
 
-type CheckedState = DropdownMenuCheckboxItemProps["checked"];
+export type CheckedState = DropdownMenuCheckboxItemProps["checked"];
 
-type Item = {
+export type Item = {
   checked: CheckedState;
   count: number;
 };
 
-type Name = string | "All";
-
-export type Items = Record<Name, Item>;
+export type Items = {
+  All: Item;
+  [key: string]: Item;
+};
 
 interface Props {
   title: ReactNode;
   items: Items;
-  setChecked: Dispatch<SetStateAction<Items>>;
+  onCheckedChange: ({
+    checked,
+    itemName,
+  }: {
+    checked: CheckedState;
+    itemName: string;
+  }) => void;
 }
 /**
  * A dropdown menu with checkboxes.
@@ -31,54 +38,7 @@ interface Props {
  * @param items The items to display in the dropdown.
  * @param setChecked A callback to be called when the checked state of an item changes.
  */
-export function CheckboxDropdown({ title, items, setChecked }: Props) {
-  const hasItemsOtherThanAllChecked = Object.entries(items).some(
-    ([name, { checked }]) => name !== "All" && checked
-  );
-
-  function handleCheckedChange(name: string, checked: CheckedState) {
-    const newItems = { ...items };
-
-    if (name === "All") {
-      // if all is checked, we cannot let the user uncheck it without having at least one other item checked
-      if (!hasItemsOtherThanAllChecked) return;
-
-      // if all is checked, uncheck all other items
-      Object.keys(newItems).forEach((name) => {
-        newItems[name].checked = false;
-      });
-
-      newItems["All"].checked = true;
-      setChecked(newItems);
-
-      return;
-    }
-
-    // if we are unchecking the only remaining checked item, check all
-    if (!checked && isTheOnlyItemChecked(name)) {
-      newItems[name].checked = false;
-      newItems["All"].checked = true;
-
-      setChecked(newItems);
-
-      return;
-    }
-
-    // if we are checking an item, uncheck all
-    newItems["All"].checked = false;
-    newItems[name].checked = checked;
-
-    setChecked(newItems);
-  }
-
-  function isTheOnlyItemChecked(name: string) {
-    return (
-      Object.entries(items).filter(
-        ([key, { checked }]) => key !== name && checked
-      ).length === 0
-    );
-  }
-
+export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
   return (
     <Root modal={false}>
       <Trigger>
@@ -86,11 +46,13 @@ export function CheckboxDropdown({ title, items, setChecked }: Props) {
       </Trigger>
       <Portal>
         <Content>
-          {Object.entries(items).map(([name, { count, checked }]) => (
+          {Object.entries(items).map(([itemName, { count, checked }]) => (
             <_CheckboxItem
-              key={name}
+              key={itemName}
               checked={checked}
-              onCheckedChange={(checked) => handleCheckedChange(name, checked)}
+              onCheckedChange={(checked) =>
+                onCheckedChange({ checked, itemName })
+              }
               onSelect={(e) => e.preventDefault()}
               disabled={count === 0}
             >
@@ -106,7 +68,7 @@ export function CheckboxDropdown({ title, items, setChecked }: Props) {
                     <Check />
                   </ItemIndicator>
                 </Box>
-                <ItemName>{name}</ItemName>
+                <ItemName>{itemName}</ItemName>
               </NameAndBoxWrapper>
               <ItemCount>{count}</ItemCount>
             </_CheckboxItem>

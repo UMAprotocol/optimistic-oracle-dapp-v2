@@ -1,6 +1,8 @@
 export { Button } from "./Button";
 export { ConnectButton } from "./ConnectButton";
 export { DecimalInput } from "./DecimalInput";
+export { CheckboxDropdown } from "./Dropdown/CheckboxDropdown";
+export type { CheckedState, Item, Items } from "./Dropdown/CheckboxDropdown";
 export { RadioDropdown } from "./Dropdown/RadioDropdown";
 export { ErrorBanner } from "./ErrorBanner";
 export { ErrorMessage } from "./ErrorMessage";
