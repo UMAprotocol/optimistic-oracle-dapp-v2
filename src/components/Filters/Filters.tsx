@@ -224,12 +224,9 @@ export function Filters({ types, projects, chains }: Props) {
           <MobileFilters
             panelOpen={mobileFiltersOpen}
             closePanel={closeMobileFilters}
+            resetCheckedFilters={resetCheckedFilters}
           >
-            <CheckboxList
-              filters={filters}
-              onCheckedChange={onCheckedChange}
-              resetCheckedFilters={resetCheckedFilters}
-            />
+            <CheckboxList filters={filters} onCheckedChange={onCheckedChange} />
           </MobileFilters>
         </MobileWrapper>
       </InnerWrapper>

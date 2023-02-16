@@ -1,5 +1,6 @@
+import { blueGrey700 } from "@/constants";
+import { addOpacityToHsla } from "@/helpers";
 import styled from "styled-components";
-import { Button } from "../Button";
 import { CheckedState } from "../Dropdown/CheckboxDropdown";
 import { Filter, Filters } from "../Filters/Filters";
 import { Checkbox } from "./Checkbox";
@@ -15,13 +16,8 @@ interface Props {
     checked: CheckedState;
     itemName: string;
   }) => void;
-  resetCheckedFilters: () => void;
 }
-export function CheckboxList({
-  filters,
-  onCheckedChange,
-  resetCheckedFilters,
-}: Props) {
+export function CheckboxList({ filters, onCheckedChange }: Props) {
   return (
     <Wrapper>
       {Object.entries(filters).map(([filter, items]) => (
@@ -40,15 +36,26 @@ export function CheckboxList({
           ))}
         </CheckboxesWrapper>
       ))}
-      <Button variant="secondary" onClick={resetCheckedFilters}>
-        Reset filters
-      </Button>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div``;
 
-const Title = styled.h2``;
+const Title = styled.h2`
+  margin-bottom: 12px;
+  font: var(--body-sm);
+  color: var(--blue-grey-500);
+  text-transform: capitalize;
+`;
 
-const CheckboxesWrapper = styled.div``;
+const CheckboxesWrapper = styled.div`
+  &:not(:last-child) {
+    margin-bottom: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid ${addOpacityToHsla(blueGrey700, 0.25)};
+  }
+  &:is(:last-child) {
+    margin-bottom: 28px;
+  }
+`;

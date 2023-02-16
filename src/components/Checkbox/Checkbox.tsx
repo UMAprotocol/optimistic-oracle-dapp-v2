@@ -43,5 +43,7 @@ export function Checkbox({ itemName, checked, count, onCheckedChange }: Props) {
 }
 
 const Wrapper = styled(Root)`
+  width: 100%;
+  background: transparent;
   ${checkboxItem}
 `;
