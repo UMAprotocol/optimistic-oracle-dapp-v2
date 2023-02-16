@@ -22,6 +22,13 @@ interface Props {
     itemName: string;
   }) => void;
 }
+/**
+ * A checkbox component that is used in the filters component.
+ * @param itemName The name of the checkbox item.
+ * @param checked Whether the checkbox is checked or not.
+ * @param count The number of items that match the checkbox item.
+ * @param onCheckedChange A callback function that is called when the checkbox is checked or unchecked.
+ */
 export function Checkbox({ itemName, checked, count, onCheckedChange }: Props) {
   return (
     <Wrapper

@@ -16,6 +16,11 @@ interface Props {
     itemName: string;
   }) => void;
 }
+/**
+ * A list of checkboxes that is used in the filters component.
+ * @param filters The filters that are used to create the checkboxes.
+ * @param onCheckedChange A callback function that is called when a checkbox is checked or unchecked.
+ */
 export function CheckboxList({ filters, onCheckedChange }: Props) {
   return (
     <Wrapper>

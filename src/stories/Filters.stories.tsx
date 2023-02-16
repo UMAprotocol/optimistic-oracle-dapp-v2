@@ -11,7 +11,7 @@ type Story = StoryObj<typeof Filters>;
 
 export const Default: Story = {
   args: {
-    types: {
+    expiry: {
       "Event-Based": {
         checked: false,
         count: 128,

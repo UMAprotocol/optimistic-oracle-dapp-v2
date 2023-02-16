@@ -20,13 +20,16 @@ import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import styled from "styled-components";
 
 interface Props {
-  types: FilterOptions;
+  expiry: FilterOptions;
   projects: FilterOptions;
   chains: FilterOptions;
 }
-export function Filters({ types, projects, chains }: Props) {
-  const [checkedTypes, setCheckedTypes] = useState<CheckboxItems>(
-    makeCheckboxItems(types)
+/**
+ * Shows checkboxes for the different filters.
+ */
+export function Filters({ expiry, projects, chains }: Props) {
+  const [checkedExpiry, setCheckedExpiry] = useState<CheckboxItems>(
+    makeCheckboxItems(expiry)
   );
 
   const [checkedProjects, setCheckedProjects] = useState<CheckboxItems>(
@@ -40,19 +43,22 @@ export function Filters({ types, projects, chains }: Props) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const filters: Filters = {
-    types: checkedTypes,
+    expiry: checkedExpiry,
     projects: checkedProjects,
     chains: checkedChains,
   };
 
   const setters: Record<Filter, Dispatch<SetStateAction<CheckboxItems>>> = {
-    types: setCheckedTypes,
+    expiry: setCheckedExpiry,
     projects: setCheckedProjects,
     chains: setCheckedChains,
   };
 
   const checkedFilters: { filter: Filter; checked: string[] }[] = [
-    { filter: "types", checked: getObjectKeysWhereCheckedIsTrue(checkedTypes) },
+    {
+      filter: "expiry",
+      checked: getObjectKeysWhereCheckedIsTrue(checkedExpiry),
+    },
     {
       filter: "projects",
       checked: getObjectKeysWhereCheckedIsTrue(checkedProjects),
@@ -92,7 +98,7 @@ export function Filters({ types, projects, chains }: Props) {
   }
 
   function resetCheckedFilters() {
-    setCheckedTypes(makeCheckboxItems(types));
+    setCheckedExpiry(makeCheckboxItems(expiry));
     setCheckedProjects(makeCheckboxItems(projects));
     setCheckedChains(makeCheckboxItems(chains));
   }

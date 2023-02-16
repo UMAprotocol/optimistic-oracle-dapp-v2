@@ -10,6 +10,13 @@ interface Props {
   closePanel: () => void;
   resetCheckedFilters: () => void;
 }
+/**
+ * A mobile filters component — shows a panel with filters.
+ * @param children The filters to show in the panel.
+ * @param panelOpen Whether the panel is open or not.
+ * @param closePanel A callback function that is called when the panel is closed.
+ * @param resetCheckedFilters A callback function that is called when the filters are reset.
+ */
 export function MobileFilters({
   children,
   panelOpen,

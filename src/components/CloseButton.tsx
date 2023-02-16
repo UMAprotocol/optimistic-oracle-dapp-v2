@@ -7,6 +7,12 @@ interface Props {
   size?: CSSProperties["width"];
   variant?: "light" | "dark";
 }
+/**
+ * A close button component — shows an X icon.
+ * @param onClick A callback function that is called when the button is clicked.
+ * @param size The size of the button.
+ * @param variant The color variant of the button (light or dark).
+ */
 export function CloseButton({ onClick, size = 14, variant = "light" }: Props) {
   const style = {
     "--size": typeof size === "number" ? `${size}px` : size,

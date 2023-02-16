@@ -76,7 +76,7 @@ export type ErrorMessage = {
   };
 };
 
-export type Filter = "types" | "projects" | "chains";
+export type Filter = "expiry" | "projects" | "chains";
 
 export type CheckboxState = DropdownMenuCheckboxItemProps["checked"];
 
