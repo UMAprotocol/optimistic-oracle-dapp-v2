@@ -1,14 +1,14 @@
 import {
-  Box,
+  CheckboxBox,
   checkboxItem,
-  Content,
+  CheckboxItemCount,
+  CheckboxItemName,
+  CheckboxNameAndBoxWrapper,
   DropdownChevronIcon,
-  ItemCount,
-  ItemName,
-  NameAndBoxWrapper,
-  Portal,
-  Root,
-  Trigger,
+  DropdownContent,
+  DropdownPortal,
+  DropdownRoot,
+  DropdownTrigger,
 } from "@/components/style";
 import type { CheckboxItems, CheckboxState } from "@/types";
 import { CheckboxItem, ItemIndicator } from "@radix-ui/react-dropdown-menu";
@@ -35,12 +35,12 @@ interface Props {
  */
 export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
   return (
-    <Root modal={false}>
-      <Trigger>
+    <DropdownRoot modal={false}>
+      <DropdownTrigger>
         {title} <DropdownChevronIcon />
-      </Trigger>
-      <Portal>
-        <Content>
+      </DropdownTrigger>
+      <DropdownPortal>
+        <DropdownContent>
           {Object.entries(items).map(([itemName, { count, checked }]) => (
             <_CheckboxItem
               key={itemName}
@@ -51,20 +51,20 @@ export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
               onSelect={(e) => e.preventDefault()}
               disabled={count === 0}
             >
-              <NameAndBoxWrapper>
-                <Box $checked={checked}>
+              <CheckboxNameAndBoxWrapper>
+                <CheckboxBox $checked={checked}>
                   <ItemIndicator>
                     <Check />
                   </ItemIndicator>
-                </Box>
-                <ItemName>{itemName}</ItemName>
-              </NameAndBoxWrapper>
-              <ItemCount>{count}</ItemCount>
+                </CheckboxBox>
+                <CheckboxItemName>{itemName}</CheckboxItemName>
+              </CheckboxNameAndBoxWrapper>
+              <CheckboxItemCount>{count}</CheckboxItemCount>
             </_CheckboxItem>
           ))}
-        </Content>
-      </Portal>
-    </Root>
+        </DropdownContent>
+      </DropdownPortal>
+    </DropdownRoot>
   );
 }
 

@@ -1,9 +1,9 @@
 import {
-  Content,
   DropdownChevronIcon,
-  Portal,
-  Root,
-  Trigger,
+  DropdownContent,
+  DropdownPortal,
+  DropdownRoot,
+  DropdownTrigger,
 } from "@/components/style";
 import { RadioItem } from "@radix-ui/react-dropdown-menu";
 import styled from "styled-components";
@@ -26,11 +26,11 @@ interface Props {
  */
 export function RadioDropdown({ items, selected, onSelect }: Props) {
   return (
-    <Root modal={false}>
+    <DropdownRoot modal={false}>
       <_Trigger>
         {selected.label} <DropdownChevronIcon />
       </_Trigger>
-      <Portal>
+      <DropdownPortal>
         <_Content>
           {items.map((item) => (
             <_RadioItem
@@ -42,12 +42,12 @@ export function RadioDropdown({ items, selected, onSelect }: Props) {
             </_RadioItem>
           ))}
         </_Content>
-      </Portal>
-    </Root>
+      </DropdownPortal>
+    </DropdownRoot>
   );
 }
 
-const _Trigger = styled(Trigger)`
+const _Trigger = styled(DropdownTrigger)`
   min-height: 40px;
   border-radius: 4px;
   min-width: 128px;
@@ -55,7 +55,7 @@ const _Trigger = styled(Trigger)`
   gap: 12px;
 `;
 
-const _Content = styled(Content)`
+const _Content = styled(DropdownContent)`
   min-width: 128px;
   width: fit-content;
   padding-block: 0;

@@ -4,7 +4,7 @@ import * as RadixDropdown from "@radix-ui/react-dropdown-menu";
 import Chevron from "public/assets/icons/chevron.svg";
 import styled, { css } from "styled-components";
 
-export const ChevronIcon = styled(Chevron)`
+export const DropdownChevronIcon = styled(Chevron)`
   path {
     stroke: currentColor;
     fill: var(--white);
@@ -12,11 +12,11 @@ export const ChevronIcon = styled(Chevron)`
   transition: transform var(--animation-duration);
 `;
 
-export const Root = styled(RadixDropdown.Root)``;
+export const DropdownRoot = styled(RadixDropdown.Root)``;
 
-export const Portal = styled(RadixDropdown.Portal)``;
+export const DropdownPortal = styled(RadixDropdown.Portal)``;
 
-export const Trigger = styled(RadixDropdown.Trigger)`
+export const DropdownTrigger = styled(RadixDropdown.Trigger)`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -32,13 +32,13 @@ export const Trigger = styled(RadixDropdown.Trigger)`
   padding-left: 18px;
   padding-right: 22px;
   &[data-state="open"] {
-    ${ChevronIcon} {
+    ${DropdownChevronIcon} {
       transform: rotate(180deg);
     }
   }
 `;
 
-export const Content = styled(RadixDropdown.Content)`
+export const DropdownContent = styled(RadixDropdown.Content)`
   min-width: 220px;
   margin-top: 4px;
   padding-top: 8px;
@@ -52,7 +52,7 @@ export const Content = styled(RadixDropdown.Content)`
   border-radius: 4px;
 `;
 
-export const Box = styled.div<{ $checked: CheckboxState }>`
+export const CheckboxBox = styled.div<{ $checked: CheckboxState }>`
   display: grid;
   place-items: center;
   width: 16px;
@@ -63,15 +63,15 @@ export const Box = styled.div<{ $checked: CheckboxState }>`
   transition: background var(--animation-duration);
 `;
 
-export const NameAndBoxWrapper = styled.div`
+export const CheckboxNameAndBoxWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
 `;
 
-export const ItemName = styled.span``;
+export const CheckboxItemName = styled.span``;
 
-export const ItemCount = styled.span`
+export const CheckboxItemCount = styled.span`
   color: var(--blue-grey-400);
 `;
 
@@ -83,16 +83,16 @@ export const checkboxItem = css`
   }
 
   &[data-disabled] {
-    ${ItemName} {
+    ${CheckboxItemName} {
       color: var(--blue-grey-400);
     }
-    ${Box} {
+    ${CheckboxBox} {
       border: 1px solid var(--blue-grey-400);
     }
   }
 `;
 
-export const InfoIconWrapper = styled.div`
+export const PanelInfoIconWrapper = styled.div`
   height: 35px;
   width: max-content;
   display: flex;
@@ -104,6 +104,6 @@ export const InfoIconWrapper = styled.div`
   border-radius: 5px;
 `;
 
-export const InfoIconText = styled.p`
+export const PanelInfoIconText = styled.p`
   font: var(--body-xs);
 `;

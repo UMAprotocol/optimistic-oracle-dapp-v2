@@ -1,9 +1,9 @@
 import {
-  Box,
+  CheckboxBox,
   checkboxItem,
-  ItemCount,
-  ItemName,
-  NameAndBoxWrapper,
+  CheckboxItemCount,
+  CheckboxItemName,
+  CheckboxNameAndBoxWrapper,
 } from "@/components/style";
 import { CheckboxState } from "@/types";
 import { Indicator, Root } from "@radix-ui/react-checkbox";
@@ -29,15 +29,15 @@ export function Checkbox({ itemName, checked, count, onCheckedChange }: Props) {
       onCheckedChange={(checked) => onCheckedChange({ checked, itemName })}
       disabled={count === 0}
     >
-      <NameAndBoxWrapper>
-        <Box $checked={checked}>
+      <CheckboxNameAndBoxWrapper>
+        <CheckboxBox $checked={checked}>
           <Indicator>
             <Check />
           </Indicator>
-        </Box>
-        <ItemName>{itemName}</ItemName>
-      </NameAndBoxWrapper>
-      <ItemCount>{count}</ItemCount>
+        </CheckboxBox>
+        <CheckboxItemName>{itemName}</CheckboxItemName>
+      </CheckboxNameAndBoxWrapper>
+      <CheckboxItemCount>{count}</CheckboxItemCount>
     </Wrapper>
   );
 }

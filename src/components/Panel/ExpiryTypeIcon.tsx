@@ -1,4 +1,4 @@
-import { InfoIconText, InfoIconWrapper } from "@/components/style";
+import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
 import { ExpiryType } from "@/types";
 import Clock from "public/assets/icons/clock.svg";
 import styled from "styled-components";
@@ -16,12 +16,12 @@ export function ExpiryTypeIcon({
   if (!expiryType) return null;
 
   return (
-    <InfoIconWrapper>
+    <PanelInfoIconWrapper>
       <ClockIconWrapper>
         <ClockIcon />
       </ClockIconWrapper>
-      <InfoIconText>{expiryType} Expiry</InfoIconText>
-    </InfoIconWrapper>
+      <PanelInfoIconText>{expiryType} Expiry</PanelInfoIconText>
+    </PanelInfoIconWrapper>
   );
 }
 
