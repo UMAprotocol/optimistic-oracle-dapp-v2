@@ -42,7 +42,7 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
   useEffect(() => {
     updateEntries();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [entries]);
 
   function getNumberOfButtons() {
     if (numberOfPages === defaultNumberOfButtons + 1) {

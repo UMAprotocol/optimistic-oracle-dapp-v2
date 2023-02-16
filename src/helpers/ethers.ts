@@ -1,3 +1,4 @@
+import { ethersErrorCodes } from "@/constants";
 import { ethers } from "ethers";
 
 export const formatEther = ethers.utils.formatEther;
@@ -37,3 +38,34 @@ export const isAddress = ethers.utils.isAddress;
 export const oneEth = ethers.BigNumber.from("1000000000000000000");
 
 export const maximumApprovalAmount = ethers.constants.MaxUint256;
+
+/**
+ * Matches given text against the list of known ethers error codes.
+ * @param text - the text to match
+ * @returns true if the text matches an error code, false otherwise
+ */
+export function isEthersError(text: string) {
+  return ethersErrorCodes.some((code) => text.includes(code));
+}
+
+/**
+ * Parses an ethers error into a message part and a link part.
+ * Conforms to the `ErrorMessage` type.
+ * @param ethersError - the error to parse
+ * @returns the parsed error
+ */
+export function parseEthersError(ethersError: string) {
+  const [firstPart, secondPart] = ethersError.split("[");
+
+  const text = firstPart.trim();
+
+  const href = secondPart.replace("See:", "").replace("]", "").trim();
+
+  return {
+    text,
+    link: {
+      text: "Learn more",
+      href,
+    },
+  };
+}

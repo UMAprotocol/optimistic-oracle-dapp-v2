@@ -16,12 +16,14 @@ export function VerifyCells({
       <TD>
         <Text>{proposedValue}</Text>
       </TD>
-      <TD>
-        <LivenessProgressBar
-          startTime={timeMilliseconds}
-          endTime={livenessEndsMilliseconds}
-        />
-      </TD>
+      {livenessEndsMilliseconds !== undefined ? (
+        <TD>
+          <LivenessProgressBar
+            startTime={timeMilliseconds}
+            endTime={livenessEndsMilliseconds}
+          />
+        </TD>
+      ) : undefined}
     </>
   );
 }
