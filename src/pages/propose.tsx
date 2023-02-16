@@ -6,7 +6,11 @@ export default function Propose() {
 
   return (
     <Layout>
-      <Table rows={propose} isLoading={propose.length === 0} page="propose" />
+      <Table
+        rows={propose ?? []}
+        isLoading={propose === undefined}
+        page="propose"
+      />
     </Layout>
   );
 }

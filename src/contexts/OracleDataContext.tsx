@@ -26,18 +26,18 @@ export type RequestTable = Record<string, Request>;
 export type AssertionTable = Record<string, Assertion>;
 export type Errors = Error[];
 export interface OracleDataContextState {
-  all: OracleQueryTable;
-  verify: OracleQueryList;
-  propose: OracleQueryList;
-  settled: OracleQueryList;
+  all: OracleQueryTable | undefined;
+  verify: OracleQueryList | undefined;
+  propose: OracleQueryList | undefined;
+  settled: OracleQueryList | undefined;
   errors: Errors;
 }
 
 export const defaultOracleDataContextState: OracleDataContextState = {
-  all: {},
-  verify: [],
-  propose: [],
-  settled: [],
+  all: undefined,
+  verify: undefined,
+  propose: undefined,
+  settled: undefined,
   errors: [],
 };
 
@@ -60,7 +60,7 @@ function DataReducerFactory<Input extends Request | Assertion>(
     state: OracleDataContextState,
     updates: Input[]
   ): OracleDataContextState => {
-    const { all } = state;
+    const { all = {} } = state;
     updates.forEach((update) => {
       const queryUpdate = converter(update);
       all[update.id] = {
