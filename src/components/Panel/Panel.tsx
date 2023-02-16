@@ -1,10 +1,9 @@
-import { Button, DecimalInput } from "@/components";
+import { Button, CloseButton, DecimalInput } from "@/components";
 import { blueGrey700, currencyIcons, projectIcons, red500 } from "@/constants";
 import { addOpacityToHsla, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
-import Close from "public/assets/icons/close.svg";
 import Info from "public/assets/icons/info.svg";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
@@ -82,11 +81,7 @@ export function Panel() {
       <TitleWrapper>
         <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
         <Title id="panel-title">{title}</Title>
-        <CloseButton aria-label="close panel" onClick={closePanel}>
-          <CloseIconWrapper>
-            <CloseIcon />
-          </CloseIconWrapper>
-        </CloseButton>
+        <CloseButton onClick={closePanel} size={20} />
       </TitleWrapper>
       <ActionsWrapper>
         <SectionTitleWrapper>
@@ -275,11 +270,6 @@ const InfoIconsWrapper = styled.div`
 
 const ProjectIconWrapper = styled.div``;
 
-const CloseIconWrapper = styled.div`
-  width: 20px;
-  height: 20px;
-`;
-
 const ValueWrapper = styled.div`
   width: min(100%, 512px);
   display: grid;
@@ -382,14 +372,7 @@ const Link = styled(NextLink)`
   }
 `;
 
-const CloseButton = styled.button`
-  background: transparent;
-  margin-top: 6px;
-`;
-
 // icons
-
-const CloseIcon = styled(Close)``;
 
 const PencilIcon = styled(Pencil)``;
 

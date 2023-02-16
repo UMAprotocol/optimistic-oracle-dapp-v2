@@ -1,6 +1,7 @@
 export { Button } from "./Button";
 export { Checkbox } from "./Checkbox/Checkbox";
 export * from "./Checkbox/style";
+export { CloseButton } from "./CloseButton";
 export { ConnectButton } from "./ConnectButton";
 export { DecimalInput } from "./DecimalInput";
 export { CheckboxDropdown } from "./Dropdown/CheckboxDropdown";

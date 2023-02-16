@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Button } from "../Button";
 import { CheckedState } from "../Dropdown/CheckboxDropdown";
 import { Filter, Filters } from "../Filters/Filters";
 import { Checkbox } from "./Checkbox";
@@ -14,8 +15,13 @@ interface Props {
     checked: CheckedState;
     itemName: string;
   }) => void;
+  resetCheckedFilters: () => void;
 }
-export function CheckboxList({ filters, onCheckedChange }: Props) {
+export function CheckboxList({
+  filters,
+  onCheckedChange,
+  resetCheckedFilters,
+}: Props) {
   return (
     <Wrapper>
       {Object.entries(filters).map(([filter, items]) => (
@@ -34,6 +40,9 @@ export function CheckboxList({ filters, onCheckedChange }: Props) {
           ))}
         </CheckboxesWrapper>
       ))}
+      <Button variant="secondary" onClick={resetCheckedFilters}>
+        Reset filters
+      </Button>
     </Wrapper>
   );
 }

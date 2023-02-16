@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Base } from "./Base";
+import Close from "public/assets/icons/close.svg";
 
 interface Props {
   children: ReactNode;
@@ -14,3 +15,5 @@ export function MobileFilters({ children, panelOpen, closePanel }: Props) {
     </Base>
   );
 }
+
+const TitleWrapper = styled.div``;

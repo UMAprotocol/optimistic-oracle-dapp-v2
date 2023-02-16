@@ -9,7 +9,7 @@ import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import { cloneDeep } from "lodash";
 import Close from "public/assets/icons/close.svg";
 import Sliders from "public/assets/icons/sliders.svg";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../Button";
 import { CheckboxList } from "../Checkbox/CheckboxList";
@@ -186,7 +186,7 @@ export function Filters({ types, projects, chains }: Props) {
           </InputsWrapper>
           <CheckedFiltersWrapper>
             {checkedFilters.map(({ filter, checked }) => (
-              <>
+              <Fragment key={filter}>
                 {checked.map((name) => (
                   <CheckedFilter key={name}>
                     {name}
@@ -198,7 +198,7 @@ export function Filters({ types, projects, chains }: Props) {
                     </RemoveFilterButton>
                   </CheckedFilter>
                 ))}
-              </>
+              </Fragment>
             ))}
             {hasCheckedFilters && (
               <Button
@@ -225,7 +225,11 @@ export function Filters({ types, projects, chains }: Props) {
             panelOpen={mobileFiltersOpen}
             closePanel={closeMobileFilters}
           >
-            <CheckboxList filters={filters} onCheckedChange={onCheckedChange} />
+            <CheckboxList
+              filters={filters}
+              onCheckedChange={onCheckedChange}
+              resetCheckedFilters={resetCheckedFilters}
+            />
           </MobileFilters>
         </MobileWrapper>
       </InnerWrapper>
@@ -267,6 +271,7 @@ const CheckedFiltersWrapper = styled.div`
   display: flex;
   gap: 8px;
   margin-block: 20px;
+  ${hideOnMobileAndUnder}
 `;
 
 const CheckedFilter = styled.div`
