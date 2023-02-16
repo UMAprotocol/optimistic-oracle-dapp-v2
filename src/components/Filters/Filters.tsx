@@ -1,11 +1,12 @@
-import {
-  CheckboxDropdown,
-  CheckedState,
-  Item,
-  Items,
-  MobileFilters,
-} from "@/components";
+import { CheckboxDropdown, MobileFilters } from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
+import type {
+  CheckboxItems,
+  CheckboxState,
+  Filter,
+  FilterOptions,
+  Filters,
+} from "@/types";
 import { cloneDeep } from "lodash";
 import Close from "public/assets/icons/close.svg";
 import Sliders from "public/assets/icons/sliders.svg";
@@ -15,27 +16,21 @@ import { Button } from "../Button";
 import { CheckboxList } from "../Checkbox/CheckboxList";
 import { Search } from "./Search";
 
-export type Filter = "types" | "projects" | "chains";
-
-export type FilterOptions = Record<string, Item>;
-
-export type Filters = Record<Filter, Items>;
-
 interface Props {
   types: FilterOptions;
   projects: FilterOptions;
   chains: FilterOptions;
 }
 export function Filters({ types, projects, chains }: Props) {
-  const [checkedTypes, setCheckedTypes] = useState<Items>(
+  const [checkedTypes, setCheckedTypes] = useState<CheckboxItems>(
     makeCheckboxItems(types)
   );
 
-  const [checkedProjects, setCheckedProjects] = useState<Items>(
+  const [checkedProjects, setCheckedProjects] = useState<CheckboxItems>(
     makeCheckboxItems(projects)
   );
 
-  const [checkedChains, setCheckedChains] = useState<Items>(
+  const [checkedChains, setCheckedChains] = useState<CheckboxItems>(
     makeCheckboxItems(chains)
   );
 
@@ -47,7 +42,7 @@ export function Filters({ types, projects, chains }: Props) {
     chains: checkedChains,
   };
 
-  const setters: Record<Filter, Dispatch<SetStateAction<Items>>> = {
+  const setters: Record<Filter, Dispatch<SetStateAction<CheckboxItems>>> = {
     types: setCheckedTypes,
     projects: setCheckedProjects,
     chains: setCheckedChains,
@@ -99,7 +94,7 @@ export function Filters({ types, projects, chains }: Props) {
     setCheckedChains(makeCheckboxItems(chains));
   }
 
-  function getObjectKeysWhereCheckedIsTrue(obj: Items) {
+  function getObjectKeysWhereCheckedIsTrue(obj: CheckboxItems) {
     return Object.keys(obj).filter((key) => key !== "All" && obj[key].checked);
   }
 
@@ -109,7 +104,7 @@ export function Filters({ types, projects, chains }: Props) {
     itemName,
   }: {
     filter: Filter;
-    checked: CheckedState;
+    checked: CheckboxState;
     itemName: string;
   }) {
     const items = filters[filter];
@@ -151,7 +146,7 @@ export function Filters({ types, projects, chains }: Props) {
     setter(newItems);
   }
 
-  function isTheOnlyItemChecked(itemName: string, items: Items) {
+  function isTheOnlyItemChecked(itemName: string, items: CheckboxItems) {
     return (
       Object.entries(items).filter(
         ([key, { checked }]) => key !== itemName && checked

@@ -1,7 +1,7 @@
+import { CheckboxState } from "@/types";
 import { Indicator, Root } from "@radix-ui/react-checkbox";
 import Check from "public/assets/icons/check.svg";
 import styled from "styled-components";
-import { CheckedState } from "../Dropdown/CheckboxDropdown";
 import {
   Box,
   checkboxItem,
@@ -11,14 +11,14 @@ import {
 } from "./style";
 
 interface Props {
-  checked: CheckedState;
+  checked: CheckboxState;
   itemName: string;
   count: number;
   onCheckedChange: ({
     checked,
     itemName,
   }: {
-    checked: CheckedState;
+    checked: CheckboxState;
     itemName: string;
   }) => void;
 }

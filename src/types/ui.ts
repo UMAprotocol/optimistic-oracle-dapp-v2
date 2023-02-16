@@ -1,4 +1,5 @@
 import { supportedChainsById, supportedCurrencies } from "@/constants";
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { ReactNode } from "react";
 
 /**
@@ -68,3 +69,21 @@ export type ErrorMessage = {
     href: string;
   };
 };
+
+export type Filter = "types" | "projects" | "chains";
+
+export type CheckboxState = DropdownMenuCheckboxItemProps["checked"];
+
+export type CheckboxItem = {
+  checked: CheckboxState;
+  count: number;
+};
+
+export type CheckboxItems = {
+  All: CheckboxItem;
+  [key: string]: CheckboxItem;
+};
+
+export type FilterOptions = Record<string, CheckboxItem>;
+
+export type Filters = Record<Filter, CheckboxItems>;

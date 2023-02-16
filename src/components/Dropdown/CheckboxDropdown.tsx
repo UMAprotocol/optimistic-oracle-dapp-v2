@@ -5,36 +5,21 @@ import {
   ItemName,
   NameAndBoxWrapper,
 } from "@/components";
-import {
-  CheckboxItem,
-  DropdownMenuCheckboxItemProps,
-  ItemIndicator,
-} from "@radix-ui/react-dropdown-menu";
+import type { CheckboxItems, CheckboxState } from "@/types";
+import { CheckboxItem, ItemIndicator } from "@radix-ui/react-dropdown-menu";
 import Check from "public/assets/icons/check.svg";
 import { ReactNode } from "react";
 import styled from "styled-components";
 import { ChevronIcon, Content, Portal, Root, Trigger } from "./style";
 
-export type CheckedState = DropdownMenuCheckboxItemProps["checked"];
-
-export type Item = {
-  checked: CheckedState;
-  count: number;
-};
-
-export type Items = {
-  All: Item;
-  [key: string]: Item;
-};
-
 interface Props {
   title: ReactNode;
-  items: Items;
+  items: CheckboxItems;
   onCheckedChange: ({
     checked,
     itemName,
   }: {
-    checked: CheckedState;
+    checked: CheckboxState;
     itemName: string;
   }) => void;
 }

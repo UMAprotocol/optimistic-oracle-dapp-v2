@@ -1,8 +1,7 @@
 import { blueGrey700 } from "@/constants";
 import { addOpacityToHsla } from "@/helpers";
 import styled from "styled-components";
-import { CheckedState } from "../Dropdown/CheckboxDropdown";
-import { Filter, Filters } from "../Filters/Filters";
+import type { CheckboxState, Filter, Filters } from "@/types";
 import { Checkbox } from "./Checkbox";
 
 interface Props {
@@ -13,7 +12,7 @@ interface Props {
     itemName,
   }: {
     filter: Filter;
-    checked: CheckedState;
+    checked: CheckboxState;
     itemName: string;
   }) => void;
 }

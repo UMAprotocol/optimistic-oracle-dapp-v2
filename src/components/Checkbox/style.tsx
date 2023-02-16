@@ -1,8 +1,8 @@
 import { blueGrey700, white } from "@/constants";
 import styled, { css } from "styled-components";
-import { CheckedState } from "../Dropdown/CheckboxDropdown";
+import { CheckboxState } from "@/types";
 
-export const Box = styled.div<{ $checked: CheckedState }>`
+export const Box = styled.div<{ $checked: CheckboxState }>`
   display: grid;
   place-items: center;
   width: 16px;
