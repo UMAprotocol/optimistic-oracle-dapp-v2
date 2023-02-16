@@ -1,4 +1,10 @@
-import { CheckboxDropdown, MobileFilters } from "@/components";
+import {
+  Button,
+  CheckboxDropdown,
+  CheckboxList,
+  MobileFilters,
+  Search,
+} from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import type {
   CheckboxItems,
@@ -12,9 +18,6 @@ import Close from "public/assets/icons/close.svg";
 import Sliders from "public/assets/icons/sliders.svg";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import styled from "styled-components";
-import { Button } from "./Button";
-import { CheckboxList } from "./CheckboxList";
-import { Search } from "./Search";
 
 interface Props {
   types: FilterOptions;
@@ -34,7 +37,7 @@ export function Filters({ types, projects, chains }: Props) {
     makeCheckboxItems(chains)
   );
 
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(true);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const filters: Filters = {
     types: checkedTypes,
