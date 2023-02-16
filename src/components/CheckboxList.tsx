@@ -1,7 +1,7 @@
 import { blueGrey700 } from "@/constants";
 import { addOpacityToHsla } from "@/helpers";
-import styled from "styled-components";
 import type { CheckboxState, Filter, Filters } from "@/types";
+import styled from "styled-components";
 import { Checkbox } from "./Checkbox";
 
 interface Props {

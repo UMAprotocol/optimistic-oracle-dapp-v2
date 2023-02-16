@@ -1,6 +1,12 @@
+import {
+  Content,
+  DropdownChevronIcon,
+  Portal,
+  Root,
+  Trigger,
+} from "@/components/style";
 import { RadioItem } from "@radix-ui/react-dropdown-menu";
 import styled from "styled-components";
-import { ChevronIcon, Content, Portal, Root, Trigger } from "./style";
 
 type Item = {
   label: string;
@@ -22,7 +28,7 @@ export function RadioDropdown({ items, selected, onSelect }: Props) {
   return (
     <Root modal={false}>
       <_Trigger>
-        {selected.label} <ChevronIcon />
+        {selected.label} <DropdownChevronIcon />
       </_Trigger>
       <Portal>
         <_Content>

@@ -11,10 +11,10 @@ import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import { CSSProperties, Fragment, useState } from "react";
 import styled from "styled-components";
-import { Base } from "./Base";
-import { ChainIcon } from "./ChainIcon";
-import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
-import { OoTypeIcon } from "./OoTypeIcon";
+import { Base } from "./Panel/Base";
+import { ChainIcon } from "./Panel/ChainIcon";
+import { ExpiryTypeIcon } from "./Panel/ExpiryTypeIcon";
+import { OoTypeIcon } from "./Panel/OoTypeIcon";
 
 const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 

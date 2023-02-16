@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import styled from "styled-components";
-import { Button } from "../Button";
-import { CloseButton } from "../CloseButton";
-import { Base } from "./Base";
+import { Button } from "./Button";
+import { CloseButton } from "./CloseButton";
+import { Base } from "./Panel/Base";
 
 interface Props {
   children: ReactNode;

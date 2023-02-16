@@ -1,16 +1,20 @@
 import {
   Box,
   checkboxItem,
+  Content,
+  DropdownChevronIcon,
   ItemCount,
   ItemName,
   NameAndBoxWrapper,
-} from "@/components";
+  Portal,
+  Root,
+  Trigger,
+} from "@/components/style";
 import type { CheckboxItems, CheckboxState } from "@/types";
 import { CheckboxItem, ItemIndicator } from "@radix-ui/react-dropdown-menu";
 import Check from "public/assets/icons/check.svg";
 import { ReactNode } from "react";
 import styled from "styled-components";
-import { ChevronIcon, Content, Portal, Root, Trigger } from "./style";
 
 interface Props {
   title: ReactNode;
@@ -33,7 +37,7 @@ export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
   return (
     <Root modal={false}>
       <Trigger>
-        {title} <ChevronIcon />
+        {title} <DropdownChevronIcon />
       </Trigger>
       <Portal>
         <Content>

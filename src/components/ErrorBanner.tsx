@@ -21,7 +21,9 @@ export function ErrorBanner() {
         <ErrorMessageWrapper key={errorMessage.text}>
           <WarningIcon />
           <ErrorMessage {...errorMessage} />
-          <_CloseButton onClick={() => removeErrorMessage(errorMessage)} />
+          <CloseButtonWrapper>
+            <CloseButton onClick={() => removeErrorMessage(errorMessage)} />
+          </CloseButtonWrapper>
         </ErrorMessageWrapper>
       ))}
     </Wrapper>
@@ -79,6 +81,6 @@ export const WarningIcon = styled(Warning)`
   }
 `;
 
-const _CloseButton = styled(CloseButton)`
+const CloseButtonWrapper = styled.div`
   margin-left: auto;
 `;

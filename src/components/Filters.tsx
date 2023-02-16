@@ -12,8 +12,8 @@ import Close from "public/assets/icons/close.svg";
 import Sliders from "public/assets/icons/sliders.svg";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import styled from "styled-components";
-import { Button } from "../Button";
-import { CheckboxList } from "../Checkbox/CheckboxList";
+import { Button } from "./Button";
+import { CheckboxList } from "./CheckboxList";
 import { Search } from "./Search";
 
 interface Props {

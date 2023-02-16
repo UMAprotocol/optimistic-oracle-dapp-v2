@@ -1,3 +1,4 @@
+import { InfoIconText, InfoIconWrapper } from "@/components/style";
 import { supportedChainsById } from "@/constants";
 import { SupportedChainId } from "@/types";
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
@@ -10,7 +11,6 @@ import Polygon from "public/assets/icons/chains/polygon.svg";
 import SX from "public/assets/icons/chains/sx.svg";
 import styled from "styled-components";
 import { IconWrapper } from "../IconWrapper";
-import { InfoIconText, InfoIconWrapper } from "./style";
 
 /**
  * Displays an icon for the given chain ID.

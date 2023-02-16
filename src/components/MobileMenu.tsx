@@ -10,9 +10,9 @@ import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
 import Logo from "public/assets/logo.svg";
 import styled, { CSSProperties } from "styled-components";
-import { CloseButton } from "../CloseButton";
-import { Base } from "./Base";
-import { ConnectButton } from "./ConnectButton";
+import { CloseButton } from "./CloseButton";
+import { Base } from "./Panel/Base";
+import { ConnectButton } from "./Panel/ConnectButton";
 
 interface Props {
   panelOpen: boolean;

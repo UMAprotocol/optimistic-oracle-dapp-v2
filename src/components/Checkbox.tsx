@@ -1,14 +1,14 @@
-import { CheckboxState } from "@/types";
-import { Indicator, Root } from "@radix-ui/react-checkbox";
-import Check from "public/assets/icons/check.svg";
-import styled from "styled-components";
 import {
   Box,
   checkboxItem,
   ItemCount,
   ItemName,
   NameAndBoxWrapper,
-} from "./style";
+} from "@/components/style";
+import { CheckboxState } from "@/types";
+import { Indicator, Root } from "@radix-ui/react-checkbox";
+import Check from "public/assets/icons/check.svg";
+import styled from "styled-components";
 
 interface Props {
   checked: CheckboxState;

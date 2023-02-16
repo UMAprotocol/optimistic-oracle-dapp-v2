@@ -1,7 +1,7 @@
+import { InfoIconText, InfoIconWrapper } from "@/components/style";
 import { ExpiryType } from "@/types";
 import Clock from "public/assets/icons/clock.svg";
 import styled from "styled-components";
-import { InfoIconText, InfoIconWrapper } from "./style";
 
 /**
  * Displays an icon for the given expiry type.
