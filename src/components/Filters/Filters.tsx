@@ -1,15 +1,25 @@
-import { CheckboxDropdown, CheckedState, Item, Items } from "@/components";
+import {
+  CheckboxDropdown,
+  CheckedState,
+  Item,
+  Items,
+  MobileFilters,
+} from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import { cloneDeep } from "lodash";
 import Close from "public/assets/icons/close.svg";
+import Sliders from "public/assets/icons/sliders.svg";
 import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../Button";
+import { CheckboxList } from "../Checkbox/CheckboxList";
 import { Search } from "./Search";
 
-type Filter = "types" | "projects" | "chains";
+export type Filter = "types" | "projects" | "chains";
 
-type FilterOptions = Record<string, Item>;
+export type FilterOptions = Record<string, Item>;
+
+export type Filters = Record<Filter, Items>;
 
 interface Props {
   types: FilterOptions;
@@ -29,7 +39,9 @@ export function Filters({ types, projects, chains }: Props) {
     makeCheckboxItems(chains)
   );
 
-  const filters: Record<Filter, Items> = {
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(true);
+
+  const filters: Filters = {
     types: checkedTypes,
     projects: checkedProjects,
     chains: checkedChains,
@@ -147,10 +159,18 @@ export function Filters({ types, projects, chains }: Props) {
     );
   }
 
+  function openMobileFilters() {
+    setMobileFiltersOpen(true);
+  }
+
+  function closeMobileFilters() {
+    setMobileFiltersOpen(false);
+  }
+
   return (
     <OuterWrapper>
       <InnerWrapper>
-        <DesktopOnly>
+        <DesktopWrapper>
           <InputsWrapper>
             <Search />
             {Object.entries(filters).map(([filter, items]) => (
@@ -192,10 +212,22 @@ export function Filters({ types, projects, chains }: Props) {
               </Button>
             )}
           </CheckedFiltersWrapper>
-        </DesktopOnly>
-        <MobileOnly>
+        </DesktopWrapper>
+        <MobileWrapper>
           <Search />
-        </MobileOnly>
+          <OpenMobileFiltersButton
+            onClick={openMobileFilters}
+            aria-label="open filters"
+          >
+            <SlidersIcon />
+          </OpenMobileFiltersButton>
+          <MobileFilters
+            panelOpen={mobileFiltersOpen}
+            closePanel={closeMobileFilters}
+          >
+            <CheckboxList filters={filters} onCheckedChange={onCheckedChange} />
+          </MobileFilters>
+        </MobileWrapper>
       </InnerWrapper>
     </OuterWrapper>
   );
@@ -208,16 +240,20 @@ const OuterWrapper = styled.div`
   align-items: center;
 `;
 
-const DesktopOnly = styled.div`
+const DesktopWrapper = styled.div`
   ${hideOnMobileAndUnder}
 `;
 
-const MobileOnly = styled.div`
+const MobileWrapper = styled.div`
+  --display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
   ${showOnMobileAndUnder}
 `;
 
 const InnerWrapper = styled.div`
   width: var(--page-width);
+  padding: var(--page-padding);
   margin-inline: auto;
 `;
 
@@ -256,4 +292,10 @@ const RemoveFilterButton = styled.button`
   }
 `;
 
+const OpenMobileFiltersButton = styled.button`
+  background: transparent;
+`;
+
 const CloseIcon = styled(Close)``;
+
+const SlidersIcon = styled(Sliders)``;

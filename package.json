@@ -16,6 +16,7 @@
     "chromatic-accept": "npx chromatic --project-token=e13461f750dc --auto-accept-changes"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^1.0.1",
     "@radix-ui/react-dropdown-menu": "^2.0.2",
     "@radix-ui/react-portal": "^1.0.1",
     "@radix-ui/react-progress": "^1.0.1",

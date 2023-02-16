@@ -1,4 +1,10 @@
-import { blueGrey700, white } from "@/constants";
+import {
+  Box,
+  checkboxItem,
+  ItemCount,
+  ItemName,
+  NameAndBoxWrapper,
+} from "@/components";
 import {
   CheckboxItem,
   DropdownMenuCheckboxItemProps,
@@ -6,7 +12,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import Check from "public/assets/icons/check.svg";
 import { ReactNode } from "react";
-import styled, { CSSProperties } from "styled-components";
+import styled from "styled-components";
 import { ChevronIcon, Content, Portal, Root, Trigger } from "./style";
 
 export type CheckedState = DropdownMenuCheckboxItemProps["checked"];
@@ -57,13 +63,7 @@ export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
               disabled={count === 0}
             >
               <NameAndBoxWrapper>
-                <Box
-                  style={
-                    {
-                      "--background": checked ? blueGrey700 : white,
-                    } as CSSProperties
-                  }
-                >
+                <Box $checked={checked}>
                   <ItemIndicator>
                     <Check />
                   </ItemIndicator>
@@ -79,42 +79,6 @@ export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
   );
 }
 
-const NameAndBoxWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const ItemName = styled.span``;
-
-const ItemCount = styled.span`
-  color: var(--blue-grey-400);
-`;
-
-const Box = styled.div`
-  display: grid;
-  place-items: center;
-  width: 16px;
-  height: 16px;
-  background: var(--background);
-  border: 1px solid var(--blue-grey-700);
-  border-radius: 4px;
-  transition: background var(--animation-duration);
-`;
-
 const _CheckboxItem = styled(CheckboxItem)`
-  display: flex;
-  justify-content: space-between;
-  &:not(:last-child) {
-    margin-bottom: 12px;
-  }
-
-  &[data-disabled] {
-    ${ItemName} {
-      color: var(--blue-grey-400);
-    }
-    ${Box} {
-      border: 1px solid var(--blue-grey-400);
-    }
-  }
+  ${checkboxItem}
 `;
