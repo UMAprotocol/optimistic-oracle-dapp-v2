@@ -8,7 +8,7 @@ export enum RequestState {
   Settled = "Settled", // Final price has been set in the contract (can get here from Expired or Resolved).
 }
 /// data needed to identify oracle requests
-export type RequestKey = {
+export type Key = {
   requester: string;
   identifier: string;
   timestamp: string;
@@ -16,11 +16,13 @@ export type RequestKey = {
 };
 
 export enum OracleType {
-  Optimistic = "Optimistic",
-  Skinny = "Skinny",
-  OptimisticV2 = "OptimisticV2",
+  Optimistic = "Optimistic Oracle",
+  OptimisticV2 = "Optimistic Oracle V2",
+  Skinny = "Skinny Optimistic Oracle",
+  Asserter = "Optimistic Asserter",
 }
-export type Request = RequestKey & {
+
+export type Request = Key & {
   id: string;
   oracleType: OracleType;
   chainId: number;
@@ -66,7 +68,37 @@ export type Requests = Request[];
 // TODO: fill this out in future pr
 export type Assertion = {
   id: string;
-};
+  oracleType: OracleType;
+  chainId: number;
+} & Partial<{
+  assertionId: string;
+  domainId: string;
+  claim: string;
+  asserter: string;
+  callbackRecipient: string;
+  escalationManager: string;
+  caller: string;
+  expirationTime: string;
+  currency: string;
+  bond: string;
+  disputer: string;
+  settlementPayout: string;
+  settlementRecipient: string;
+  settlementResolution: string;
+  assertionTimestamp: string;
+  assertionBlockNumber: number;
+  assertionHash: string;
+  assertionLogIndex: string;
+  disputeTimestamp: string;
+  disputeBlockNumber: number;
+  disputeHash: string;
+  disputeLogIndex: string;
+  settlementTimestamp: string;
+  settlementBlockNumber: number;
+  settlementHash: string;
+  settlementLogIndex: string;
+}>;
+
 export type Assertions = Assertion[];
 
 // This is the data transfer interface from client to view. Use this in a context or reducer to

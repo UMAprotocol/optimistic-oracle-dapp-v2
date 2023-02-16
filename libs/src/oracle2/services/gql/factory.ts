@@ -1,6 +1,7 @@
 import { Service, Handlers, ServiceFactory, OracleType } from "../../types";
-import { convertV1 } from "./utils";
+import { convertV1, convertAssertion } from "./utils";
 import { getRequests as getRequestsV1 } from "./oracleV1";
+import { getRequests as getAssertions } from "./asserter";
 
 export type GqlConfig = {
   url: string;
@@ -16,22 +17,24 @@ export const Factory =
       const requests = await getRequestsV1(url);
       return requests.map((request) => convertV1(request, chainId));
     }
-    async function tickRequests() {
-      const results = await Promise.all(
-        config.map((config) => {
-          if (config.type === OracleType.Optimistic) {
-            return fetchV1(config);
+    async function fetchAsserter({ url, chainId }: Omit<GqlConfig, "type">) {
+      const assertions = await getAssertions(url);
+      return assertions.map((assertion) =>
+        convertAssertion(assertion, chainId)
+      );
+    }
+    async function tick() {
+      await Promise.all(
+        config.map(async (config) => {
+          if (handlers.requests && config.type === OracleType.Optimistic) {
+            handlers.requests(await fetchV1(config));
+          }
+          if (handlers.assertions && config.type === OracleType.Asserter) {
+            handlers.assertions(await fetchAsserter(config));
           }
           throw new Error(`Unsupported oracle type ${config.type}`);
         })
       );
-      return results.flat();
-    }
-    async function tick() {
-      if (handlers.requests) {
-        const result = await tickRequests();
-        handlers.requests(result);
-      }
     }
 
     return {

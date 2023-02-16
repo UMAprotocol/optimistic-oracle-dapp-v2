@@ -100,7 +100,7 @@ export function getValueText({
   price,
   assertion,
 }: {
-  price?: number;
+  price?: string;
   assertion?: boolean;
 }) {
   if (assertion !== undefined) return assertion ? "True" : "False";

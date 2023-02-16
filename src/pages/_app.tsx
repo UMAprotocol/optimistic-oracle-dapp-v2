@@ -6,24 +6,14 @@ import {
   walletsAndConnectors,
   white,
 } from "@/constants";
-import { ErrorProvider, PanelProvider } from "@/contexts";
+import { ErrorProvider, OracleDataProvider, PanelProvider } from "@/contexts";
 import "@/styles/fonts.css";
-import { Client } from "@libs/oracle2";
-import { gql } from "@libs/oracle2/services";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
-
-const gqlService = gql.Factory(config.subgraphs);
-
-// example of using the client. hook this up in a context / reducer
-Client([gqlService], {
-  requests: (requests) => console.log(requests),
-  errors: (errors) => console.error(errors),
-});
 
 export const { chains, provider } = configureChains(supportedChains, [
   infuraProvider({ apiKey: config.infuraId }),
@@ -49,12 +39,14 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
-        <ErrorProvider>
-          <PanelProvider>
-            <GlobalStyle />
-            <Component {...pageProps} />
-          </PanelProvider>
-        </ErrorProvider>
+        <OracleDataProvider>
+          <ErrorProvider>
+            <PanelProvider>
+              <GlobalStyle />
+              <Component {...pageProps} />
+            </PanelProvider>
+          </ErrorProvider>
+        </OracleDataProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );
