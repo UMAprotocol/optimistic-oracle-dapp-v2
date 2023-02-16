@@ -6,10 +6,16 @@ import {
   useEffect,
 } from "react";
 
-import { requestToOracleQuery } from "@/helpers";
+import { requestToOracleQuery, assertionToOracleQuery } from "@/helpers";
 import { config } from "@/constants";
 import { OracleQueryUI } from "@/types";
-import { Client, Request, Requests, Assertion } from "@libs/oracle2";
+import {
+  Client,
+  Request,
+  Requests,
+  Assertion,
+  Assertions,
+} from "@libs/oracle2";
 import { gql } from "@libs/oracle2/services";
 
 const gqlService = gql.Factory(config.subgraphs);
@@ -27,7 +33,7 @@ export interface OracleDataContextState {
   errors: Errors;
 }
 
-export const defaultOracleDataContextState = {
+export const defaultOracleDataContextState: OracleDataContextState = {
   all: {},
   verify: [],
   propose: [],
@@ -39,49 +45,73 @@ export const OracleDataContext = createContext<OracleDataContextState>(
   defaultOracleDataContextState
 );
 
-// most likely we want to update this to index data by state, by transaction hash, and map the shape to something the views expect.
-function requestReducer(
-  state: OracleDataContextState,
-  updates: Requests
-): OracleDataContextState {
-  const { all } = state;
-  updates.forEach((update) => {
-    const queryUpdate = requestToOracleQuery(update);
-    all[update.id] = {
-      ...(all[update.id] || {}),
-      ...queryUpdate,
-    };
-  });
-  const init: {
-    verify: OracleQueryList;
-    propose: OracleQueryList;
-    settled: OracleQueryList;
-  } = {
-    verify: [],
-    propose: [],
-    settled: [],
-  };
-  const queries = Object.values(all).reduce((result, query) => {
-    if (query.actionType === "Propose") {
-      result.propose.push(query);
-    } else if (query.actionType === "Dispute") {
-      result.verify.push(query);
-    } else {
-      result.settled.push(query);
-    }
-    return result;
-  }, init);
+type DispatchAction<Type extends string, Data> = {
+  type: Type;
+  data: Data;
+};
+type ProcessRequestsAction = DispatchAction<"requests", Requests>;
+type ProcessAssertionsAction = DispatchAction<"assertions", Assertions>;
+type DispatchActions = ProcessRequestsAction | ProcessAssertionsAction;
 
-  return {
-    ...state,
-    all: { ...all },
-    ...queries,
+function DataReducerFactory<Input extends Request | Assertion>(
+  converter: (input: Input) => OracleQueryUI
+) {
+  return (
+    state: OracleDataContextState,
+    updates: Input[]
+  ): OracleDataContextState => {
+    const { all } = state;
+    updates.forEach((update) => {
+      const queryUpdate = converter(update);
+      all[update.id] = {
+        ...(all[update.id] || {}),
+        ...queryUpdate,
+      };
+    });
+    const init: {
+      verify: OracleQueryList;
+      propose: OracleQueryList;
+      settled: OracleQueryList;
+    } = {
+      verify: [],
+      propose: [],
+      settled: [],
+    };
+    const queries = Object.values(all).reduce((result, query) => {
+      if (query.actionType === "Propose") {
+        result.propose.push(query);
+      } else if (query.actionType === "Dispute") {
+        result.verify.push(query);
+      } else {
+        result.settled.push(query);
+      }
+      return result;
+    }, init);
+
+    return {
+      ...state,
+      all: { ...all },
+      ...queries,
+    };
   };
 }
+const requestReducer = DataReducerFactory(requestToOracleQuery);
+const assertionReducer = DataReducerFactory(assertionToOracleQuery);
 
+function oracleDataReducer(
+  state: OracleDataContextState,
+  action: DispatchActions
+): OracleDataContextState {
+  if (action.type === "requests") {
+    return requestReducer(state, action.data);
+  } else if (action.type === "assertions") {
+    return assertionReducer(state, action.data);
+  }
+  return state;
+}
 export function OracleDataProvider({ children }: { children: ReactNode }) {
-  const [queries, dispatchRequests] = useReducer(
-    requestReducer,
+  const [queries, dispatch] = useReducer(
+    oracleDataReducer,
     defaultOracleDataContextState
   );
   const [errors, setErrors] = useState<Errors>(
@@ -91,7 +121,9 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // its important this client only gets initialized once
     Client([gqlService], {
-      requests: dispatchRequests,
+      requests: (requests) => dispatch({ type: "requests", data: requests }),
+      assertions: (assertions) =>
+        dispatch({ type: "assertions", data: assertions }),
       errors: setErrors,
     });
   }, []);

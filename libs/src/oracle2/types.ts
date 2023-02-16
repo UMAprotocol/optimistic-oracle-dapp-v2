@@ -8,7 +8,7 @@ export enum RequestState {
   Settled = "Settled", // Final price has been set in the contract (can get here from Expired or Resolved).
 }
 /// data needed to identify oracle requests
-export type RequestKey = {
+export type Key = {
   requester: string;
   identifier: string;
   timestamp: string;
@@ -22,7 +22,7 @@ export enum OracleType {
   Asserter = "Optimistic Asserter",
 }
 
-export type Request = RequestKey & {
+export type Request = Key & {
   id: string;
   oracleType: OracleType;
   chainId: number;

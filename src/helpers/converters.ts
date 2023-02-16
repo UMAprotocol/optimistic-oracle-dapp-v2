@@ -8,7 +8,7 @@ import {
 } from "@/types";
 import { supportedChainsById } from "@/constants";
 
-import { Request, RequestState } from "@libs/oracle2";
+import { Request, RequestState, Assertion } from "@libs/oracle2";
 
 export function decodeHexString(hexString: string) {
   try {
@@ -116,7 +116,48 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     // need lookup from currency address per chain for this
     currency: "USDC",
     // need currency decimals for this
-    formattedBond: "0",
+    formattedBond: request.bond,
+    formattedReward: request.reward,
+  };
+}
+
+export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
+  return {
+    id: assertion.id,
+    chainId: isSupportedChain(assertion.chainId) ? assertion.chainId : 0,
+    chainName: isSupportedChain(assertion.chainId)
+      ? getChainName(assertion.chainId)
+      : getChainName(0),
+    oracleType: assertion.oracleType,
+    livenessEndsMilliseconds: assertion.expirationTime
+      ? toTimeMilliseconds(assertion.expirationTime)
+      : undefined,
+    formattedLivenessEndsIn: assertion.expirationTime
+      ? toTimeFormatted(assertion.expirationTime)
+      : undefined,
+    // unknown how to map data below here yet, will need additional work
+    ancillaryData: "",
+    decodedAncillaryData: "",
+    price: assertion.claim,
+    timeUTC: toTimeUTC(assertion.assertionTimestamp || "0"),
+    timeUNIX: toTimeUnix(assertion.assertionTimestamp || "0"),
+    timeMilliseconds: toTimeMilliseconds(assertion.assertionTimestamp || "0"),
+    timeFormatted: toTimeFormatted(assertion.assertionTimestamp || "0"),
+    expiryType: "Time-based",
+    actionType: undefined,
+    project: "UMA",
+    // need contentful? or a standard way to get this from anc data
+    title: "Unknown Title",
+    // need our user client for actions like this
+    action: () => undefined,
+    moreInformation: [],
+    error: "",
+    setError: () => undefined,
+    assertion: true,
+    // need lookup from currency address per chain for this
+    currency: "USDC",
+    // need currency decimals for this
+    formattedBond: assertion.bond,
     formattedReward: "0",
   };
 }
