@@ -16,9 +16,9 @@ export function Title({ page }: { page: Page }) {
 
   const { verify, propose, settled } = useOracleDataContext();
 
-  const numVerifyStatements = verify.length;
-  const numProposeRequests = propose.length;
-  const numSettledStatements = settled.length;
+  const numVerifyStatements = verify?.length ?? 0;
+  const numProposeRequests = propose?.length ?? 0;
+  const numSettledStatements = settled?.length ?? 0;
 
   const pageTitles = {
     verify: (
