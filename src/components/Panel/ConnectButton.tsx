@@ -1,11 +1,11 @@
-import { blueGrey600 } from "@/constants";
+import { red500 } from "@/constants";
+import { scaleLightnessHsla } from "@/helpers";
 import { useWalletIcon } from "@/hooks";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
-import "@rainbow-me/rainbowkit/styles.css";
 import NextImage from "next/image";
-import Chevron from "public/assets/icons/chevron.svg";
 import Warning from "public/assets/icons/warning.svg";
-import styled, { CSSProperties } from "styled-components";
+import { CSSProperties } from "react";
+import styled from "styled-components";
 
 export function ConnectButton() {
   const walletIcon = useWalletIcon();
@@ -38,37 +38,31 @@ export function ConnectButton() {
 
               if (chain.unsupported) {
                 return (
-                  <WrongNetworkButton onClick={openChainModal}>
+                  <ButtonSecondary onClick={openChainModal}>
                     <WarningIcon />
                     Wrong network
-                  </WrongNetworkButton>
+                  </ButtonSecondary>
                 );
               }
 
               return (
-                <Button
-                  onClick={openAccountModal}
-                  style={
-                    {
-                      "--justify-content": "space-between",
-                      "--background": blueGrey600,
-                    } as CSSProperties
-                  }
-                >
-                  <ButtonInnerWrapper>
+                <>
+                  <AddressWrapper>
                     {walletIcon && (
                       <Image
                         unoptimized
                         src={walletIcon}
-                        width={25}
-                        height={25}
+                        width={15}
+                        height={15}
                         alt="Connected wallet icon"
                       />
                     )}
-                    {account.displayName}
-                  </ButtonInnerWrapper>
-                  <ChevronIcon />
-                </Button>
+                    <AddressText>{account.address}</AddressText>
+                  </AddressWrapper>
+                  <ButtonSecondary onClick={openAccountModal}>
+                    Disconnect
+                  </ButtonSecondary>
+                </>
               );
             })()}
           </Wrapper>
@@ -77,33 +71,37 @@ export function ConnectButton() {
     </RainbowkitConnectButton.Custom>
   );
 }
+const Image = styled(NextImage)`
+  border-radius: 50%;
+`;
 
 const Wrapper = styled.div`
   pointer-events: var(--pointer-events);
   user-select: var(--user-select);
 `;
 
-const Image = styled(NextImage)`
-  border-radius: 50%;
+const AddressWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-block: 12px;
 `;
 
-const ButtonInnerWrapper = styled.div`
-  color: inherit;
-  display: flex;
-  gap: 20px;
+const AddressText = styled.span`
+  font: var(--body-xs);
 `;
 
 const Button = styled.button`
   display: flex;
   align-items: center;
-  justify-content: var(--justify-content, center);
-  height: 45px;
-  min-width: 190px;
-  padding-inline: 20px;
-  border-radius: 12px;
+  gap: 4px;
+  margin-top: 12px;
+  padding-inline: 32px;
+  padding-block: 8px;
+  border-radius: 4px;
   font: var(--body-sm);
   color: var(--white);
-  background: var(--background, var(--red-500));
+  background: var(--red-500);
   transition: filter var(--animation-duration);
 
   &:hover {
@@ -111,16 +109,18 @@ const Button = styled.button`
   }
 `;
 
-const WrongNetworkButton = styled(Button)`
-  gap: 8px;
-`;
+const ButtonSecondary = styled(Button)`
+  background: var(--white);
+  border: 1px solid var(--red-500);
+  color: var(--red-500);
+  transition: background var(--animation-duration);
 
-const ChevronIcon = styled(Chevron)``;
+  &:hover {
+    filter: unset;
+    background: ${scaleLightnessHsla(red500, 1.5)};
+  }
+`;
 
 const WarningIcon = styled(Warning)`
   width: 16px;
-  path {
-    fill: var(--white);
-    stroke: var(--red-500);
-  }
 `;

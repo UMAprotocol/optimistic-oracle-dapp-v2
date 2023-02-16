@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.0.2",
+    "@radix-ui/react-portal": "^1.0.1",
     "@radix-ui/react-progress": "^1.0.1",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "@uma/common": "^2.29.1",

@@ -25,6 +25,8 @@ import {
   headerSm,
   headerXs,
   lightText,
+  pagePadding,
+  pagePaddingSmall,
   red100,
   red500,
   red500Opacity15,
@@ -33,6 +35,7 @@ import {
   shadow1,
   shadow2,
   shadow3,
+  smallMobileAndUnder,
   subHeader,
   subHeaderSm,
   voteTickerHeight,
@@ -86,7 +89,6 @@ html {
 
 html, body, #__next {
   height: 100%;
-  width: 100%;
 }
 
 body {
@@ -246,7 +248,11 @@ a:not([class]) {
     --header-height: ${desktopHeaderHeight}px;
     --nav-bar-height: ${desktopNavBarHeight}px;
     --vote-ticker-height: ${voteTickerHeight}px;
-    --panel-width: ${desktopPanelWidth}px;
+    --panel-width: min(100%, ${desktopPanelWidth}px);
+    --page-padding: ${pagePadding}px;
+    @media ${smallMobileAndUnder} {
+      --page-padding: ${pagePaddingSmall}px;
+    }
     /* Animation */
     --animation-duration: ${animationDuration};
     /* Shadows */
