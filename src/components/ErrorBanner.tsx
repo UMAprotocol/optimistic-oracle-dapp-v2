@@ -1,5 +1,5 @@
 import { ErrorMessage } from "@/components";
-import { tabletAndUnder } from "@/constants";
+import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { useErrorContext } from "@/hooks";
 import Close from "public/assets/icons/close.svg";
 import Warning from "public/assets/icons/warning.svg";
@@ -40,6 +40,11 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding-block: 16px;
+  padding-inline: var(--page-padding);
+
+  @media ${mobileAndUnder} {
+    padding-block: 8px;
+  }
 `;
 
 export const ErrorMessageWrapper = styled.div`
@@ -63,6 +68,17 @@ export const CloseIcon = styled(Close)`
   path {
     fill: var(--white);
   }
+
+  --icon-size: 20px;
+  width: var(--icon-size);
+
+  @media ${tabletAndUnder} {
+    --icon-size: 16px;
+  }
+
+  @media ${mobileAndUnder} {
+    --icon-size: 12px;
+  }
 `;
 
 export const WarningIcon = styled(Warning)`
@@ -70,14 +86,20 @@ export const WarningIcon = styled(Warning)`
     fill: var(--white);
     stroke: var(--red-500);
   }
+
+  --icon-size: 24px;
+  width: var(--icon-size);
+
+  @media ${tabletAndUnder} {
+    --icon-size: 20px;
+  }
+
+  @media ${mobileAndUnder} {
+    --icon-size: 16px;
+  }
 `;
 
 export const CloseButton = styled.button`
-  --icon-size: 16px;
-  width: var(--icon-size);
-  height: var(--icon-size);
-  position: absolute;
-  top: calc(50% - var(--icon-size) / 2);
-  right: 0;
+  margin-left: auto;
   background: transparent;
 `;

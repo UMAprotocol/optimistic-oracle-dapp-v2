@@ -8,15 +8,17 @@ export const subHeader = `${weight} ${16 / 16}rem/19px ${family}`;
 export const subHeaderSm = `${weight} ${12 / 16}rem/16px ${family}`;
 export const headerLg = `${weight} ${96 / 16}rem/112px ${family}`;
 export const headerMd = `${weight} ${64 / 16}rem/72px ${family}`;
-export const headerSm = `${weight} ${40 / 16}rem/55px ${family}`;
-export const headerXs = `${weight} ${32 / 16}rem/45px ${family}`;
+export const headerSm = `${weight} ${40 / 16}rem/54px ${family}`;
+export const headerXs = `${weight} ${32 / 16}rem/44px ${family}`;
 
+// 64.00px → 96.00px
 export const headerLgFluidFontSize = `
-  clamp(${64 / 16}rem, 6vw + 2rem, ${96 / 16}rem)
+clamp(4.00rem, calc(3.35rem + 3.27vw), 6.00rem)
 `;
 
+// 72.00px → 112.00px
 export const headerLgFluidLineHeight = `
-  clamp(72px, 6vw + 2rem, 112px)
+clamp(4.50rem, calc(3.68rem + 4.08vw), 7.00rem)
 `;
 
 export const headerLgFluid = css`
@@ -25,11 +27,11 @@ export const headerLgFluid = css`
 `;
 
 export const headerMdFluidFontSize = `
-  clamp(${64 / 16}rem, 6vw + 2rem, ${96 / 16}rem)
+clamp(2.50rem, calc(2.01rem + 2.45vw), 4.00rem)
 `;
 
 export const headerMdFluidLineHeight = `
-  clamp(72px, 6vw + 2rem, 112px)
+clamp(3.38rem, calc(3.01rem + 1.84vw), 4.50rem)
 `;
 
 export const headerMdFluid = css`
@@ -38,11 +40,11 @@ export const headerMdFluid = css`
 `;
 
 export const headerSmFluidFontSize = `
-  clamp(${40 / 16}rem, 7vw + 1.18rem, ${64 / 16}rem)
+clamp(2.00rem, calc(1.84rem + 0.82vw), 2.50rem)
 `;
 
 export const headerSmFluidLineHeight = `
-  clamp(55px, 5vw + 2.5rem, 72px)
+clamp(3.38rem, calc(3.01rem + 1.84vw), 4.50rem)
 `;
 
 export const headerSmFluid = css`

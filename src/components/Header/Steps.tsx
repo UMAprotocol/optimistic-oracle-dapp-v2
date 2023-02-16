@@ -1,3 +1,4 @@
+import { tabletAndUnder } from "@/constants";
 import { Page } from "@/types";
 import styled from "styled-components";
 import { Step } from "./Step";
@@ -40,4 +41,11 @@ const Wrapper = styled.div`
   );
   border: 1px solid var(--blue-grey-500);
   border-radius: 4px;
+
+  @media ${tabletAndUnder} {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 30px 12px 16px;
+  }
 `;

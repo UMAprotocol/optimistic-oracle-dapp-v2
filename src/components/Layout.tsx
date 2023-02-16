@@ -23,8 +23,8 @@ export function Layout({ children }: { children: ReactNode }) {
         <Header page={page} />
         <Filters />
         {children}
+        <Panel />
       </Main>
-      <Panel />
     </>
   );
 }
