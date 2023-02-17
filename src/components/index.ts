@@ -15,4 +15,4 @@ export { Pagination } from "./Pagination";
 export { Panel } from "./Panel/Panel";
 export { PanelBase } from "./Panel/PanelBase";
 export { RadioDropdown } from "./RadioDropdown";
-export { Table } from "./Table/Table";
+export { OracleQueryTable } from "./Table/OracleQueryTable";

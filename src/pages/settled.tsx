@@ -1,4 +1,4 @@
-import { Layout, Table } from "@/components";
+import { Layout, OracleQueryTable } from "@/components";
 import { useOracleDataContext } from "@/hooks";
 
 export default function Propose() {
@@ -6,7 +6,7 @@ export default function Propose() {
 
   return (
     <Layout>
-      <Table
+      <OracleQueryTable
         rows={settled ?? []}
         isLoading={settled === undefined}
         page="settled"
