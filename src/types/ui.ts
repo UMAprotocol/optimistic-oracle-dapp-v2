@@ -93,3 +93,13 @@ export type CheckboxItems = {
 export type FilterOptions = Record<string, CheckboxItem>;
 
 export type Filters = Record<Filter, CheckboxItems>;
+
+export type FilterOnCheckedChange = ({
+  filter,
+  checked,
+  itemName,
+}: {
+  filter: Filter;
+  checked: CheckboxState;
+  itemName: string;
+}) => void;

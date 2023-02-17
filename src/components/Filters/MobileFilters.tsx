@@ -1,36 +1,35 @@
-import { ReactNode } from "react";
+import { Button, CheckboxList, CloseButton, PanelBase } from "@/components";
+import type { FilterOnCheckedChange, Filters } from "@/types";
 import styled from "styled-components";
-import { Button } from "./Button";
-import { CloseButton } from "./CloseButton";
-import { Base } from "./Panel/Base";
 
 interface Props {
-  children: ReactNode;
   panelOpen: boolean;
   closePanel: () => void;
+  filters: Filters;
+  onCheckedChange: FilterOnCheckedChange;
   resetCheckedFilters: () => void;
 }
 /**
  * A mobile filters component — shows a panel with filters.
- * @param children The filters to show in the panel.
  * @param panelOpen Whether the panel is open or not.
  * @param closePanel A callback function that is called when the panel is closed.
  * @param resetCheckedFilters A callback function that is called when the filters are reset.
  */
 export function MobileFilters({
-  children,
   panelOpen,
   closePanel,
+  filters,
+  onCheckedChange,
   resetCheckedFilters,
 }: Props) {
   return (
-    <Base panelOpen={panelOpen} closePanel={closePanel}>
+    <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
       <TitleWrapper>
         <Title>Filters</Title>
         <CloseButton onClick={closePanel} />
       </TitleWrapper>
       <InnerWrapper>
-        {children}
+        <CheckboxList filters={filters} onCheckedChange={onCheckedChange} />
         <ButtonsWrapper>
           <Button variant="primary" width="100%" onClick={closePanel}>
             Confirm
@@ -44,7 +43,7 @@ export function MobileFilters({
           </Button>
         </ButtonsWrapper>
       </InnerWrapper>
-    </Base>
+    </PanelBase>
   );
 }
 

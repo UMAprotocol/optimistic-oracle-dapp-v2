@@ -1,9 +1,10 @@
-import { ConnectButton, MobileMenu } from "@/components";
 import { hideOnTabletAndUnder, showOnTabletAndUnder } from "@/helpers";
 import Hamburger from "public/assets/icons/hamburger.svg";
 import Logo from "public/assets/logo.svg";
 import { useState } from "react";
 import styled from "styled-components";
+import { ConnectButton } from "./ConnectButton";
+import { MobileMenu } from "./MobileMenu";
 import { Nav } from "./Nav";
 
 export function NavBar() {

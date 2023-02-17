@@ -6,6 +6,7 @@ interface Props {
   onClick: () => void;
   size?: CSSProperties["width"];
   variant?: "light" | "dark";
+  ariaLabel?: string;
 }
 /**
  * A close button component — shows an X icon.
@@ -13,14 +14,19 @@ interface Props {
  * @param size The size of the button.
  * @param variant The color variant of the button (light or dark).
  */
-export function CloseButton({ onClick, size = 14, variant = "light" }: Props) {
+export function CloseButton({
+  onClick,
+  size = 14,
+  variant = "light",
+  ariaLabel = "close",
+}: Props) {
   const style = {
     "--size": typeof size === "number" ? `${size}px` : size,
     "--fill": variant === "light" ? white : darkText,
   } as CSSProperties;
 
   return (
-    <Button onClick={onClick} style={style} aria-label="Close">
+    <Button onClick={onClick} style={style} aria-label={ariaLabel}>
       <CloseIcon />
     </Button>
   );

@@ -1,10 +1,3 @@
-import {
-  Button,
-  CheckboxDropdown,
-  CheckboxList,
-  MobileFilters,
-  Search,
-} from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import type {
   CheckboxItems,
@@ -14,10 +7,13 @@ import type {
   Filters,
 } from "@/types";
 import { cloneDeep } from "lodash";
-import Close from "public/assets/icons/close.svg";
 import Sliders from "public/assets/icons/sliders.svg";
-import { Dispatch, Fragment, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
+import { CheckedFilters } from "./CheckedFilters";
+import { Dropdowns } from "./Dropdowns";
+import { MobileFilters } from "./MobileFilters";
+import { Search } from "./Search";
 
 interface Props {
   expiry: FilterOptions;
@@ -26,6 +22,9 @@ interface Props {
 }
 /**
  * Shows checkboxes for the different filters.
+ * @param expiry The expiry filter options.
+ * @param projects The projects filter options.
+ * @param chains The chains filter options.
  */
 export function Filters({ expiry, projects, chains }: Props) {
   const [checkedExpiry, setCheckedExpiry] = useState<CheckboxItems>(
@@ -53,25 +52,6 @@ export function Filters({ expiry, projects, chains }: Props) {
     projects: setCheckedProjects,
     chains: setCheckedChains,
   };
-
-  const checkedFilters: { filter: Filter; checked: string[] }[] = [
-    {
-      filter: "expiry",
-      checked: getObjectKeysWhereCheckedIsTrue(checkedExpiry),
-    },
-    {
-      filter: "projects",
-      checked: getObjectKeysWhereCheckedIsTrue(checkedProjects),
-    },
-    {
-      filter: "chains",
-      checked: getObjectKeysWhereCheckedIsTrue(checkedChains),
-    },
-  ];
-
-  const hasCheckedFilters = checkedFilters.some(
-    ({ checked }) => checked.length > 0
-  );
 
   function makeCheckboxItems(filter: FilterOptions) {
     const clone = cloneDeep(filter);
@@ -101,10 +81,6 @@ export function Filters({ expiry, projects, chains }: Props) {
     setCheckedExpiry(makeCheckboxItems(expiry));
     setCheckedProjects(makeCheckboxItems(projects));
     setCheckedChains(makeCheckboxItems(chains));
-  }
-
-  function getObjectKeysWhereCheckedIsTrue(obj: CheckboxItems) {
-    return Object.keys(obj).filter((key) => key !== "All" && obj[key].checked);
   }
 
   function onCheckedChange({
@@ -177,44 +153,14 @@ export function Filters({ expiry, projects, chains }: Props) {
         <DesktopWrapper>
           <InputsWrapper>
             <Search />
-            {Object.entries(filters).map(([filter, items]) => (
-              <CheckboxDropdown
-                key={filter}
-                title={filter}
-                items={items}
-                onCheckedChange={({ ...args }) =>
-                  onCheckedChange({ ...args, filter: filter as Filter })
-                }
-              />
-            ))}
+            <Dropdowns filters={filters} onCheckedChange={onCheckedChange} />
           </InputsWrapper>
           <CheckedFiltersWrapper>
-            {checkedFilters.map(({ filter, checked }) => (
-              <Fragment key={filter}>
-                {checked.map((name) => (
-                  <CheckedFilter key={name}>
-                    {name}
-                    <RemoveFilterButton
-                      onClick={() => uncheckFilter(filter, name)}
-                      aria-label="Remove filter"
-                    >
-                      <CloseIcon />
-                    </RemoveFilterButton>
-                  </CheckedFilter>
-                ))}
-              </Fragment>
-            ))}
-            {hasCheckedFilters && (
-              <Button
-                variant="secondary"
-                onClick={resetCheckedFilters}
-                width={100}
-                height={30}
-                fontSize={14}
-              >
-                Clear filters
-              </Button>
-            )}
+            <CheckedFilters
+              filters={filters}
+              uncheckFilter={uncheckFilter}
+              resetCheckedFilters={resetCheckedFilters}
+            />
           </CheckedFiltersWrapper>
         </DesktopWrapper>
         <MobileWrapper>
@@ -228,10 +174,10 @@ export function Filters({ expiry, projects, chains }: Props) {
           <MobileFilters
             panelOpen={mobileFiltersOpen}
             closePanel={closeMobileFilters}
+            filters={filters}
+            onCheckedChange={onCheckedChange}
             resetCheckedFilters={resetCheckedFilters}
-          >
-            <CheckboxList filters={filters} onCheckedChange={onCheckedChange} />
-          </MobileFilters>
+          />
         </MobileWrapper>
       </InnerWrapper>
     </OuterWrapper>
@@ -269,39 +215,11 @@ const InputsWrapper = styled.div`
 `;
 
 const CheckedFiltersWrapper = styled.div`
-  display: flex;
-  gap: 8px;
   margin-block: 20px;
-  ${hideOnMobileAndUnder}
-`;
-
-const CheckedFilter = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 112px;
-  height: 32px;
-  padding-inline: 8px;
-  background: var(--grey-400);
-  border-radius: 4px;
-  font: var(--body-xs);
-  color: var(--dark-text);
-  font-size: 14px;
-`;
-
-const RemoveFilterButton = styled.button`
-  width: 10px;
-  height: 10px;
-  background: transparent;
-  path {
-    fill: var(--dark-text);
-  }
 `;
 
 const OpenMobileFiltersButton = styled.button`
   background: transparent;
 `;
-
-const CloseIcon = styled(Close)``;
 
 const SlidersIcon = styled(Sliders)``;

@@ -1,20 +1,12 @@
 import { blueGrey700 } from "@/constants";
 import { addOpacityToHsla } from "@/helpers";
-import type { CheckboxState, Filter, Filters } from "@/types";
+import type { Filter, FilterOnCheckedChange, Filters } from "@/types";
 import styled from "styled-components";
-import { Checkbox } from "./Checkbox";
+import { Checkbox } from "@/components";
 
 interface Props {
   filters: Filters;
-  onCheckedChange: ({
-    filter,
-    checked,
-    itemName,
-  }: {
-    filter: Filter;
-    checked: CheckboxState;
-    itemName: string;
-  }) => void;
+  onCheckedChange: FilterOnCheckedChange;
 }
 /**
  * A list of checkboxes that is used in the filters component.

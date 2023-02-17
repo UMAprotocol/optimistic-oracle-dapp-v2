@@ -1,3 +1,4 @@
+import { CloseButton, PanelBase } from "@/components";
 import { navLinks, red500, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
@@ -10,9 +11,7 @@ import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
 import Logo from "public/assets/logo.svg";
 import styled, { CSSProperties } from "styled-components";
-import { CloseButton } from "./CloseButton";
-import { Base } from "./Panel/Base";
-import { ConnectButton } from "./Panel/ConnectButton";
+import { MobileMenuConnectButton } from "./MobileMenuConnectButton";
 
 interface Props {
   panelOpen: boolean;
@@ -30,13 +29,13 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
   };
 
   return (
-    <Base panelOpen={panelOpen} closePanel={closePanel}>
+    <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
       <AccountWrapper>
         <AccountTitleWrapper>
           <AccountTitle>Account</AccountTitle>
           <CloseButton onClick={closePanel} variant="dark" />
         </AccountTitleWrapper>
-        <ConnectButton />
+        <MobileMenuConnectButton />
       </AccountWrapper>
       <Nav>
         <NavItems>
@@ -79,7 +78,7 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
           Powered by <LogoIcon />
         </PoweredByUmaText>
       </PoweredByUmaWrapper>
-    </Base>
+    </PanelBase>
   );
 }
 

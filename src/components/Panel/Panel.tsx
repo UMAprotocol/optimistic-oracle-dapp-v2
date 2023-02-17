@@ -1,4 +1,4 @@
-import { Button, CloseButton, DecimalInput } from "@/components";
+import { Button, CloseButton, DecimalInput, PanelBase } from "@/components";
 import { blueGrey700, currencyIcons, projectIcons, red500 } from "@/constants";
 import { addOpacityToHsla, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
@@ -11,10 +11,9 @@ import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import { CSSProperties, Fragment, useState } from "react";
 import styled from "styled-components";
-import { Base } from "./Panel/Base";
-import { ChainIcon } from "./Panel/ChainIcon";
-import { ExpiryTypeIcon } from "./Panel/ExpiryTypeIcon";
-import { OoTypeIcon } from "./Panel/OoTypeIcon";
+import { ChainIcon } from "./ChainIcon";
+import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
+import { OoTypeIcon } from "./OoTypeIcon";
 
 const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 
@@ -77,7 +76,7 @@ export function Panel() {
   }
 
   return (
-    <Base panelOpen={panelOpen} closePanel={closePanel}>
+    <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
       <TitleWrapper>
         <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
         <Title id="panel-title">{title}</Title>
@@ -201,7 +200,7 @@ export function Panel() {
           ))}
         </DetailWrapper>
       </DetailsWrapper>
-    </Base>
+    </PanelBase>
   );
 }
 
