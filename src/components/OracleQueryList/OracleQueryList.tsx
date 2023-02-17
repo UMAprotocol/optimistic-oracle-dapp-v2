@@ -1,5 +1,8 @@
+import { defaultResultsPerPage } from "@/constants";
 import type { OracleQueryUI, Page } from "@/types";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Pagination } from "../Pagination";
 import { Item } from "./Item";
 import { LoadingItem } from "./LoadingItem";
 
@@ -9,6 +12,13 @@ interface Props {
   isLoading: boolean;
 }
 export function OracleQueryList({ page, items, isLoading }: Props) {
+  const [itemsToShow, setItemsToShow] = useState(items);
+
+  useEffect(() => {
+    if (items.length <= defaultResultsPerPage) {
+      setItemsToShow(items);
+    }
+  }, [items]);
   return (
     <Wrapper>
       <Title>Query</Title>
@@ -20,10 +30,15 @@ export function OracleQueryList({ page, items, isLoading }: Props) {
         </>
       ) : (
         <>
-          {items.map((item) => (
+          {itemsToShow.map((item) => (
             <Item key={item.id} page={page} item={item} />
           ))}
         </>
+      )}
+      {items.length > defaultResultsPerPage && !isLoading && (
+        <PaginationWrapper>
+          <Pagination entries={items} setEntriesToShow={setItemsToShow} />
+        </PaginationWrapper>
       )}
     </Wrapper>
   );
@@ -43,4 +58,10 @@ const Wrapper = styled.div`
 const Title = styled.h1`
   font: var(--body-xs);
   margin-bottom: 8px;
+`;
+
+const PaginationWrapper = styled.div`
+  max-width: var(--page-width);
+  margin-top: 32px;
+  margin-inline: auto;
 `;

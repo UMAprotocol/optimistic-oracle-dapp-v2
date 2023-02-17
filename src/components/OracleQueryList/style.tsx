@@ -13,6 +13,7 @@ export const HeaderWrapper = styled.div`
   display: grid;
   grid-template-columns: 18px auto;
   gap: 8px;
+  margin-bottom: 4px;
 `;
 
 export const TitleHeader = styled.h3`
@@ -35,8 +36,9 @@ export const ItemWrapper = styled.div`
 `;
 
 export const ItemInnerWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 16px;
+  gap: 4px;
   padding-bottom: 8px;
   margin-bottom: 4px;
 `;

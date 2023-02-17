@@ -53,6 +53,7 @@ const _Trigger = styled(DropdownTrigger)`
   min-width: 128px;
   width: fit-content;
   gap: 12px;
+  text-transform: unset;
 `;
 
 const _Content = styled(DropdownContent)`
