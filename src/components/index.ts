@@ -12,6 +12,7 @@ export { GlobalStyle } from "./GlobalStyle";
 export { Header } from "./Header/Header";
 export { IconWrapper } from "./IconWrapper";
 export { Layout } from "./Layout";
+export { OracleQueries } from "./OracleQueries";
 export { OracleQueryList } from "./OracleQueryList/OracleQueryList";
 export { OracleQueryTable } from "./OracleQueryTable/OracleQueryTable";
 export { Pagination } from "./Pagination";
