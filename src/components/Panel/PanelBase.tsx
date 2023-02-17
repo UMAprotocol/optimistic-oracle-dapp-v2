@@ -1,6 +1,7 @@
 import { Root as Portal } from "@radix-ui/react-portal";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect } from "react";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { useIsClient } from "usehooks-ts";
 import { Content } from "./Content";
 import { Overlay } from "./Overlay";

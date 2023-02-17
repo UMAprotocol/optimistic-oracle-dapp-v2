@@ -1,5 +1,5 @@
 import { mobileAndUnder } from "@/constants";
-import { Page } from "@/types";
+import type { Page } from "@/types";
 import styled from "styled-components";
 import { NavBar } from "./NavBar";
 import { Steps } from "./Steps";

@@ -1,4 +1,4 @@
-import { Layout, Table } from "@/components";
+import { Layout, OracleQueries } from "@/components";
 import { useOracleDataContext } from "@/hooks";
 
 export default function Propose() {
@@ -6,8 +6,8 @@ export default function Propose() {
 
   return (
     <Layout>
-      <Table
-        rows={propose ?? []}
+      <OracleQueries
+        queries={propose ?? []}
         isLoading={propose === undefined}
         page="propose"
       />

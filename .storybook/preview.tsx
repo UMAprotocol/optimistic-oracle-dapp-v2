@@ -55,6 +55,7 @@ export const parameters: Parameters = {
     },
   },
   defaultViewport: "mobile",
+  layout: "fullscreen",
   controls: {
     matchers: {
       color: /(background|color)$/i,

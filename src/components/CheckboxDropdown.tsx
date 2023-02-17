@@ -13,7 +13,7 @@ import {
 import type { CheckboxItems, CheckboxState } from "@/types";
 import { CheckboxItem, ItemIndicator } from "@radix-ui/react-dropdown-menu";
 import Check from "public/assets/icons/check.svg";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import styled from "styled-components";
 
 interface Props {

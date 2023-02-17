@@ -1,5 +1,5 @@
 import { getValueText } from "@/helpers";
-import { OracleQueryUI } from "@/types";
+import type { OracleQueryUI } from "@/types";
 import { TD, Text } from "./style";
 
 export function SettledCells({ oracleType, price, assertion }: OracleQueryUI) {

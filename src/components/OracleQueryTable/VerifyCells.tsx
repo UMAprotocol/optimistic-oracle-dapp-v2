@@ -1,5 +1,5 @@
 import { getValueText } from "@/helpers";
-import { OracleQueryUI } from "@/types";
+import type { OracleQueryUI } from "@/types";
 import { LivenessProgressBar } from "../LivenessProgressBar";
 import { TD, Text } from "./style";
 

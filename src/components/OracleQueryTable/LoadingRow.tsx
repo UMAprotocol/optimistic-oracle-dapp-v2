@@ -1,6 +1,6 @@
 import { red500 } from "@/constants";
 import { addOpacityToHsla } from "@/helpers";
-import { Page } from "@/types";
+import type { Page } from "@/types";
 import { LoadingSkeleton } from "../LoadingSkeleton";
 import {
   IconWrapper,

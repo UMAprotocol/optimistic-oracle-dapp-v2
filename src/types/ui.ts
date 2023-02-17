@@ -1,6 +1,6 @@
-import { supportedChainsById, supportedCurrencies } from "@/constants";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-import { ReactNode } from "react";
+import type { supportedChainsById, supportedCurrencies } from "@/constants";
+import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import type { ReactNode } from "react";
 export type ActionType =
   | "Dispute"
   | "Propose"

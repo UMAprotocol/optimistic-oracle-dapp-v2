@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { CSSProperties } from "styled-components";
+import type { ReactNode } from "react";
+import type { CSSProperties } from "styled-components";
 
 /**
  * Wraps an icon in a span element with a fixed width and height.

@@ -1,5 +1,6 @@
-import { ErrorMessage } from "@/types";
-import { createContext, ReactNode, useState } from "react";
+import type { ErrorMessage } from "@/types";
+import type { ReactNode } from "react";
+import { createContext, useState } from "react";
 
 export interface ErrorContextState {
   errorMessages: ErrorMessage[];

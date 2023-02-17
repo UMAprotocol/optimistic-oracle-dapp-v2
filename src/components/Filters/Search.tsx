@@ -1,5 +1,6 @@
 import SearchIcon from "public/assets/icons/search.svg";
-import { FormEvent, useState } from "react";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 export function Search() {

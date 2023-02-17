@@ -1,6 +1,6 @@
 import { headerMdFluid, headerSmFluid, mobileAndUnder } from "@/constants";
 import { useOracleDataContext } from "@/hooks";
-import { Page } from "@/types";
+import type { Page } from "@/types";
 import Propose from "public/assets/icons/pages/propose.svg";
 import Settled from "public/assets/icons/pages/settled.svg";
 import Verify from "public/assets/icons/pages/verify.svg";

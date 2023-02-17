@@ -1,6 +1,6 @@
 import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
 import { supportedChainsById } from "@/constants";
-import { SupportedChainId } from "@/types";
+import type { SupportedChainId } from "@/types";
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
 import Avalanche from "public/assets/icons/chains/avax.svg";
 import Boba from "public/assets/icons/chains/boba.svg";

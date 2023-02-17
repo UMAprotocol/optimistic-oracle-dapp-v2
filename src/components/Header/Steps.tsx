@@ -1,5 +1,5 @@
 import { tabletAndUnder } from "@/constants";
-import { Page } from "@/types";
+import type { Page } from "@/types";
 import styled from "styled-components";
 import { Step } from "./Step";
 

@@ -8,7 +8,8 @@ import type {
 } from "@/types";
 import { cloneDeep } from "lodash";
 import Sliders from "public/assets/icons/sliders.svg";
-import { Dispatch, SetStateAction, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { CheckedFilters } from "./CheckedFilters";
 import { Dropdowns } from "./Dropdowns";
