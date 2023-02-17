@@ -1,5 +1,5 @@
 import { usePanelContext } from "@/hooks";
-import { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI, Page } from "@/types";
 import { ProposeCells } from "./ProposeCells";
 import { SettledCells } from "./SettledCells";
 import { ClickableIcon, TD, TR } from "./style";

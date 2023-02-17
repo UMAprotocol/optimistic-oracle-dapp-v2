@@ -1,4 +1,5 @@
-import { CSSProperties, ReactNode, useEffect, useRef } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useRef } from "react";
 import { FocusOn } from "react-focus-on";
 import styled from "styled-components";
 

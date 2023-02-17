@@ -3,7 +3,7 @@ import { siteDescription, siteTitle } from "@/constants";
 import { capitalizeFirstLetter, determinePage } from "@/helpers";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import styled from "styled-components";
 
 export function Layout({ children }: { children: ReactNode }) {

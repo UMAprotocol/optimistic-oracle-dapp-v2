@@ -1,6 +1,6 @@
 import { OracleQueryTable, Panel } from "@/components";
 import { PanelProvider } from "@/contexts";
-import { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import {
   makeMockOracleQueryUIs,
   makeRandomTitle,

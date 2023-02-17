@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { format } from "date-fns";
-import {
+import type {
   OracleQueryUI,
   SupportedChainId,
   ActionType,
@@ -8,7 +8,8 @@ import {
 } from "@/types";
 import { supportedChainsById } from "@/constants";
 
-import { Request, RequestState, Assertion } from "@libs/oracle2";
+import type { Request, Assertion } from "@libs/oracle2";
+import { RequestState } from "@libs/oracle2";
 
 export function decodeHexString(hexString: string) {
   try {

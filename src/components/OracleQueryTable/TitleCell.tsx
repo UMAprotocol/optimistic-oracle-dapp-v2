@@ -1,5 +1,5 @@
 import { projectIcons } from "@/constants";
-import { OracleQueryUI } from "@/types";
+import type { OracleQueryUI } from "@/types";
 import Uma from "public/assets/icons/projects/uma.svg";
 import styled from "styled-components";
 import {

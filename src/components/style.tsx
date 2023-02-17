@@ -1,5 +1,5 @@
 import { blueGrey700, white } from "@/constants";
-import { CheckboxState } from "@/types";
+import type { CheckboxState } from "@/types";
 import * as RadixDropdown from "@radix-ui/react-dropdown-menu";
 import Chevron from "public/assets/icons/chevron.svg";
 import styled, { css } from "styled-components";

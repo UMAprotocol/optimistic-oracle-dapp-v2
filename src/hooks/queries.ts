@@ -1,5 +1,5 @@
 import { config } from "@/constants";
-import { VotingInfo } from "@/types";
+import type { VotingInfo } from "@/types";
 import useSWR from "swr";
 
 async function getVotingInfo() {

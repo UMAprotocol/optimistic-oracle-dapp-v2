@@ -1,5 +1,5 @@
 import { defaultResultsPerPage } from "@/constants";
-import { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI, Page } from "@/types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Pagination } from "../Pagination";

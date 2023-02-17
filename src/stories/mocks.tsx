@@ -1,4 +1,4 @@
-import { OracleQueryUI } from "@/types";
+import type { OracleQueryUI } from "@/types";
 import { addMinutes, format } from "date-fns";
 
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {

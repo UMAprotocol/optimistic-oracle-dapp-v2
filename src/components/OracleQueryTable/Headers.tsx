@@ -1,4 +1,4 @@
-import { Page } from "@/types";
+import type { Page } from "@/types";
 import styled from "styled-components";
 
 /**

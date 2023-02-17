@@ -5,7 +5,7 @@ import {
   CheckboxItemName,
   CheckboxNameAndBoxWrapper,
 } from "@/components/style";
-import { CheckboxState } from "@/types";
+import type { CheckboxState } from "@/types";
 import { Indicator, Root } from "@radix-ui/react-checkbox";
 import Check from "public/assets/icons/check.svg";
 import styled from "styled-components";

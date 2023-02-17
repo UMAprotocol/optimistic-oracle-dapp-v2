@@ -1,5 +1,5 @@
 import { LivenessProgressBar } from "@/components/LivenessProgressBar";
-import { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof LivenessProgressBar> = {
   component: LivenessProgressBar,

@@ -1,21 +1,11 @@
-import {
-  createContext,
-  ReactNode,
-  useReducer,
-  useState,
-  useEffect,
-} from "react";
+import type { ReactNode } from "react";
+import { createContext, useReducer, useState, useEffect } from "react";
 
 import { requestToOracleQuery, assertionToOracleQuery } from "@/helpers";
 import { config } from "@/constants";
-import { OracleQueryUI } from "@/types";
-import {
-  Client,
-  Request,
-  Requests,
-  Assertion,
-  Assertions,
-} from "@libs/oracle2";
+import type { OracleQueryUI } from "@/types";
+import type { Request, Requests, Assertion, Assertions } from "@libs/oracle2";
+import { Client } from "@libs/oracle2";
 import { gql } from "@libs/oracle2/services";
 
 const gqlService = gql.Factory(config.subgraphs);
