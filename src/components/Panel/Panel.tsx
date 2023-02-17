@@ -5,7 +5,12 @@ import {
   DecimalInput,
   PanelBase,
 } from "@/components";
-import { blueGrey700, getProjectIcon, red500 } from "@/constants";
+import {
+  blueGrey700,
+  getProjectIcon,
+  red500,
+  smallMobileAndUnder,
+} from "@/constants";
 import { addOpacityToHsla, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import NextLink from "next/link";
@@ -269,6 +274,7 @@ const DetailWrapper = styled.div`
 
 const InfoIconsWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin-top: 20px;
   padding-inline: var(--padding-inline);
@@ -298,11 +304,12 @@ const InputWrapper = styled.div`
 
 const ErrorWrapper = styled.div`
   width: min(100%, 512px);
+  min-height: 48px;
   display: flex;
+  align-items: center;
   gap: 16px;
   margin-top: 20px;
   padding-inline: 16px;
-  padding-block: 12px;
   background: ${errorBackgroundColor};
   border: 1px solid var(--red-500);
   border-radius: 2px;
@@ -336,32 +343,36 @@ const SectionSubTitle = styled.h3`
 
 // text
 
-const ValueText = styled.p`
+const Text = styled.p`
+  font: var(--body-sm);
+  @media ${smallMobileAndUnder} {
+    font: var(--body-xs);
+  }
+`;
+
+const ValueText = styled(Text)`
   font: var(--body-md);
   font-weight: 600;
+  @media ${smallMobileAndUnder} {
+    font: var(--body-sm);
+  }
 `;
 
-const ActionText = styled.p`
+const ActionText = styled(Text)`
   display: flex;
   align-items: center;
-  font: var(--body-sm);
 `;
 
-const DetailText = styled.p`
-  font: var(--body-sm);
-`;
+const DetailText = styled(Text)``;
 
-const Time = styled.p`
-  font: var(--body-sm);
-`;
+const Time = styled(Text)``;
 
 const TimeFormat = styled.span`
   display: inline-block;
   margin-right: 32px;
 `;
 
-const ErrorText = styled.p`
-  font: var(--body-sm);
+const ErrorText = styled(Text)`
   color: var(--red-500);
 `;
 
@@ -372,6 +383,7 @@ const Link = styled(NextLink)`
   text-decoration: none;
   color: var(--red-500);
   transition: opacity var(--animation-duration);
+  word-break: break-all;
 
   &:hover {
     opacity: 0.75;
