@@ -24,4 +24,4 @@ const Wrapper = styled.span`
   gap: 8px;
 `;
 
-const CurrencyIconWrapper = styled.div``;
+const CurrencyIconWrapper = styled.span``;

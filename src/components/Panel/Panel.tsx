@@ -28,7 +28,6 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
  * A panel that slides in from the right.
  * The panel adapts to the page it is used on.
  * @see `PanelContext`
- * @see `PanelContent`
  */
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
@@ -86,7 +85,12 @@ export function Panel() {
       <TitleWrapper>
         <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
         <Title id="panel-title">{title}</Title>
-        <CloseButton onClick={closePanel} size={20} />
+        <CloseButtonWrapper>
+          <CloseButton
+            onClick={closePanel}
+            size="clamp(1.00rem, calc(0.92rem + 0.41vw), 1.25rem)"
+          />
+        </CloseButtonWrapper>
       </TitleWrapper>
       <ActionsWrapper>
         <SectionTitleWrapper>
@@ -207,11 +211,11 @@ export function Panel() {
 // wrappers
 
 const TitleWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--page-padding);
   min-height: 84px;
-  padding-inline: 28px;
+  padding-inline: var(--padding-inline);
   padding-block: 20px;
   background: var(--blue-grey-700);
 `;
@@ -224,7 +228,7 @@ const SectionTitleWrapper = styled.div`
 
 const ActionsWrapper = styled.div`
   background: var(--grey-400);
-  padding-inline: 28px;
+  padding-inline: var(--padding-inline);
   padding-top: 20px;
   padding-bottom: 24px;
 `;
@@ -244,8 +248,12 @@ const ActionWrapper = styled.div`
 
 const ActionButtonWrapper = styled.div``;
 
+const CloseButtonWrapper = styled.div`
+  width: clamp(1.25rem, calc(0.84rem + 2.04vw), 2.5rem);
+`;
+
 const DetailsWrapper = styled.div`
-  padding-inline: 28px;
+  padding-inline: var(--padding-inline);
   padding-bottom: 64px;
 `;
 
@@ -263,11 +271,13 @@ const InfoIconsWrapper = styled.div`
   display: flex;
   gap: 12px;
   margin-top: 20px;
-  padding-inline: 28px;
+  padding-inline: var(--padding-inline);
   margin-bottom: 42px;
 `;
 
-const ProjectIconWrapper = styled.div``;
+const ProjectIconWrapper = styled.div`
+  width: clamp(1.25rem, calc(0.84rem + 2.04vw), 2.5rem);
+`;
 
 const ValueWrapper = styled.div`
   width: min(100%, 512px);
@@ -331,9 +341,10 @@ const ValueText = styled.p`
   font-weight: 600;
 `;
 
-const ActionText = styled.span`
+const ActionText = styled.p`
   display: flex;
   align-items: center;
+  font: var(--body-sm);
 `;
 
 const DetailText = styled.p`
