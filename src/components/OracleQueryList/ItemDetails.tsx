@@ -1,8 +1,12 @@
 import { getValueText } from "@/helpers";
 import type { OracleQueryUI, Page } from "@/types";
-import styled from "styled-components";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
+import {
+  ItemDetailsInnerWrapper,
+  ItemDetailsText,
+  ItemDetailsWrapper,
+} from "./style";
 
 export function ItemDetails({
   page,
@@ -15,49 +19,49 @@ export function ItemDetails({
   assertion,
 }: OracleQueryUI & { page: Page }) {
   const verifyDetails = (
-    <Wrapper>
-      <InnerWrapper>
-        <Text>Proposal/Assertion</Text>
-        <Text>{getValueText({ price, assertion })}</Text>
-      </InnerWrapper>
+    <ItemDetailsWrapper>
+      <ItemDetailsInnerWrapper>
+        <ItemDetailsText>Proposal/Assertion</ItemDetailsText>
+        <ItemDetailsText>{getValueText({ price, assertion })}</ItemDetailsText>
+      </ItemDetailsInnerWrapper>
       {livenessEndsMilliseconds !== undefined && (
-        <InnerWrapper>
-          <Text>Challenge Period Left</Text>
+        <ItemDetailsInnerWrapper>
+          <ItemDetailsText>Challenge Period Left</ItemDetailsText>
           <LivenessProgressBar
             startTime={timeMilliseconds}
             endTime={livenessEndsMilliseconds}
             fontSize={12}
             marginBottom={0}
           />
-        </InnerWrapper>
+        </ItemDetailsInnerWrapper>
       )}
-    </Wrapper>
+    </ItemDetailsWrapper>
   );
 
   const proposeDetails = (
-    <Wrapper>
-      <InnerWrapper>
-        <Text>Bond</Text>
-        <Text>
+    <ItemDetailsWrapper>
+      <ItemDetailsInnerWrapper>
+        <ItemDetailsText>Bond</ItemDetailsText>
+        <ItemDetailsText>
           <Currency amount={formattedBond} currency={currency} />
-        </Text>
-      </InnerWrapper>
-      <InnerWrapper>
-        <Text>Reward</Text>
-        <Text>
+        </ItemDetailsText>
+      </ItemDetailsInnerWrapper>
+      <ItemDetailsInnerWrapper>
+        <ItemDetailsText>Reward</ItemDetailsText>
+        <ItemDetailsText>
           <Currency amount={formattedReward} currency={currency} />
-        </Text>
-      </InnerWrapper>
-    </Wrapper>
+        </ItemDetailsText>
+      </ItemDetailsInnerWrapper>
+    </ItemDetailsWrapper>
   );
 
   const settledDetails = (
-    <Wrapper>
-      <InnerWrapper>
-        <Text>Settled As</Text>
-        <Text>{getValueText({ price, assertion })}</Text>
-      </InnerWrapper>
-    </Wrapper>
+    <ItemDetailsWrapper>
+      <ItemDetailsInnerWrapper>
+        <ItemDetailsText>Settled As</ItemDetailsText>
+        <ItemDetailsText>{getValueText({ price, assertion })}</ItemDetailsText>
+      </ItemDetailsInnerWrapper>
+    </ItemDetailsWrapper>
   );
 
   const detailsForPage = {
@@ -70,17 +74,3 @@ export function ItemDetails({
 
   return details;
 }
-
-const Wrapper = styled.div``;
-
-const InnerWrapper = styled.div`
-  min-height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--grey-500);
-`;
-
-const Text = styled.p`
-  font: var(--body-xs);
-`;

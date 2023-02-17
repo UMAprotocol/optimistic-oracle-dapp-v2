@@ -1,7 +1,7 @@
 import type { OracleQueryUI, Page } from "@/types";
 import styled from "styled-components";
-import { oracleQueryHover } from "../style";
 import { Item } from "./Item";
+import { LoadingItem } from "./LoadingItem";
 
 interface Props {
   page: Page;
@@ -12,9 +12,19 @@ export function OracleQueryList({ page, items, isLoading }: Props) {
   return (
     <Wrapper>
       <Title>Query</Title>
-      {items.map((item) => (
-        <Item key={item.id} page={page} item={item} />
-      ))}
+      {isLoading ? (
+        <>
+          {Array.from({ length: 3 }).map((_, index) => (
+            <LoadingItem key={index} />
+          ))}
+        </>
+      ) : (
+        <>
+          {items.map((item) => (
+            <Item key={item.id} page={page} item={item} />
+          ))}
+        </>
+      )}
     </Wrapper>
   );
 }
