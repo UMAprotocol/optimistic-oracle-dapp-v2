@@ -13,5 +13,5 @@ export function Client(factories: ServiceFactories, handlers: Handlers) {
         handlers.errors && handlers.errors([err]);
       }
     });
-  }, 4000);
+  });
 }
