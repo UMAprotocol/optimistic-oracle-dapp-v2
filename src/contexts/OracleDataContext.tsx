@@ -25,8 +25,7 @@ import {
 import { gql, tokens } from "@libs/oracle2/services";
 
 const gqlService = gql.Factory(config.subgraphs);
-// TODO: need to add configuration for providers and chains here
-const [tokenQueries, tokenService] = tokens.Factory([]);
+const [tokenQueries, tokenService] = tokens.Factory(config.providers);
 
 // tokenQueries has {token,allowance,balance} which you have to pass in chainid plus args for each call
 export { tokenQueries };
@@ -148,7 +147,7 @@ function tokensReducer(state: OracleDataContextState, updates: Tokens) {
   return {
     ...state,
     tokens: uniqueList([...state.tokens, ...updates], (el: Token) =>
-      [el.chainId, el.address].join("~")
+      [el.chainId, el.tokenAddress].join("~")
     ),
   };
 }
