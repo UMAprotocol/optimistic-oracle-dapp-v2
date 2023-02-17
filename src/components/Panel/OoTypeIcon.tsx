@@ -1,8 +1,8 @@
 import { IconWrapper } from "@/components";
+import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
 import { OracleType } from "@/types";
 import OptimisticOracle from "public/assets/icons/optimistic-oracle.svg";
 import styled from "styled-components";
-import { InfoIconText, InfoIconWrapper } from "./style";
 
 /**
  * Displays an icon for the given Optimistic Oracle type.
@@ -13,12 +13,12 @@ export function OoTypeIcon({ ooType }: { ooType: OracleType | undefined }) {
   if (!ooType) return null;
 
   return (
-    <InfoIconWrapper>
+    <PanelInfoIconWrapper>
       <IconWrapper width={24} height={12}>
         <OoIcon />
       </IconWrapper>
-      <InfoIconText>{ooType}</InfoIconText>
-    </InfoIconWrapper>
+      <PanelInfoIconText>{ooType}</PanelInfoIconText>
+    </PanelInfoIconWrapper>
   );
 }
 

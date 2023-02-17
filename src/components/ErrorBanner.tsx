@@ -1,7 +1,6 @@
-import { ErrorMessage } from "@/components";
+import { CloseButton, ErrorMessage } from "@/components";
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { useErrorContext } from "@/hooks";
-import Close from "public/assets/icons/close.svg";
 import Warning from "public/assets/icons/warning.svg";
 import styled from "styled-components";
 
@@ -22,9 +21,9 @@ export function ErrorBanner() {
         <ErrorMessageWrapper key={errorMessage.text}>
           <WarningIcon />
           <ErrorMessage {...errorMessage} />
-          <CloseButton onClick={() => removeErrorMessage(errorMessage)}>
-            <CloseIcon />
-          </CloseButton>
+          <CloseButtonWrapper>
+            <CloseButton onClick={() => removeErrorMessage(errorMessage)} />
+          </CloseButtonWrapper>
         </ErrorMessageWrapper>
       ))}
     </Wrapper>
@@ -64,23 +63,6 @@ export const ErrorMessageWrapper = styled.div`
   }
 `;
 
-export const CloseIcon = styled(Close)`
-  path {
-    fill: var(--white);
-  }
-
-  --icon-size: 20px;
-  width: var(--icon-size);
-
-  @media ${tabletAndUnder} {
-    --icon-size: 16px;
-  }
-
-  @media ${mobileAndUnder} {
-    --icon-size: 12px;
-  }
-`;
-
 export const WarningIcon = styled(Warning)`
   path {
     fill: var(--white);
@@ -99,7 +81,6 @@ export const WarningIcon = styled(Warning)`
   }
 `;
 
-export const CloseButton = styled.button`
+const CloseButtonWrapper = styled.div`
   margin-left: auto;
-  background: transparent;
 `;

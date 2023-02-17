@@ -1,10 +1,9 @@
-import { Button, DecimalInput } from "@/components";
+import { Button, CloseButton, DecimalInput, PanelBase } from "@/components";
 import { blueGrey700, currencyIcons, projectIcons, red500 } from "@/constants";
 import { addOpacityToHsla, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
-import Close from "public/assets/icons/close.svg";
 import Info from "public/assets/icons/info.svg";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
@@ -12,7 +11,6 @@ import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import { CSSProperties, Fragment, useState } from "react";
 import styled from "styled-components";
-import { Base } from "./Base";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
@@ -78,15 +76,11 @@ export function Panel() {
   }
 
   return (
-    <Base panelOpen={panelOpen} closePanel={closePanel}>
+    <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
       <TitleWrapper>
         <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
         <Title id="panel-title">{title}</Title>
-        <CloseButton aria-label="close panel" onClick={closePanel}>
-          <CloseIconWrapper>
-            <CloseIcon />
-          </CloseIconWrapper>
-        </CloseButton>
+        <CloseButton onClick={closePanel} size={20} />
       </TitleWrapper>
       <ActionsWrapper>
         <SectionTitleWrapper>
@@ -206,7 +200,7 @@ export function Panel() {
           ))}
         </DetailWrapper>
       </DetailsWrapper>
-    </Base>
+    </PanelBase>
   );
 }
 
@@ -274,11 +268,6 @@ const InfoIconsWrapper = styled.div`
 `;
 
 const ProjectIconWrapper = styled.div``;
-
-const CloseIconWrapper = styled.div`
-  width: 20px;
-  height: 20px;
-`;
 
 const ValueWrapper = styled.div`
   width: min(100%, 512px);
@@ -382,14 +371,7 @@ const Link = styled(NextLink)`
   }
 `;
 
-const CloseButton = styled.button`
-  background: transparent;
-  margin-top: 6px;
-`;
-
 // icons
-
-const CloseIcon = styled(Close)``;
 
 const PencilIcon = styled(Pencil)``;
 
