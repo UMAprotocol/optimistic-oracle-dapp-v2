@@ -10,7 +10,7 @@ interface Props {
   panelOpen: boolean;
   closePanel: () => void;
 }
-export function Base({ children, panelOpen, closePanel }: Props) {
+export function PanelBase({ children, panelOpen, closePanel }: Props) {
   const router = useRouter();
   const isClient = useIsClient();
 

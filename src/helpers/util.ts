@@ -117,30 +117,44 @@ export function isActiveRoute(pathname: string, href: string) {
   return pathname === href;
 }
 
+/**
+ * Hides content on tablet and under
+ */
 export const hideOnTabletAndUnder = css`
   @media ${tabletAndUnder} {
     display: none;
   }
 `;
 
+/**
+ * Hides content on mobile and under
+ */
 export const hideOnMobileAndUnder = css`
   @media ${mobileAndUnder} {
     display: none;
   }
 `;
 
+/**
+ * Hides content by default, and shows it on tablet and under.
+ * Defaults to display: block, but can be overridden with the --display variable.
+ */
 export const showOnTabletAndUnder = css`
   display: none;
 
   @media ${tabletAndUnder} {
-    display: block;
+    display: var(--display, block);
   }
 `;
 
+/**
+ * Hides content by default, and shows it on mobile and under.
+ * Defaults to display: block, but can be overridden with the --display variable.
+ */
 export const showOnMobileAndUnder = css`
   display: none;
 
   @media ${mobileAndUnder} {
-    display: block;
+    display: var(--display, block);
   }
 `;

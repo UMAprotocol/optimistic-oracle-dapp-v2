@@ -1,8 +1,8 @@
+import { CloseButton, PanelBase } from "@/components";
 import { navLinks, red500, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import Close from "public/assets/icons/close.svg";
 import ExternalLink from "public/assets/icons/external-link.svg";
 import Discord from "public/assets/icons/social/discord.svg";
 import Discourse from "public/assets/icons/social/discourse.svg";
@@ -11,8 +11,7 @@ import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
 import Logo from "public/assets/logo.svg";
 import styled, { CSSProperties } from "styled-components";
-import { Base } from "./Base";
-import { ConnectButton } from "./ConnectButton";
+import { MobileMenuConnectButton } from "./MobileMenuConnectButton";
 
 interface Props {
   panelOpen: boolean;
@@ -30,15 +29,13 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
   };
 
   return (
-    <Base panelOpen={panelOpen} closePanel={closePanel}>
+    <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
       <AccountWrapper>
         <AccountTitleWrapper>
           <AccountTitle>Account</AccountTitle>
-          <CloseButton onClick={closePanel}>
-            <CloseIcon />
-          </CloseButton>
+          <CloseButton onClick={closePanel} variant="dark" />
         </AccountTitleWrapper>
-        <ConnectButton />
+        <MobileMenuConnectButton />
       </AccountWrapper>
       <Nav>
         <NavItems>
@@ -81,7 +78,7 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
           Powered by <LogoIcon />
         </PoweredByUmaText>
       </PoweredByUmaWrapper>
-    </Base>
+    </PanelBase>
   );
 }
 
@@ -100,17 +97,6 @@ const AccountTitleWrapper = styled.div`
 const AccountTitle = styled.h1`
   font: var(--body-sm);
   font-weight: 700;
-`;
-
-const CloseButton = styled.button`
-  background: transparent;
-`;
-
-const CloseIcon = styled(Close)`
-  width: 14px;
-  path {
-    fill: var(--blue-grey-700);
-  }
 `;
 
 const Nav = styled.nav``;

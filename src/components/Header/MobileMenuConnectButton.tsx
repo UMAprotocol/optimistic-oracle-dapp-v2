@@ -7,7 +7,7 @@ import Warning from "public/assets/icons/warning.svg";
 import { CSSProperties } from "react";
 import styled from "styled-components";
 
-export function ConnectButton() {
+export function MobileMenuConnectButton() {
   const walletIcon = useWalletIcon();
 
   return (

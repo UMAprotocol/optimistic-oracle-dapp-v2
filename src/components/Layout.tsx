@@ -1,4 +1,4 @@
-import { Filters, Header, Panel } from "@/components";
+import { Header, Panel } from "@/components";
 import { siteDescription, siteTitle } from "@/constants";
 import { capitalizeFirstLetter, determinePage } from "@/helpers";
 import Head from "next/head";
@@ -21,7 +21,6 @@ export function Layout({ children }: { children: ReactNode }) {
       </Head>
       <Main>
         <Header page={page} />
-        <Filters />
         {children}
         <Panel />
       </Main>
