@@ -11,6 +11,13 @@ interface Props {
   items: OracleQueryUI[];
   isLoading: boolean;
 }
+/**
+ * Renders a list of oracle queries.
+ * Intended to be shown on mobile.
+ * @param page The page the queries are being rendered on.
+ * @param items The queries to render.
+ * @param isLoading Whether the queries are still loading.
+ */
 export function OracleQueryList({ page, items, isLoading }: Props) {
   const [itemsToShow, setItemsToShow] = useState(items);
 

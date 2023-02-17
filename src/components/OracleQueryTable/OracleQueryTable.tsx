@@ -13,7 +13,8 @@ interface Props {
   isLoading: boolean;
 }
 /**
- * Table for showing oracle queries
+ * Table for showing oracle queries.
+ * Intended to be shown on desktop.
  * @param page - the page of the app, used to determine which columns to show
  * @param rows - the rows to show in the table
  * @param isLoading - whether the table is loading
