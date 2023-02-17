@@ -2,6 +2,7 @@ import { blueGrey700, white } from "@/constants";
 import type { CheckboxState } from "@/types";
 import * as RadixDropdown from "@radix-ui/react-dropdown-menu";
 import Chevron from "public/assets/icons/chevron.svg";
+import Clickable from "public/assets/icons/clickable.svg";
 import styled, { css } from "styled-components";
 
 export const DropdownChevronIcon = styled(Chevron)`
@@ -106,4 +107,29 @@ export const PanelInfoIconWrapper = styled.div`
 
 export const PanelInfoIconText = styled.p`
   font: var(--body-xs);
+`;
+
+export const OracleQueryClickableIcon = styled(Clickable)`
+  transition: fill var(--animation-duration);
+
+  path {
+    transition: stroke var(--animation-duration);
+  }
+`;
+
+export const oracleQueryHover = css`
+  &:hover {
+    h3 {
+      transition: color var(--animation-duration);
+      color: var(--red-500);
+    }
+
+    ${OracleQueryClickableIcon} {
+      fill: var(--red-500);
+
+      path {
+        stroke: var(--white);
+      }
+    }
+  }
 `;

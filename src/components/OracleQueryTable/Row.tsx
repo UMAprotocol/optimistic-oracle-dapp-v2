@@ -1,8 +1,9 @@
 import { usePanelContext } from "@/hooks";
 import type { OracleQueryUI, Page } from "@/types";
+import { OracleQueryClickableIcon } from "@/components/style";
 import { ProposeCells } from "./ProposeCells";
 import { SettledCells } from "./SettledCells";
-import { ClickableIcon, TD, TR } from "./style";
+import { TD, TR } from "./style";
 import { TitleCell } from "./TitleCell";
 import { VerifyCells } from "./VerifyCells";
 
@@ -32,7 +33,7 @@ export function Row({ page, row }: { page: Page; row: OracleQueryUI }) {
       <TitleCell {...row} />
       {innerCellsComponent}
       <TD>
-        <ClickableIcon />
+        <OracleQueryClickableIcon />
       </TD>
     </TR>
   );

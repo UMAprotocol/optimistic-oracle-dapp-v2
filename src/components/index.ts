@@ -3,6 +3,7 @@ export { Checkbox } from "./Checkbox";
 export { CheckboxDropdown } from "./CheckboxDropdown";
 export { CheckboxList } from "./CheckboxList";
 export { CloseButton } from "./CloseButton";
+export { Currency } from "./Currency";
 export { DecimalInput } from "./DecimalInput";
 export { ErrorBanner } from "./ErrorBanner";
 export { ErrorMessage } from "./ErrorMessage";

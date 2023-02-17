@@ -1,7 +1,5 @@
-import { projectIcons } from "@/constants";
+import { getProjectIcon } from "@/constants";
 import type { OracleQueryUI } from "@/types";
-import Uma from "public/assets/icons/projects/uma.svg";
-import styled from "styled-components";
 import {
   IconWrapper,
   TextWrapper,
@@ -28,8 +26,7 @@ export function TitleCell({
   timeFormatted,
   expiryType,
 }: OracleQueryUI) {
-  const projectIcon =
-    project && project in projectIcons ? projectIcons[project] : <UmaIcon />;
+  const projectIcon = getProjectIcon(project);
 
   return (
     <TitleTD>
@@ -46,5 +43,3 @@ export function TitleCell({
     </TitleTD>
   );
 }
-
-const UmaIcon = styled(Uma)``;

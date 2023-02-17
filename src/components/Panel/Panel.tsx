@@ -1,5 +1,11 @@
-import { Button, CloseButton, DecimalInput, PanelBase } from "@/components";
-import { blueGrey700, currencyIcons, projectIcons, red500 } from "@/constants";
+import {
+  Button,
+  CloseButton,
+  Currency,
+  DecimalInput,
+  PanelBase,
+} from "@/components";
+import { blueGrey700, getProjectIcon, red500 } from "@/constants";
 import { addOpacityToHsla, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import NextLink from "next/link";
@@ -51,8 +57,7 @@ export function Panel() {
     setError,
   } = content ?? {};
 
-  const projectIcon = project ? projectIcons[project] : undefined;
-  const currencyIcon = currency ? currencyIcons[currency] : undefined;
+  const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
   const hasActionButton = action !== undefined && actionType !== undefined;
@@ -117,10 +122,7 @@ export function Panel() {
                 <InfoIcon />
               </ActionText>
               <ActionText>
-                {currencyIcon && (
-                  <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
-                )}
-                {formattedBond} {!currencyIcon && currency}
+                <Currency amount={formattedBond} currency={currency} />
               </ActionText>
             </ActionWrapper>
             <ActionWrapper>
@@ -129,10 +131,7 @@ export function Panel() {
                 <InfoIcon />
               </ActionText>
               <ActionText>
-                {currencyIcon && (
-                  <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
-                )}
-                {formattedReward} {!currencyIcon && currency}
+                <Currency amount={formattedReward} currency={currency} />
               </ActionText>
             </ActionWrapper>
             <ActionWrapper>
@@ -285,10 +284,6 @@ const ValueWrapper = styled.div`
 const InputWrapper = styled.div`
   margin-top: 16px;
   margin-bottom: 20px;
-`;
-
-const CurrencyIconWrapper = styled.div`
-  margin-right: 8px;
 `;
 
 const ErrorWrapper = styled.div`
