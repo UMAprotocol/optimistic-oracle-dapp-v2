@@ -111,7 +111,7 @@ export type Assertions = Assertion[];
 
 export type Token = {
   chainId: number;
-  address: string;
+  tokenAddress: string;
   name: string;
   symbol: string;
   decimals: number;
