@@ -5,7 +5,12 @@ import {
   DecimalInput,
   PanelBase,
 } from "@/components";
-import { blueGrey700, getProjectIcon, red500 } from "@/constants";
+import {
+  blueGrey700,
+  getProjectIcon,
+  red500,
+  smallMobileAndUnder,
+} from "@/constants";
 import { addOpacityToHsla, getValueText } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import NextLink from "next/link";
@@ -28,7 +33,6 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
  * A panel that slides in from the right.
  * The panel adapts to the page it is used on.
  * @see `PanelContext`
- * @see `PanelContent`
  */
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
@@ -86,7 +90,12 @@ export function Panel() {
       <TitleWrapper>
         <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
         <Title id="panel-title">{title}</Title>
-        <CloseButton onClick={closePanel} size={20} />
+        <CloseButtonWrapper>
+          <CloseButton
+            onClick={closePanel}
+            size="clamp(1.00rem, calc(0.92rem + 0.41vw), 1.25rem)"
+          />
+        </CloseButtonWrapper>
       </TitleWrapper>
       <ActionsWrapper>
         <SectionTitleWrapper>
@@ -207,11 +216,11 @@ export function Panel() {
 // wrappers
 
 const TitleWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--page-padding);
   min-height: 84px;
-  padding-inline: 28px;
+  padding-inline: var(--padding-inline);
   padding-block: 20px;
   background: var(--blue-grey-700);
 `;
@@ -224,7 +233,7 @@ const SectionTitleWrapper = styled.div`
 
 const ActionsWrapper = styled.div`
   background: var(--grey-400);
-  padding-inline: 28px;
+  padding-inline: var(--padding-inline);
   padding-top: 20px;
   padding-bottom: 24px;
 `;
@@ -244,8 +253,12 @@ const ActionWrapper = styled.div`
 
 const ActionButtonWrapper = styled.div``;
 
+const CloseButtonWrapper = styled.div`
+  width: clamp(1.25rem, calc(0.84rem + 2.04vw), 2.5rem);
+`;
+
 const DetailsWrapper = styled.div`
-  padding-inline: 28px;
+  padding-inline: var(--padding-inline);
   padding-bottom: 64px;
 `;
 
@@ -261,13 +274,16 @@ const DetailWrapper = styled.div`
 
 const InfoIconsWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin-top: 20px;
-  padding-inline: 28px;
+  padding-inline: var(--padding-inline);
   margin-bottom: 42px;
 `;
 
-const ProjectIconWrapper = styled.div``;
+const ProjectIconWrapper = styled.div`
+  width: clamp(1.25rem, calc(0.84rem + 2.04vw), 2.5rem);
+`;
 
 const ValueWrapper = styled.div`
   width: min(100%, 512px);
@@ -288,11 +304,12 @@ const InputWrapper = styled.div`
 
 const ErrorWrapper = styled.div`
   width: min(100%, 512px);
+  min-height: 48px;
   display: flex;
+  align-items: center;
   gap: 16px;
   margin-top: 20px;
   padding-inline: 16px;
-  padding-block: 12px;
   background: ${errorBackgroundColor};
   border: 1px solid var(--red-500);
   border-radius: 2px;
@@ -326,31 +343,36 @@ const SectionSubTitle = styled.h3`
 
 // text
 
-const ValueText = styled.p`
-  font: var(--body-md);
-  font-weight: 600;
+const Text = styled.p`
+  font: var(--body-sm);
+  @media ${smallMobileAndUnder} {
+    font: var(--body-xs);
+  }
 `;
 
-const ActionText = styled.span`
+const ValueText = styled(Text)`
+  font: var(--body-md);
+  font-weight: 600;
+  @media ${smallMobileAndUnder} {
+    font: var(--body-sm);
+  }
+`;
+
+const ActionText = styled(Text)`
   display: flex;
   align-items: center;
 `;
 
-const DetailText = styled.p`
-  font: var(--body-sm);
-`;
+const DetailText = styled(Text)``;
 
-const Time = styled.p`
-  font: var(--body-sm);
-`;
+const Time = styled(Text)``;
 
 const TimeFormat = styled.span`
   display: inline-block;
   margin-right: 32px;
 `;
 
-const ErrorText = styled.p`
-  font: var(--body-sm);
+const ErrorText = styled(Text)`
   color: var(--red-500);
 `;
 
@@ -361,6 +383,7 @@ const Link = styled(NextLink)`
   text-decoration: none;
   color: var(--red-500);
   transition: opacity var(--animation-duration);
+  word-break: break-all;
 
   &:hover {
     opacity: 0.75;

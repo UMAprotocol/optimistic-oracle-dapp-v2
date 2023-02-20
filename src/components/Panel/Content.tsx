@@ -1,3 +1,4 @@
+import { tabletAndUnder } from "@/constants";
 import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { FocusOn } from "react-focus-on";
@@ -56,4 +57,9 @@ const Wrapper = styled.div`
   overflow-y: scroll;
   transition: transform 400ms;
   z-index: 1;
+  /* Sets inline padding to be used by children */
+  --padding-inline: 28px;
+  @media ${tabletAndUnder} {
+    --padding-inline: var(--page-padding);
+  }
 `;
