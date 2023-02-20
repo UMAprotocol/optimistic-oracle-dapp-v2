@@ -1,4 +1,5 @@
 import Events from "events";
+import { ethers } from "ethers";
 import {
   Handlers,
   JsonRpcProvider,
@@ -13,11 +14,11 @@ import { TokenClient } from "../../web3-token";
 
 export type ChainConfig = {
   chainId: number;
-  provider: JsonRpcProvider;
+  url: string;
 };
-export type TokenChain = {
+export type RequiredParams = {
   chainId: number;
-  address: string;
+  tokenAddress: string;
 };
 export type Config = ChainConfig[];
 export const Factory = (config: Config): [Queries, ServiceFactory] => {
@@ -34,6 +35,7 @@ export const Factory = (config: Config): [Queries, ServiceFactory] => {
       } else if (event.type === "token") {
         handlers.tokens && handlers.tokens([event.data]);
       } else if (event.type === "error") {
+        console.log(event.data);
         handlers.errors && handlers.errors([event.data]);
       }
     });
@@ -68,7 +70,10 @@ type Emit = (event: QueryEvent) => unknown;
 
 export function Queries(config: Config, emit: Emit) {
   const providers = Object.fromEntries(
-    config.map(({ chainId, provider }) => [chainId.toString(), provider])
+    config.map(({ chainId, url }) => [
+      chainId.toString(),
+      new ethers.providers.JsonRpcProvider(url),
+    ])
   );
   const tokenClients: Record<string, TokenClient> = {};
 
@@ -78,20 +83,23 @@ export function Queries(config: Config, emit: Emit) {
     return provider;
   }
 
-  function getTokenClient({ chainId, address }: TokenChain): TokenClient {
-    const id = [chainId, address].join("~");
+  function getTokenClient({
+    chainId,
+    tokenAddress,
+  }: RequiredParams): TokenClient {
+    const id = [chainId, tokenAddress].join("~");
     const client = tokenClients[id];
     if (client) return client;
 
     const config = {
       chainId,
-      address,
+      tokenAddress,
       provider: getProvider(chainId),
     };
     tokenClients[id] = TokenClient(config);
     return tokenClients[id];
   }
-  function token(config: TokenChain): void {
+  function token(config: RequiredParams): void {
     getTokenClient(config)
       .props()
       .then((props) => {
@@ -103,17 +111,16 @@ export function Queries(config: Config, emit: Emit) {
         }
       });
   }
-  function balance(config: TokenChain, account: string): void {
+  function balance(config: RequiredParams, params: { account: string }): void {
     getTokenClient(config)
-      .balanceOf(account)
+      .balanceOf(params)
       .then((amount) => {
         emit({
           type: "balance",
           data: {
-            tokenAddress: config.address,
-            account,
+            ...config,
+            ...params,
             amount,
-            chainId: config.chainId,
           },
         });
       })
@@ -124,21 +131,21 @@ export function Queries(config: Config, emit: Emit) {
       });
   }
   function allowance(
-    config: TokenChain,
-    spender: string,
-    account: string
+    config: RequiredParams,
+    params: {
+      spender: string;
+      account: string;
+    }
   ): void {
     getTokenClient(config)
-      .allowance(account, spender)
+      .allowance(params)
       .then((amount) => {
         emit({
           type: "allowance",
           data: {
-            tokenAddress: config.address,
-            account,
+            ...config,
+            ...params,
             amount,
-            spender,
-            chainId: config.chainId,
           },
         });
       })

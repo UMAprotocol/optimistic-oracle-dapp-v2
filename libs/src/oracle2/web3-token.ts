@@ -3,12 +3,12 @@ import type { JsonRpcProvider, JsonRpcSigner } from "./types";
 
 export type Config = {
   provider: JsonRpcProvider;
-  address: string;
+  tokenAddress: string;
 };
 
 export function TokenClient(config: Config) {
-  const { address, provider } = config;
-  const contract = erc20.connect(address, provider);
+  const { tokenAddress, provider } = config;
+  const contract = erc20.connect(tokenAddress, provider);
 
   async function props(): Promise<{
     symbol: string;
@@ -21,21 +21,24 @@ export function TokenClient(config: Config) {
       decimals: await contract.callStatic.decimals(),
     };
   }
-  async function balanceOf(address: string): Promise<string> {
-    const amount = await contract.balanceOf(address);
+  async function balanceOf(params: { account: string }): Promise<string> {
+    const amount = await contract.balanceOf(params.account);
     return amount.toString();
   }
-  async function allowance(address: string, spender: string): Promise<string> {
-    const amount = await contract.allowance(address, spender);
+  async function allowance(params: {
+    account: string;
+    spender: string;
+  }): Promise<string> {
+    const amount = await contract.allowance(params.account, params.spender);
     return amount.toString();
   }
-  async function approve(
-    signer: JsonRpcSigner,
-    spender: string,
-    amount: string
-  ) {
-    const contract = erc20.connect(address, signer);
-    return contract.approve(spender, amount);
+  async function approve(params: {
+    signer: JsonRpcSigner;
+    spender: string;
+    amount: string;
+  }) {
+    const contract = erc20.connect(tokenAddress, params.signer);
+    return contract.approve(params.spender, params.amount);
   }
 
   return {
