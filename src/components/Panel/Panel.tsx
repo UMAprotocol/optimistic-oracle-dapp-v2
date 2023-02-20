@@ -12,7 +12,7 @@ import {
   smallMobileAndUnder,
 } from "@/constants";
 import { addOpacityToHsla, getValueText } from "@/helpers";
-import { usePanelContext } from "@/hooks";
+import { usePanelContext, useActions } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -21,7 +21,7 @@ import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import styled from "styled-components";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
@@ -37,6 +37,7 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const [inputValue, setInputValue] = useState("");
+  const { actions } = useActions();
 
   const {
     chainId,
@@ -69,6 +70,12 @@ export function Panel() {
   const valueText = getValueText({ price, assertion });
   const actionsTitle = getActionsTitle();
   const isError = error !== "";
+
+  useEffect(() => {
+    actions.fetchCurrencyTokenInfo && actions.fetchCurrencyTokenInfo();
+    actions.fetchCurrencyBalance && actions.fetchCurrencyBalance();
+    actions.fetchCurrencyAllowance && actions.fetchCurrencyAllowance();
+  }, [actions]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";

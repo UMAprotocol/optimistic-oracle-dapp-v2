@@ -2,6 +2,7 @@ import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { commify, formatEther, parseEther } from "@/helpers";
 import { BigNumber } from "ethers";
 import { css } from "styled-components";
+import type { Tokens, Token, Balances, Allowances } from "@libs/oracle2";
 
 /**
  * Adds an opacity value to an hsl string
@@ -158,3 +159,48 @@ export const showOnMobileAndUnder = css`
     display: var(--display, block);
   }
 `;
+
+export function findToken(
+  tokens: Tokens,
+  search: { tokenAddress: string; chainId: number }
+): Token | undefined {
+  return tokens.find(({ chainId, tokenAddress }) => {
+    return search.chainId === chainId && search.tokenAddress === tokenAddress;
+  });
+}
+
+export function findBalance(
+  balances: Balances,
+  search: { account: string; tokenAddress: string; chainId: number }
+): BigNumber | undefined {
+  const found = balances.find(({ account, chainId, tokenAddress }) => {
+    return (
+      search.chainId === chainId &&
+      search.account === account &&
+      search.tokenAddress === tokenAddress
+    );
+  });
+  return found ? BigNumber.from(found.amount) : undefined;
+}
+
+export function findAllowance(
+  allowances: Allowances,
+  search: {
+    account: string;
+    tokenAddress: string;
+    chainId: number;
+    spender: string;
+  }
+): BigNumber | undefined {
+  const found = allowances.find(
+    ({ account, chainId, tokenAddress, spender }) => {
+      return (
+        search.spender === spender &&
+        search.chainId === chainId &&
+        search.account === account &&
+        search.tokenAddress === tokenAddress
+      );
+    }
+  );
+  return found ? BigNumber.from(found.amount) : undefined;
+}
