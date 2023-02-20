@@ -1,7 +1,7 @@
 import { Header } from "@/components";
 import { chains, rainbowKitTheme, wagmiClient } from "@/pages/_app";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { WagmiConfig } from "wagmi";
 
 const meta: Meta<typeof Header> = {

@@ -1,7 +1,7 @@
 import { Pagination } from "@/components";
 import { defaultResultsPerPage } from "@/constants";
 import { expect } from "@storybook/jest";
-import { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, waitFor, within } from "@storybook/testing-library";
 import { useState } from "react";
 

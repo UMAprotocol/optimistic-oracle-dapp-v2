@@ -1,5 +1,5 @@
 import { defaultResultsPerPage } from "@/constants";
-import { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI, Page } from "@/types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Pagination } from "../Pagination";
@@ -13,12 +13,13 @@ interface Props {
   isLoading: boolean;
 }
 /**
- * Table for showing oracle queries
+ * Table for showing oracle queries.
+ * Intended to be shown on desktop.
  * @param page - the page of the app, used to determine which columns to show
  * @param rows - the rows to show in the table
  * @param isLoading - whether the table is loading
  */
-export function Table({ page, rows, isLoading }: Props) {
+export function OracleQueryTable({ page, rows, isLoading }: Props) {
   const [rowsToShow, setRowsToShow] = useState(rows);
 
   useEffect(() => {

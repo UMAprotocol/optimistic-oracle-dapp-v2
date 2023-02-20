@@ -1,5 +1,6 @@
-import { OracleQueryUI, Page } from "@/types";
-import { createContext, ReactNode, useState } from "react";
+import type { OracleQueryUI, Page } from "@/types";
+import type { ReactNode } from "react";
+import { createContext, useState } from "react";
 
 export interface PanelContextState {
   panelOpen: boolean;

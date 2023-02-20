@@ -1,6 +1,6 @@
 import { IconWrapper } from "@/components";
 import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
-import { OracleType } from "@/types";
+import type { OracleType } from "@/types";
 import OptimisticOracle from "public/assets/icons/optimistic-oracle.svg";
 import styled from "styled-components";
 

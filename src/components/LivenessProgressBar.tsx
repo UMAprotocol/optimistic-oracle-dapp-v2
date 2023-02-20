@@ -2,12 +2,15 @@ import { darkText, red500 } from "@/constants";
 import { Indicator, Root } from "@radix-ui/react-progress";
 import { intervalToDuration } from "date-fns";
 import { useState } from "react";
-import styled, { css, CSSProperties } from "styled-components";
+import type { CSSProperties } from "styled-components";
+import styled, { css } from "styled-components";
 import { useInterval } from "usehooks-ts";
 
 interface Props {
   startTime: number;
   endTime: number;
+  fontSize?: number;
+  marginBottom?: number;
 }
 /**
  * A progress bar that shows the time remaining until a request or assertion
@@ -15,7 +18,12 @@ interface Props {
  * @param startTime Time the request or assertion was made in milliseconds
  * @param endTime Time the request or assertion will expire in milliseconds
  */
-export function LivenessProgressBar({ startTime, endTime }: Props) {
+export function LivenessProgressBar({
+  startTime,
+  endTime,
+  fontSize,
+  marginBottom,
+}: Props) {
   const [now, setNow] = useState(new Date());
 
   useInterval(() => {
@@ -46,6 +54,9 @@ export function LivenessProgressBar({ startTime, endTime }: Props) {
         style={
           {
             "--color": isTextRed ? red500 : darkText,
+            "--font-size": fontSize !== undefined ? `${fontSize}px` : "16px",
+            "--margin-bottom":
+              marginBottom !== undefined ? `${marginBottom}px` : "8px",
           } as CSSProperties
         }
       >
@@ -61,8 +72,9 @@ export function LivenessProgressBar({ startTime, endTime }: Props) {
 const Wrapper = styled.div``;
 
 const Text = styled.p`
-  margin-bottom: 8px;
+  margin-bottom: var(--margin-bottom);
   font: var(--body-sm);
+  font-size: var(--font-size);
   color: var(--color);
 `;
 

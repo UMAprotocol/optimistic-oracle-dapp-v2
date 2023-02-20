@@ -3,7 +3,8 @@ import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import ExternalLink from "public/assets/icons/external-link.svg";
-import styled, { CSSProperties } from "styled-components";
+import type { CSSProperties } from "styled-components";
+import styled from "styled-components";
 
 export function Nav() {
   const router = useRouter();

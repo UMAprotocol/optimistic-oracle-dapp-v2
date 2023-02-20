@@ -1,4 +1,4 @@
-import { Layout, Table } from "@/components";
+import { Layout, OracleQueries } from "@/components";
 import { useOracleDataContext } from "@/hooks";
 
 export default function Verify() {
@@ -6,8 +6,8 @@ export default function Verify() {
 
   return (
     <Layout>
-      <Table
-        rows={verify ?? []}
+      <OracleQueries
+        queries={verify ?? []}
         isLoading={verify === undefined}
         page="verify"
       />

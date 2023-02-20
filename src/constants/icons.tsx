@@ -14,3 +14,13 @@ export const currencyIcons: Record<string, JSX.Element> = {
   USDC: <USDC />,
   ETH: <ETH />,
 };
+
+export function getProjectIcon(project: string | undefined) {
+  if (!project || !(project in projectIcons)) return <UMA />;
+  return projectIcons[project];
+}
+
+export function getCurrencyIcon(currency: string | undefined) {
+  if (!currency || !(currency in currencyIcons)) return;
+  return currencyIcons[currency];
+}

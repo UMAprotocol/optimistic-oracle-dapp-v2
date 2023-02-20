@@ -1,13 +1,5 @@
-import Clickable from "public/assets/icons/clickable.svg";
 import styled from "styled-components";
-
-export const ClickableIcon = styled(Clickable)`
-  transition: fill var(--animation-duration);
-
-  path {
-    transition: stroke var(--animation-duration);
-  }
-`;
+import { oracleQueryHover } from "../style";
 
 export const TR = styled.tr`
   height: 80px;
@@ -24,19 +16,7 @@ export const TR = styled.tr`
     border-bottom-right-radius: 4px;
   }
 
-  &:hover {
-    h3 {
-      color: var(--red-500);
-    }
-
-    ${ClickableIcon} {
-      fill: var(--red-500);
-
-      path {
-        stroke: var(--white);
-      }
-    }
-  }
+  ${oracleQueryHover}
 `;
 
 export const TD = styled.td`
@@ -58,7 +38,6 @@ export const TitleHeader = styled.h3`
   max-width: min(500px, 50vw);
   font: var(--body-sm);
   font-weight: 600;
-  transition: color var(--animation-duration);
 `;
 
 export const IconWrapper = styled.div`

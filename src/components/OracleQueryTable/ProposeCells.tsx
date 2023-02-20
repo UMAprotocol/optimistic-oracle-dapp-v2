@@ -1,5 +1,5 @@
 import { currencyIcons } from "@/constants";
-import { OracleQueryUI } from "@/types";
+import type { OracleQueryUI } from "@/types";
 import styled from "styled-components";
 import { TD, Text } from "./style";
 

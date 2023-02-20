@@ -1,6 +1,7 @@
 import { darkText, white } from "@/constants";
 import Close from "public/assets/icons/close.svg";
-import styled, { CSSProperties } from "styled-components";
+import type { CSSProperties } from "styled-components";
+import styled from "styled-components";
 
 interface Props {
   onClick: () => void;

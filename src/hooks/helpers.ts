@@ -1,5 +1,6 @@
 import { walletsAndConnectors } from "@/constants";
-import { ChangeEvent, useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 interface DecimalInput {

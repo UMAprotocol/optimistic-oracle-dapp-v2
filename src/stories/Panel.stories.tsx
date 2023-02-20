@@ -1,7 +1,8 @@
 import { Button, Panel } from "@/components";
-import { PanelContext, PanelContextState } from "@/contexts";
-import { OracleQueryUI, Page } from "@/types";
-import { Meta, StoryObj } from "@storybook/react";
+import type { PanelContextState } from "@/contexts";
+import { PanelContext } from "@/contexts";
+import type { OracleQueryUI, Page } from "@/types";
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { makeMockOracleQueryUI } from "./mocks";
 

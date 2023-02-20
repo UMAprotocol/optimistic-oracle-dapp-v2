@@ -221,7 +221,7 @@ const Wrapper = styled.div`
 `;
 
 const ResultsPerPageWrapper = styled.div`
-  width: 120px;
+  min-width: 120px;
 `;
 
 const ButtonsWrapper = styled.nav`

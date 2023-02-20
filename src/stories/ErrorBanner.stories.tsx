@@ -1,8 +1,9 @@
 import { Button, ErrorBanner } from "@/components";
-import { ErrorContext, ErrorContextState } from "@/contexts";
+import type { ErrorContextState } from "@/contexts";
+import { ErrorContext } from "@/contexts";
 import { parseEthersError } from "@/helpers";
-import { ErrorMessage } from "@/types";
-import { Meta, StoryObj } from "@storybook/react";
+import type { ErrorMessage } from "@/types";
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import styled from "styled-components";
 

@@ -4,7 +4,7 @@ import { useWalletIcon } from "@/hooks";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import NextImage from "next/image";
 import Warning from "public/assets/icons/warning.svg";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import styled from "styled-components";
 
 export function MobileMenuConnectButton() {
