@@ -156,13 +156,11 @@ export function Filters({ expiry, projects, chains }: Props) {
             <Search />
             <Dropdowns filters={filters} onCheckedChange={onCheckedChange} />
           </InputsWrapper>
-          <CheckedFiltersWrapper>
-            <CheckedFilters
-              filters={filters}
-              uncheckFilter={uncheckFilter}
-              resetCheckedFilters={resetCheckedFilters}
-            />
-          </CheckedFiltersWrapper>
+          <CheckedFilters
+            filters={filters}
+            uncheckFilter={uncheckFilter}
+            resetCheckedFilters={resetCheckedFilters}
+          />
         </DesktopWrapper>
         <MobileWrapper>
           <Search />
@@ -205,7 +203,7 @@ const MobileWrapper = styled.div`
 
 const InnerWrapper = styled.div`
   width: var(--page-width);
-  padding: var(--page-padding);
+  padding-inline: var(--page-padding);
   margin-inline: auto;
 `;
 
@@ -213,10 +211,6 @@ const InputsWrapper = styled.div`
   display: grid;
   gap: 18px;
   grid-template-columns: 2fr repeat(3, 1fr);
-`;
-
-const CheckedFiltersWrapper = styled.div`
-  margin-block: 20px;
 `;
 
 const OpenMobileFiltersButton = styled.button`

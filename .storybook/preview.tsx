@@ -1,6 +1,9 @@
+import { chains, rainbowKitTheme, wagmiClient } from "../src/pages/_app";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { Decorator, Parameters } from "@storybook/react";
 import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
+import { WagmiConfig } from "wagmi";
 import { GlobalStyle } from "../src/components/GlobalStyle";
 import "../src/styles/fonts.css";
 import "./rainbow.css";
@@ -56,6 +59,9 @@ export const parameters: Parameters = {
   },
   defaultViewport: "mobile",
   layout: "fullscreen",
+  chromatic: {
+    viewports: [320, 640, 1024, 1300, 1920]
+  },
   controls: {
     matchers: {
       color: /(background|color)$/i,
@@ -72,5 +78,12 @@ export const decorators: Decorator[] = [
       <GlobalStyle />
       <Story />
     </>
+  ),
+  (Story) => (
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
+        <Story />
+      </RainbowKitProvider>
+    </WagmiConfig>
   ),
 ];

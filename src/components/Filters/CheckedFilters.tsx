@@ -31,6 +31,8 @@ export function CheckedFilters({
     ({ checked }) => checked.length > 0
   );
 
+  if (!hasCheckedFilters) return null;
+
   return (
     <Wrapper>
       {checkedFilters.map(({ filter, checked }) => (
@@ -66,6 +68,7 @@ export function CheckedFilters({
 const Wrapper = styled.div`
   display: flex;
   gap: 8px;
+  margin-block: 20px;
 `;
 
 const CheckedFilter = styled.div`

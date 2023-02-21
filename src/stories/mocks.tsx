@@ -1,6 +1,12 @@
 import type { OracleQueryUI } from "@/types";
 import { addMinutes, format } from "date-fns";
 
+/**
+ * This is a deterministic date that is used to mock the date in the stories.
+ * 21 Feb 2023 11:44
+ */
+export const deterministicDate = 1676972657388;
+
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
   const defaultMockOracleQueryUI: OracleQueryUI = {
     id: `mock-id-${Math.random()}`,
@@ -16,16 +22,19 @@ export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
     of tokens in Euler (https://app.euler.finance/) at any point
     after Ethereum Mainnet block number 16175802? This will revert
     if a non-YES answer is proposed.`,
-    timeUNIX: Math.floor(Date.now() / 1000),
-    timeUTC: new Date().toUTCString(),
-    timeMilliseconds: Date.now(),
-    timeFormatted: format(new Date(), "Pp"),
+    timeUNIX: Math.floor(deterministicDate / 1000),
+    timeUTC: new Date(deterministicDate).toUTCString(),
+    timeMilliseconds: deterministicDate,
+    timeFormatted: format(new Date(deterministicDate), "Pp"),
     assertion: true,
     price: undefined,
     currency: "USDC",
     formattedBond: "50,000",
     formattedReward: "250,000",
-    livenessEndsMilliseconds: addMinutes(new Date(), 53).getTime(),
+    livenessEndsMilliseconds: addMinutes(
+      new Date(deterministicDate),
+      53
+    ).getTime(),
     formattedLivenessEndsIn: "53 min 11 sec",
     actionType: "Dispute",
     action: () => alert("Dispute or propose or settle"),
@@ -111,69 +120,121 @@ export function makeRandomTitle() {
   return randomWords + ` ${Math.random() * 10000000}`;
 }
 
-export const proposeMockOracleQueryUIs = makeMockOracleQueryUIs({
-  count: 3,
-  inputs: [
-    { title: "With project specified", project: "Cozy Finance" },
-    {
-      title: "With expiry type and weird random currency",
-      expiryType: "Time-based",
-      currency: "RY",
-    },
-    {
-      title: "With chain name, oracle type and other known currency",
-      currency: "ETH",
-      chainName: "Polygon",
-      oracleType: "Skinny Optimistic Oracle",
-    },
-  ],
-});
+export const proposeMockOracleQueryUIs = (count = 3) =>
+  makeMockOracleQueryUIs({
+    count,
+    inputs: [
+      { title: "With project specified", project: "Cozy Finance" },
+      {
+        title: "With expiry type and weird random currency",
+        expiryType: "Time-based",
+        currency: "RY",
+      },
+      {
+        title: "With chain name, oracle type and other known currency",
+        currency: "ETH",
+        chainName: "Polygon",
+        oracleType: "Skinny Optimistic Oracle",
+      },
+    ],
+  });
 
-export const verifyMockOracleQueryUIs = makeMockOracleQueryUIs({
-  count: 3,
-  inputs: [
-    {
-      title: "With project specified and price",
-      project: "Cozy Finance",
-      assertion: undefined,
-      price: "123",
-    },
-    {
-      title: "With expiry type and weird random currency and liveness ends",
-      expiryType: "Time-based",
-      currency: "RY",
-      livenessEndsMilliseconds: Date.now() + 10_000,
-    },
-    {
-      title: "With chain name, oracle type and other known currency",
-      currency: "ETH",
-      chainName: "Polygon",
-      oracleType: "Skinny Optimistic Oracle",
-    },
-  ],
-});
+export const verifyMockOracleQueryUIs = (count = 3) =>
+  makeMockOracleQueryUIs({
+    count,
+    inputs: [
+      {
+        title: "With project specified and price",
+        project: "Cozy Finance",
+        assertion: undefined,
+        price: "123",
+      },
+      {
+        title: "With expiry type and weird random currency and liveness ends",
+        expiryType: "Time-based",
+        currency: "RY",
+        livenessEndsMilliseconds: deterministicDate + 10_000,
+      },
+      {
+        title: "With chain name, oracle type and other known currency",
+        currency: "ETH",
+        chainName: "Polygon",
+        oracleType: "Skinny Optimistic Oracle",
+      },
+    ],
+  });
 
-export const settledMockOracleQueryUIs = makeMockOracleQueryUIs({
-  count: 3,
-  inputForAll: { action: undefined, actionType: undefined },
-  inputs: [
-    {
-      title: "With project specified and price",
-      project: "Cozy Finance",
-      assertion: undefined,
-      price: "123",
+export const settledMockOracleQueryUIs = (count = 3) =>
+  makeMockOracleQueryUIs({
+    count,
+    inputForAll: { action: undefined, actionType: undefined },
+    inputs: [
+      {
+        title: "With project specified and price",
+        project: "Cozy Finance",
+        assertion: undefined,
+        price: "123",
+      },
+      {
+        title: "With expiry type and weird random currency and liveness ends",
+        expiryType: "Time-based",
+        currency: "RY",
+        livenessEndsMilliseconds: deterministicDate + 10_000,
+      },
+      {
+        title: "With chain name, oracle type and other known currency",
+        currency: "ETH",
+        chainName: "Polygon",
+        oracleType: "Skinny Optimistic Oracle",
+      },
+    ],
+  });
+
+export const mockFilters = {
+  expiry: {
+    "Event-Based": {
+      checked: false,
+      count: 128,
     },
-    {
-      title: "With expiry type and weird random currency and liveness ends",
-      expiryType: "Time-based",
-      currency: "RY",
-      livenessEndsMilliseconds: Date.now() + 10_000,
+    "Time-Based": {
+      checked: false,
+      count: 128,
     },
-    {
-      title: "With chain name, oracle type and other known currency",
-      currency: "ETH",
-      chainName: "Polygon",
-      oracleType: "Skinny Optimistic Oracle",
+  },
+  projects: {
+    Polymarket: {
+      checked: false,
+      count: 128,
     },
-  ],
-});
+    UMA: {
+      checked: false,
+      count: 12,
+    },
+    "Cozy Finance": {
+      checked: false,
+      count: 50,
+    },
+    "stake.com": {
+      checked: false,
+      count: 0,
+    },
+  },
+  chains: {
+    Ethereum: {
+      checked: false,
+      count: 128,
+    },
+    Polygon: {
+      checked: false,
+      count: 12,
+    },
+    Optimism: {
+      checked: false,
+      count: 50,
+    },
+    Boba: {
+      checked: false,
+      count: 0,
+    },
+  },
+};

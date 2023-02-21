@@ -2,8 +2,6 @@ import { OracleQueryList, Panel } from "@/components";
 import { PanelProvider } from "@/contexts";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  makeMockOracleQueryUIs,
-  makeRandomTitle,
   proposeMockOracleQueryUIs,
   settledMockOracleQueryUIs,
   verifyMockOracleQueryUIs,
@@ -28,33 +26,28 @@ type Story = StoryObj<typeof OracleQueryList>;
 export const Propose: Story = {
   args: {
     page: "propose",
-    items: proposeMockOracleQueryUIs,
+    items: proposeMockOracleQueryUIs(),
   },
 };
 
 export const Verify: Story = {
   args: {
     page: "verify",
-    items: verifyMockOracleQueryUIs,
+    items: verifyMockOracleQueryUIs(),
   },
 };
 
 export const Settled: Story = {
   args: {
     page: "settled",
-    items: settledMockOracleQueryUIs,
+    items: settledMockOracleQueryUIs(),
   },
 };
 
 export const WithMany: Story = {
   args: {
     page: "propose",
-    items: makeMockOracleQueryUIs({
-      count: 100,
-      inputs: Array.from({ length: 100 }, () => ({
-        title: makeRandomTitle(),
-      })),
-    }),
+    items: proposeMockOracleQueryUIs(100),
   },
 };
 
