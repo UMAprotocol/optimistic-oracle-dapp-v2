@@ -1,6 +1,12 @@
 import type { OracleQueryUI } from "@/types";
 import { addMinutes, format } from "date-fns";
 
+/**
+ * This is a deterministic date that is used to mock the date in the stories.
+ * 21 Feb 2023 11:44
+ */
+export const deterministicDate = 1676972657388;
+
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
   const defaultMockOracleQueryUI: OracleQueryUI = {
     id: `mock-id-${Math.random()}`,
@@ -16,16 +22,19 @@ export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
     of tokens in Euler (https://app.euler.finance/) at any point
     after Ethereum Mainnet block number 16175802? This will revert
     if a non-YES answer is proposed.`,
-    timeUNIX: Math.floor(1676972657388 / 1000),
-    timeUTC: new Date(1676972657388).toUTCString(),
-    timeMilliseconds: 1676972657388,
-    timeFormatted: format(new Date(1676972657388), "Pp"),
+    timeUNIX: Math.floor(deterministicDate / 1000),
+    timeUTC: new Date(deterministicDate).toUTCString(),
+    timeMilliseconds: deterministicDate,
+    timeFormatted: format(new Date(deterministicDate), "Pp"),
     assertion: true,
     price: undefined,
     currency: "USDC",
     formattedBond: "50,000",
     formattedReward: "250,000",
-    livenessEndsMilliseconds: addMinutes(new Date(1676972657388), 53).getTime(),
+    livenessEndsMilliseconds: addMinutes(
+      new Date(deterministicDate),
+      53
+    ).getTime(),
     formattedLivenessEndsIn: "53 min 11 sec",
     actionType: "Dispute",
     action: () => alert("Dispute or propose or settle"),
@@ -144,7 +153,7 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
         title: "With expiry type and weird random currency and liveness ends",
         expiryType: "Time-based",
         currency: "RY",
-        livenessEndsMilliseconds: 1676972657388 + 10_000,
+        livenessEndsMilliseconds: deterministicDate + 10_000,
       },
       {
         title: "With chain name, oracle type and other known currency",
@@ -170,7 +179,7 @@ export const settledMockOracleQueryUIs = (count = 3) =>
         title: "With expiry type and weird random currency and liveness ends",
         expiryType: "Time-based",
         currency: "RY",
-        livenessEndsMilliseconds: 1676972657388 + 10_000,
+        livenessEndsMilliseconds: deterministicDate + 10_000,
       },
       {
         title: "With chain name, oracle type and other known currency",
