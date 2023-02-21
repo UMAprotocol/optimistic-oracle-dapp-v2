@@ -1,13 +1,14 @@
 import SearchIcon from "public/assets/icons/search.svg";
-import type { FormEvent } from "react";
-import { useState } from "react";
+import type { Dispatch, FormEvent, SetStateAction } from "react";
 import styled from "styled-components";
 
-export function Search() {
-  const [_input, setInput] = useState("");
-
+interface Props {
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+}
+export function Search({ searchTerm, setSearchTerm }: Props) {
   function onInput(e: FormEvent<HTMLInputElement>) {
-    setInput(e.currentTarget.value);
+    setSearchTerm(e.currentTarget.value);
   }
 
   return (
@@ -15,7 +16,12 @@ export function Search() {
       <SearchIconWrapper>
         <SearchIcon aria-hidden />
       </SearchIconWrapper>
-      <Input placeholder="Search" onInput={onInput} aria-label="search input" />
+      <Input
+        value={searchTerm}
+        onInput={onInput}
+        placeholder="Search"
+        aria-label="search input"
+      />
     </Wrapper>
   );
 }

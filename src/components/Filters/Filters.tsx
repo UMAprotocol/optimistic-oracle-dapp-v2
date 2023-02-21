@@ -1,15 +1,17 @@
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
+import { useSearch } from "@/hooks";
 import type {
   CheckboxItems,
   CheckboxState,
   Filter,
   FilterOptions,
   Filters,
+  OracleQueryUI,
 } from "@/types";
 import { cloneDeep } from "lodash";
 import Sliders from "public/assets/icons/sliders.svg";
 import type { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CheckedFilters } from "./CheckedFilters";
 import { Dropdowns } from "./Dropdowns";
@@ -17,17 +19,42 @@ import { MobileFilters } from "./MobileFilters";
 import { Search } from "./Search";
 
 interface Props {
+  dataSet: OracleQueryUI[];
+  setResults: Dispatch<SetStateAction<OracleQueryUI[]>>;
   expiry: FilterOptions;
   projects: FilterOptions;
   chains: FilterOptions;
 }
-/**
- * Shows checkboxes for the different filters.
- * @param expiry The expiry filter options.
- * @param projects The projects filter options.
- * @param chains The chains filter options.
- */
-export function Filters({ expiry, projects, chains }: Props) {
+export function Filters({
+  dataSet,
+  setResults,
+  expiry,
+  projects,
+  chains,
+}: Props) {
+  const keys = [
+    "chainName",
+    "oracleType",
+    "project",
+    "title",
+    "ancillaryData",
+    "decodedAncillaryData",
+    "timeUTC",
+    "timeFormatted",
+    "price",
+    "expiryType",
+    "currency",
+    "formattedBond",
+    "formattedReward",
+    "assertion",
+  ];
+
+  const { results, ...searchProps } = useSearch({ dataSet, keys });
+
+  useEffect(() => {
+    setResults(results);
+  }, [results, setResults]);
+
   const [checkedExpiry, setCheckedExpiry] = useState<CheckboxItems>(
     makeCheckboxItems(expiry)
   );
@@ -153,7 +180,7 @@ export function Filters({ expiry, projects, chains }: Props) {
       <InnerWrapper>
         <DesktopWrapper>
           <InputsWrapper>
-            <Search />
+            <Search {...searchProps} />
             <Dropdowns filters={filters} onCheckedChange={onCheckedChange} />
           </InputsWrapper>
           <CheckedFilters
@@ -163,7 +190,7 @@ export function Filters({ expiry, projects, chains }: Props) {
           />
         </DesktopWrapper>
         <MobileWrapper>
-          <Search />
+          <Search {...searchProps} />
           <OpenMobileFiltersButton
             onClick={openMobileFilters}
             aria-label="open filters"
