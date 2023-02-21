@@ -28,21 +28,21 @@ type Story = StoryObj<typeof OracleQueries>;
 export const Propose: Story = {
   args: {
     page: "propose",
-    queries: proposeMockOracleQueryUIs,
+    queries: proposeMockOracleQueryUIs(),
   },
 };
 
 export const Verify: Story = {
   args: {
     page: "verify",
-    queries: verifyMockOracleQueryUIs,
+    queries: verifyMockOracleQueryUIs(),
   },
 };
 
 export const Settled: Story = {
   args: {
     page: "settled",
-    queries: settledMockOracleQueryUIs,
+    queries: settledMockOracleQueryUIs(),
   },
 };
 

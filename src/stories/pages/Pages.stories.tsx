@@ -105,7 +105,7 @@ export const Verify: Story = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
-    verify: verifyMockOracleQueryUIs,
+    verify: verifyMockOracleQueryUIs(100),
   },
 };
 
@@ -121,7 +121,7 @@ export const VerifyError: Story = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
-    verify: verifyMockOracleQueryUIs,
+    verify: verifyMockOracleQueryUIs(100),
     errorMessages: [
       {
         text: "Error in verify page",
@@ -138,7 +138,7 @@ export const Propose: Story = {
   ...ProposeTemplate,
   args: {
     Component: ProposePage,
-    propose: proposeMockOracleQueryUIs,
+    propose: proposeMockOracleQueryUIs(100),
   },
 };
 
@@ -154,7 +154,7 @@ export const ProposeError: Story = {
   ...ProposeTemplate,
   args: {
     Component: ProposePage,
-    propose: proposeMockOracleQueryUIs,
+    propose: proposeMockOracleQueryUIs(100),
     errorMessages: [
       {
         text: "Error in propose page",
@@ -171,7 +171,7 @@ export const Settled: Story = {
   ...SettledTemplate,
   args: {
     Component: SettledPage,
-    settled: settledMockOracleQueryUIs,
+    settled: settledMockOracleQueryUIs(100),
   },
 };
 
@@ -187,7 +187,7 @@ export const SettledError: Story = {
   ...SettledTemplate,
   args: {
     Component: SettledPage,
-    settled: settledMockOracleQueryUIs,
+    settled: settledMockOracleQueryUIs(100),
     errorMessages: [
       {
         text: "Error in settled page",

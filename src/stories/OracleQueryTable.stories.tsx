@@ -2,8 +2,6 @@ import { OracleQueryTable, Panel } from "@/components";
 import { PanelProvider } from "@/contexts";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  makeMockOracleQueryUIs,
-  makeRandomTitle,
   proposeMockOracleQueryUIs,
   settledMockOracleQueryUIs,
   verifyMockOracleQueryUIs,
@@ -28,33 +26,28 @@ type Story = StoryObj<typeof OracleQueryTable>;
 export const Propose: Story = {
   args: {
     page: "propose",
-    rows: proposeMockOracleQueryUIs,
+    rows: proposeMockOracleQueryUIs(),
   },
 };
 
 export const Verify: Story = {
   args: {
     page: "verify",
-    rows: verifyMockOracleQueryUIs,
+    rows: verifyMockOracleQueryUIs(),
   },
 };
 
 export const Settled: Story = {
   args: {
     page: "settled",
-    rows: settledMockOracleQueryUIs,
+    rows: settledMockOracleQueryUIs(),
   },
 };
 
 export const WithPagination: Story = {
   args: {
     page: "propose",
-    rows: makeMockOracleQueryUIs({
-      count: 100,
-      inputs: Array.from({ length: 100 }, () => ({
-        title: makeRandomTitle(),
-      })),
-    }),
+    rows: proposeMockOracleQueryUIs(100),
   },
 };
 

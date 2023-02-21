@@ -111,72 +111,75 @@ export function makeRandomTitle() {
   return randomWords + ` ${Math.random() * 10000000}`;
 }
 
-export const proposeMockOracleQueryUIs = makeMockOracleQueryUIs({
-  count: 3,
-  inputs: [
-    { title: "With project specified", project: "Cozy Finance" },
-    {
-      title: "With expiry type and weird random currency",
-      expiryType: "Time-based",
-      currency: "RY",
-    },
-    {
-      title: "With chain name, oracle type and other known currency",
-      currency: "ETH",
-      chainName: "Polygon",
-      oracleType: "Skinny Optimistic Oracle",
-    },
-  ],
-});
+export const proposeMockOracleQueryUIs = (count = 3) =>
+  makeMockOracleQueryUIs({
+    count,
+    inputs: [
+      { title: "With project specified", project: "Cozy Finance" },
+      {
+        title: "With expiry type and weird random currency",
+        expiryType: "Time-based",
+        currency: "RY",
+      },
+      {
+        title: "With chain name, oracle type and other known currency",
+        currency: "ETH",
+        chainName: "Polygon",
+        oracleType: "Skinny Optimistic Oracle",
+      },
+    ],
+  });
 
-export const verifyMockOracleQueryUIs = makeMockOracleQueryUIs({
-  count: 3,
-  inputs: [
-    {
-      title: "With project specified and price",
-      project: "Cozy Finance",
-      assertion: undefined,
-      price: "123",
-    },
-    {
-      title: "With expiry type and weird random currency and liveness ends",
-      expiryType: "Time-based",
-      currency: "RY",
-      livenessEndsMilliseconds: Date.now() + 10_000,
-    },
-    {
-      title: "With chain name, oracle type and other known currency",
-      currency: "ETH",
-      chainName: "Polygon",
-      oracleType: "Skinny Optimistic Oracle",
-    },
-  ],
-});
+export const verifyMockOracleQueryUIs = (count = 3) =>
+  makeMockOracleQueryUIs({
+    count,
+    inputs: [
+      {
+        title: "With project specified and price",
+        project: "Cozy Finance",
+        assertion: undefined,
+        price: "123",
+      },
+      {
+        title: "With expiry type and weird random currency and liveness ends",
+        expiryType: "Time-based",
+        currency: "RY",
+        livenessEndsMilliseconds: Date.now() + 10_000,
+      },
+      {
+        title: "With chain name, oracle type and other known currency",
+        currency: "ETH",
+        chainName: "Polygon",
+        oracleType: "Skinny Optimistic Oracle",
+      },
+    ],
+  });
 
-export const settledMockOracleQueryUIs = makeMockOracleQueryUIs({
-  count: 3,
-  inputForAll: { action: undefined, actionType: undefined },
-  inputs: [
-    {
-      title: "With project specified and price",
-      project: "Cozy Finance",
-      assertion: undefined,
-      price: "123",
-    },
-    {
-      title: "With expiry type and weird random currency and liveness ends",
-      expiryType: "Time-based",
-      currency: "RY",
-      livenessEndsMilliseconds: Date.now() + 10_000,
-    },
-    {
-      title: "With chain name, oracle type and other known currency",
-      currency: "ETH",
-      chainName: "Polygon",
-      oracleType: "Skinny Optimistic Oracle",
-    },
-  ],
-});
+export const settledMockOracleQueryUIs = (count = 3) =>
+  makeMockOracleQueryUIs({
+    count,
+    inputForAll: { action: undefined, actionType: undefined },
+    inputs: [
+      {
+        title: "With project specified and price",
+        project: "Cozy Finance",
+        assertion: undefined,
+        price: "123",
+      },
+      {
+        title: "With expiry type and weird random currency and liveness ends",
+        expiryType: "Time-based",
+        currency: "RY",
+        livenessEndsMilliseconds: Date.now() + 10_000,
+      },
+      {
+        title: "With chain name, oracle type and other known currency",
+        currency: "ETH",
+        chainName: "Polygon",
+        oracleType: "Skinny Optimistic Oracle",
+      },
+    ],
+  });
 
 export const mockFilters = {
   expiry: {
