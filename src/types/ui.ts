@@ -1,4 +1,11 @@
-import type { supportedChainsById, supportedCurrencies } from "@/constants";
+import type {
+  expiryTypes,
+  oracleTypes,
+  projects,
+  supportedChainNames,
+  supportedChainsById,
+  supportedCurrencies,
+} from "@/constants";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type { ReactNode } from "react";
 export type ActionType =
@@ -42,21 +49,25 @@ export type OracleQueryUI = {
   assertion: boolean | undefined;
 };
 
-export type OracleType =
-  | "Optimistic Oracle"
-  | "Optimistic Oracle V2"
-  | "Skinny Optimistic Oracle"
-  | "Optimistic Asserter";
+export type OracleTypes = typeof oracleTypes;
+
+export type OracleType = OracleTypes[number];
 
 export type SupportedChainsById = typeof supportedChainsById;
 
 export type SupportedChainId = keyof SupportedChainsById;
 
-export type SupportedChainName = SupportedChainsById[SupportedChainId];
+export type SupportedChainNames = typeof supportedChainNames;
 
-export type ExpiryType = "Event-based" | "Time-based";
+export type SupportedChainName = SupportedChainNames[number];
 
-export type Project = "UMA" | "Polymarket" | "Cozy Finance";
+export type ExpiryTypes = typeof expiryTypes;
+
+export type ExpiryType = ExpiryTypes[number];
+
+export type Projects = typeof projects;
+
+export type Project = Projects[number];
 
 export type SupportedCurrencies = typeof supportedCurrencies;
 
