@@ -1,4 +1,4 @@
-import { Header, Panel } from "@/components";
+import { ErrorBanner, Header, Panel } from "@/components";
 import { siteDescription, siteTitle } from "@/constants";
 import { capitalizeFirstLetter, determinePage } from "@/helpers";
 import Head from "next/head";
@@ -20,6 +20,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Main>
+        <ErrorBanner />
         <Header page={page} />
         {children}
         <Panel />
