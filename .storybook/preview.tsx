@@ -59,6 +59,9 @@ export const parameters: Parameters = {
   },
   defaultViewport: "mobile",
   layout: "fullscreen",
+  chromatic: {
+    viewports: [320, 640, 1024, 1300, 1920]
+  },
   controls: {
     matchers: {
       color: /(background|color)$/i,
