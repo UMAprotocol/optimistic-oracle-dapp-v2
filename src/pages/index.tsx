@@ -16,9 +16,13 @@ export default function Verify() {
 
   return (
     <Layout>
-      <Filters {...mockFilters} dataSet={queries} setResults={setQueries} />
+      <Filters
+        {...mockFilters}
+        dataSet={verify ?? []}
+        setResults={setQueries}
+      />
       <OracleQueries
-        queries={verify ?? []}
+        queries={queries}
         isLoading={verify === undefined}
         page="verify"
       />
