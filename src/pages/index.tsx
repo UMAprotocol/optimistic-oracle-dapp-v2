@@ -14,6 +14,33 @@ export default function Verify() {
     }
   }, [verify]);
 
+  function getFilteredQueries() {
+    const filters = {
+      chainName: ["Ethereum", "Boba"],
+      project: ["UMA"],
+      oracleType: ["Skinny Optimistic Oracle"],
+    };
+
+    const result = [];
+
+    for (const query of queries) {
+      let passes = true;
+
+      for (const [filter, values] of Object.entries(filters)) {
+        const _filter = filter as keyof typeof filters;
+        if (values.length && !values.includes(query[_filter])) {
+          passes = false;
+        }
+      }
+
+      if (passes) {
+        result.push(query);
+      }
+    }
+
+    return result;
+  }
+
   return (
     <Layout>
       <Filters
@@ -22,7 +49,7 @@ export default function Verify() {
         setResults={setQueries}
       />
       <OracleQueries
-        queries={queries}
+        queries={getFilteredQueries()}
         isLoading={verify === undefined}
         page="verify"
       />

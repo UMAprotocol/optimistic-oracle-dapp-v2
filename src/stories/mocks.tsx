@@ -144,6 +144,9 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
         title: "With expiry type and weird random currency and liveness ends",
         expiryType: "Time-based",
         currency: "RY",
+        project: "UMA",
+        chainName: "Ethereum",
+        oracleType: "Skinny Optimistic Oracle",
         livenessEndsMilliseconds: Date.now() + 10_000,
       },
       {
