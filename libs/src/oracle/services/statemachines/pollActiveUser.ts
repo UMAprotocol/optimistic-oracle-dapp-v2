@@ -1,7 +1,7 @@
 import { Update } from "../update";
-import Store from "../../store";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
-import { ContextClient } from "./utils";
+import type Store from "../../store";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
+import type { ContextClient } from "./utils";
 import { ignoreExistenceErrorAsync } from "../../errors";
 
 export type Params = undefined;

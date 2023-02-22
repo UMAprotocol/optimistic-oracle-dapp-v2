@@ -1,4 +1,5 @@
-import { Service, Handlers, ServiceFactory, OracleType } from "../../types";
+import type { Service, Handlers, ServiceFactory } from "../../types";
+import { OracleType } from "../../types";
 import { convertV1, convertAssertion } from "./utils";
 import { getRequests as getRequestsV1 } from "./oracleV1";
 import { getRequests as getAssertions } from "./asserter";

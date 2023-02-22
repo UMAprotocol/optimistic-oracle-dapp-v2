@@ -1,6 +1,6 @@
-import Store from "../store";
-import { InputRequest } from "../types/state";
-import { TransactionReceipt } from "../types/ethers";
+import type Store from "../store";
+import type { InputRequest } from "../types/state";
+import type { TransactionReceipt } from "../types/ethers";
 
 export class Update {
   private read: Store["read"];

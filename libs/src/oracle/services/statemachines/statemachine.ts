@@ -1,4 +1,5 @@
-import { Context, Memory, ContextType } from "../../types/statemachine";
+import type { Context, Memory } from "../../types/statemachine";
+import { ContextType } from "../../types/statemachine";
 import type Store from "../../store";
 import { ContextManager, shouldStep } from "./utils";
 

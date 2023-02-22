@@ -6,18 +6,16 @@ import { optimisticOracle } from "@libs/clients";
 // this request id does not include chain id
 export const { requestId } = optimisticOracle;
 
-import {
+import type {
   State,
-  RequestState,
-  Flag,
   Flags,
   PartialChainConfig,
   ChainConfig,
   PartialConfig,
   ChainMetadata,
   Config,
-  OracleType,
 } from "./types/state";
+import { RequestState, Flag, OracleType } from "./types/state";
 import type {
   Provider,
   TransactionReceipt,

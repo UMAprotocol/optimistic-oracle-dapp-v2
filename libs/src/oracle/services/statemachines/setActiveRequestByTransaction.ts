@@ -1,6 +1,6 @@
 import assert from "assert";
-import Store from "../../store";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
+import type Store from "../../store";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
 
 // required exports for state machine
 export type Params = {

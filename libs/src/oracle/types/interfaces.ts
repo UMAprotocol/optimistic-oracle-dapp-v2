@@ -1,4 +1,4 @@
-import {
+import type {
   BigNumberish,
   BigNumber,
   Signer,
@@ -8,9 +8,9 @@ import {
   Log,
   ParsedLog,
 } from "../types/ethers";
-import { clients } from "@uma/sdk";
-import { Client } from "../client";
-import { OracleType } from "../types/state";
+import type { clients } from "@uma/sdk";
+import type { Client } from "../client";
+import type { OracleType } from "../types/state";
 
 type RequestState = clients.optimisticOracle.RequestState;
 type RequestKey = clients.optimisticOracle.RequestKey;

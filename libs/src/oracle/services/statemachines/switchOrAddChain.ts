@@ -1,6 +1,6 @@
-import Store from "../../store";
-import { Web3Provider } from "../../types/ethers";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
+import type Store from "../../store";
+import type { Web3Provider } from "../../types/ethers";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
 import { chainConfigToChainMetadata, hexValue } from "../../utils";
 
 export type Params = {

@@ -1,6 +1,7 @@
-import { OptimisticPriceRequest } from "./oracleV1";
-import { Assertion as GqlAssertion } from "./asserter";
-import { Request, OracleType, RequestState, Assertion } from "../../types";
+import type { OptimisticPriceRequest } from "./oracleV1";
+import type { Assertion as GqlAssertion } from "./asserter";
+import type { Request, Assertion } from "../../types";
+import { OracleType, RequestState } from "../../types";
 
 export function isRequestState(
   state: string | undefined

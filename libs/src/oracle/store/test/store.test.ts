@@ -2,7 +2,7 @@ import assert from "assert";
 import Store from "..";
 import Events from "events";
 import { BigNumber } from "ethers";
-import { State } from "../../types/state";
+import type { State } from "../../types/state";
 
 describe("Oracle Store", function () {
   let store: Store;

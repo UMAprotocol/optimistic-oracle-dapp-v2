@@ -1,4 +1,4 @@
-import { utils } from "@uma/sdk";
+import type { utils } from "@uma/sdk";
 export type BatchReadWithErrorsType = ReturnType<
   ReturnType<typeof utils.BatchReadWithErrors>
 >;

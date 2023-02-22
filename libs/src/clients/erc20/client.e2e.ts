@@ -1,7 +1,8 @@
 import * as dotenv from "dotenv";
 import assert from "assert";
 import * as Client from "./client";
-import { ethers, Event } from "ethers";
+import type { Event } from "ethers";
+import { ethers } from "ethers";
 
 dotenv.config();
 

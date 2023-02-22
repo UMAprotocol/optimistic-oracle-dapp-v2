@@ -1,5 +1,5 @@
 import type { Event } from "ethers";
-import { Interface } from "@ethersproject/abi";
+import type { Interface } from "@ethersproject/abi";
 
 import type { Signer, BigNumber, Contract } from "ethers";
 export type { Overrides } from "@ethersproject/contracts";

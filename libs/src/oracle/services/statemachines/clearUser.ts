@@ -1,5 +1,5 @@
-import Store from "../../store";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
+import type Store from "../../store";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
 
 // require exports for a new context handler
 export type Params = undefined;

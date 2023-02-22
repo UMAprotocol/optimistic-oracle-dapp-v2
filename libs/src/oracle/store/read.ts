@@ -13,9 +13,9 @@ import type {
 } from "../types/state";
 import type { JsonRpcSigner, BigNumber, Provider } from "../types/ethers";
 import { TransactionConfirmer, requestId } from "../utils";
-import { OracleInterface, Request, Requests } from "../types/interfaces";
-import { Erc20 } from "../services/erc20";
-import { SortedRequests } from "../services/sortedRequests";
+import type { OracleInterface, Request, Requests } from "../types/interfaces";
+import type { Erc20 } from "../services/erc20";
+import type { SortedRequests } from "../services/sortedRequests";
 import { assertExists } from "../errors";
 
 // This is a typescript compatible way of pulling out values from the global state object, essentially
