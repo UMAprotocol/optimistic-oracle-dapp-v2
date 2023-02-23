@@ -1,4 +1,4 @@
-export const supportedCurrencies = ["USDC", "ETH", "RY"] as const;
+export const currencies = ["USDC", "ETH", "RY"] as const;
 
 export const oracleTypes = [
   "Optimistic Oracle",

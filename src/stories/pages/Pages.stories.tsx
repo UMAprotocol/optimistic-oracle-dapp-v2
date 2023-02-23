@@ -105,7 +105,7 @@ export const Verify: Story = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
-    verify: verifyMockOracleQueryUIs(100),
+    verify: verifyMockOracleQueryUIs(),
   },
 };
 

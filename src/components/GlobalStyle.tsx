@@ -211,6 +211,10 @@ a:not([class]) {
       color: var(--dark-text);
     }
 
+    body {
+      background: var(--grey-400);
+    }
+
   html {
     /* Colors */
     --white: ${white};

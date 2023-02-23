@@ -137,6 +137,7 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
       {
         title: "With project specified and price",
         project: "Cozy Finance",
+        chainName: "Polygon",
         assertion: undefined,
         price: "123",
       },

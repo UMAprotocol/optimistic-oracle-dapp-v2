@@ -1,36 +1,22 @@
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
-import { useSearch } from "@/hooks";
-import type {
-  CheckboxItems,
-  CheckboxState,
-  Filter,
-  FilterOptions,
-  Filters,
-  OracleQueryUI,
-} from "@/types";
-import { cloneDeep } from "lodash";
 import Sliders from "public/assets/icons/sliders.svg";
-import type { Dispatch, SetStateAction } from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { CheckedFilters } from "./CheckedFilters";
 import { Dropdowns } from "./Dropdowns";
 import { MobileFilters } from "./MobileFilters";
-import { Search } from "./Search";
 
 interface Props {
-  dataSet: OracleQueryUI[];
-  setResults: Dispatch<SetStateAction<OracleQueryUI[]>>;
-  expiry: FilterOptions;
-  projects: FilterOptions;
-  chains: FilterOptions;
+  filters: any;
+  checkedFilters: any;
+  onCheckedChange: any;
+  reset: any;
 }
 export function Filters({
-  dataSet,
-  setResults,
-  expiry,
-  projects,
-  chains,
+  filters,
+  checkedFilters,
+  onCheckedChange,
+  reset,
 }: Props) {
   const keys = [
     "chainName",
@@ -49,123 +35,7 @@ export function Filters({
     "assertion",
   ];
 
-  const { results, ...searchProps } = useSearch({ dataSet, keys });
-
-  useEffect(() => {
-    setResults(results);
-  }, [results, setResults]);
-
-  const [checkedExpiry, setCheckedExpiry] = useState<CheckboxItems>(
-    makeCheckboxItems(expiry)
-  );
-
-  const [checkedProjects, setCheckedProjects] = useState<CheckboxItems>(
-    makeCheckboxItems(projects)
-  );
-
-  const [checkedChains, setCheckedChains] = useState<CheckboxItems>(
-    makeCheckboxItems(chains)
-  );
-
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
-  const filters: Filters = {
-    expiry: checkedExpiry,
-    projects: checkedProjects,
-    chains: checkedChains,
-  };
-
-  const setters: Record<Filter, Dispatch<SetStateAction<CheckboxItems>>> = {
-    expiry: setCheckedExpiry,
-    projects: setCheckedProjects,
-    chains: setCheckedChains,
-  };
-
-  function makeCheckboxItems(filter: FilterOptions) {
-    const clone = cloneDeep(filter);
-    const totalCount = Object.values(filter).reduce(
-      (acc, { count }) => acc + count,
-      0
-    );
-
-    return {
-      All: {
-        checked: true,
-        count: totalCount,
-      },
-      ...clone,
-    };
-  }
-
-  function uncheckFilter(filter: Filter, itemName: string) {
-    onCheckedChange({
-      filter,
-      checked: false,
-      itemName,
-    });
-  }
-
-  function resetCheckedFilters() {
-    setCheckedExpiry(makeCheckboxItems(expiry));
-    setCheckedProjects(makeCheckboxItems(projects));
-    setCheckedChains(makeCheckboxItems(chains));
-  }
-
-  function onCheckedChange({
-    filter,
-    checked,
-    itemName,
-  }: {
-    filter: Filter;
-    checked: CheckboxState;
-    itemName: string;
-  }) {
-    const items = filters[filter];
-    const setter = setters[filter];
-    const newItems = cloneDeep(items);
-    const hasItemsOtherThanAllChecked = Object.entries(items).some(
-      ([name, { checked }]) => name !== "All" && checked
-    );
-
-    if (itemName === "All") {
-      // if all is checked, we cannot let the user uncheck it without having at least one other item checked
-      if (!hasItemsOtherThanAllChecked) return;
-
-      // if all is checked, uncheck all other items
-      Object.keys(newItems).forEach((name) => {
-        newItems[name].checked = false;
-      });
-
-      newItems["All"].checked = true;
-      setter(newItems);
-
-      return;
-    }
-
-    // if we are unchecking the only remaining checked item, check all
-    if (!checked && isTheOnlyItemChecked(itemName, items)) {
-      newItems[itemName].checked = false;
-      newItems["All"].checked = true;
-
-      setter(newItems);
-
-      return;
-    }
-
-    // if we are checking an item, uncheck all
-    newItems["All"].checked = false;
-    newItems[itemName].checked = checked;
-
-    setter(newItems);
-  }
-
-  function isTheOnlyItemChecked(itemName: string, items: CheckboxItems) {
-    return (
-      Object.entries(items).filter(
-        ([key, { checked }]) => key !== itemName && checked
-      ).length === 0
-    );
-  }
 
   function openMobileFilters() {
     setMobileFiltersOpen(true);
@@ -180,17 +50,17 @@ export function Filters({
       <InnerWrapper>
         <DesktopWrapper>
           <InputsWrapper>
-            <Search {...searchProps} />
             <Dropdowns filters={filters} onCheckedChange={onCheckedChange} />
           </InputsWrapper>
           <CheckedFilters
             filters={filters}
-            uncheckFilter={uncheckFilter}
-            resetCheckedFilters={resetCheckedFilters}
+            uncheckFilter={(filter, itemName) =>
+              onCheckedChange({ filter, itemName, checked: false })
+            }
+            resetCheckedFilters={reset}
           />
         </DesktopWrapper>
         <MobileWrapper>
-          <Search {...searchProps} />
           <OpenMobileFiltersButton
             onClick={openMobileFilters}
             aria-label="open filters"
@@ -202,7 +72,7 @@ export function Filters({
             closePanel={closeMobileFilters}
             filters={filters}
             onCheckedChange={onCheckedChange}
-            resetCheckedFilters={resetCheckedFilters}
+            resetCheckedFilters={reset}
           />
         </MobileWrapper>
       </InnerWrapper>

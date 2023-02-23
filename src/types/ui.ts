@@ -1,10 +1,10 @@
 import type {
+  chainNames,
+  chainsById,
+  currencies,
   expiryTypes,
   oracleTypes,
   projects,
-  supportedChainNames,
-  supportedChainsById,
-  supportedCurrencies,
 } from "@/constants";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type { ReactNode } from "react";
@@ -21,8 +21,8 @@ export type ActionType =
  */
 export type OracleQueryUI = {
   id: string;
-  chainId: SupportedChainId;
-  chainName: SupportedChainName;
+  chainId: ChainId;
+  chainName: ChainName;
   oracleType: OracleType;
   project: Project;
   title: ReactNode;
@@ -42,7 +42,7 @@ export type OracleQueryUI = {
   // oo
   price: string | undefined;
   expiryType: ExpiryType | undefined;
-  currency: SupportedCurrency | undefined;
+  currency: Currency | undefined;
   formattedBond: string | undefined;
   formattedReward: string | undefined;
   // oa
@@ -53,13 +53,13 @@ export type OracleTypes = typeof oracleTypes;
 
 export type OracleType = OracleTypes[number];
 
-export type SupportedChainsById = typeof supportedChainsById;
+export type ChainsById = typeof chainsById;
 
-export type SupportedChainId = keyof SupportedChainsById;
+export type ChainId = keyof ChainsById;
 
-export type SupportedChainNames = typeof supportedChainNames;
+export type ChainNames = typeof chainNames;
 
-export type SupportedChainName = SupportedChainNames[number];
+export type ChainName = ChainNames[number];
 
 export type ExpiryTypes = typeof expiryTypes;
 
@@ -69,9 +69,9 @@ export type Projects = typeof projects;
 
 export type Project = Projects[number];
 
-export type SupportedCurrencies = typeof supportedCurrencies;
+export type Currencies = typeof currencies;
 
-export type SupportedCurrency = SupportedCurrencies[number];
+export type Currency = Currencies[number];
 
 export type MoreInformationItem = {
   title: string;
@@ -86,8 +86,6 @@ export type ErrorMessage = {
     href: string;
   };
 };
-
-export type Filter = "expiry" | "projects" | "chains";
 
 export type CheckboxState = DropdownMenuCheckboxItemProps["checked"];
 

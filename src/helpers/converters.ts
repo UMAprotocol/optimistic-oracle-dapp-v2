@@ -1,14 +1,9 @@
-import { ethers } from "ethers";
+import { chainsById } from "@/constants";
+import type { ActionType, ChainId, ChainName, OracleQueryUI } from "@/types";
 import { format } from "date-fns";
-import type {
-  OracleQueryUI,
-  SupportedChainId,
-  ActionType,
-  SupportedChainName,
-} from "@/types";
-import { supportedChainsById } from "@/constants";
+import { ethers } from "ethers";
 
-import type { Request, Assertion } from "@libs/oracle2";
+import type { Assertion, Request } from "@libs/oracle2";
 import { RequestState } from "@libs/oracle2";
 
 export function decodeHexString(hexString: string) {
@@ -71,13 +66,13 @@ export function requestStateToAction(
   }
 }
 
-export function getChainName(chainId: number): SupportedChainName {
+export function getChainName(chainId: number): ChainName {
   if (!isSupportedChain(chainId))
     throw new Error(`Unsupported Chain ${chainId}`);
-  return supportedChainsById[chainId];
+  return chainsById[chainId];
 }
-export function isSupportedChain(chainId: number): chainId is SupportedChainId {
-  return chainId in supportedChainsById;
+export function isSupportedChain(chainId: number): chainId is ChainId {
+  return chainId in chainsById;
 }
 
 export function requestToOracleQuery(request: Request): OracleQueryUI {

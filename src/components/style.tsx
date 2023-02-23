@@ -42,10 +42,6 @@ export const DropdownTrigger = styled(RadixDropdown.Trigger)`
 export const DropdownContent = styled(RadixDropdown.Content)`
   min-width: 220px;
   margin-top: 4px;
-  padding-top: 8px;
-  padding-left: 16px;
-  padding-right: 24px;
-  padding-bottom: 16px;
   font: var(--body-sm);
   color: var(--blue-grey-500);
   background: var(--white);
@@ -79,8 +75,26 @@ export const CheckboxItemCount = styled.span`
 export const checkboxItem = css`
   display: flex;
   justify-content: space-between;
-  &:not(:last-child) {
-    margin-bottom: 12px;
+  width: 100%;
+  padding-top: 8px;
+  padding-left: 16px;
+  padding-right: 24px;
+  padding-bottom: 12px;
+
+  &:is(:first-child) {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  &:is(:last-child) {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+
+  &:focus,
+  &:hover {
+    outline: none;
+    background: var(--grey-500);
   }
 
   &[data-disabled] {
