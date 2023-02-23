@@ -1,11 +1,11 @@
 import type * as ethersTypes from "../types/ethers";
-import * as state from "../types/state";
-import * as statemachine from "../types/statemachine";
+import type * as state from "../types/state";
+import type * as statemachine from "../types/statemachine";
 
 import { requestId } from "../utils";
 import { factory as Erc20Factory } from "../services/erc20";
 import Multicall2 from "@libs/multicall2";
-import { SortedRequests } from "../services/sortedRequests";
+import type { SortedRequests } from "../services/sortedRequests";
 import type { OracleInterface, Request, Requests } from "../types/interfaces";
 
 // This file contains composable and type safe state writers which mirror the state in types/state.

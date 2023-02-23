@@ -4,15 +4,15 @@
 // Normally you want to query events in order, ie oldest to newest, but in this case we want to prioritize the
 // newest requests first in the case we cant fetch the whole range. Also we will store all events in order and
 // process them on each iteration, so we should always have a consistent view of request with our currently known events.
-import Store from "../../store";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
-import { ContextClient } from "./utils";
+import type Store from "../../store";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
+import type { ContextClient } from "./utils";
 import { Update } from "../update";
+import type { RangeState } from "../../utils";
 import {
   rangeStart,
   rangeSuccessDescending,
   rangeFailureDescending,
-  RangeState,
 } from "../../utils";
 import { ignoreExistenceErrorAsync } from "../../errors";
 

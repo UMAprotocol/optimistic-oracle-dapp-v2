@@ -1,7 +1,7 @@
 import { Update } from "../update";
-import Store from "../../store";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
-import { User } from "../../types/state";
+import type Store from "../../store";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
+import type { User } from "../../types/state";
 import { ignoreExistenceErrorAsync } from "../../errors";
 
 // require exports for a new context handler

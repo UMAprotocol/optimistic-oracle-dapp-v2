@@ -1,17 +1,14 @@
-import {
-  Calls,
-  BatchReadWithErrorsType,
-  BatchReadWithErrors,
-} from "@libs/utils";
+import type { Calls, BatchReadWithErrorsType } from "@libs/utils";
+import { BatchReadWithErrors } from "@libs/utils";
 import { erc20 } from "@libs/clients";
-import Multicall2 from "@libs/multicall2";
-import {
+import type Multicall2 from "@libs/multicall2";
+import type {
   Provider,
   Signer,
   BigNumberish,
   TransactionResponse,
 } from "../types/ethers";
-import { Erc20Props } from "../types/state";
+import type { Erc20Props } from "../types/state";
 
 const batchProps: Calls = [["symbol"], ["name"], ["decimals"], ["totalSupply"]];
 export class Erc20 {

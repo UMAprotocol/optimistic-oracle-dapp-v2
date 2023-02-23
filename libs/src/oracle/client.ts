@@ -1,17 +1,16 @@
 import assert from "assert";
 import { ethers } from "ethers";
-import Store, { Emit } from "./store";
+import type { Emit } from "./store";
+import Store from "./store";
 import type { state } from "./types";
 import type { FallbackProvider } from "./types/ethers";
-import { InputRequest, User } from "./types/state";
+import type { InputRequest, User } from "./types/state";
 import { Update } from "./services/update";
-import { SortedRequests } from "./services/sortedRequests";
-import {
-  StateMachine,
-  setActiveRequestByTransaction,
-} from "./services/statemachines";
+import type { SortedRequests } from "./services/sortedRequests";
+import type { setActiveRequestByTransaction } from "./services/statemachines";
+import { StateMachine } from "./services/statemachines";
 import { toWei } from "./utils";
-import { NewOracle } from "./types/interfaces";
+import type { NewOracle } from "./types/interfaces";
 import { loop } from "@libs/utils";
 
 export class Client {

@@ -2,8 +2,9 @@ import Write from "./write";
 import Read from "./read";
 import Has from "./has";
 
-import Store, { Emit as GenericEmit } from "./store";
-import { State } from "../types/state";
+import type { Emit as GenericEmit } from "./store";
+import Store from "./store";
+import type { State } from "../types/state";
 
 export type WriteCallback = (write: Write, state: State) => void;
 export type Emit = GenericEmit<State>;

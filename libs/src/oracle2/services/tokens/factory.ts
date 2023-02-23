@@ -1,6 +1,6 @@
 import Events from "events";
 import { ethers } from "ethers";
-import {
+import type {
   Handlers,
   JsonRpcProvider,
   Token,

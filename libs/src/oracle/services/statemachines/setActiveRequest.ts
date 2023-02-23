@@ -1,6 +1,6 @@
-import Store from "../../store";
-import { Inputs } from "../../types/state";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
+import type Store from "../../store";
+import type { Inputs } from "../../types/state";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
 
 // required exports for state machine
 export type Params = Inputs["request"];

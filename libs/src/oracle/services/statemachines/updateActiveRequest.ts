@@ -1,6 +1,6 @@
 import { Update } from "../update";
-import Store from "../../store";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
+import type Store from "../../store";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
 import { ignoreExistenceErrorAsync } from "../../errors";
 
 // required exports for state machine

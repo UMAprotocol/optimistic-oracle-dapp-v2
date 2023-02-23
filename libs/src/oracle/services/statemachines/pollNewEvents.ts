@@ -1,9 +1,9 @@
 // this statemachine will continue to poll for new events from startBlock ( or latest block if not defined).
 // It will maintain memory of the last block it polled for events up to, and use that as the start block for next
 // iteration, while always querying up to the latest block.
-import Store from "../../store";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
-import { ContextClient } from "./utils";
+import type Store from "../../store";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
+import type { ContextClient } from "./utils";
 import { Update } from "../update";
 import { ignoreExistenceErrorAsync } from "../../errors";
 

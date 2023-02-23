@@ -1,9 +1,10 @@
-import { Client, factory } from "./client";
+import type { Client } from "./client";
+import { factory } from "./client";
 import { SkinnyOptimisticOracle } from "./services/skinnyOptimisticOracle";
 import { SortedRequests } from "./services/sortedRequests";
 import { DefaultConfig, getMulticall2Address } from "./utils";
 import { state } from "./types";
-import { Emit } from "./store";
+import type { Emit } from "./store";
 
 const Factory = (
   config: state.PartialConfig,

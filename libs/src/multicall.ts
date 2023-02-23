@@ -1,5 +1,5 @@
 import { multicall } from "@libs/clients";
-import { Contract } from "ethers";
+import type { Contract } from "ethers";
 import type { SignerOrProvider } from "@libs/types";
 import zip from "lodash/zip";
 

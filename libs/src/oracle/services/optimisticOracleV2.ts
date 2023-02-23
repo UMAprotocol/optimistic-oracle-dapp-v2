@@ -1,5 +1,5 @@
 // This is almost a direct copy of the OO v1 service, just with updated abis and different contract addresses
-import {
+import type {
   BigNumberish,
   Provider,
   Signer,

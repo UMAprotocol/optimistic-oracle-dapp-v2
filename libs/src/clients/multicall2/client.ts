@@ -1,7 +1,5 @@
-import {
-  Multicall2Ethers,
-  Multicall2Ethers__factory,
-} from "@uma/contracts-frontend";
+import type { Multicall2Ethers } from "@uma/contracts-frontend";
+import { Multicall2Ethers__factory } from "@uma/contracts-frontend";
 import type { SignerOrProvider } from "@libs/types";
 
 export type Instance = Multicall2Ethers;
