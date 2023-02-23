@@ -9,7 +9,7 @@ export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
     tokenAddress: "0xc43767f4592df265b4a9f1a398b97ff24f38c6a6",
     chainId: 1,
     chainName: "Ethereum",
-    oracleType: "Optimistic Oracle",
+    oracleType: "Optimistic Oracle V1",
     project: "UMA",
     title:
       "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",

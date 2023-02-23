@@ -16,9 +16,9 @@ import type {
   Tokens,
 } from "@libs/oracle2";
 import { Client } from "@libs/oracle2";
-import { gql, tokens } from "@libs/oracle2/services";
+import { oracles, tokens } from "@libs/oracle2/services";
 
-const gqlService = gql.Factory(config.subgraphs);
+const oraclesService = oracles.Factory(config.subgraphs);
 const [tokenQueries, tokenService] = tokens.Factory(config.providers);
 
 // tokenQueries has {token,allowance,balance} which you have to pass in chainid plus args for each call
@@ -182,7 +182,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // its important this client only gets initialized once
-    Client([gqlService, tokenService], {
+    Client([oraclesService, tokenService], {
       requests: (requests) => dispatch({ type: "requests", data: requests }),
       assertions: (assertions) =>
         dispatch({ type: "assertions", data: assertions }),
