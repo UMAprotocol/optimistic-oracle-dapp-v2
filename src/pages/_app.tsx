@@ -2,7 +2,7 @@ import { GlobalStyle } from "@/components";
 import {
   config,
   red500,
-  supportedChains,
+  chains as supportedChains,
   walletsAndConnectors,
   white,
 } from "@/constants";

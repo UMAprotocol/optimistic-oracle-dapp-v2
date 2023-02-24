@@ -1,4 +1,11 @@
-import type { supportedChainsById, supportedCurrencies } from "@/constants";
+import type {
+  chainNames,
+  chainsById,
+  currencies,
+  expiryTypes,
+  oracleTypes,
+  projects,
+} from "@/constants";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type { ReactNode } from "react";
 export type ActionType =
@@ -14,8 +21,8 @@ export type ActionType =
  */
 export type OracleQueryUI = {
   id: string;
-  chainId: SupportedChainId;
-  chainName: SupportedChainName;
+  chainId: ChainId;
+  chainName: ChainName;
   oracleType: OracleType;
   project: Project;
   title: ReactNode;
@@ -36,7 +43,7 @@ export type OracleQueryUI = {
   // oo
   price: string | undefined;
   expiryType: ExpiryType | undefined;
-  currency: SupportedCurrency | undefined;
+  currency: Currency | undefined;
   oracleAddress: string;
   tokenAddress: string | undefined;
   formattedBond: string | undefined;
@@ -44,25 +51,29 @@ export type OracleQueryUI = {
   assertion: boolean | undefined;
 };
 
-export type OracleType =
-  | "Optimistic Oracle"
-  | "Optimistic Oracle V2"
-  | "Skinny Optimistic Oracle"
-  | "Optimistic Asserter";
+export type OracleTypes = typeof oracleTypes;
 
-export type SupportedChainsById = typeof supportedChainsById;
+export type OracleType = OracleTypes[number];
 
-export type SupportedChainId = keyof SupportedChainsById;
+export type ChainsById = typeof chainsById;
 
-export type SupportedChainName = SupportedChainsById[SupportedChainId];
+export type ChainId = keyof ChainsById;
 
-export type ExpiryType = "Event-based" | "Time-based";
+export type ChainNames = typeof chainNames;
 
-export type Project = "UMA" | "Polymarket" | "Cozy Finance";
+export type ChainName = ChainNames[number];
 
-export type SupportedCurrencies = typeof supportedCurrencies;
+export type ExpiryTypes = typeof expiryTypes;
 
-export type SupportedCurrency = SupportedCurrencies[number];
+export type ExpiryType = ExpiryTypes[number];
+
+export type Projects = typeof projects;
+
+export type Project = Projects[number];
+
+export type Currencies = typeof currencies;
+
+export type Currency = Currencies[number];
 
 export type MoreInformationItem = {
   title: string;
@@ -78,8 +89,6 @@ export type ErrorMessage = {
   };
 };
 
-export type Filter = "expiry" | "projects" | "chains";
-
 export type CheckboxState = DropdownMenuCheckboxItemProps["checked"];
 
 export type CheckboxItem = {
@@ -92,16 +101,18 @@ export type CheckboxItems = {
   [key: string]: CheckboxItem;
 };
 
-export type FilterOptions = Record<string, CheckboxItem>;
+export type FilterName = "chainName" | "project" | "oracleType";
 
-export type Filters = Record<Filter, CheckboxItems>;
+export type CheckedFiltersByFilterName = Record<FilterName, string[]>;
 
-export type FilterOnCheckedChange = ({
-  filter,
-  checked,
-  itemName,
-}: {
-  filter: Filter;
+export type CheckboxItemsByFilterName = Record<FilterName, CheckboxItems>;
+
+export type FilterCheckboxes = Record<string, CheckboxItem>;
+
+export type CheckedChangePayload = {
+  filterName: FilterName;
   checked: CheckboxState;
   itemName: string;
-}) => void;
+};
+
+export type OnCheckedChange = (payload: CheckedChangePayload) => void;

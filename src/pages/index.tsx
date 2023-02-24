@@ -1,15 +1,15 @@
 import { Filters, Layout, OracleQueries } from "@/components";
-import { useOracleDataContext } from "@/hooks";
-import { mockFilters } from "@/stories/mocks";
+import { useFilterAndSearch, useOracleDataContext } from "@/hooks";
 
 export default function Verify() {
   const { verify } = useOracleDataContext();
+  const { results, searchProps, filterProps } = useFilterAndSearch(verify);
 
   return (
     <Layout>
-      <Filters {...mockFilters} />
+      <Filters {...filterProps} {...searchProps} />
       <OracleQueries
-        queries={verify ?? []}
+        queries={results}
         isLoading={verify === undefined}
         page="verify"
       />

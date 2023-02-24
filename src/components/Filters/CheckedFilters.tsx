@@ -1,47 +1,50 @@
 import { Button, CloseButton } from "@/components";
-import type { Filter, Filters } from "@/types";
+import type {
+  CheckedFiltersByFilterName,
+  FilterName,
+  OnCheckedChange,
+} from "@/types";
 import { Fragment } from "react";
 import styled from "styled-components";
 
 interface Props {
-  filters: Filters;
-  uncheckFilter: (filter: Filter, itemName: string) => void;
-  resetCheckedFilters: () => void;
+  checkedFilters: CheckedFiltersByFilterName;
+  onCheckedChange: OnCheckedChange;
+  reset: () => void;
 }
+
 /**
- * Determines which filters are checked and shows them.
- * @param filters The filters.
- * @param uncheckFilter Unchecks a filter.
- * @param resetCheckedFilters Resets all checked filters.
+ * Displays the checked filters
+ * @param checkedFilters - The checked filters
+ * @param onCheckedChange - The function to call when a filter is unchecked
+ * @param reset - The function to call when the "Clear filters" button is clicked
  */
 export function CheckedFilters({
-  filters,
-  uncheckFilter,
-  resetCheckedFilters,
+  checkedFilters,
+  onCheckedChange,
+  reset,
 }: Props) {
-  const checkedFilters = Object.entries(filters).map(([filter, checked]) => ({
-    filter: filter as Filter,
-    checked: Object.entries(checked)
-      .filter(([_, { checked }]) => checked)
-      .map(([name]) => name)
-      .filter((name) => name !== "All"),
-  }));
-
-  const hasCheckedFilters = checkedFilters.some(
-    ({ checked }) => checked.length > 0
+  const hasCheckedFilters = Object.values(checkedFilters).some(
+    (checked) => checked.length > 0
   );
+
+  function uncheckFilter(filterName: FilterName, itemName: string) {
+    onCheckedChange({ filterName, itemName, checked: false });
+  }
 
   if (!hasCheckedFilters) return null;
 
   return (
     <Wrapper>
-      {checkedFilters.map(({ filter, checked }) => (
-        <Fragment key={filter}>
-          {checked.map((name) => (
-            <CheckedFilter key={name}>
-              {name}
+      {Object.entries(checkedFilters).map(([filterName, checked]) => (
+        <Fragment key={filterName}>
+          {checked.map((itemName) => (
+            <CheckedFilter key={itemName}>
+              {itemName}
               <CloseButton
-                onClick={() => uncheckFilter(filter, name)}
+                onClick={() =>
+                  uncheckFilter(filterName as FilterName, itemName)
+                }
                 size={10}
                 variant="dark"
                 ariaLabel="remove filter"
@@ -53,7 +56,7 @@ export function CheckedFilters({
       {hasCheckedFilters && (
         <Button
           variant="secondary"
-          onClick={resetCheckedFilters}
+          onClick={reset}
           width={100}
           height={30}
           fontSize={14}
@@ -68,7 +71,7 @@ export function CheckedFilters({
 const Wrapper = styled.div`
   display: flex;
   gap: 8px;
-  margin-block: 20px;
+  margin-top: 20px;
 `;
 
 const CheckedFilter = styled.div`

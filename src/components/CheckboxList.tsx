@@ -1,12 +1,16 @@
-import { blueGrey700 } from "@/constants";
-import { addOpacityToHsla } from "@/helpers";
-import type { Filter, FilterOnCheckedChange, Filters } from "@/types";
-import styled from "styled-components";
 import { Checkbox } from "@/components";
+import { blueGrey700 } from "@/constants";
+import { addOpacityToHsla, makeFilterTitle } from "@/helpers";
+import type {
+  CheckboxItemsByFilterName,
+  FilterName,
+  OnCheckedChange,
+} from "@/types";
+import styled from "styled-components";
 
 interface Props {
-  filters: Filters;
-  onCheckedChange: FilterOnCheckedChange;
+  filters: CheckboxItemsByFilterName;
+  onCheckedChange: OnCheckedChange;
 }
 /**
  * A list of checkboxes that is used in the filters component.
@@ -16,9 +20,9 @@ interface Props {
 export function CheckboxList({ filters, onCheckedChange }: Props) {
   return (
     <Wrapper>
-      {Object.entries(filters).map(([filter, items]) => (
-        <CheckboxesWrapper key={filter}>
-          <Title>{filter}</Title>
+      {Object.entries(filters).map(([filterName, items]) => (
+        <CheckboxesWrapper key={filterName}>
+          <Title>{makeFilterTitle(filterName)}</Title>
           {Object.entries(items).map(([itemName, { checked, count }]) => (
             <Checkbox
               key={itemName}
@@ -26,7 +30,10 @@ export function CheckboxList({ filters, onCheckedChange }: Props) {
               itemName={itemName}
               count={count}
               onCheckedChange={({ ...args }) =>
-                onCheckedChange({ ...args, filter: filter as Filter })
+                onCheckedChange({
+                  ...args,
+                  filterName: filterName as FilterName,
+                })
               }
             />
           ))}
@@ -42,7 +49,6 @@ const Title = styled.h2`
   margin-bottom: 12px;
   font: var(--body-sm);
   color: var(--blue-grey-500);
-  text-transform: capitalize;
 `;
 
 const CheckboxesWrapper = styled.div`

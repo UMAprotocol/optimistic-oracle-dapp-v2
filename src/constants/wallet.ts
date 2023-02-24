@@ -12,7 +12,7 @@ import {
   polygonMumbai,
 } from "wagmi/chains";
 
-export const supportedChains = [
+export const chains = [
   mainnet,
   goerli,
   optimism,
@@ -24,7 +24,7 @@ export const supportedChains = [
   polygonMumbai,
 ];
 
-export const supportedChainsById = {
+export const chainsById = {
   0: "Unsupported Chain" as const,
   1: "Ethereum" as const,
   5: "Görli" as const,
@@ -37,12 +37,12 @@ export const supportedChainsById = {
   42161: "Arbitrum" as const,
 };
 
+export const chainNames = Object.values(chainsById);
+
 export const walletsAndConnectors = getDefaultWallets({
   appName: "Optimistic Oracle dApp V2",
-  chains: supportedChains,
+  chains,
 });
-
-export const supportedCurrencies = ["USDC", "ETH", "RY"] as const;
 
 export const ethersErrorCodes = [
   "CALL_EXCEPTION",

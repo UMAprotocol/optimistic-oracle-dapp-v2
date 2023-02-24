@@ -1,12 +1,9 @@
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import type {
-  CheckboxItems,
-  CheckboxState,
-  Filter,
-  FilterOptions,
-  Filters,
+  CheckboxItemsByFilterName,
+  CheckedFiltersByFilterName,
+  OnCheckedChange,
 } from "@/types";
-import { cloneDeep } from "lodash";
 import Sliders from "public/assets/icons/sliders.svg";
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
@@ -17,128 +14,31 @@ import { MobileFilters } from "./MobileFilters";
 import { Search } from "./Search";
 
 interface Props {
-  expiry: FilterOptions;
-  projects: FilterOptions;
-  chains: FilterOptions;
+  filters: CheckboxItemsByFilterName;
+  checkedFilters: CheckedFiltersByFilterName;
+  onCheckedChange: OnCheckedChange;
+  reset: () => void;
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
 }
 /**
- * Shows checkboxes for the different filters.
- * @param expiry The expiry filter options.
- * @param projects The projects filter options.
- * @param chains The chains filter options.
+ * Component for searching and filtering queries
+ * @param filters The filters that are used to create the dropdown menus.
+ * @param checkedFilters The checked filters
+ * @param onCheckedChange A callback function that is called when a checkbox is checked or unchecked.
+ * @param reset A callback function that is called when the "Clear filters" button is clicked
+ * @param searchTerm The search term
+ * @param setSearchTerm A callback function that is called when the search term is changed
  */
-export function Filters({ expiry, projects, chains }: Props) {
-  const [checkedExpiry, setCheckedExpiry] = useState<CheckboxItems>(
-    makeCheckboxItems(expiry)
-  );
-
-  const [checkedProjects, setCheckedProjects] = useState<CheckboxItems>(
-    makeCheckboxItems(projects)
-  );
-
-  const [checkedChains, setCheckedChains] = useState<CheckboxItems>(
-    makeCheckboxItems(chains)
-  );
-
+export function Filters({
+  filters,
+  checkedFilters,
+  onCheckedChange,
+  reset,
+  searchTerm,
+  setSearchTerm,
+}: Props) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
-  const filters: Filters = {
-    expiry: checkedExpiry,
-    projects: checkedProjects,
-    chains: checkedChains,
-  };
-
-  const setters: Record<Filter, Dispatch<SetStateAction<CheckboxItems>>> = {
-    expiry: setCheckedExpiry,
-    projects: setCheckedProjects,
-    chains: setCheckedChains,
-  };
-
-  function makeCheckboxItems(filter: FilterOptions) {
-    const clone = cloneDeep(filter);
-    const totalCount = Object.values(filter).reduce(
-      (acc, { count }) => acc + count,
-      0
-    );
-
-    return {
-      All: {
-        checked: true,
-        count: totalCount,
-      },
-      ...clone,
-    };
-  }
-
-  function uncheckFilter(filter: Filter, itemName: string) {
-    onCheckedChange({
-      filter,
-      checked: false,
-      itemName,
-    });
-  }
-
-  function resetCheckedFilters() {
-    setCheckedExpiry(makeCheckboxItems(expiry));
-    setCheckedProjects(makeCheckboxItems(projects));
-    setCheckedChains(makeCheckboxItems(chains));
-  }
-
-  function onCheckedChange({
-    filter,
-    checked,
-    itemName,
-  }: {
-    filter: Filter;
-    checked: CheckboxState;
-    itemName: string;
-  }) {
-    const items = filters[filter];
-    const setter = setters[filter];
-    const newItems = cloneDeep(items);
-    const hasItemsOtherThanAllChecked = Object.entries(items).some(
-      ([name, { checked }]) => name !== "All" && checked
-    );
-
-    if (itemName === "All") {
-      // if all is checked, we cannot let the user uncheck it without having at least one other item checked
-      if (!hasItemsOtherThanAllChecked) return;
-
-      // if all is checked, uncheck all other items
-      Object.keys(newItems).forEach((name) => {
-        newItems[name].checked = false;
-      });
-
-      newItems["All"].checked = true;
-      setter(newItems);
-
-      return;
-    }
-
-    // if we are unchecking the only remaining checked item, check all
-    if (!checked && isTheOnlyItemChecked(itemName, items)) {
-      newItems[itemName].checked = false;
-      newItems["All"].checked = true;
-
-      setter(newItems);
-
-      return;
-    }
-
-    // if we are checking an item, uncheck all
-    newItems["All"].checked = false;
-    newItems[itemName].checked = checked;
-
-    setter(newItems);
-  }
-
-  function isTheOnlyItemChecked(itemName: string, items: CheckboxItems) {
-    return (
-      Object.entries(items).filter(
-        ([key, { checked }]) => key !== itemName && checked
-      ).length === 0
-    );
-  }
 
   function openMobileFilters() {
     setMobileFiltersOpen(true);
@@ -153,17 +53,16 @@ export function Filters({ expiry, projects, chains }: Props) {
       <InnerWrapper>
         <DesktopWrapper>
           <InputsWrapper>
-            <Search />
+            <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <Dropdowns filters={filters} onCheckedChange={onCheckedChange} />
           </InputsWrapper>
           <CheckedFilters
-            filters={filters}
-            uncheckFilter={uncheckFilter}
-            resetCheckedFilters={resetCheckedFilters}
+            checkedFilters={checkedFilters}
+            onCheckedChange={onCheckedChange}
+            reset={reset}
           />
         </DesktopWrapper>
         <MobileWrapper>
-          <Search />
           <OpenMobileFiltersButton
             onClick={openMobileFilters}
             aria-label="open filters"
@@ -175,7 +74,7 @@ export function Filters({ expiry, projects, chains }: Props) {
             closePanel={closeMobileFilters}
             filters={filters}
             onCheckedChange={onCheckedChange}
-            resetCheckedFilters={resetCheckedFilters}
+            reset={reset}
           />
         </MobileWrapper>
       </InnerWrapper>
@@ -184,7 +83,7 @@ export function Filters({ expiry, projects, chains }: Props) {
 }
 
 const OuterWrapper = styled.div`
-  min-height: 96px;
+  padding-block: 20px;
   background: var(--white);
   display: flex;
   align-items: center;
