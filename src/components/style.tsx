@@ -116,7 +116,7 @@ export const PanelInfoIconWrapper = styled.div`
   gap: 10px;
   padding-inline: 10px;
   padding-block: 8px;
-  border: 1px solid var(--grey-100);
+  border: 1px solid var(--grey-400);
   border-radius: 5px;
 `;
 
