@@ -1,3 +1,4 @@
+import { searchKeys } from "@/constants";
 import type {
   CheckboxItems,
   CheckboxItemsByFilterName,
@@ -8,8 +9,20 @@ import type {
   FilterName,
   OracleQueryUI,
 } from "@/types";
+import Fuse from "fuse.js";
 import { cloneDeep } from "lodash";
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
+
+export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
+  const { filteredQueries, ...filterProps } = useFilters(queries);
+  const { searchResults, ...searchProps } = useSearch(filteredQueries);
+
+  return {
+    results: searchResults,
+    filterProps,
+    searchProps,
+  };
+}
 
 type State = {
   filters: CheckboxItemsByFilterName;
@@ -32,7 +45,7 @@ type CheckedChange = {
   payload: CheckedChangePayload;
 };
 
-export function useFilters({ queries }: { queries: OracleQueryUI[] }) {
+export function useFilters(queries: OracleQueryUI[]) {
   const initialState: State = {
     filters: {
       project: makeFilterCheckboxItems("project"),
@@ -160,16 +173,16 @@ export function useFilters({ queries }: { queries: OracleQueryUI[] }) {
 
   function makeCheckedFilters(state: State) {
     return Object.entries(state.filters).reduce((acc, [filterName, filter]) => {
-      const checkedOptions = Object.entries(filter).reduce(
-        (acc, [optionName, option]) => {
-          if (option.checked && optionName !== "All") {
-            acc.push(optionName);
+      const checkedItems = Object.entries(filter).reduce(
+        (acc, [itemName, option]) => {
+          if (option.checked && itemName !== "All") {
+            acc.push(itemName);
           }
           return acc;
         },
         [] as string[]
       );
-      acc[filterName as FilterName] = checkedOptions;
+      acc[filterName as FilterName] = checkedItems;
       return acc;
     }, {} as CheckedFiltersByFilterName);
   }
@@ -195,11 +208,11 @@ export function useFilters({ queries }: { queries: OracleQueryUI[] }) {
   }
 
   function makeFilterCheckboxItems(filterName: FilterName) {
-    const filterOptions = queries.reduce((acc, query) => {
-      const filterValue = query[filterName];
+    const checkboxItems = queries.reduce((acc, query) => {
+      const itemName = query[filterName];
 
-      if (typeof filterValue === "string" && !acc[filterValue]) {
-        acc[filterValue] = { checked: false, count: 0 };
+      if (typeof itemName === "string" && !acc[itemName]) {
+        acc[itemName] = { checked: false, count: 0 };
       }
 
       return acc;
@@ -207,7 +220,7 @@ export function useFilters({ queries }: { queries: OracleQueryUI[] }) {
 
     return {
       All: { checked: true, count: 0 },
-      ...filterOptions,
+      ...checkboxItems,
     } as CheckboxItems;
   }
 
@@ -229,5 +242,27 @@ export function useFilters({ queries }: { queries: OracleQueryUI[] }) {
     reset() {
       dispatch({ type: "reset" });
     },
+  };
+}
+
+export function useSearch(queries: OracleQueryUI[]) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const fuse = useMemo(() => {
+    return new Fuse(queries, { keys: searchKeys });
+  }, [queries]);
+
+  const searchResults = useMemo(() => {
+    if (!searchTerm) return queries;
+
+    const results = fuse.search(searchTerm);
+
+    return results.map((result) => result.item);
+  }, [queries, fuse, searchTerm]);
+
+  return {
+    searchResults,
+    searchTerm,
+    setSearchTerm,
   };
 }
