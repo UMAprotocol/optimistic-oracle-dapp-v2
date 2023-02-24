@@ -23,17 +23,17 @@ export type Key = {
   ancillaryData: string;
 };
 
-export enum OracleType {
-  Optimistic = "Optimistic Oracle",
-  OptimisticV2 = "Optimistic Oracle V2",
-  Skinny = "Skinny Optimistic Oracle",
-  Asserter = "Optimistic Asserter",
-}
+export type OracleType =
+  | "Optimistic Oracle V1"
+  | "Optimistic Oracle V2"
+  | "Skinny Optimistic Oracle"
+  | "Optimistic Asserter";
 
 export type Request = Key & {
   id: string;
   oracleType: OracleType;
   chainId: number;
+  oracleAddress: string;
 } & Partial<{
     // this is partial since we dont know what events we have to populate parts of this
     proposer: string;
@@ -78,6 +78,7 @@ export type Assertion = {
   id: string;
   oracleType: OracleType;
   chainId: number;
+  oracleAddress: string;
 } & Partial<{
   assertionId: string;
   domainId: string;

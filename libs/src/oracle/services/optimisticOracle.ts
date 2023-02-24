@@ -1,5 +1,5 @@
 import { optimisticOracleV2 } from "@libs/clients";
-import {
+import type {
   BigNumberish,
   Provider,
   Signer,

@@ -1,8 +1,10 @@
+import { Panel } from "@/components";
 import {
   defaultErrorContextState,
   defaultOracleDataContextState,
   ErrorContext,
   OracleDataContext,
+  PanelProvider,
 } from "@/contexts";
 import VerifyPage from "@/pages";
 import ProposePage from "@/pages/propose";
@@ -58,7 +60,10 @@ function Wrapper({
   return (
     <OracleDataContext.Provider value={mockOracleContextState}>
       <ErrorContext.Provider value={mockErrorContextState}>
-        <Component />
+        <PanelProvider>
+          <Component />
+          <Panel />
+        </PanelProvider>
       </ErrorContext.Provider>
     </OracleDataContext.Provider>
   );

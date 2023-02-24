@@ -1,10 +1,11 @@
+import type { SkinnyOptimisticOracleEthers } from "@uma/contracts-frontend";
 import {
-  SkinnyOptimisticOracleEthers,
   SkinnyOptimisticOracleEthers__factory,
   getSkinnyOptimisticOracleAbi,
 } from "@uma/contracts-frontend";
 import type { SignerOrProvider, GetEventType } from "@libs/types";
-import { Event, BigNumberish, utils, BigNumber } from "ethers";
+import type { Event, BigNumberish, BigNumber } from "ethers";
+import { utils } from "ethers";
 
 export type Instance = SkinnyOptimisticOracleEthers;
 const Factory = SkinnyOptimisticOracleEthers__factory;

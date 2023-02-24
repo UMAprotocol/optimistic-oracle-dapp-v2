@@ -1,8 +1,9 @@
 import assert from "assert";
 import { SortedRequests } from "./services/sortedRequests";
-import { ClientTable } from "./types/interfaces";
-import { State, OracleType, PartialConfigTable } from "./types/state";
-import { Emit } from "./store";
+import type { ClientTable } from "./types/interfaces";
+import type { State, PartialConfigTable } from "./types/state";
+import { OracleType } from "./types/state";
+import type { Emit } from "./store";
 import SkinnyFactory from "./skinnyFactory";
 import OptimisticFactory from "./optimisticFactory";
 import OptimisticV2Factory from "./optimisticV2Factory";

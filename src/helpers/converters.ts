@@ -82,7 +82,8 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     chainName: isSupportedChain(request.chainId)
       ? getChainName(request.chainId)
       : getChainName(0),
-    oracleType: request.oracleType,
+    oracleType: "Optimistic Oracle",
+    oracleAddress: request.oracleAddress,
     ancillaryData: request.ancillaryData,
     decodedAncillaryData: decodeAncillaryData(request.ancillaryData),
     timeUTC: toTimeUTC(request.timestamp),
@@ -97,12 +98,13 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
       : undefined,
     price: request.price,
     expiryType: request.eventBased ? "Event-based" : "Time-based",
-    actionType: request.state ? requestStateToAction(request.state) : undefined,
+    tokenAddress: request.currency,
     // TODO: we need methods to calculate these things
     // need a lookup for project based on price ident or anc data?
     project: "UMA",
     // need contentful? or a standard way to get this from anc data
     title: "Unknown Title",
+    actionType: undefined,
     // need our user client for actions like this
     action: () => undefined,
     moreInformation: [],
@@ -114,6 +116,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     // need currency decimals for this
     formattedBond: request.bond,
     formattedReward: request.reward,
+    bond: request.bond,
   };
 }
 
@@ -124,7 +127,9 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     chainName: isSupportedChain(assertion.chainId)
       ? getChainName(assertion.chainId)
       : getChainName(0),
-    oracleType: assertion.oracleType,
+    oracleType: "Optimistic Asserter",
+    oracleAddress: assertion.oracleAddress,
+    tokenAddress: assertion.currency,
     livenessEndsMilliseconds: assertion.expirationTime
       ? toTimeMilliseconds(assertion.expirationTime)
       : undefined,
@@ -155,5 +160,6 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     // need currency decimals for this
     formattedBond: assertion.bond,
     formattedReward: "0",
+    bond: assertion.bond,
   };
 }

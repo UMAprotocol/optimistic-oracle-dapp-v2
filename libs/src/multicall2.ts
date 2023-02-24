@@ -1,8 +1,9 @@
 import { multicall2 } from "./clients";
-import { Call, Multicall, Request, State } from "./multicall";
+import type { Call, Request, State } from "./multicall";
+import { Multicall } from "./multicall";
 import zip from "lodash/zip";
-import { SignerOrProvider } from "@libs/types";
-import { Contract } from "ethers";
+import type { SignerOrProvider } from "@libs/types";
+import type { Contract } from "ethers";
 
 class Multicall2 extends Multicall<multicall2.Instance> {
   constructor(state: State<multicall2.Instance>) {

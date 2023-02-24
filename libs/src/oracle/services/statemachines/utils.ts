@@ -1,7 +1,7 @@
 import assert from "assert";
 import uid from "lodash/uniqueId";
 
-import {
+import type {
   Handlers,
   Memory,
   Context,

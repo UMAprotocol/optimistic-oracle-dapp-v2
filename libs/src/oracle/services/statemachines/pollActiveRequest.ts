@@ -1,10 +1,10 @@
 // this should only run as a single instance, will continue updating the active request as needed.
 // this is a single poller for requests on all chains
 import { Update } from "../update";
-import Store from "../../store";
+import type Store from "../../store";
 import { RequestState } from "../../types/state";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
-import { ContextClient } from "./utils";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
+import type { ContextClient } from "./utils";
 import { ignoreExistenceErrorAsync } from "../../errors";
 
 // required exports for state machine

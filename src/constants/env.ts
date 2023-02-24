@@ -1,5 +1,5 @@
 import * as ss from "superstruct";
-import { OracleType } from "@libs/oracle2";
+import { getContractAddress } from "@libs/constants";
 
 const Env = ss.object({
   NEXT_PUBLIC_DEFAULT_APY: ss.optional(ss.string()),
@@ -75,12 +75,13 @@ const ChainId = ss.enums([1, 5, 10, 100, 137, 288, 416, 42161, 43114, 80001]);
 const SubgraphConfig = ss.object({
   url: ss.string(),
   type: ss.enums([
-    OracleType.Optimistic,
-    OracleType.Skinny,
-    OracleType.OptimisticV2,
-    OracleType.Asserter,
+    "Optimistic Oracle V1",
+    "Optimistic Oracle V2",
+    "Skinny Optimistic Oracle",
+    "Optimistic Asserter",
   ]),
   chainId: ChainId,
+  address: ss.string(),
 });
 export type SubgraphConfig = ss.Infer<typeof SubgraphConfig>;
 
@@ -109,85 +110,118 @@ function parseEnv(env: Env): Config {
   if (env.NEXT_PUBLIC_SUBGRAPH_V1_1) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_V1_1,
-      type: OracleType.Optimistic,
+      type: "Optimistic Oracle V1",
       chainId: 1,
+      address: getContractAddress({ chainId: 1, type: "Optimistic Oracle V1" }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_V1_10) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_V1_10,
-      type: OracleType.Optimistic,
+      type: "Optimistic Oracle V1",
       chainId: 10,
+      address: getContractAddress({
+        chainId: 10,
+        type: "Optimistic Oracle V1",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_V1_137) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_V1_137,
-      type: OracleType.Optimistic,
+      type: "Optimistic Oracle V1",
       chainId: 137,
+      address: getContractAddress({
+        chainId: 137,
+        type: "Optimistic Oracle V1",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_V1_288) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_V1_288,
-      type: OracleType.Optimistic,
+      type: "Optimistic Oracle V1",
       chainId: 288,
+      address: getContractAddress({
+        chainId: 288,
+        type: "Optimistic Oracle V1",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_V1_42161) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_V1_42161,
-      type: OracleType.Optimistic,
+      type: "Optimistic Oracle V1",
       chainId: 42161,
+      address: getContractAddress({
+        chainId: 42161,
+        type: "Optimistic Oracle V1",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_V1_5) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_V1_5,
-      type: OracleType.Optimistic,
+      type: "Optimistic Oracle V1",
       chainId: 5,
+      address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V1" }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_1) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_1,
-      type: OracleType.Asserter,
+      type: "Optimistic Asserter",
       chainId: 1,
+      address: getContractAddress({ chainId: 1, type: "Optimistic Asserter" }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_10) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_10,
-      type: OracleType.Asserter,
+      type: "Optimistic Asserter",
       chainId: 10,
+      address: getContractAddress({ chainId: 10, type: "Optimistic Asserter" }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_137) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_137,
-      type: OracleType.Asserter,
+      type: "Optimistic Asserter",
       chainId: 137,
+      address: getContractAddress({
+        chainId: 137,
+        type: "Optimistic Asserter",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_288) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_288,
-      type: OracleType.Asserter,
+      type: "Optimistic Asserter",
       chainId: 288,
+      address: getContractAddress({
+        chainId: 288,
+        type: "Optimistic Asserter",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_42161) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_42161,
-      type: OracleType.Asserter,
+      type: "Optimistic Asserter",
       chainId: 42161,
+      address: getContractAddress({
+        chainId: 42161,
+        type: "Optimistic Asserter",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_5) {
     subgraphs.push({
       url: env.NEXT_PUBLIC_SUBGRAPH_ASSERTER_5,
-      type: OracleType.Asserter,
+      type: "Optimistic Asserter",
       chainId: 5,
+      address: getContractAddress({ chainId: 5, type: "Optimistic Asserter" }),
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_1) {

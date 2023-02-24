@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 import assert from "assert";
 
-import { Client } from "../client";
+import type { Client } from "../client";
 import factory from "../optimisticV2Factory";
 import { getFlags, getAddress } from "../utils";
-import Store from "../store";
+import type Store from "../store";
 import * as types from "../types";
 
 dotenv.config();

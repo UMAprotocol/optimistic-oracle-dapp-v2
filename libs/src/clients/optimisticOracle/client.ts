@@ -1,10 +1,11 @@
+import type { OptimisticOracleInterfaceEthers } from "@uma/contracts-frontend";
 import {
-  OptimisticOracleInterfaceEthers,
   OptimisticOracleInterfaceEthers__factory,
   getOptimisticOracleInterfaceAbi,
 } from "@uma/contracts-frontend";
 import type { SignerOrProvider, GetEventType } from "@libs/types";
-import { Event, BigNumberish, utils, BigNumber } from "ethers";
+import type { Event, BigNumberish, BigNumber } from "ethers";
+import { utils } from "ethers";
 
 export type Instance = OptimisticOracleInterfaceEthers;
 const Factory = OptimisticOracleInterfaceEthers__factory;

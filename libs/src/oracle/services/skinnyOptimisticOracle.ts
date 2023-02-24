@@ -1,6 +1,6 @@
 import assert from "assert";
 import { skinnyOptimisticOracle } from "@libs/clients";
-import {
+import type {
   BigNumberish,
   Provider,
   Signer,

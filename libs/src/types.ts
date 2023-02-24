@@ -1,10 +1,10 @@
-import { Contract, ethers, providers, Event } from "ethers";
+import type { Contract, ethers, providers, Event } from "ethers";
 import type {
   TypedEventFilterEthers as TypedEventFilter,
   TypedEventEthers as TypedEvent,
 } from "@uma/contracts-frontend";
-import { Provider } from "@ethersproject/providers";
-import { Signer } from "@ethersproject/abstract-signer";
+import type { Provider } from "@ethersproject/providers";
+import type { Signer } from "@ethersproject/abstract-signer";
 
 type Result = ethers.utils.Result;
 

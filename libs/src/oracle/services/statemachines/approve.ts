@@ -1,9 +1,9 @@
 import assert from "assert";
 import { Update } from "../update";
-import Store from "../../store";
-import { Signer } from "../../types/ethers";
-import { Handlers as GenericHandlers } from "../../types/statemachine";
-import { ContextClient } from "./utils";
+import type Store from "../../store";
+import type { Signer } from "../../types/ethers";
+import type { Handlers as GenericHandlers } from "../../types/statemachine";
+import type { ContextClient } from "./utils";
 
 export type Params = {
   currency: string;

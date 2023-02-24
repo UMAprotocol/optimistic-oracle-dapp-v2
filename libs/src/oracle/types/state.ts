@@ -1,14 +1,14 @@
-import Multicall2 from "@libs/multicall2";
+import type Multicall2 from "@libs/multicall2";
 import * as clients from "@libs/clients";
-import {
+import type {
   JsonRpcSigner,
   BigNumber,
   Web3Provider,
   FallbackProvider,
 } from "./ethers";
 import type { erc20, sortedRequests } from "../services";
-import { Request, OracleInterface } from "./interfaces";
-import { Context, Memory } from "./statemachine";
+import type { Request, OracleInterface } from "./interfaces";
+import type { Context, Memory } from "./statemachine";
 
 const RequestState = clients.optimisticOracle.RequestState;
 type RequestKey = clients.optimisticOracle.RequestKey;

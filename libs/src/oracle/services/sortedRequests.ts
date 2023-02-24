@@ -6,7 +6,7 @@ import sortedLastIndex from "lodash/sortedLastIndex";
 import { exists } from "@libs/utils";
 import { requestId } from "../utils";
 
-import {
+import type {
   InputRequestWithOracleType,
   RequestWithOracleType,
   RequestsWithOracleType,

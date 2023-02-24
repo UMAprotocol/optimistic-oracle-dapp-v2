@@ -1,5 +1,6 @@
 import assert from "assert";
-import { BigNumber, Contract } from "ethers";
+import type { Contract } from "ethers";
+import { BigNumber } from "ethers";
 import type Multicall2 from "./multicall2";
 import zip from "lodash/zip";
 

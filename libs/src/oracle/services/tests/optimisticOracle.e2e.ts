@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import assert from "assert";
 import { ethers } from "ethers";
-import { Provider } from "@ethersproject/providers";
+import type { Provider } from "@ethersproject/providers";
 import { OptimisticOracle } from "../optimisticOracle";
 
 dotenv.config();

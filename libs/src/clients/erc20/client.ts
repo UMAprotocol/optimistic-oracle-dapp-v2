@@ -1,6 +1,7 @@
-import { ERC20Ethers, ERC20Ethers__factory } from "@uma/contracts-frontend";
+import type { ERC20Ethers } from "@uma/contracts-frontend";
+import { ERC20Ethers__factory } from "@uma/contracts-frontend";
 import type { SignerOrProvider, GetEventType } from "@libs/types";
-import { Event } from "ethers";
+import type { Event } from "ethers";
 import { Balances } from "../../utils";
 import { set } from "lodash";
 

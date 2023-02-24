@@ -39,13 +39,15 @@ export type OracleQueryUI = {
   moreInformation: MoreInformationItem[];
   error: string;
   setError: (error: string) => void;
+  bond: string | undefined;
   // oo
   price: string | undefined;
   expiryType: ExpiryType | undefined;
   currency: Currency | undefined;
+  oracleAddress: string;
+  tokenAddress: string | undefined;
   formattedBond: string | undefined;
   formattedReward: string | undefined;
-  // oa
   assertion: boolean | undefined;
 };
 

@@ -1,8 +1,9 @@
 import dotenv from "dotenv";
 import assert from "assert";
 import { ethers } from "ethers";
-import { Provider } from "@ethersproject/providers";
-import { factory, Erc20 } from "../erc20";
+import type { Provider } from "@ethersproject/providers";
+import type { Erc20 } from "../erc20";
+import { factory } from "../erc20";
 import Multicall2 from "@libs/multicall2";
 
 dotenv.config();

@@ -4,6 +4,9 @@ import { addMinutes, format } from "date-fns";
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
   const defaultMockOracleQueryUI: OracleQueryUI = {
     id: `mock-id-${Math.random()}`,
+    oracleAddress: "0xc43767f4592df265b4a9f1a398b97ff24f38c6a6",
+    bond: "50000000000",
+    tokenAddress: "0xc43767f4592df265b4a9f1a398b97ff24f38c6a6",
     chainId: 1,
     chainName: "Ethereum",
     oracleType: "Optimistic Oracle",
