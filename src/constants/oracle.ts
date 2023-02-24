@@ -1,10 +1,10 @@
 export const currencies = ["USDC", "ETH", "RY"] as const;
 
 export const oracleTypes = [
-  "Optimistic Oracle",
+  "Optimistic Oracle V1",
   "Optimistic Oracle V2",
+  "Optimistic Oracle V3",
   "Skinny Optimistic Oracle",
-  "Optimistic Asserter",
 ] as const;
 
 export const expiryTypes = ["Event-based", "Time-based"] as const;

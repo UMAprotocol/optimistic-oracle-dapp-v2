@@ -82,7 +82,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     chainName: isSupportedChain(request.chainId)
       ? getChainName(request.chainId)
       : getChainName(0),
-    oracleType: "Optimistic Oracle",
+    oracleType: "Optimistic Oracle V1",
     oracleAddress: request.oracleAddress,
     ancillaryData: request.ancillaryData,
     decodedAncillaryData: decodeAncillaryData(request.ancillaryData),
@@ -127,7 +127,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     chainName: isSupportedChain(assertion.chainId)
       ? getChainName(assertion.chainId)
       : getChainName(0),
-    oracleType: "Optimistic Asserter",
+    oracleType: "Optimistic Oracle V3",
     oracleAddress: assertion.oracleAddress,
     tokenAddress: assertion.currency,
     livenessEndsMilliseconds: assertion.expirationTime

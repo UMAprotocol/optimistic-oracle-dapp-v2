@@ -48,37 +48,37 @@ export const ContractInfoList: ContractInfoList = [
   },
   // v3
   {
-    type: "Optimistic Asserter",
+    type: "Optimistic Oracle V3",
     chainId: 1,
     address: getAddress("0xfb55F43fB9F48F63f9269DB7Dde3BbBe1ebDC0dE"),
   },
   {
     // goerli
-    type: "Optimistic Asserter",
+    type: "Optimistic Oracle V3",
     chainId: 5,
     address: getAddress("0x9923D42eF695B5dd9911D05Ac944d4cAca3c4EAB"),
   },
   {
     // optimism
-    type: "Optimistic Asserter",
+    type: "Optimistic Oracle V3",
     chainId: 10,
     address: getAddress("0x072819Bb43B50E7A251c64411e7aA362ce82803B"),
   },
   {
     // polygon
-    type: "Optimistic Asserter",
+    type: "Optimistic Oracle V3",
     chainId: 137,
     address: getAddress("0x5953f2538F613E05bAED8A5AeFa8e6622467AD3D"),
   },
   {
     // boba
-    type: "Optimistic Asserter",
+    type: "Optimistic Oracle V3",
     chainId: 288,
     address: getAddress("0xe1C2587C1789f7D00F22931D4DBAD537405DFe1f"),
   },
   {
     // arbitrum
-    type: "Optimistic Asserter",
+    type: "Optimistic Oracle V3",
     chainId: 42161,
     address: getAddress("0xa6147867264374F324524E30C02C331cF28aa879"),
   },

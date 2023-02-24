@@ -26,8 +26,8 @@ export type Key = {
 export type OracleType =
   | "Optimistic Oracle V1"
   | "Optimistic Oracle V2"
-  | "Skinny Optimistic Oracle"
-  | "Optimistic Asserter";
+  | "Optimistic Oracle V3"
+  | "Skinny Optimistic Oracle";
 
 export type Request = Key & {
   id: string;
