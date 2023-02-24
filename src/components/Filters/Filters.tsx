@@ -5,41 +5,30 @@ import type {
   CheckedFiltersByFilterName,
 } from "@/types";
 import Sliders from "public/assets/icons/sliders.svg";
+import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import { CheckedFilters } from "./CheckedFilters";
 import { Dropdowns } from "./Dropdowns";
 import { MobileFilters } from "./MobileFilters";
+import { Search } from "./Search";
 
 interface Props {
   filters: CheckboxItemsByFilterName;
   checkedFilters: CheckedFiltersByFilterName;
   onCheckedChange: (payload: CheckedChangePayload) => void;
   reset: () => void;
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
 }
 export function Filters({
   filters,
   checkedFilters,
   onCheckedChange,
   reset,
+  searchTerm,
+  setSearchTerm,
 }: Props) {
-  const keys = [
-    "chainName",
-    "oracleType",
-    "project",
-    "title",
-    "ancillaryData",
-    "decodedAncillaryData",
-    "timeUTC",
-    "timeFormatted",
-    "price",
-    "expiryType",
-    "currency",
-    "formattedBond",
-    "formattedReward",
-    "assertion",
-  ];
-
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   function openMobileFilters() {
@@ -55,6 +44,7 @@ export function Filters({
       <InnerWrapper>
         <DesktopWrapper>
           <InputsWrapper>
+            <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <Dropdowns filters={filters} onCheckedChange={onCheckedChange} />
           </InputsWrapper>
           <CheckedFilters

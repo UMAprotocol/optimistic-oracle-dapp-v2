@@ -1,17 +1,36 @@
 import { Filters, Layout, OracleQueries } from "@/components";
-import { useFilters, useOracleDataContext } from "@/hooks";
-
+import { useFilters, useOracleDataContext, useSearch } from "@/hooks";
+const keys = [
+  "chainName",
+  "oracleType",
+  "project",
+  "title",
+  "ancillaryData",
+  "decodedAncillaryData",
+  "timeUTC",
+  "timeFormatted",
+  "price",
+  "expiryType",
+  "currency",
+  "formattedBond",
+  "formattedReward",
+  "assertion",
+];
 export default function Verify() {
   const { verify } = useOracleDataContext();
   const { filteredQueries, ...filterProps } = useFilters({
     queries: verify ?? [],
   });
+  const { searchResults, ...searchProps } = useSearch({
+    queries: filteredQueries,
+    keys,
+  });
 
   return (
     <Layout>
-      <Filters {...filterProps} />
+      <Filters {...filterProps} {...searchProps} />
       <OracleQueries
-        queries={filteredQueries}
+        queries={searchResults}
         isLoading={verify === undefined}
         page="verify"
       />

@@ -1,36 +1,28 @@
+import type { OracleQueryUI } from "@/types";
 import Fuse from "fuse.js";
 import { useMemo, useState } from "react";
 
-interface Props<Data> {
-  dataSet: Data[];
+interface Props {
+  queries: OracleQueryUI[];
   keys: string[];
 }
-export function useSearch<Data>({ dataSet, keys }: Props<Data>) {
+export function useSearch({ queries, keys }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const scoreThreshold = 0.4;
-
   const fuse = useMemo(() => {
-    const options = {
-      includeScore: true,
-      keys,
-    };
+    return new Fuse(queries, { keys });
+  }, [queries, keys]);
 
-    return new Fuse(dataSet, options);
-  }, [dataSet, keys]);
-
-  const results = useMemo(() => {
-    if (!searchTerm) return dataSet;
+  const searchResults = useMemo(() => {
+    if (!searchTerm) return queries;
 
     const results = fuse.search(searchTerm);
 
-    return results
-      .filter((result) => !!result.score && result.score < scoreThreshold)
-      .map((result) => result.item);
-  }, [dataSet, fuse, searchTerm]);
+    return results.map((result) => result.item);
+  }, [queries, fuse, searchTerm]);
 
   return {
-    results,
+    searchResults,
     searchTerm,
     setSearchTerm,
   };
