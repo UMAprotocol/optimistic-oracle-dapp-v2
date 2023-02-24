@@ -1,15 +1,15 @@
 import { Filters, Layout, OracleQueries } from "@/components";
-import { useOracleDataContext } from "@/hooks";
-import { mockFilters } from "@/stories/mocks";
+import { useFilterAndSearch, useOracleDataContext } from "@/hooks";
 
 export default function Propose() {
   const { propose } = useOracleDataContext();
+  const { results, searchProps, filterProps } = useFilterAndSearch(propose);
 
   return (
     <Layout>
-      <Filters {...mockFilters} />
+      <Filters {...filterProps} {...searchProps} />
       <OracleQueries
-        queries={propose ?? []}
+        queries={results}
         isLoading={propose === undefined}
         page="propose"
       />
