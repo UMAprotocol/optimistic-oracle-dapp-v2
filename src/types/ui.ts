@@ -6,6 +6,7 @@ import type {
   oracleTypes,
   projects,
 } from "@/constants";
+import type { BigNumber } from "ethers";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type { ReactNode } from "react";
 export type ActionType =
@@ -50,6 +51,124 @@ export type OracleQueryUI = {
   formattedReward: string | undefined;
   assertion: boolean | undefined;
 };
+export type BigNumberish = string | number | BigNumber;
+
+export type Tag = {
+  icon: string;
+  text: string;
+};
+export type Time = {
+  unix: string;
+  utc: string;
+};
+export type Token = {
+  // details
+  decimals: number;
+  symbol: string;
+  icon: string;
+  // actions
+  formatAmount: (wei: BigNumberish) => string;
+  approve: (address: string, spender: string, amount: BigNumberish) => void;
+  balance: (address: string) => void;
+  details: () => void;
+};
+export type Amount = {
+  formatted: string;
+  icon: string;
+};
+export type QuerySummary = {
+  icon: string;
+  title: string;
+  subtitle: {
+    project: string;
+    timestamp: string;
+    chain: string;
+    expiryType: string;
+    formatted: string;
+  };
+  click: () => void;
+};
+export type VerifyQuerySummary = QuerySummary & {
+  proposal: string;
+  startTime: number;
+  endTime: number;
+};
+
+export type ProposeQuerySummary = QuerySummary & {
+  bond: Amount;
+  reward: Amount;
+};
+
+export type SettledQuerySummary = QuerySummary & {
+  result: string;
+};
+
+export type QueryDetails = {
+  timestamp: Time;
+  ancillaryData: {
+    formatted: string;
+    bytes: string;
+  };
+  tags: Tag[];
+  moreInfo: MoreInformationItem[];
+  error: ErrorMessage;
+  primaryAction: {
+    disabled: boolean;
+    tooltip: string;
+    submit: (input?: BigNumberish) => void;
+    label: string;
+  };
+};
+export type VerifyQueryDetails = QueryDetails & {
+  bond: Amount;
+  reward: Amount;
+  bondToken: Token;
+  rewardToken: Token;
+  proposal: string;
+  expiry: string;
+  dispute: () => void;
+};
+
+export type VerifyQuery = {
+  type: "verify";
+  summary: VerifyQuerySummary;
+  details: VerifyQueryDetails;
+};
+export type ProposeQueryDetails = QueryDetails & {
+  bond: Amount;
+  reward: Amount;
+  bondToken: Token;
+  rewardToken: Token;
+  challengePeriod: string;
+  propose: (value: BigNumberish) => void;
+};
+export type ProposeQuery = {
+  type: "propose";
+  summary: ProposeQuerySummary;
+  details: ProposeQueryDetails;
+};
+
+export type LifeCycleDetail = {
+  icon: string;
+  name: string;
+  address: string;
+  href: string;
+  timeFormatted: string;
+};
+export type SettledQueryDetails = QueryDetails & {
+  proposal: string;
+  lifecycle: LifeCycleDetail[];
+  settle: () => void;
+};
+
+export type SettledQuery = {
+  type: "settled";
+  summary: SettledQuerySummary;
+  details: SettledQueryDetails;
+};
+
+export type OracleQuery = SettledQuery | ProposeQuery | VerifyQuery;
+export type OracleQueries = OracleQuery[];
 
 export type OracleTypes = typeof oracleTypes;
 
@@ -116,3 +235,5 @@ export type CheckedChangePayload = {
 };
 
 export type OnCheckedChange = (payload: CheckedChangePayload) => void;
+
+export type PageName = "verify" | "propose" | "settled";

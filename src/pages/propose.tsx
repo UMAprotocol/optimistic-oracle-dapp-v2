@@ -1,17 +1,16 @@
 import { Filters, Layout, OracleQueries } from "@/components";
-import { useFilterAndSearch, useOracleDataContext } from "@/hooks";
+import { usePage } from "@/hooks";
 
-export default function Propose() {
-  const { propose } = useOracleDataContext();
-  const { results, searchProps, filterProps } = useFilterAndSearch(propose);
-
+const pageName = "propose";
+export default function Verify() {
+  const page = usePage(pageName);
   return (
     <Layout>
-      <Filters {...filterProps} {...searchProps} />
+      <Filters {...page.filterProps} {...page.searchProps} />
       <OracleQueries
-        queries={results}
-        isLoading={propose === undefined}
-        page="propose"
+        queries={page.results}
+        isLoading={page.isLoading}
+        page={page.name}
       />
     </Layout>
   );
