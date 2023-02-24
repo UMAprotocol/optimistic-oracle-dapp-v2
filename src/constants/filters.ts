@@ -1,4 +1,4 @@
-export const searchKeys = [
+export const keys = [
   "chainName",
   "oracleType",
   "project",
