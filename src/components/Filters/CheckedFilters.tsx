@@ -1,15 +1,15 @@
 import { Button, CloseButton } from "@/components";
 import type {
-  CheckedChangePayload,
   CheckedFiltersByFilterName,
   FilterName,
+  OnCheckedChange,
 } from "@/types";
 import { Fragment } from "react";
 import styled from "styled-components";
 
 interface Props {
   checkedFilters: CheckedFiltersByFilterName;
-  onCheckedChange: (payload: CheckedChangePayload) => void;
+  onCheckedChange: OnCheckedChange;
   reset: () => void;
 }
 
@@ -65,7 +65,7 @@ export function CheckedFilters({
 const Wrapper = styled.div`
   display: flex;
   gap: 8px;
-  margin-block: 20px;
+  margin-top: 20px;
 `;
 
 const CheckedFilter = styled.div`

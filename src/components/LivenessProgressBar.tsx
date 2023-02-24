@@ -48,8 +48,6 @@ export function LivenessProgressBar({
 
   const isTextRed = !hours || hours === 0 || isEnded;
 
-  return null;
-
   return (
     <Wrapper>
       <Text

@@ -1,6 +1,7 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { commify, formatEther, parseEther } from "@/helpers";
 import { BigNumber } from "ethers";
+import { capitalize, words } from "lodash";
 import { css } from "styled-components";
 
 /**
@@ -158,3 +159,7 @@ export const showOnMobileAndUnder = css`
     display: var(--display, block);
   }
 `;
+
+export function makeFilterTitle(filterName: string) {
+  return capitalize(words(filterName)[0]);
+}

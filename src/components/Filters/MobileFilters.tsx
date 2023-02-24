@@ -1,12 +1,12 @@
 import { Button, CheckboxList, CloseButton, PanelBase } from "@/components";
-import type { CheckboxItemsByFilterName, CheckedChangePayload } from "@/types";
+import type { CheckboxItemsByFilterName, OnCheckedChange } from "@/types";
 import styled from "styled-components";
 
 interface Props {
   panelOpen: boolean;
   closePanel: () => void;
   filters: CheckboxItemsByFilterName;
-  onCheckedChange: (payload: CheckedChangePayload) => void;
+  onCheckedChange: OnCheckedChange;
   reset: () => void;
 }
 

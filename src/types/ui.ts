@@ -112,3 +112,5 @@ export type CheckedChangePayload = {
   checked: CheckboxState;
   itemName: string;
 };
+
+export type OnCheckedChange = (payload: CheckedChangePayload) => void;

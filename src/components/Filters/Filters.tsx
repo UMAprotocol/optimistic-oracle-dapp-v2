@@ -1,8 +1,8 @@
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import type {
   CheckboxItemsByFilterName,
-  CheckedChangePayload,
   CheckedFiltersByFilterName,
+  OnCheckedChange,
 } from "@/types";
 import Sliders from "public/assets/icons/sliders.svg";
 import type { Dispatch, SetStateAction } from "react";
@@ -16,7 +16,7 @@ import { Search } from "./Search";
 interface Props {
   filters: CheckboxItemsByFilterName;
   checkedFilters: CheckedFiltersByFilterName;
-  onCheckedChange: (payload: CheckedChangePayload) => void;
+  onCheckedChange: OnCheckedChange;
   reset: () => void;
   searchTerm: string;
   setSearchTerm: Dispatch<SetStateAction<string>>;
@@ -74,7 +74,7 @@ export function Filters({
 }
 
 const OuterWrapper = styled.div`
-  min-height: 96px;
+  padding-block: 20px;
   background: var(--white);
   display: flex;
   align-items: center;
