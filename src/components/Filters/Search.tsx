@@ -6,6 +6,11 @@ interface Props {
   searchTerm: string;
   setSearchTerm: Dispatch<SetStateAction<string>>;
 }
+/**
+ * Component for searching queries
+ * @param searchTerm The search term
+ * @param setSearchTerm A callback function that is called when the search term is changed
+ */
 export function Search({ searchTerm, setSearchTerm }: Props) {
   function onInput(e: FormEvent<HTMLInputElement>) {
     setSearchTerm(e.currentTarget.value);

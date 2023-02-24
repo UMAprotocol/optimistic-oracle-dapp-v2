@@ -12,6 +12,12 @@ import Fuse from "fuse.js";
 import { cloneDeep } from "lodash";
 import { useEffect, useMemo, useReducer, useState } from "react";
 
+/**
+ * Combines the filter and search hooks
+ * @returns results - the filtered and searched queries
+ * @returns filterProps - the props for the filter checkboxes
+ * @returns searchProps - the props for the search input
+ */
 export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
   const { filteredQueries, ...filterProps } = useFilters(queries);
   const { searchResults, ...searchProps } = useSearch(filteredQueries);
@@ -44,6 +50,14 @@ type CheckedChange = {
   payload: CheckedChangePayload;
 };
 
+/**
+ * Filter the queries based on the checked filters
+ * @returns filters - state of the filter checkboxes
+ * @returns checkedFilters - the checked filters in an array for rendering a list of checked filters
+ * @returns filteredQueries - the filtered queries
+ * @returns checkedChange - update the filters based on the checked state of a checkbox
+ * @returns reset - reset the filters to their initial state
+ */
 export function useFilters(queries: OracleQueryUI[]) {
   const initialState: State = {
     filters: {
@@ -249,6 +263,9 @@ export function useFilters(queries: OracleQueryUI[]) {
   };
 }
 
+/**
+ * Searches the provided queries based on search term
+ */
 export function useSearch(queries: OracleQueryUI[]) {
   const [searchTerm, setSearchTerm] = useState("");
 

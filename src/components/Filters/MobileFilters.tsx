@@ -10,6 +10,15 @@ interface Props {
   reset: () => void;
 }
 
+/**
+ * A set of checkboxes for selecting filters.
+ * Only shown on mobile.
+ * @param panelOpen Whether the panel is open or not
+ * @param closePanel A callback function that is called when the panel is closed
+ * @param filters The filters that are used to create the checkboxes.
+ * @param onCheckedChange A callback function that is called when a checkbox is checked or unchecked.
+ * @param reset A callback function that is called when the "Reset filters" button is clicked
+ */
 export function MobileFilters({
   panelOpen,
   closePanel,

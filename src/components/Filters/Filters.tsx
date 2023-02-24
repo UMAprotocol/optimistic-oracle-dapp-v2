@@ -21,6 +21,15 @@ interface Props {
   searchTerm: string;
   setSearchTerm: Dispatch<SetStateAction<string>>;
 }
+/**
+ * Component for searching and filtering queries
+ * @param filters The filters that are used to create the dropdown menus.
+ * @param checkedFilters The checked filters
+ * @param onCheckedChange A callback function that is called when a checkbox is checked or unchecked.
+ * @param reset A callback function that is called when the "Clear filters" button is clicked
+ * @param searchTerm The search term
+ * @param setSearchTerm A callback function that is called when the search term is changed
+ */
 export function Filters({
   filters,
   checkedFilters,

@@ -13,6 +13,12 @@ interface Props {
   reset: () => void;
 }
 
+/**
+ * Displays the checked filters
+ * @param checkedFilters - The checked filters
+ * @param onCheckedChange - The function to call when a filter is unchecked
+ * @param reset - The function to call when the "Clear filters" button is clicked
+ */
 export function CheckedFilters({
   checkedFilters,
   onCheckedChange,
