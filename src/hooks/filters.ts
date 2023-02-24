@@ -5,7 +5,6 @@ import type {
   CheckboxState,
   CheckedChangePayload,
   CheckedFiltersByFilterName,
-  FilterCheckboxes,
   FilterName,
   OracleQueryUI,
 } from "@/types";
@@ -30,10 +29,10 @@ type State = {
   filteredQueries: OracleQueryUI[];
 };
 
-type Action = CountEntries | CheckedChange | Reset;
+type Action = MakeEntries | CheckedChange | Reset;
 
-type CountEntries = {
-  type: "count-entries";
+type MakeEntries = {
+  type: "make-entries";
 };
 
 type Reset = {
@@ -48,9 +47,9 @@ type CheckedChange = {
 export function useFilters(queries: OracleQueryUI[]) {
   const initialState: State = {
     filters: {
-      project: makeFilterCheckboxItems("project"),
-      chainName: makeFilterCheckboxItems("chainName"),
-      oracleType: makeFilterCheckboxItems("oracleType"),
+      project: { All: { checked: true, count: 0 } },
+      chainName: { All: { checked: true, count: 0 } },
+      oracleType: { All: { checked: true, count: 0 } },
     },
     checkedFilters: {
       project: [],
@@ -62,26 +61,48 @@ export function useFilters(queries: OracleQueryUI[]) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: "count-entries" });
+    dispatch({ type: "make-entries" });
   }, [queries]);
 
   function reducer(state: State, action: Action) {
     switch (action.type) {
-      case "count-entries": {
+      case "make-entries": {
         const newState = cloneDeep(state);
-
         queries.forEach((query) => {
           const { project, chainName, oracleType } = query;
 
+          // for all filters, increment the count for the "All" item
           newState.filters.project.All.count++;
-          newState.filters.project[project].count++;
-
           newState.filters.chainName.All.count++;
-          newState.filters.chainName[chainName].count++;
-
           newState.filters.oracleType.All.count++;
-          newState.filters.oracleType[oracleType].count++;
+
+          if (newState.filters.project[project]) {
+            newState.filters.project[project].count++;
+          } else {
+            newState.filters.project[project] = { checked: false, count: 1 };
+          }
+
+          if (newState.filters.chainName[chainName]) {
+            newState.filters.chainName[chainName].count++;
+          } else {
+            newState.filters.chainName[chainName] = {
+              checked: false,
+              count: 1,
+            };
+          }
+
+          if (newState.filters.oracleType[oracleType]) {
+            newState.filters.oracleType[oracleType].count++;
+          } else {
+            newState.filters.oracleType[oracleType] = {
+              checked: false,
+              count: 1,
+            };
+          }
         });
+
+        newState.checkedFilters = makeCheckedFilters(newState);
+        newState.filteredQueries = makeFilteredQueries(newState);
 
         return newState;
       }
@@ -172,8 +193,8 @@ export function useFilters(queries: OracleQueryUI[]) {
   }
 
   function makeCheckedFilters(state: State) {
-    return Object.entries(state.filters).reduce((acc, [filterName, filter]) => {
-      const checkedItems = Object.entries(filter).reduce(
+    return Object.entries(state.filters).reduce((acc, [filterName, items]) => {
+      const checkedItems = Object.entries(items).reduce(
         (acc, [itemName, option]) => {
           if (option.checked && itemName !== "All") {
             acc.push(itemName);
@@ -205,23 +226,6 @@ export function useFilters(queries: OracleQueryUI[]) {
     }
 
     return result;
-  }
-
-  function makeFilterCheckboxItems(filterName: FilterName) {
-    const checkboxItems = queries.reduce((acc, query) => {
-      const itemName = query[filterName];
-
-      if (typeof itemName === "string" && !acc[itemName]) {
-        acc[itemName] = { checked: false, count: 0 };
-      }
-
-      return acc;
-    }, {} as FilterCheckboxes);
-
-    return {
-      All: { checked: true, count: 0 },
-      ...checkboxItems,
-    } as CheckboxItems;
   }
 
   function isTheOnlyItemChecked(itemName: string, items: CheckboxItems) {
