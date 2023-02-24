@@ -1,26 +1,21 @@
 import { Button, CheckboxList, CloseButton, PanelBase } from "@/components";
-import type { FilterOnCheckedChange, Filters } from "@/types";
+import type { CheckboxItemsByFilterName, CheckedChangePayload } from "@/types";
 import styled from "styled-components";
 
 interface Props {
   panelOpen: boolean;
   closePanel: () => void;
-  filters: Filters;
-  onCheckedChange: FilterOnCheckedChange;
-  resetCheckedFilters: () => void;
+  filters: CheckboxItemsByFilterName;
+  onCheckedChange: (payload: CheckedChangePayload) => void;
+  reset: () => void;
 }
-/**
- * A mobile filters component — shows a panel with filters.
- * @param panelOpen Whether the panel is open or not.
- * @param closePanel A callback function that is called when the panel is closed.
- * @param resetCheckedFilters A callback function that is called when the filters are reset.
- */
+
 export function MobileFilters({
   panelOpen,
   closePanel,
   filters,
   onCheckedChange,
-  resetCheckedFilters,
+  reset,
 }: Props) {
   return (
     <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
@@ -34,11 +29,7 @@ export function MobileFilters({
           <Button variant="primary" width="100%" onClick={closePanel}>
             Confirm
           </Button>
-          <Button
-            variant="secondary"
-            width="100%"
-            onClick={resetCheckedFilters}
-          >
+          <Button variant="secondary" width="100%" onClick={reset}>
             Reset filters
           </Button>
         </ButtonsWrapper>

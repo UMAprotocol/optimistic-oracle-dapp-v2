@@ -1,4 +1,9 @@
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
+import type {
+  CheckboxItemsByFilterName,
+  CheckedChangePayload,
+  CheckedFiltersByFilterName,
+} from "@/types";
 import Sliders from "public/assets/icons/sliders.svg";
 import { useState } from "react";
 import styled from "styled-components";
@@ -7,10 +12,10 @@ import { Dropdowns } from "./Dropdowns";
 import { MobileFilters } from "./MobileFilters";
 
 interface Props {
-  filters: any;
-  checkedFilters: any;
-  onCheckedChange: any;
-  reset: any;
+  filters: CheckboxItemsByFilterName;
+  checkedFilters: CheckedFiltersByFilterName;
+  onCheckedChange: (payload: CheckedChangePayload) => void;
+  reset: () => void;
 }
 export function Filters({
   filters,
@@ -53,11 +58,9 @@ export function Filters({
             <Dropdowns filters={filters} onCheckedChange={onCheckedChange} />
           </InputsWrapper>
           <CheckedFilters
-            filters={filters}
-            uncheckFilter={(filter, itemName) =>
-              onCheckedChange({ filter, itemName, checked: false })
-            }
-            resetCheckedFilters={reset}
+            checkedFilters={checkedFilters}
+            onCheckedChange={onCheckedChange}
+            reset={reset}
           />
         </DesktopWrapper>
         <MobileWrapper>
@@ -72,7 +75,7 @@ export function Filters({
             closePanel={closeMobileFilters}
             filters={filters}
             onCheckedChange={onCheckedChange}
-            resetCheckedFilters={reset}
+            reset={reset}
           />
         </MobileWrapper>
       </InnerWrapper>

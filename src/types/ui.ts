@@ -99,16 +99,16 @@ export type CheckboxItems = {
   [key: string]: CheckboxItem;
 };
 
-export type FilterOptions = Record<string, CheckboxItem>;
+export type FilterName = "chainName" | "project" | "oracleType";
 
-export type Filters = Record<Filter, CheckboxItems>;
+export type CheckedFiltersByFilterName = Record<FilterName, string[]>;
 
-export type FilterOnCheckedChange = ({
-  filter,
-  checked,
-  itemName,
-}: {
-  filter: Filter;
+export type CheckboxItemsByFilterName = Record<FilterName, CheckboxItems>;
+
+export type FilterCheckboxes = Record<string, CheckboxItem>;
+
+export type CheckedChangePayload = {
+  filterName: FilterName;
   checked: CheckboxState;
   itemName: string;
-}) => void;
+};

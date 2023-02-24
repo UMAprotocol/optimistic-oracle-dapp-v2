@@ -14,13 +14,13 @@ interface Props {
 export function Dropdowns({ filters, onCheckedChange }: Props) {
   return (
     <>
-      {Object.entries(filters).map(([filter, items]) => (
+      {Object.entries(filters).map(([filterName, items]) => (
         <CheckboxDropdown
-          key={filter}
-          title={filter}
+          key={filterName}
+          title={filterName}
           items={items}
           onCheckedChange={({ ...args }) =>
-            onCheckedChange({ ...args, filter: filter as Filter })
+            onCheckedChange({ ...args, filterName: filterName as Filter })
           }
         />
       ))}
