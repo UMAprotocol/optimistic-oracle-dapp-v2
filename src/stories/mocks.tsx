@@ -140,6 +140,7 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
       {
         title: "With project specified and price",
         project: "Cozy Finance",
+        chainName: "Polygon",
         assertion: undefined,
         price: "123",
       },
@@ -147,6 +148,9 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
         title: "With expiry type and weird random currency and liveness ends",
         expiryType: "Time-based",
         currency: "RY",
+        project: "UMA",
+        chainName: "Ethereum",
+        oracleType: "Skinny Optimistic Oracle",
         livenessEndsMilliseconds: Date.now() + 10_000,
       },
       {

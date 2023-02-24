@@ -1,15 +1,15 @@
 import { Filters, Layout, OracleQueries } from "@/components";
-import { useOracleDataContext } from "@/hooks";
-import { mockFilters } from "@/stories/mocks";
+import { useFilterAndSearch, useOracleDataContext } from "@/hooks";
 
 export default function Propose() {
   const { settled } = useOracleDataContext();
+  const { results, searchProps, filterProps } = useFilterAndSearch(settled);
 
   return (
     <Layout>
-      <Filters {...mockFilters} />
+      <Filters {...filterProps} {...searchProps} />
       <OracleQueries
-        queries={settled ?? []}
+        queries={results}
         isLoading={settled === undefined}
         page="settled"
       />

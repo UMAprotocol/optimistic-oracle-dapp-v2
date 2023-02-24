@@ -110,7 +110,7 @@ export const Verify: Story = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
-    verify: verifyMockOracleQueryUIs(100),
+    verify: verifyMockOracleQueryUIs(),
   },
 };
 
@@ -126,7 +126,7 @@ export const VerifyError: Story = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
-    verify: verifyMockOracleQueryUIs(100),
+    verify: verifyMockOracleQueryUIs(5),
     errorMessages: [
       {
         text: "Error in verify page",

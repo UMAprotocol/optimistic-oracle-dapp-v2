@@ -1,6 +1,6 @@
 import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
-import { supportedChainsById } from "@/constants";
-import type { SupportedChainId } from "@/types";
+import { chainsById } from "@/constants";
+import type { ChainId } from "@/types";
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
 import Avalanche from "public/assets/icons/chains/avax.svg";
 import Boba from "public/assets/icons/chains/boba.svg";
@@ -18,11 +18,7 @@ import { IconWrapper } from "../IconWrapper";
  * @returns The icon for the given chain ID, or null if the chain ID is not supported.
  * @see supportedChainsById
  */
-export function ChainIcon({
-  chainId,
-}: {
-  chainId: SupportedChainId | undefined;
-}) {
+export function ChainIcon({ chainId }: { chainId: ChainId | undefined }) {
   if (!chainId) return null;
 
   const icons = {
@@ -37,7 +33,7 @@ export function ChainIcon({
     42161: ArbitrumIcon,
   };
 
-  const chainName = supportedChainsById[chainId];
+  const chainName = chainsById[chainId];
   const Icon = icons[chainId];
   if (!Icon || !chainName) return null;
 

@@ -1,9 +1,14 @@
 import { CheckboxDropdown } from "@/components";
-import type { Filter, FilterOnCheckedChange, Filters } from "@/types";
+import { makeFilterTitle } from "@/helpers";
+import type {
+  CheckboxItemsByFilterName,
+  FilterName,
+  OnCheckedChange,
+} from "@/types";
 
 interface Props {
-  filters: Filters;
-  onCheckedChange: FilterOnCheckedChange;
+  filters: CheckboxItemsByFilterName;
+  onCheckedChange: OnCheckedChange;
 }
 /**
  * A set of dropdown menus for selecting filters.
@@ -14,13 +19,13 @@ interface Props {
 export function Dropdowns({ filters, onCheckedChange }: Props) {
   return (
     <>
-      {Object.entries(filters).map(([filter, items]) => (
+      {Object.entries(filters).map(([filterName, items]) => (
         <CheckboxDropdown
-          key={filter}
-          title={filter}
+          key={filterName}
+          title={makeFilterTitle(filterName)}
           items={items}
           onCheckedChange={({ ...args }) =>
-            onCheckedChange({ ...args, filter: filter as Filter })
+            onCheckedChange({ ...args, filterName: filterName as FilterName })
           }
         />
       ))}
