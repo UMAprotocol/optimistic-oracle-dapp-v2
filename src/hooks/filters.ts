@@ -29,6 +29,31 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
   };
 }
 
+/**
+ * Searches the provided queries based on search term
+ */
+export function useSearch(queries: OracleQueryUI[]) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const fuse = useMemo(() => {
+    return new Fuse(queries, { keys });
+  }, [queries]);
+
+  const results = useMemo(() => {
+    if (!searchTerm) return queries;
+
+    const results = fuse.search(searchTerm);
+
+    return results.map((result) => result.item);
+  }, [queries, fuse, searchTerm]);
+
+  return {
+    results,
+    searchTerm,
+    setSearchTerm,
+  };
+}
+
 type State = {
   filters: CheckboxItemsByFilterName;
   checkedFilters: CheckedFiltersByFilterName;
@@ -72,13 +97,34 @@ export function useFilters(queries: OracleQueryUI[]) {
     },
     filteredQueries: cloneDeep(queries),
   };
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(filtersReducer(queries), initialState);
 
   useEffect(() => {
     dispatch({ type: "make-entries" });
   }, [queries]);
 
-  function reducer(state: State, action: Action) {
+  function onCheckedChange(payload: CheckedChangePayload) {
+    dispatch({ type: "checked-change", payload });
+  }
+
+  function reset() {
+    dispatch({ type: "reset" });
+  }
+
+  const { filters, checkedFilters, filteredQueries } = state;
+
+  return {
+    filters,
+    checkedFilters,
+    filteredQueries,
+    onCheckedChange,
+    reset,
+  };
+}
+
+function filtersReducer(queries: OracleQueryUI[]) {
+  // use currying to capture queries
+  return function reducer(state: State, action: Action) {
     switch (action.type) {
       case "make-entries": {
         const newState = cloneDeep(state);
@@ -117,7 +163,7 @@ export function useFilters(queries: OracleQueryUI[]) {
         });
 
         newState.checkedFilters = makeCheckedFilters(newState);
-        newState.filteredQueries = makeFilteredQueries(newState);
+        newState.filteredQueries = makeFilteredQueries(newState, queries);
 
         return newState;
       }
@@ -134,7 +180,7 @@ export function useFilters(queries: OracleQueryUI[]) {
 
         newState.filters[filterName] = newFilters;
         newState.checkedFilters = makeCheckedFilters(newState);
-        newState.filteredQueries = makeFilteredQueries(newState);
+        newState.filteredQueries = makeFilteredQueries(newState, queries);
 
         return newState;
       }
@@ -152,143 +198,100 @@ export function useFilters(queries: OracleQueryUI[]) {
         });
 
         newState.checkedFilters = makeCheckedFilters(newState);
-        newState.filteredQueries = makeFilteredQueries(newState);
+        newState.filteredQueries = makeFilteredQueries(newState, queries);
 
         return newState;
       }
       default:
         return state;
     }
-  }
+  };
+}
 
-  function makeFilters({
-    items,
-    checked,
-    itemName,
-  }: {
-    items: CheckboxItems;
-    checked: CheckboxState;
-    itemName: string;
-  }) {
-    const newItems = cloneDeep(items);
+function makeFilters({
+  items,
+  checked,
+  itemName,
+}: {
+  items: CheckboxItems;
+  checked: CheckboxState;
+  itemName: string;
+}) {
+  const newItems = cloneDeep(items);
 
-    const hasItemsOtherThanAllChecked = Object.entries(items).some(
-      ([name, { checked }]) => name !== "All" && checked
-    );
+  const hasItemsOtherThanAllChecked = Object.entries(items).some(
+    ([name, { checked }]) => name !== "All" && checked
+  );
 
-    if (itemName === "All") {
-      // if all is checked, we cannot let the user uncheck it without having at least one other item checked
-      if (!hasItemsOtherThanAllChecked) return newItems;
+  if (itemName === "All") {
+    // if all is checked, we cannot let the user uncheck it without having at least one other item checked
+    if (!hasItemsOtherThanAllChecked) return newItems;
 
-      // if all is checked, uncheck all other items
-      Object.keys(newItems).forEach((name) => {
-        newItems[name].checked = false;
-      });
+    // if all is checked, uncheck all other items
+    Object.keys(newItems).forEach((name) => {
+      newItems[name].checked = false;
+    });
 
-      newItems.All.checked = true;
-
-      return newItems;
-    }
-
-    // if we are unchecking the only remaining checked item, check all
-    if (!checked && isTheOnlyItemChecked(itemName, items)) {
-      newItems[itemName].checked = false;
-      newItems.All.checked = true;
-
-      return newItems;
-    }
-
-    // if we are checking an item, uncheck all
-    newItems.All.checked = false;
-    newItems[itemName].checked = checked;
+    newItems.All.checked = true;
 
     return newItems;
   }
 
-  function makeCheckedFilters({ filters }: State) {
-    return Object.entries(filters).reduce((acc, [filterName, items]) => {
-      const checkedItems = Object.entries(items).reduce(
-        (acc, [itemName, option]) => {
-          if (option.checked && itemName !== "All") {
-            acc.push(itemName);
-          }
-          return acc;
-        },
-        [] as string[]
-      );
-      acc[filterName as FilterName] = checkedItems;
-      return acc;
-    }, {} as CheckedFiltersByFilterName);
+  // if we are unchecking the only remaining checked item, check all
+  if (!checked && isTheOnlyItemChecked(itemName, items)) {
+    newItems[itemName].checked = false;
+    newItems.All.checked = true;
+
+    return newItems;
   }
 
-  function makeFilteredQueries({ checkedFilters }: State) {
-    const result = [];
+  // if we are checking an item, uncheck all
+  newItems.All.checked = false;
+  newItems[itemName].checked = checked;
 
-    for (const query of queries) {
-      let passes = true;
+  return newItems;
+}
 
-      for (const [filter, values] of Object.entries(checkedFilters)) {
-        if (values.length && !values.includes(query[filter as FilterName])) {
-          passes = false;
+function makeCheckedFilters({ filters }: State) {
+  return Object.entries(filters).reduce((acc, [filterName, items]) => {
+    const checkedItems = Object.entries(items).reduce(
+      (acc, [itemName, option]) => {
+        if (option.checked && itemName !== "All") {
+          acc.push(itemName);
         }
-      }
+        return acc;
+      },
+      [] as string[]
+    );
+    acc[filterName as FilterName] = checkedItems;
+    return acc;
+  }, {} as CheckedFiltersByFilterName);
+}
 
-      if (passes) {
-        result.push(query);
+function makeFilteredQueries(state: State, queries: OracleQueryUI[]) {
+  const result = [];
+
+  for (const query of queries) {
+    let passes = true;
+
+    for (const [filter, values] of Object.entries(state.checkedFilters)) {
+      if (values.length && !values.includes(query[filter as FilterName])) {
+        passes = false;
       }
     }
 
-    return result;
+    if (passes) {
+      result.push(query);
+    }
   }
 
-  function isTheOnlyItemChecked(itemName: string, items: CheckboxItems) {
-    return (
-      Object.entries(items).filter(
-        ([key, { checked }]) => key !== itemName && checked
-      ).length === 0
-    );
-  }
-
-  function onCheckedChange(payload: CheckedChangePayload) {
-    dispatch({ type: "checked-change", payload });
-  }
-
-  function reset() {
-    dispatch({ type: "reset" });
-  }
-
-  const { filters, checkedFilters, filteredQueries } = state;
-
-  return {
-    filters,
-    checkedFilters,
-    filteredQueries,
-    onCheckedChange,
-    reset,
-  };
+  return result;
 }
 
-/**
- * Searches the provided queries based on search term
- */
-export function useSearch(queries: OracleQueryUI[]) {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const fuse = useMemo(() => {
-    return new Fuse(queries, { keys });
-  }, [queries]);
-
-  const results = useMemo(() => {
-    if (!searchTerm) return queries;
-
-    const results = fuse.search(searchTerm);
-
-    return results.map((result) => result.item);
-  }, [queries, fuse, searchTerm]);
-
-  return {
-    results,
-    searchTerm,
-    setSearchTerm,
-  };
+function isTheOnlyItemChecked(itemName: string, items: CheckboxItems) {
+  return (
+    Object.entries(items).filter(
+      ([key, { checked }]) => key !== itemName && checked
+    ).length === 0
+  );
 }
