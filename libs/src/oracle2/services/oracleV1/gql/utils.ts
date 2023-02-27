@@ -1,7 +1,6 @@
-import type { OptimisticPriceRequest } from "./oracleV1";
-import type { Assertion as GqlAssertion } from "./asserter";
-import type { Request, Assertion } from "../../types";
-import { RequestState } from "../../types";
+import type { OptimisticPriceRequest } from "./queries";
+import type { Request } from "../../../types";
+import { RequestState } from "../../../types";
 
 export function isRequestState(
   state: string | undefined
@@ -10,7 +9,7 @@ export function isRequestState(
   return state in RequestState;
 }
 
-export function convertV1(
+export function convert(
   request: OptimisticPriceRequest,
   chainId: number,
   oracleAddress: string
@@ -51,18 +50,5 @@ export function convertV1(
     proposeLogIndex: request.proposalLogIndex,
     disputeLogIndex: request.disputeLogIndex,
     settleLogIndex: request.settlementLogIndex,
-  };
-}
-
-export function convertAssertion(
-  assertion: GqlAssertion,
-  chainId: number,
-  oracleAddress: string
-): Assertion {
-  return {
-    chainId,
-    oracleType: "Optimistic Asserter",
-    oracleAddress,
-    ...assertion,
   };
 }

@@ -1,0 +1,42 @@
+import type {
+  Service,
+  Handlers,
+  ServiceFactory,
+  OracleType,
+} from "../../types";
+
+import { gql as gqlV1 } from "../oracleV1";
+import { gql as gqlV3 } from "../oracleV3";
+
+export type GqlConfig = {
+  source: "gql";
+  url: string;
+  chainId: number;
+  type: OracleType;
+  address: string;
+};
+export type Config = GqlConfig[];
+
+export const Factory =
+  (config: Config): ServiceFactory =>
+  (handlers: Handlers): Service => {
+    const services: Service[] = config.map((config) => {
+      if (config.source === "gql" && config.type === "Optimistic Oracle V1") {
+        return gqlV1.Factory(config)(handlers);
+      }
+      if (config.source === "gql" && config.type === "Optimistic Oracle V3") {
+        return gqlV3.Factory(config)(handlers);
+      }
+      throw new Error(
+        `Unsupported oracle type ${config.type} from ${config.source}`
+      );
+    });
+
+    async function tick() {
+      await Promise.all(services.map(async (service) => service.tick()));
+    }
+
+    return {
+      tick,
+    };
+  };
