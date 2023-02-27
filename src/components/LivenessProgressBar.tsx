@@ -35,6 +35,7 @@ export function LivenessProgressBar({
   const currentTime = now.getTime();
   const progress = currentTime - startTime;
   const percent = Math.round((progress / totalTime) * 100);
+  const normalizedPercent = percent < 100 ? percent : 100;
   const timeRemaining = intervalToDuration({
     start: now,
     end: endTimeAsDate,
@@ -62,8 +63,10 @@ export function LivenessProgressBar({
       >
         {isEnded ? "Ended" : timeRemainingString}
       </Text>
-      <_Root value={percent}>
-        <_Indicator style={{ transform: `translateX(-${100 - percent}%)` }} />
+      <_Root value={normalizedPercent}>
+        <_Indicator
+          style={{ transform: `translateX(-${100 - normalizedPercent}%)` }}
+        />
       </_Root>
     </Wrapper>
   );

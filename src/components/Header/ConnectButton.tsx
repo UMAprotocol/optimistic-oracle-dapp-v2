@@ -101,7 +101,7 @@ const Button = styled.button`
   height: 45px;
   min-width: 190px;
   padding-inline: 20px;
-  border-radius: 12px;
+  border-radius: 4px;
   font: var(--body-sm);
   color: var(--white);
   background: var(--background, var(--red-500));
