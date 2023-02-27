@@ -3,3 +3,4 @@ export * from "./filters";
 export * from "./helpers";
 export * from "./queries";
 export * from "./actions";
+export * from "./page";

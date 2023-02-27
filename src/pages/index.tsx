@@ -1,17 +1,16 @@
 import { Filters, Layout, OracleQueries } from "@/components";
-import { useFilterAndSearch, useOracleDataContext } from "@/hooks";
+import { usePage } from "@/hooks";
 
+const pageName = "verify";
 export default function Verify() {
-  const { verify } = useOracleDataContext();
-  const { results, searchProps, filterProps } = useFilterAndSearch(verify);
-
+  const page = usePage(pageName);
   return (
     <Layout>
-      <Filters {...filterProps} {...searchProps} />
+      <Filters {...page.filterProps} {...page.searchProps} />
       <OracleQueries
-        queries={results}
-        isLoading={verify === undefined}
-        page="verify"
+        queries={page.results}
+        isLoading={page.isLoading}
+        page={page.name}
       />
     </Layout>
   );
