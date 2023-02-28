@@ -24,6 +24,10 @@ export const Factory =
       if (config.source === "gql" && config.type === "Optimistic Oracle V1") {
         return gqlV1.Factory(config)(handlers);
       }
+      // note that v2 queries are essentially the same shape as v1, so we reuse the service
+      if (config.source === "gql" && config.type === "Optimistic Oracle V2") {
+        return gqlV1.Factory(config)(handlers);
+      }
       if (config.source === "gql" && config.type === "Optimistic Oracle V3") {
         return gqlV3.Factory(config)(handlers);
       }

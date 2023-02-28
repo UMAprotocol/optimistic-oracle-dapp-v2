@@ -82,7 +82,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     chainName: isSupportedChain(request.chainId)
       ? getChainName(request.chainId)
       : getChainName(0),
-    oracleType: "Optimistic Oracle V1",
+    oracleType: request.oracleType,
     oracleAddress: request.oracleAddress,
     ancillaryData: request.ancillaryData,
     decodedAncillaryData: decodeAncillaryData(request.ancillaryData),

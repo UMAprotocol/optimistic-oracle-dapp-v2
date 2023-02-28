@@ -1,5 +1,5 @@
 import type { OptimisticPriceRequest } from "./queries";
-import type { Request } from "../../../types";
+import type { Request, OracleType } from "../../../types";
 import { RequestState } from "../../../types";
 
 export function isRequestState(
@@ -12,7 +12,8 @@ export function isRequestState(
 export function convert(
   request: OptimisticPriceRequest,
   chainId: number,
-  oracleAddress: string
+  oracleAddress: string,
+  oracleType: OracleType
 ): Request {
   return {
     // request key
@@ -23,7 +24,7 @@ export function convert(
     // meta data
     chainId,
     oracleAddress,
-    oracleType: "Optimistic Oracle V1",
+    oracleType,
     id: request.id,
     // everything else
     proposer: request.proposer,
