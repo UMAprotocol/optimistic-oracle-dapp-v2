@@ -1,37 +1,31 @@
+import { tokenQueries } from "@/contexts";
+import { findAllowance, findBalance, findToken } from "@/helpers";
+import { useOracleDataContext } from "@/hooks";
+import type { OracleQueryUI } from "@/types";
 import { useAccount } from "wagmi";
-import { useOracleDataContext, usePanelContext } from "@/hooks";
-import { tokenQueries } from "@/contexts/OracleDataContext";
-import { findBalance, findToken, findAllowance } from "@/helpers";
 
-export function useActions() {
+export function useActions(query: OracleQueryUI | undefined) {
   const { allowances, balances, tokens } = useOracleDataContext();
-  const { address } = useAccount();
-  const { content: query } = usePanelContext();
+  const { tokenAddress, chainId, oracleAddress: spender } = query || {};
+  const { address: account } = useAccount();
   const actions: Record<string, () => void> = {};
 
-  if (
-    query &&
-    address &&
-    query.tokenAddress &&
-    query.chainId &&
-    query.oracleAddress
-  ) {
+  if (query && account && tokenAddress && chainId && spender) {
     const oracleQueryParams = {
-      account: address,
-      tokenAddress: query.tokenAddress,
-      chainId: query.chainId,
-      spender: query.oracleAddress,
+      account,
+      tokenAddress,
+      chainId,
+      spender,
     };
     const currencyBalance = findBalance(balances, oracleQueryParams);
     if (!currencyBalance) {
       actions.fetchCurrencyBalance = () => {
         tokenQueries.balance(
           {
-            chainId: query.chainId,
-            // typescript thinks this doesnt exist, even though we check in the if statement
-            tokenAddress: query.tokenAddress as string,
+            chainId,
+            tokenAddress,
           },
-          { account: address }
+          { account }
         );
       };
     }
@@ -40,41 +34,40 @@ export function useActions() {
       actions.fetchCurrencyAllowance = () => {
         tokenQueries.allowance(
           {
-            chainId: query.chainId,
-            tokenAddress: query.tokenAddress as string,
+            chainId,
+            tokenAddress,
           },
-          { account: address, spender: query.oracleAddress }
+          { account, spender }
         );
       };
     }
     actions.sendCurrencyApprove = () => {
       // TODO: figure out best way to do this
       // prepareWriteContract({
-      //   address: query.tokenAddress as `0x${string}`,
+      //   address: tokenAddress as `0x${string}`,
       //   abi: erc20Abi,
       //   functionName: "approve",
-      //   args: [query.oracleAddress, MaxInt256.toString()],
+      //   args: [spender, MaxInt256.toString()],
       // })
       // .then(writeContract)
       // .then(setWatchTransaction)
       // .catch(err=>console.error('unable to approve',err));
     };
   }
-  if (query && query.tokenAddress && query.chainId) {
+  if (query && tokenAddress && chainId) {
     const token = findToken(tokens, {
-      tokenAddress: query.tokenAddress,
-      chainId: query.chainId,
+      tokenAddress,
+      chainId,
     });
     if (!token) {
       actions.fetchCurrencyTokenInfo = () => {
         tokenQueries.token({
-          chainId: query.chainId,
-          tokenAddress: query.tokenAddress as string,
+          chainId,
+          tokenAddress,
         });
       };
     }
   }
-  return {
-    actions,
-  };
+
+  return actions;
 }
