@@ -1,3 +1,4 @@
+import assert from "assert";
 import * as ss from "superstruct";
 import { getContractAddress } from "@libs/constants";
 
@@ -534,6 +535,16 @@ function parseEnv(env: Env): Config {
       chainId: 80001,
     });
   }
+  // verify we have providers for all enable subgraph chains. If not checked we will have run time errors if providers are missing.
+  subgraphs.map((subgraph) => {
+    const found = providers.find(
+      (provider) => provider.chainId === subgraph.chainId
+    );
+    assert(
+      found,
+      `Subgraphs on chainId ${subgraph.chainId} requires a provider to be set for that chain as well: NEXT_PUBLIC_PROVIDER_${subgraph.chainId}`
+    );
+  });
   return {
     defaultApy: env.NEXT_PUBLIC_DEFAULT_APY ?? "30.1",
     infuraId: env.NEXT_PUBLIC_INFURA_ID,
