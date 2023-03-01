@@ -50,13 +50,13 @@ export const ContractInfoList: ContractInfoList = [
   {
     type: "Optimistic Oracle V2",
     chainId: 1,
-    address: getAddress("0xA0Ae6609447e57a42c51B50EAe921D701823FFAe"),
+    address: getAddress("0x004395edb43EFca9885CEdad51EC9fAf93Bd34ac"),
   },
   {
     // goerli
     type: "Optimistic Oracle V2",
     chainId: 5,
-    address: getAddress("0xA5B9d8a0B0Fa04Ba71BDD68069661ED5C0848884"),
+    address: getAddress("0xc48F2d8491AffFc8eB21c85dEa1B4c0259c749a0"),
   },
   {
     // optimism
