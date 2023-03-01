@@ -46,6 +46,42 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 42161,
     address: getAddress("0x031A7882cE3e8b4462b057EBb0c3F23Cd731D234"),
   },
+  // v2
+  {
+    type: "Optimistic Oracle V2",
+    chainId: 1,
+    address: getAddress("0xA0Ae6609447e57a42c51B50EAe921D701823FFAe"),
+  },
+  {
+    // goerli
+    type: "Optimistic Oracle V2",
+    chainId: 5,
+    address: getAddress("0xA5B9d8a0B0Fa04Ba71BDD68069661ED5C0848884"),
+  },
+  {
+    // optimism
+    type: "Optimistic Oracle V2",
+    chainId: 10,
+    address: getAddress("0x255483434aba5a75dc60c1391bB162BCd9DE2882"),
+  },
+  {
+    // polygon
+    type: "Optimistic Oracle V2",
+    chainId: 137,
+    address: getAddress("0xee3afe347d5c74317041e2618c49534daf887c24"),
+  },
+  {
+    // boba
+    type: "Optimistic Oracle V2",
+    chainId: 288,
+    address: getAddress("0xb2b5C1b17B19d92CC4fC1f026B2133259e3ccd41"),
+  },
+  {
+    // arbitrum
+    type: "Optimistic Oracle V2",
+    chainId: 42161,
+    address: getAddress("0x88Ad27C41AD06f01153E7Cd9b10cBEdF4616f4d5"),
+  },
   // v3
   {
     type: "Optimistic Oracle V3",
