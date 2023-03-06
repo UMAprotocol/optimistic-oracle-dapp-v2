@@ -12,7 +12,7 @@ import {
   smallMobileAndUnder,
 } from "@/constants";
 import { addOpacityToHsla, getValueText } from "@/helpers";
-import { useActions, usePanelContext } from "@/hooks";
+import { useComputed, usePanelContext } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -37,7 +37,7 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const [inputValue, setInputValue] = useState("");
-  const actions = useActions(content);
+  const actions = useComputed(content);
 
   const {
     chainId,

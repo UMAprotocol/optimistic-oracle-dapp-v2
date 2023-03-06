@@ -1,5 +1,5 @@
-import * as ss from "superstruct";
 import { getContractAddress } from "@libs/constants";
+import * as ss from "superstruct";
 
 const Env = ss.object({
   NEXT_PUBLIC_DEFAULT_APY: ss.optional(ss.string()),
@@ -99,7 +99,9 @@ const env = ss.create(
   Env
 );
 
-const ChainId = ss.enums([1, 5, 10, 100, 137, 288, 416, 42161, 43114, 80001]);
+export const ChainId = ss.enums([
+  1, 5, 10, 100, 137, 288, 416, 42161, 43114, 80001,
+]);
 const SubgraphConfig = ss.object({
   source: ss.literal("gql"),
   url: ss.string(),

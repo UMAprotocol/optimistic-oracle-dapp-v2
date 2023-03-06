@@ -1,20 +1,15 @@
 import { Panel } from "@/components";
-import {
-  defaultErrorContextState,
-  defaultOracleDataContextState,
-  ErrorContext,
-  OracleDataContext,
-  PanelProvider,
-} from "@/contexts";
+import { ErrorProvider, OracleDataProvider, PanelProvider } from "@/contexts";
 import VerifyPage from "@/pages";
 import ProposePage from "@/pages/propose";
 import SettledPage from "@/pages/settled";
-import type { ErrorMessage, OracleQueryUI } from "@/types";
+import type { ErrorMessage } from "@/types";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  proposeMockOracleQueryUIs,
-  settledMockOracleQueryUIs,
-  verifyMockOracleQueryUIs,
+  makeMockAssertions,
+  makeMockRequests,
+  makeMockRouterPathname,
+  makeRequestHandlerForOraclesAndChains,
 } from "../mocks";
 
 const meta: Meta = {
@@ -27,45 +22,22 @@ type Page = typeof VerifyPage | typeof ProposePage | typeof SettledPage;
 
 type Story = StoryObj<{
   Component: Page;
-  verify: OracleQueryUI[];
-  propose: OracleQueryUI[];
-  settled: OracleQueryUI[];
   errorMessages: ErrorMessage[];
 }>;
 
 interface Props {
   Component: Page;
-  verify?: OracleQueryUI[];
-  propose?: OracleQueryUI[];
-  settled?: OracleQueryUI[];
-  errorMessages?: ErrorMessage[];
 }
-function Wrapper({
-  Component,
-  verify,
-  propose,
-  settled,
-  errorMessages = [],
-}: Props) {
-  const mockOracleContextState = {
-    ...defaultOracleDataContextState,
-    verify,
-    propose,
-    settled,
-  };
-  const mockErrorContextState = {
-    ...defaultErrorContextState,
-    errorMessages,
-  };
+function Wrapper({ Component }: Props) {
   return (
-    <OracleDataContext.Provider value={mockOracleContextState}>
-      <ErrorContext.Provider value={mockErrorContextState}>
+    <OracleDataProvider>
+      <ErrorProvider>
         <PanelProvider>
           <Component />
           <Panel />
         </PanelProvider>
-      </ErrorContext.Provider>
-    </OracleDataContext.Provider>
+      </ErrorProvider>
+    </OracleDataProvider>
   );
 }
 
@@ -76,10 +48,20 @@ const Template: Story = {
 const VerifyTemplate: Story = {
   ...Template,
   parameters: {
-    nextjs: {
-      router: {
-        pathname: "/",
-      },
+    nextjs: makeMockRouterPathname(),
+    msw: {
+      handlers: makeRequestHandlerForOraclesAndChains([
+        {
+          version: 2,
+          chainId: 1,
+          requests: makeMockRequests(),
+        },
+        {
+          version: 3,
+          chainId: 5,
+          assertions: makeMockAssertions(),
+        },
+      ]),
     },
   },
 };
@@ -87,10 +69,20 @@ const VerifyTemplate: Story = {
 const ProposeTemplate: Story = {
   ...Template,
   parameters: {
-    nextjs: {
-      router: {
-        pathname: "/propose",
-      },
+    nextjs: makeMockRouterPathname("/propose"),
+    msw: {
+      handlers: makeRequestHandlerForOraclesAndChains([
+        {
+          version: 2,
+          chainId: 1,
+          requests: makeMockRequests(),
+        },
+        {
+          version: 3,
+          chainId: 5,
+          assertions: makeMockAssertions(),
+        },
+      ]),
     },
   },
 };
@@ -98,10 +90,20 @@ const ProposeTemplate: Story = {
 const SettledTemplate: Story = {
   ...Template,
   parameters: {
-    nextjs: {
-      router: {
-        pathname: "/settled",
-      },
+    nextjs: makeMockRouterPathname("/settled"),
+    msw: {
+      handlers: makeRequestHandlerForOraclesAndChains([
+        {
+          version: 2,
+          chainId: 1,
+          requests: makeMockRequests(),
+        },
+        {
+          version: 3,
+          chainId: 5,
+          assertions: makeMockAssertions(),
+        },
+      ]),
     },
   },
 };
@@ -110,7 +112,6 @@ export const Verify: Story = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
-    verify: verifyMockOracleQueryUIs(),
   },
 };
 
@@ -118,7 +119,6 @@ export const VerifyLoading: Story = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
-    verify: undefined,
   },
 };
 
@@ -126,16 +126,6 @@ export const VerifyError: Story = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
-    verify: verifyMockOracleQueryUIs(5),
-    errorMessages: [
-      {
-        text: "Error in verify page",
-        link: {
-          text: "Try again",
-          href: "https://error.com",
-        },
-      },
-    ],
   },
 };
 
@@ -143,7 +133,6 @@ export const Propose: Story = {
   ...ProposeTemplate,
   args: {
     Component: ProposePage,
-    propose: proposeMockOracleQueryUIs(100),
   },
 };
 
@@ -151,7 +140,6 @@ export const ProposeLoading: Story = {
   ...ProposeTemplate,
   args: {
     Component: ProposePage,
-    propose: undefined,
   },
 };
 
@@ -159,16 +147,6 @@ export const ProposeError: Story = {
   ...ProposeTemplate,
   args: {
     Component: ProposePage,
-    propose: proposeMockOracleQueryUIs(100),
-    errorMessages: [
-      {
-        text: "Error in propose page",
-        link: {
-          text: "Try again",
-          href: "https://error.com",
-        },
-      },
-    ],
   },
 };
 
@@ -176,7 +154,6 @@ export const Settled: Story = {
   ...SettledTemplate,
   args: {
     Component: SettledPage,
-    settled: settledMockOracleQueryUIs(100),
   },
 };
 
@@ -184,7 +161,6 @@ export const SettledLoading: Story = {
   ...SettledTemplate,
   args: {
     Component: SettledPage,
-    settled: undefined,
   },
 };
 
@@ -192,15 +168,5 @@ export const SettledError: Story = {
   ...SettledTemplate,
   args: {
     Component: SettledPage,
-    settled: settledMockOracleQueryUIs(100),
-    errorMessages: [
-      {
-        text: "Error in settled page",
-        link: {
-          text: "Try again",
-          href: "https://error.com",
-        },
-      },
-    ],
   },
 };

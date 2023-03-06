@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-import { createContext, useEffect, useReducer, useState } from "react";
 import { config } from "@/constants";
 import { assertionToOracleQuery, requestToOracleQuery } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
@@ -17,12 +15,14 @@ import type {
 } from "@libs/oracle2";
 import { Client } from "@libs/oracle2";
 import { oracles, tokens } from "@libs/oracle2/services";
+import type { ReactNode } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 
 const oraclesService = oracles.Factory(config.subgraphs);
 const [tokenQueries, tokenService] = tokens.Factory(config.providers);
 
 // tokenQueries has {token,allowance,balance} which you have to pass in chainid plus args for each call
-export { tokenQueries };
+export { oraclesService, tokenService, tokenQueries };
 
 export type OracleQueryList = OracleQueryUI[];
 export type OracleQueryTable = Record<string, OracleQueryUI>;
@@ -101,7 +101,10 @@ function DataReducerFactory<Input extends Request | Assertion>(
     const queries = Object.values(all).reduce((result, query) => {
       if (query.actionType === "Propose") {
         result.propose.push(query);
-      } else if (query.actionType === "Dispute") {
+      } else if (
+        query.actionType === "Dispute" ||
+        query.actionType === "Settle"
+      ) {
         result.verify.push(query);
       } else {
         result.settled.push(query);
@@ -154,7 +157,7 @@ function allowancesReducer(state: OracleDataContextState, updates: Allowances) {
   };
 }
 
-function oracleDataReducer(
+export function oracleDataReducer(
   state: OracleDataContextState,
   action: DispatchActions
 ): OracleDataContextState {
@@ -189,7 +192,9 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
       balances: (balances) => dispatch({ type: "balances", data: balances }),
       allowances: (allowances) =>
         dispatch({ type: "allowances", data: allowances }),
-      tokens: (tokens) => dispatch({ type: "tokens", data: tokens }),
+      tokens: (tokens) => {
+        dispatch({ type: "tokens", data: tokens });
+      },
       errors: setErrors,
     });
   }, []);

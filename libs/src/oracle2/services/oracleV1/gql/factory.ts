@@ -18,7 +18,7 @@ export const Factory =
   (config: Config): ServiceFactory =>
   (handlers: Handlers): Service => {
     async function fetch({ url, chainId, address, type }: Config) {
-      const requests = await getRequests(url);
+      const requests = await getRequests(url, chainId, type);
       return requests.map((request) =>
         convert(request, chainId, address, type)
       );

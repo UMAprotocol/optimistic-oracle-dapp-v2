@@ -1,6 +1,6 @@
-import type { Service, Handlers, ServiceFactory } from "../../../types";
-import { convert } from "./utils";
+import type { Handlers, Service, ServiceFactory } from "../../../types";
 import { getRequests } from "./queries";
+import { convert } from "./utils";
 
 export type Config = {
   url: string;
@@ -12,7 +12,7 @@ export const Factory =
   (config: Config): ServiceFactory =>
   (handlers: Handlers): Service => {
     async function fetch({ url, chainId, address }: Config) {
-      const requests = await getRequests(url);
+      const requests = await getRequests(url, "Optimistic Oracle V3", chainId);
       return requests.map((request) => convert(request, chainId, address));
     }
     async function tick() {

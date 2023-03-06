@@ -6,15 +6,10 @@ import type {
   oracleTypes,
   projects,
 } from "@/constants";
-import type { BigNumber } from "ethers";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
-export type ActionType =
-  | "Dispute"
-  | "Propose"
-  | "Settle"
-  | "Invalid"
-  | "Requested";
+export type ActionType = "Dispute" | "Propose" | "Settle" | undefined;
 
 /**
  * Defines the shape of data required by the UI to render a price request or a an assertion.

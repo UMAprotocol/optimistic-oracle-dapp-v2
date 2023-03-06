@@ -4,7 +4,7 @@ import { useOracleDataContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import { useAccount } from "wagmi";
 
-export function useActions(query: OracleQueryUI | undefined) {
+export function useComputed(query: OracleQueryUI | undefined) {
   const { allowances, balances, tokens } = useOracleDataContext();
   const { tokenAddress, chainId, oracleAddress: spender } = query || {};
   const { address: account } = useAccount();

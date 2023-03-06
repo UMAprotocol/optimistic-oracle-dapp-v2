@@ -1,4 +1,6 @@
+import type { OracleType } from "@libs/oracle2/types";
 import request, { gql } from "graphql-request";
+import { makeQueryName } from "./utils";
 
 export type OptimisticPriceRequest = {
   id: string;
@@ -39,10 +41,13 @@ export type OptimisticPriceRequestsQuery = {
   optimisticPriceRequests: OptimisticPriceRequests;
 };
 export const getRequests = async (
-  url: string
+  url: string,
+  chainId: number,
+  oracleType: OracleType
 ): Promise<OptimisticPriceRequests> => {
+  const queryName = makeQueryName(oracleType, chainId);
   const query = gql`
-    {
+    query ${queryName} {
       optimisticPriceRequests {
         id
         identifier

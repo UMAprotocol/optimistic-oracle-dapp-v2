@@ -1,10 +1,14 @@
 import { chainsById } from "@/constants";
 import type { ActionType, ChainId, ChainName, OracleQueryUI } from "@/types";
+import { RequestState } from "@libs/oracle2";
 import { format } from "date-fns";
 import { ethers } from "ethers";
 
 import type { Assertion, Request } from "@libs/oracle2";
-import { RequestState } from "@libs/oracle2";
+
+export function utf8ToHex(utf8String: string) {
+  return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
+}
 
 export function decodeHexString(hexString: string) {
   try {
@@ -40,32 +44,6 @@ export function toTimeFormatted(timestamp: number | string) {
   return format(toTimeMilliseconds(timestamp), "pP");
 }
 
-export function requestStateToAction(
-  requestState: RequestState
-): ActionType | undefined {
-  if (requestState === RequestState.Invalid) {
-    return undefined;
-  }
-  if (requestState === RequestState.Requested) {
-    return "Propose";
-  }
-  if (requestState === RequestState.Proposed) {
-    return "Dispute";
-  }
-  if (requestState === RequestState.Expired) {
-    return "Settle";
-  }
-  if (requestState === RequestState.Disputed) {
-    return undefined;
-  }
-  if (requestState === RequestState.Resolved) {
-    return "Settle";
-  }
-  if (requestState === RequestState.Settled) {
-    return undefined;
-  }
-}
-
 export function getChainName(chainId: number): ChainName {
   if (!isSupportedChain(chainId))
     throw new Error(`Unsupported Chain ${chainId}`);
@@ -73,6 +51,26 @@ export function getChainName(chainId: number): ChainName {
 }
 export function isSupportedChain(chainId: number): chainId is ChainId {
   return chainId in chainsById;
+}
+
+function getRequestActionType({ state }: Request): ActionType {
+  if (state === RequestState.Requested) {
+    return "Propose";
+  }
+  if (state === RequestState.Proposed) {
+    return "Dispute";
+  }
+  if (state === RequestState.Disputed) {
+    return "Settle";
+  }
+}
+
+function getAssertionActionType(assertion: Assertion): ActionType {
+  if (assertion.settlementHash) return;
+  if (new Date(Number(assertion.expirationTime) * 1000) > new Date()) {
+    return "Settle";
+  }
+  return "Dispute";
 }
 
 export function requestToOracleQuery(request: Request): OracleQueryUI {
@@ -104,7 +102,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     project: "UMA",
     // need contentful? or a standard way to get this from anc data
     title: "Unknown Title",
-    actionType: undefined,
+    actionType: getRequestActionType(request),
     // need our user client for actions like this
     action: () => undefined,
     moreInformation: [],
@@ -145,7 +143,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     timeMilliseconds: toTimeMilliseconds(assertion.assertionTimestamp || "0"),
     timeFormatted: toTimeFormatted(assertion.assertionTimestamp || "0"),
     expiryType: "Time-based",
-    actionType: undefined,
+    actionType: getAssertionActionType(assertion),
     project: "UMA",
     // need contentful? or a standard way to get this from anc data
     title: "Unknown Title",
