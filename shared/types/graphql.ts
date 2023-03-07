@@ -10,6 +10,84 @@ export type OOV3GraphQuery = {
   assertions: OOV3GraphEntity[];
 };
 
+/**
+ enum OptimisticPriceRequestState {
+  Invalid
+  Requested
+  Proposed
+  Expired
+  Disputed
+  Resolved
+  Settled
+}
+
+type OptimisticPriceRequest @entity {
+  "ID is the PriceIdentifier ID + the timestamp + ancillaryData (if available)"
+  id: ID!
+
+  identifier: String!
+
+  ancillaryData: String!
+
+  time: BigInt!
+
+  requester: Bytes!
+
+  currency: Bytes!
+
+  reward: BigInt!
+
+  finalFee: BigInt!
+
+  proposer: Bytes
+
+  proposedPrice: BigInt
+
+  proposalExpirationTimestamp: BigInt
+
+  disputer: Bytes
+
+  settlementPrice: BigInt
+
+  settlementPayout: BigInt
+
+  settlementRecipient: Bytes
+
+  state: OptimisticPriceRequestState
+
+  requestTimestamp: BigInt
+
+  requestBlockNumber: BigInt
+
+  requestHash: Bytes
+
+  requestLogIndex: BigInt
+
+  proposalTimestamp: BigInt
+
+  proposalBlockNumber: BigInt
+
+  proposalHash: Bytes
+
+  proposalLogIndex: BigInt
+
+  disputeTimestamp: BigInt
+
+  disputeBlockNumber: BigInt
+
+  disputeHash: Bytes
+
+  disputeLogIndex: BigInt
+
+  settlementTimestamp: BigInt
+
+  settlementBlockNumber: BigInt
+
+  settlementHash: Bytes
+
+  settlementLogIndex: BigInt
+}
+ */
 export type OOV1GraphEntity = {
   id: string;
 
@@ -76,12 +154,156 @@ export type OOV1GraphEntity = {
   settlementLogIndex: string | null;
 };
 
+/**
+  enum OptimisticPriceRequestState {
+  Invalid
+  Requested
+  Proposed
+  Expired
+  Disputed
+  Resolved
+  Settled
+}
+
+type OptimisticPriceRequest @entity {
+  "ID is the PriceIdentifier ID + the timestamp + ancillaryData (if available)"
+  id: ID!
+
+  identifier: String!
+
+  ancillaryData: String!
+
+  time: BigInt!
+
+  requester: Bytes!
+
+  currency: Bytes!
+
+  reward: BigInt!
+
+  finalFee: BigInt!
+
+  proposer: Bytes
+
+  proposedPrice: BigInt
+
+  proposalExpirationTimestamp: BigInt
+
+  disputer: Bytes
+
+  settlementPrice: BigInt
+
+  settlementPayout: BigInt
+
+  settlementRecipient: Bytes
+
+  state: OptimisticPriceRequestState
+
+  requestTimestamp: BigInt
+
+  requestBlockNumber: BigInt
+
+  requestHash: Bytes
+
+  requestLogIndex: BigInt
+
+  proposalTimestamp: BigInt
+
+  proposalBlockNumber: BigInt
+
+  proposalHash: Bytes
+
+  proposalLogIndex: BigInt
+
+  disputeTimestamp: BigInt
+
+  disputeBlockNumber: BigInt
+
+  disputeHash: Bytes
+
+  disputeLogIndex: BigInt
+
+  settlementTimestamp: BigInt
+
+  settlementBlockNumber: BigInt
+
+  settlementHash: Bytes
+
+  settlementLogIndex: BigInt
+
+  customLiveness: BigInt
+
+  bond: BigInt
+
+  eventBased: Boolean
+}
+ */
 export type OOV2GraphEntity = OOV1GraphEntity & {
   customLiveness: string | null;
   bond: string | null;
   eventBased: boolean | null;
 };
 
+/**
+  type Assertion @entity {
+  "ID is the PriceIdentifier ID + the timestamp + ancillaryData (if available)"
+  id: ID!
+
+  assertionId: String!
+
+  domainId: String!
+
+  claim: String!
+
+  asserter: Bytes!
+
+  identifier: String!
+
+  callbackRecipient: Bytes!
+
+  escalationManager: Bytes!
+
+  caller: Bytes!
+
+  expirationTime: BigInt!
+
+  currency: Bytes!
+
+  bond: BigInt!
+
+  disputer: Bytes
+
+  settlementPayout: BigInt
+
+  settlementRecipient: Bytes
+
+  settlementResolution: Boolean
+
+  assertionTimestamp: BigInt
+
+  assertionBlockNumber: BigInt
+
+  assertionHash: Bytes
+
+  assertionLogIndex: BigInt
+
+  disputeTimestamp: BigInt
+
+  disputeBlockNumber: BigInt
+
+  disputeHash: Bytes
+
+  disputeLogIndex: BigInt
+
+  settlementTimestamp: BigInt
+
+  settlementBlockNumber: BigInt
+
+  settlementHash: Bytes
+
+  settlementLogIndex: BigInt
+}
+ */
 export type OOV3GraphEntity = {
   id: string;
 
