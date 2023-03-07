@@ -1,5 +1,3 @@
-import type { OracleType, Request } from "../../../types";
-import { RequestState } from "../../../types";
 import type { OptimisticPriceRequest } from "./queries";
 
 export function isRequestState(
@@ -52,9 +50,4 @@ export function convert(
     disputeLogIndex: request.disputeLogIndex,
     settleLogIndex: request.settlementLogIndex,
   };
-}
-
-export function makeQueryName(oracleType: OracleType, chainId: number) {
-  const camelCaseOracleType = oracleType.replaceAll(" ", "");
-  return `${camelCaseOracleType}Chain${chainId}`;
 }

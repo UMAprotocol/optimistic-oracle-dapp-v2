@@ -1,51 +1,14 @@
-import type { OracleType } from "@libs/oracle2/types";
+import type { OracleType, PriceRequestQuery } from "@shared/types";
+import { makeQueryName } from "@shared/utils";
 import request, { gql } from "graphql-request";
-import { makeQueryName } from "./utils";
 
-export type OptimisticPriceRequest = {
-  id: string;
-  identifier: string;
-  ancillaryData: string;
-  time: string;
-  requester: string;
-  currency: string;
-  reward: string;
-  finalFee: string;
-  proposer: string;
-  proposedPrice: string;
-  proposalExpirationTimestamp: string;
-  disputer: string;
-  settlementPrice: string;
-  settlementPayout: string;
-  settlementRecipient: string;
-  state: string;
-  requestTimestamp: string;
-  requestBlockNumber: number;
-  requestHash: string;
-  requestLogIndex: number;
-  proposalTimestamp: string;
-  proposalBlockNumber: number;
-  proposalHash: string;
-  proposalLogIndex: number;
-  disputeTimestamp: string;
-  disputeBlockNumber: number;
-  disputeHash: string;
-  disputeLogIndex: number;
-  settlementTimestamp: string;
-  settlementBlockNumber: number;
-  settlementHash: string;
-  settlementLogIndex: number;
-};
-export type OptimisticPriceRequests = OptimisticPriceRequest[];
-export type OptimisticPriceRequestsQuery = {
-  optimisticPriceRequests: OptimisticPriceRequests;
-};
-export const getRequests = async (
+export async function getPriceRequests<Result extends PriceRequestQuery>(
   url: string,
   chainId: number,
   oracleType: OracleType
-): Promise<OptimisticPriceRequests> => {
+) {
   const queryName = makeQueryName(oracleType, chainId);
+  const isV2 = oracleType === "Optimistic Oracle V2";
   const query = gql`
     query ${queryName} {
       optimisticPriceRequests {
@@ -81,9 +44,18 @@ export const getRequests = async (
         settlementBlockNumber
         settlementHash
         settlementLogIndex
+        ${
+          isV2
+            ? `
+              customLiveness
+              bond
+              eventBased
+              `
+            : ""
+        }
       }
     }
   `;
-  const result = await request<OptimisticPriceRequestsQuery>(url, query);
+  const result = await request<Result>(url, query);
   return result.optimisticPriceRequests;
-};
+}

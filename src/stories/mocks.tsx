@@ -7,7 +7,7 @@ import type {
   OptimisticPriceRequest,
   OptimisticPriceRequests,
 } from "@libs/oracle2/services/priceRequests/gql/queries";
-import { makeQueryName } from "@libs/oracle2/services/priceRequests/gql/utils";
+import { makeQueryName } from "@shared/utils";
 import { addMinutes, format, subHours } from "date-fns";
 import { graphql } from "msw";
 
