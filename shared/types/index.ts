@@ -1,1 +1,1 @@
-export * from "./oracleQueries";
+export * from "./graphql";
