@@ -118,6 +118,13 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 42161,
     address: getAddress("0xa6147867264374F324524E30C02C331cF28aa879"),
   },
+  // skinny
+  {
+    // mainnet
+    type: "Skinny Optimistic Oracle",
+    chainId: 1,
+    address: getAddress("0xeE3Afe347D5C74317041E2618C49534dAf887c24"),
+  },
 ];
 export function getContractInfo(params: {
   chainId: number;
