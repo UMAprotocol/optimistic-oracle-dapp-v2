@@ -116,6 +116,8 @@ export function parsePriceRequestGraphEntity(
 
   const ooV2PriceRequest = priceRequest as OOV2GraphEntity;
 
+  // nullable values
+  // only present in v2
   return {
     ...ooV2PriceRequest,
     customLiveness: handleNullableGraphqlBigInt(

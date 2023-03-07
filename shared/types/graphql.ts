@@ -1,3 +1,6 @@
+import type { BigNumber } from "ethers";
+import type { ChainId, OracleType, RequestState } from "./oracle";
+
 export type PriceRequestQuery = OOV1GraphQuery | OOV2GraphQuery;
 
 export type AssertionQuery = OOV3GraphQuery;
@@ -368,4 +371,46 @@ export type OOV3GraphEntity = {
   settlementHash: string | null;
 
   settlementLogIndex: string | null;
+};
+
+export type ParsedOOV1GraphEntity = {
+  chainId: ChainId;
+  oracleAddress: string;
+  oracleType: OracleType;
+  id: string;
+  identifier: string;
+  ancillaryData: string;
+  time: BigNumber;
+  requester: string;
+  currency: string;
+  reward: BigNumber;
+  finalFee: BigNumber;
+  proposer: string | undefined;
+  proposedPrice: BigNumber | undefined;
+  proposalExpirationTimestamp: BigNumber | undefined;
+  disputer: string | undefined;
+  settlementPrice: BigNumber | undefined;
+  settlementPayout: BigNumber | undefined;
+  state: RequestState;
+  requestTimestamp: BigNumber | undefined;
+  requestBlockNumber: BigNumber | undefined;
+  requestHash: string | undefined;
+  requestLogIndex: BigNumber | undefined;
+  proposalTimestamp: BigNumber | undefined;
+  proposalBlockNumber: BigNumber | undefined;
+  proposalHash: string | undefined;
+  proposalLogIndex: BigNumber | undefined;
+  disputeTimestamp: BigNumber | undefined;
+  disputeBlockNumber: BigNumber | undefined;
+  disputeHash: string | undefined;
+  disputeLogIndex: BigNumber | undefined;
+  settlementTimestamp: BigNumber | undefined;
+  settlementBlockNumber: BigNumber | undefined;
+  settlementLogIndex: BigNumber | undefined;
+};
+
+export type ParsedV2GraphEntity = ParsedOOV1GraphEntity & {
+  customLiveness: BigNumber | undefined;
+  bond: BigNumber | undefined;
+  eventBased: boolean | undefined;
 };
