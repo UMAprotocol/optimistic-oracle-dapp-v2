@@ -1,3 +1,4 @@
+import type { parseAssertionGraphEntity } from "@shared/utils";
 import type { BigNumber } from "ethers";
 import type { ChainId, OracleType, RequestState } from "./oracle";
 
@@ -414,3 +415,7 @@ export type ParsedV2GraphEntity = ParsedOOV1GraphEntity & {
   bond: BigNumber | undefined;
   eventBased: boolean | undefined;
 };
+
+export type ParsedOOV3GraphEntity = ReturnType<
+  typeof parseAssertionGraphEntity
+>;
