@@ -15,7 +15,7 @@ export type Handlers = {
   assertions?: (assertions: Assertions) => void;
   transactions?: (transactions: Transactions) => void;
   // errors array indexes into server list. use this to determine which servers are failing
-  errors?: (errors: Error[]) => void;
+  errors?: (errors: (Error | undefined)[]) => void;
 };
 
 export type Service = {

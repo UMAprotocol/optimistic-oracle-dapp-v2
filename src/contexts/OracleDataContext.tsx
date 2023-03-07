@@ -15,7 +15,8 @@ export type OracleQueryList = OracleQueryUI[];
 export type OracleQueryTable = Record<string, OracleQueryUI>;
 export type RequestTable = Record<string, Request>;
 export type AssertionTable = Record<string, Assertion>;
-export type Errors = Error[];
+export type Errors = (Error | undefined)[];
+
 export interface OracleDataContextState {
   all: OracleQueryTable | undefined;
   verify: OracleQueryList | undefined;
