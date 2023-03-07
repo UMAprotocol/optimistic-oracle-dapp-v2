@@ -1,6 +1,6 @@
 import type { OracleType } from "@libs/oracle2/types";
 import request, { gql } from "graphql-request";
-import { makeQueryName } from "../../oracleV1/gql/utils";
+import { makeQueryName } from "../../priceRequests/gql/utils";
 export type Assertion = {
   id: string;
   assertionId: string;

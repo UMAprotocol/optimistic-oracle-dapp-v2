@@ -6,8 +6,8 @@ import { RequestState } from "@libs/oracle2";
 import type {
   OptimisticPriceRequest,
   OptimisticPriceRequests,
-} from "@libs/oracle2/services/oracleV1/gql/queries";
-import { makeQueryName } from "@libs/oracle2/services/oracleV1/gql/utils";
+} from "@libs/oracle2/services/priceRequests/gql/queries";
+import { makeQueryName } from "@libs/oracle2/services/priceRequests/gql/utils";
 import { addMinutes, format, subHours } from "date-fns";
 import { graphql } from "msw";
 

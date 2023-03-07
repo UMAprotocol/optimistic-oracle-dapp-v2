@@ -1,12 +1,12 @@
 import type {
-  Service,
   Handlers,
-  ServiceFactory,
   OracleType,
+  Service,
+  ServiceFactory,
 } from "../../types";
 
-import { gql as gqlV1 } from "../oracleV1";
-import { gql as gqlV3 } from "../oracleV3";
+import { gql as gqlV3 } from "../assertions";
+import { gql as gqlV1 } from "../priceRequests";
 
 export type GqlConfig = {
   source: "gql";
