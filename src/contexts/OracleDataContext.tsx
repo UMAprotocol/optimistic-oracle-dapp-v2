@@ -96,11 +96,11 @@ function DataReducerFactory<Input extends Request | Assertion>(
       settled: [],
     };
     const queries = Object.values(all).reduce((result, query) => {
-      if (query.actionType === "Propose") {
+      if (query.actionType === "propose") {
         result.propose.push(query);
       } else if (
-        query.actionType === "Dispute" ||
-        query.actionType === "Settle"
+        query.actionType === "dispute" ||
+        query.actionType === "settle"
       ) {
         result.verify.push(query);
       } else {

@@ -31,6 +31,7 @@ export function ChainIcon({ chainId }: { chainId: ChainId | undefined }) {
     416: SXIcon,
     43114: AvalancheIcon,
     42161: ArbitrumIcon,
+    80001: PolygonIcon,
   };
 
   const chainName = chainsById[chainId];

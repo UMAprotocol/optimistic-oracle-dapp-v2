@@ -1,4 +1,3 @@
-import { getValueText } from "@/helpers";
 import type { OracleQueryUI, Page } from "@/types";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
@@ -12,17 +11,16 @@ export function ItemDetails({
   page,
   timeMilliseconds,
   livenessEndsMilliseconds,
-  currency,
   formattedBond,
   formattedReward,
-  price,
-  assertion,
+  valueText,
 }: OracleQueryUI & { page: Page }) {
+  const currency = "USDC";
   const verifyDetails = (
     <ItemDetailsWrapper>
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Proposal/Assertion</ItemDetailsText>
-        <ItemDetailsText>{getValueText({ price, assertion })}</ItemDetailsText>
+        <ItemDetailsText>{valueText}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
       {livenessEndsMilliseconds !== undefined && (
         <ItemDetailsInnerWrapper>
@@ -59,7 +57,7 @@ export function ItemDetails({
     <ItemDetailsWrapper>
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Settled As</ItemDetailsText>
-        <ItemDetailsText>{getValueText({ price, assertion })}</ItemDetailsText>
+        <ItemDetailsText>{valueText}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
     </ItemDetailsWrapper>
   );

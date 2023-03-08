@@ -21,7 +21,6 @@ interface Props {
 }
 function Wrapper({ Component, page, content }: Props) {
   const [panelOpen, setPanelOpen] = useState(true);
-  const [error, setError] = useState(content?.error ?? "");
 
   if (!content) return null;
 
@@ -34,8 +33,6 @@ function Wrapper({ Component, page, content }: Props) {
         closePanel: () => setPanelOpen(false),
         content: {
           ...content,
-          error,
-          setError,
         },
       }}
     >
@@ -56,8 +53,7 @@ export const VerifyWithDispute: Story = {
   args: {
     page: "verify",
     content: makeMockOracleQueryUI({
-      actionType: "Dispute",
-      action: () => alert("Dispute!!!"),
+      actionType: "dispute",
     }),
   },
 };
@@ -67,8 +63,7 @@ export const VerifyWithSettle: Story = {
   args: {
     page: "verify",
     content: makeMockOracleQueryUI({
-      actionType: "Settle",
-      action: () => alert("Settle!!!"),
+      actionType: "settle",
     }),
   },
 };
@@ -78,8 +73,7 @@ export const Propose: Story = {
   args: {
     page: "propose",
     content: makeMockOracleQueryUI({
-      actionType: "Propose",
-      action: () => alert("Propose!!!"),
+      actionType: "propose",
     }),
   },
 };
@@ -89,7 +83,6 @@ export const Settled: Story = {
   args: {
     page: "settled",
     content: makeMockOracleQueryUI({
-      action: undefined,
       actionType: undefined,
     }),
   },
@@ -99,9 +92,7 @@ export const WithError: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockOracleQueryUI({
-      error: "Something went wrong",
-    }),
+    content: makeMockOracleQueryUI(),
   },
 };
 
@@ -141,7 +132,7 @@ export const WithPrice: Story = {
     page: "verify",
     content: makeMockOracleQueryUI({
       oracleType: "Optimistic Oracle V1",
-      price: "200",
+      valueText: "200",
     }),
   },
 };

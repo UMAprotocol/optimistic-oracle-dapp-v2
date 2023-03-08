@@ -1,16 +1,14 @@
-import { getValueText } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { TD, Text } from "./style";
 
-export function SettledCells({ oracleType, price, assertion }: OracleQueryUI) {
-  const settledAs = getValueText({ price, assertion });
+export function SettledCells({ oracleType, valueText }: OracleQueryUI) {
   return (
     <>
       <TD>
         <Text>{oracleType}</Text>
       </TD>
       <TD>
-        <Text>{settledAs}</Text>
+        <Text>{valueText}</Text>
       </TD>
     </>
   );

@@ -11,7 +11,7 @@ import {
   red500,
   smallMobileAndUnder,
 } from "@/constants";
-import { addOpacityToHsla, getValueText } from "@/helpers";
+import { addOpacityToHsla } from "@/helpers";
 import { useComputed, usePanelContext } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
@@ -44,30 +44,27 @@ export function Panel() {
     oracleType,
     title,
     project,
-    ancillaryData,
-    decodedAncillaryData,
+    valueText,
+    queryText,
+    queryTextHex,
     timeUNIX,
     timeUTC,
-    price,
-    assertion,
-    currency,
     formattedBond,
     formattedReward,
     formattedLivenessEndsIn,
     actionType,
-    action,
     expiryType,
     moreInformation,
-    error,
-    setError,
   } = content ?? {};
 
+  const [error, setError] = useState("");
+  const currency = "USDC";
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
+  const action = () => alert("placeholder action");
   const hasActionButton = action !== undefined && actionType !== undefined;
   const hasInput = page === "propose";
-  const valueText = getValueText({ price, assertion });
   const actionsTitle = getActionsTitle();
   const isError = error !== "";
 
@@ -194,12 +191,12 @@ export function Panel() {
         <DetailWrapper>
           <SectionTitleWrapper>
             <AncillaryDataIcon />
-            <SectionTitle>Ancillary Data</SectionTitle>
+            <SectionTitle>Additional Text Data</SectionTitle>
           </SectionTitleWrapper>
           <SectionSubTitle>String</SectionSubTitle>
-          <DetailText>{decodedAncillaryData}</DetailText>
+          <DetailText>{queryText}</DetailText>
           <SectionSubTitle>Bytes</SectionSubTitle>
-          <DetailText>{ancillaryData}</DetailText>
+          <DetailText>{queryTextHex}</DetailText>
         </DetailWrapper>
         <DetailWrapper>
           <SectionTitleWrapper>

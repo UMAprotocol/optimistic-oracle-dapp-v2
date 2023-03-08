@@ -7,8 +7,8 @@ export function ProposeCells({
   oracleType,
   formattedBond,
   formattedReward,
-  currency,
 }: OracleQueryUI) {
+  const currency = "USDC";
   const currencyIcon = currency ? currencyIcons[currency] : undefined;
 
   return (

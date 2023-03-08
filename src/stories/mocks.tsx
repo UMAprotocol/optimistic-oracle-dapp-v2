@@ -175,8 +175,8 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
     "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",
   identifier: "0x0000000",
   decodedIdentifier: "0x0000000",
-  ancillaryData: `0x713a207469746c653a204469642045756c657220676574206861636b65643f202c206465736372697074696f6e3a205761732074686572652061206861636b2c206275672c2075736572206572726f722c206f72206d616c66656173616e636520726573756c74696e6720696e2061206c6f7373206f72206c6f636b2d7570206f6620746f6b656e7320696e2045756c6572202868747470733a2f2f6170702e65756c65722e6669`,
-  decodedAncillaryData: `q: title: Did Euler get hacked? , description: Was there a hack,
+  queryTextHex: `0x713a207469746c653a204469642045756c657220676574206861636b65643f202c206465736372697074696f6e3a205761732074686572652061206861636b2c206275672c2075736572206572726f722c206f72206d616c66656173616e636520726573756c74696e6720696e2061206c6f7373206f72206c6f636b2d7570206f6620746f6b656e7320696e2045756c6572202868747470733a2f2f6170702e65756c65722e6669`,
+  queryText: `q: title: Did Euler get hacked? , description: Was there a hack,
   bug, user error, or malfeasance resulting in a loss or lock-up
   of tokens in Euler (https://app.euler.finance/) at any point
   after Ethereum Mainnet block number 16175802? This will revert
@@ -185,13 +185,12 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
   timeUTC: new Date().toUTCString(),
   timeMilliseconds: Date.now(),
   timeFormatted: format(new Date(), "Pp"),
-  price: "123",
+  valueText: "123",
   formattedBond: "50,000",
   formattedReward: "250,000",
   livenessEndsMilliseconds: addMinutes(new Date(), 53).getTime(),
   formattedLivenessEndsIn: "53 min 11 sec",
-  actionType: "Dispute",
-  action: () => alert("Dispute or propose or settle"),
+  actionType: "dispute",
   expiryType: "Event-based",
   moreInformation: [
     {
@@ -201,7 +200,7 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
     },
     {
       title: "Identifier",
-      href: "https://docs.umaproject.org/resources/approved-price-identifiers",
+      href: "https://docs.umaproject.org/resources/approved-valueText-identifiers",
       text: "0xB40C3EF015B6919cc70088cF87",
     },
     {
@@ -210,8 +209,6 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
       href: "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md",
     },
   ],
-  error: "",
-  setError: () => undefined,
 };
 
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
@@ -297,10 +294,10 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
     count,
     inputs: [
       {
-        title: "With project specified and price",
+        title: "With project specified and valueText",
         project: "Cozy Finance",
         chainName: "Polygon",
-        price: "123",
+        valueText: "123",
       },
       {
         title: "With expiry type and weird random currency and liveness ends",
@@ -321,12 +318,12 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
 export const settledMockOracleQueryUIs = (count = 3) =>
   makeMockOracleQueryUIs({
     count,
-    inputForAll: { action: undefined, actionType: undefined },
+    inputForAll: { actionType: undefined },
     inputs: [
       {
-        title: "With project specified and price",
+        title: "With project specified and valueText",
         project: "Cozy Finance",
-        price: "123",
+        valueText: "123",
       },
       {
         title: "With expiry type and weird random currency and liveness ends",
