@@ -341,6 +341,8 @@ export type OOV3GraphEntity = {
 
   bond: BigNumber;
 
+  assertionTimestamp: string;
+
   disputer: string | null;
 
   settlementPayout: string | null;
@@ -348,8 +350,6 @@ export type OOV3GraphEntity = {
   settlementRecipient: string | null;
 
   settlementResolution: string | null;
-
-  assertionTimestamp: string | null;
 
   assertionBlockNumber: string | null;
 

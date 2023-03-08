@@ -139,57 +139,69 @@ export function parseAssertionGraphEntity(
   chainId: ChainId,
   oracleAddress: string
 ) {
+  const {
+    id,
+    assertionId,
+    domainId,
+    claim,
+    asserter,
+    identifier,
+    callbackRecipient,
+    escalationManager,
+    caller,
+    expirationTime,
+    currency,
+    bond,
+    disputer,
+    settlementPayout,
+    settlementRecipient,
+    settlementResolution,
+    assertionTimestamp,
+    assertionBlockNumber,
+    assertionHash,
+    assertionLogIndex,
+    disputeTimestamp,
+    disputeBlockNumber,
+    disputeHash,
+    disputeLogIndex,
+    settlementTimestamp,
+    settlementBlockNumber,
+    settlementHash,
+    settlementLogIndex,
+  } = assertion;
   return {
     chainId,
-    oracleType: "Optimistic Oracle V3",
     oracleAddress,
-    id: assertion.id,
-    assertionId: assertion.assertionId,
-    domainId: assertion.domainId,
-    claim: assertion.claim,
-    asserter: assertion.asserter,
-    identifier: assertion.identifier,
-    callbackRecipient: assertion.callbackRecipient,
-    escalationManager: assertion.escalationManager,
-    caller: assertion.caller,
-    expirationTime: assertion.expirationTime,
-    currency: assertion.currency,
-    bond: assertion.bond,
-    disputer: handleGraphqlNullableStringOrBytes(assertion.disputer),
-    settlementPayout: handleGraphqlNullableBigInt(assertion.settlementPayout),
-    settlementRecipient: handleGraphqlNullableStringOrBytes(
-      assertion.settlementRecipient
-    ),
-    settlementResolution: handleGraphqlNullableStringOrBytes(
-      assertion.settlementResolution
-    ),
-    assertionTimestamp: handleGraphqlNullableStringOrBytes(
-      assertion.assertionTimestamp
-    ),
-    assertionBlockNumber: handleGraphqlNullableBigInt(
-      assertion.assertionBlockNumber
-    ),
-    assertionHash: handleGraphqlNullableStringOrBytes(assertion.assertionHash),
-    assertionLogIndex: handleGraphqlNullableBigInt(assertion.assertionLogIndex),
-    disputeTimestamp: handleGraphqlNullableStringOrBytes(
-      assertion.disputeTimestamp
-    ),
-    disputeBlockNumber: handleGraphqlNullableBigInt(
-      assertion.disputeBlockNumber
-    ),
-    disputeHash: handleGraphqlNullableStringOrBytes(assertion.disputeHash),
-    disputeLogIndex: handleGraphqlNullableBigInt(assertion.disputeLogIndex),
-    settlementTimestamp: handleGraphqlNullableStringOrBytes(
-      assertion.settlementTimestamp
-    ),
-    settlementBlockNumber: handleGraphqlNullableBigInt(
-      assertion.settlementBlockNumber
-    ),
-    settlementHash: handleGraphqlNullableStringOrBytes(
-      assertion.settlementHash
-    ),
-    settlementLogIndex: handleGraphqlNullableBigInt(
-      assertion.settlementLogIndex
-    ),
+    id,
+    assertionId,
+    domainId,
+    claim,
+    asserter,
+    identifier,
+    callbackRecipient,
+    escalationManager,
+    caller,
+    expirationTime,
+    currency,
+    bond,
+    disputer: handleGraphqlNullableStringOrBytes(disputer),
+    settlementPayout: handleGraphqlNullableBigInt(settlementPayout),
+    settlementRecipient:
+      handleGraphqlNullableStringOrBytes(settlementRecipient),
+    settlementResolution:
+      handleGraphqlNullableStringOrBytes(settlementResolution),
+    assertionTimestamp: assertionTimestamp,
+    assertionBlockNumber: handleGraphqlNullableBigInt(assertionBlockNumber),
+    assertionHash: handleGraphqlNullableStringOrBytes(assertionHash),
+    assertionLogIndex: handleGraphqlNullableBigInt(assertionLogIndex),
+    disputeTimestamp: handleGraphqlNullableStringOrBytes(disputeTimestamp),
+    disputeBlockNumber: handleGraphqlNullableBigInt(disputeBlockNumber),
+    disputeHash: handleGraphqlNullableStringOrBytes(disputeHash),
+    disputeLogIndex: handleGraphqlNullableBigInt(disputeLogIndex),
+    settlementTimestamp:
+      handleGraphqlNullableStringOrBytes(settlementTimestamp),
+    settlementBlockNumber: handleGraphqlNullableBigInt(settlementBlockNumber),
+    settlementHash: handleGraphqlNullableStringOrBytes(settlementHash),
+    settlementLogIndex: handleGraphqlNullableBigInt(settlementLogIndex),
   };
 }
