@@ -339,7 +339,7 @@ export type OOV3GraphEntity = {
 
   currency: string;
 
-  bond: string;
+  bond: BigNumber;
 
   disputer: string | null;
 
@@ -381,37 +381,40 @@ export type ParsedOOV1GraphEntity = {
   id: string;
   identifier: string;
   ancillaryData: string;
-  time: BigNumber;
+  time: string;
   requester: string;
   currency: string;
   reward: BigNumber;
   finalFee: BigNumber;
   proposer: string | undefined;
   proposedPrice: BigNumber | undefined;
-  proposalExpirationTimestamp: BigNumber | undefined;
+  proposalExpirationTimestamp: string | undefined;
   disputer: string | undefined;
   settlementPrice: BigNumber | undefined;
   settlementPayout: BigNumber | undefined;
   state: RequestState;
-  requestTimestamp: BigNumber | undefined;
+  requestTimestamp: string | undefined;
   requestBlockNumber: BigNumber | undefined;
   requestHash: string | undefined;
   requestLogIndex: BigNumber | undefined;
-  proposalTimestamp: BigNumber | undefined;
+  proposalTimestamp: string | undefined;
   proposalBlockNumber: BigNumber | undefined;
   proposalHash: string | undefined;
   proposalLogIndex: BigNumber | undefined;
-  disputeTimestamp: BigNumber | undefined;
+  disputeTimestamp: string | undefined;
   disputeBlockNumber: BigNumber | undefined;
   disputeHash: string | undefined;
   disputeLogIndex: BigNumber | undefined;
-  settlementTimestamp: BigNumber | undefined;
+  settlementTimestamp: string | undefined;
   settlementBlockNumber: BigNumber | undefined;
   settlementLogIndex: BigNumber | undefined;
+  customLiveness?: string | undefined;
+  bond?: BigNumber | undefined;
+  eventBased?: boolean | undefined;
 };
 
-export type ParsedV2GraphEntity = ParsedOOV1GraphEntity & {
-  customLiveness: BigNumber | undefined;
+export type ParsedOOV2GraphEntity = ParsedOOV1GraphEntity & {
+  customLiveness: string | undefined;
   bond: BigNumber | undefined;
   eventBased: boolean | undefined;
 };
@@ -419,3 +422,11 @@ export type ParsedV2GraphEntity = ParsedOOV1GraphEntity & {
 export type ParsedOOV3GraphEntity = ReturnType<
   typeof parseAssertionGraphEntity
 >;
+
+export type Request = ParsedOOV1GraphEntity | ParsedOOV2GraphEntity;
+
+export type Assertion = ParsedOOV3GraphEntity;
+
+export type Requests = Request[];
+
+export type Assertions = Assertion[];

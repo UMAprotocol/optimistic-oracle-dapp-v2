@@ -22,6 +22,8 @@ export type OracleQueryUI = {
   oracleType: OracleType;
   project: Project;
   title: ReactNode;
+  identifier: string;
+  decodedIdentifier: string;
   ancillaryData: string;
   decodedAncillaryData: string;
   timeUTC: string;
@@ -35,17 +37,16 @@ export type OracleQueryUI = {
   moreInformation: MoreInformationItem[];
   error: string;
   setError: (error: string) => void;
-  bond: string | undefined;
+  bond: BigNumber | undefined;
   // oo
   price: string | undefined;
   expiryType: ExpiryType | undefined;
-  currency: Currency | undefined;
   oracleAddress: string;
   tokenAddress: string | undefined;
   formattedBond: string | undefined;
   formattedReward: string | undefined;
-  assertion: boolean | undefined;
 };
+
 export type BigNumberish = string | number | BigNumber;
 
 export type Tag = {

@@ -4,6 +4,7 @@ import type {
   OOV2GraphEntity,
   OracleType,
   PriceRequestGraphEntity,
+  RequestState,
 } from "@shared/types";
 import { BigNumber } from "ethers";
 
@@ -16,7 +17,7 @@ export function handleGraphqlNullableStringOrBytes(
   return stringOrBytes;
 }
 
-export function handleNullableGraphqlBigInt(bigInt: string | null) {
+export function handleGraphqlNullableBigInt(bigInt: string | null) {
   if (bigInt === null) {
     return undefined;
   }
@@ -50,7 +51,7 @@ export function parsePriceRequestGraphEntity(
     id: priceRequest.id,
     identifier: priceRequest.identifier,
     ancillaryData: priceRequest.ancillaryData,
-    time: BigNumber.from(priceRequest.time),
+    time: priceRequest.time,
     requester: priceRequest.requester,
     currency: priceRequest.currency,
     reward: BigNumber.from(priceRequest.reward),
@@ -58,55 +59,58 @@ export function parsePriceRequestGraphEntity(
     // nullable values
     // present in both v1 and v2
     proposer: handleGraphqlNullableStringOrBytes(priceRequest.proposer),
-    proposedPrice: handleNullableGraphqlBigInt(priceRequest.proposedPrice),
-    proposalExpirationTimestamp: handleNullableGraphqlBigInt(
+    proposedPrice: handleGraphqlNullableBigInt(priceRequest.proposedPrice),
+    proposalExpirationTimestamp: handleGraphqlNullableStringOrBytes(
       priceRequest.proposalExpirationTimestamp
     ),
     disputer: handleGraphqlNullableStringOrBytes(priceRequest.disputer),
-    settlementPrice: handleNullableGraphqlBigInt(priceRequest.settlementPrice),
-    settlementPayout: handleNullableGraphqlBigInt(
+    settlementPrice: handleGraphqlNullableBigInt(priceRequest.settlementPrice),
+    settlementPayout: handleGraphqlNullableBigInt(
       priceRequest.settlementPayout
     ),
     settlementRecipient: handleGraphqlNullableStringOrBytes(
       priceRequest.settlementRecipient
     ),
-    state: handleGraphqlNullableStringOrBytes(priceRequest.state) ?? "Invalid",
-    requestTimestamp: handleNullableGraphqlBigInt(
+    state:
+      (handleGraphqlNullableStringOrBytes(
+        priceRequest.state
+      ) as RequestState) ?? "Invalid",
+    requestTimestamp: handleGraphqlNullableStringOrBytes(
       priceRequest.requestTimestamp
     ),
-    requestBlockNumber: handleNullableGraphqlBigInt(
+    requestBlockNumber: handleGraphqlNullableBigInt(
       priceRequest.requestBlockNumber
     ),
     requestHash: handleGraphqlNullableStringOrBytes(priceRequest.requestHash),
-    requestLogIndex: handleNullableGraphqlBigInt(priceRequest.requestLogIndex),
-    proposalTimestamp: handleNullableGraphqlBigInt(
+    requestLogIndex: handleGraphqlNullableBigInt(priceRequest.requestLogIndex),
+    proposalTimestamp: handleGraphqlNullableStringOrBytes(
       priceRequest.proposalTimestamp
     ),
-    proposalBlockNumber: handleNullableGraphqlBigInt(
+    proposalBlockNumber: handleGraphqlNullableBigInt(
       priceRequest.proposalBlockNumber
     ),
     proposalHash: handleGraphqlNullableStringOrBytes(priceRequest.proposalHash),
-    proposalLogIndex: handleNullableGraphqlBigInt(
+    proposalLogIndex: handleGraphqlNullableBigInt(
       priceRequest.proposalLogIndex
     ),
-    disputeTimestamp: handleNullableGraphqlBigInt(
+    disputeTimestamp: handleGraphqlNullableStringOrBytes(
       priceRequest.disputeTimestamp
     ),
-    disputeBlockNumber: handleNullableGraphqlBigInt(
+    disputeBlockNumber: handleGraphqlNullableBigInt(
       priceRequest.disputeBlockNumber
     ),
     disputeHash: handleGraphqlNullableStringOrBytes(priceRequest.disputeHash),
-    disputeLogIndex: handleNullableGraphqlBigInt(priceRequest.disputeLogIndex),
-    settlementTimestamp: handleNullableGraphqlBigInt(
+    disputeLogIndex: handleGraphqlNullableBigInt(priceRequest.disputeLogIndex),
+    settlementTimestamp: handleGraphqlNullableStringOrBytes(
       priceRequest.settlementTimestamp
     ),
-    settlementBlockNumber: handleNullableGraphqlBigInt(
+    settlementBlockNumber: handleGraphqlNullableBigInt(
       priceRequest.settlementBlockNumber
     ),
     settlementHash: handleGraphqlNullableStringOrBytes(
       priceRequest.settlementHash
     ),
-    settlementLogIndex: handleNullableGraphqlBigInt(
+    settlementLogIndex: handleGraphqlNullableBigInt(
       priceRequest.settlementLogIndex
     ),
   };
@@ -121,10 +125,11 @@ export function parsePriceRequestGraphEntity(
   // only present in v2
   return {
     ...ooV2PriceRequest,
-    customLiveness: handleNullableGraphqlBigInt(
+    ...withOOV1Keys,
+    customLiveness: handleGraphqlNullableStringOrBytes(
       ooV2PriceRequest.customLiveness
     ),
-    bond: handleNullableGraphqlBigInt(ooV2PriceRequest.bond),
+    bond: handleGraphqlNullableBigInt(ooV2PriceRequest.bond),
     eventBased: handleGraphqlNullableBoolean(ooV2PriceRequest.eventBased),
   };
 }
@@ -136,7 +141,9 @@ export function parseAssertionGraphEntity(
 ) {
   return {
     chainId,
+    oracleType: "Optimistic Oracle V3",
     oracleAddress,
+    id: assertion.id,
     assertionId: assertion.assertionId,
     domainId: assertion.domainId,
     claim: assertion.claim,
@@ -149,37 +156,39 @@ export function parseAssertionGraphEntity(
     currency: assertion.currency,
     bond: assertion.bond,
     disputer: handleGraphqlNullableStringOrBytes(assertion.disputer),
-    settlementPayout: handleNullableGraphqlBigInt(assertion.settlementPayout),
+    settlementPayout: handleGraphqlNullableBigInt(assertion.settlementPayout),
     settlementRecipient: handleGraphqlNullableStringOrBytes(
       assertion.settlementRecipient
     ),
     settlementResolution: handleGraphqlNullableStringOrBytes(
       assertion.settlementResolution
     ),
-    assertionTimestamp: handleNullableGraphqlBigInt(
+    assertionTimestamp: handleGraphqlNullableStringOrBytes(
       assertion.assertionTimestamp
     ),
-    assertionBlockNumber: handleNullableGraphqlBigInt(
+    assertionBlockNumber: handleGraphqlNullableBigInt(
       assertion.assertionBlockNumber
     ),
     assertionHash: handleGraphqlNullableStringOrBytes(assertion.assertionHash),
-    assertionLogIndex: handleNullableGraphqlBigInt(assertion.assertionLogIndex),
-    disputeTimestamp: handleNullableGraphqlBigInt(assertion.disputeTimestamp),
-    disputeBlockNumber: handleNullableGraphqlBigInt(
+    assertionLogIndex: handleGraphqlNullableBigInt(assertion.assertionLogIndex),
+    disputeTimestamp: handleGraphqlNullableStringOrBytes(
+      assertion.disputeTimestamp
+    ),
+    disputeBlockNumber: handleGraphqlNullableBigInt(
       assertion.disputeBlockNumber
     ),
     disputeHash: handleGraphqlNullableStringOrBytes(assertion.disputeHash),
-    disputeLogIndex: handleNullableGraphqlBigInt(assertion.disputeLogIndex),
-    settlementTimestamp: handleNullableGraphqlBigInt(
+    disputeLogIndex: handleGraphqlNullableBigInt(assertion.disputeLogIndex),
+    settlementTimestamp: handleGraphqlNullableStringOrBytes(
       assertion.settlementTimestamp
     ),
-    settlementBlockNumber: handleNullableGraphqlBigInt(
+    settlementBlockNumber: handleGraphqlNullableBigInt(
       assertion.settlementBlockNumber
     ),
     settlementHash: handleGraphqlNullableStringOrBytes(
       assertion.settlementHash
     ),
-    settlementLogIndex: handleNullableGraphqlBigInt(
+    settlementLogIndex: handleGraphqlNullableBigInt(
       assertion.settlementLogIndex
     ),
   };

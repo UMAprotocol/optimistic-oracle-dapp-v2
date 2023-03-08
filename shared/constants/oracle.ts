@@ -32,6 +32,7 @@ export const chainsById = {
   416: "SX" as const,
   43114: "Avalanche" as const,
   42161: "Arbitrum" as const,
+  80001: "Mumbai" as const,
 };
 
 export const chainNames = Object.values(chainsById);

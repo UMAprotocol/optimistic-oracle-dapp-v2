@@ -1,16 +1,16 @@
-import type { OOV1GraphQuery, OOV2GraphQuery } from "@shared/types";
 import type {
-  Handlers,
+  ChainId,
+  OOV1GraphQuery,
+  OOV2GraphQuery,
   OracleType,
-  Service,
-  ServiceFactory,
-} from "../../../types";
+} from "@shared/types";
+import { parsePriceRequestGraphEntity } from "@shared/utils";
+import type { Handlers, Service, ServiceFactory } from "../../../types";
 import { getPriceRequests } from "./queries";
-import { convert } from "./utils";
 
 export type Config = {
   url: string;
-  chainId: number;
+  chainId: ChainId;
   address: string;
   type: OracleType;
 };
@@ -21,7 +21,7 @@ export const Factory =
     async function fetch({ url, chainId, address, type }: Config) {
       const requests = await fetcher(url, chainId, type);
       return requests.map((request) =>
-        convert(request, chainId, address, type)
+        parsePriceRequestGraphEntity(request, chainId, address, type)
       );
     }
     async function fetcher(url: string, chainId: number, type: OracleType) {

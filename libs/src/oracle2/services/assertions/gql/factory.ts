@@ -1,10 +1,11 @@
+import type { ChainId } from "@shared/types";
+import { parseAssertionGraphEntity } from "@shared/utils";
 import type { Handlers, Service, ServiceFactory } from "../../../types";
 import { getAssertions } from "./queries";
-import { convert } from "./utils";
 
 export type Config = {
   url: string;
-  chainId: number;
+  chainId: ChainId;
   address: string;
 };
 
@@ -12,12 +13,10 @@ export const Factory =
   (config: Config): ServiceFactory =>
   (handlers: Handlers): Service => {
     async function fetch({ url, chainId, address }: Config) {
-      const requests = await getAssertions(
-        url,
-        "Optimistic Oracle V3",
-        chainId
+      const requests = await getAssertions(url, chainId);
+      return requests.map((request) =>
+        parseAssertionGraphEntity(request, chainId, address)
       );
-      return requests.map((request) => convert(request, chainId, address));
     }
     async function tick() {
       if (handlers.assertions) {

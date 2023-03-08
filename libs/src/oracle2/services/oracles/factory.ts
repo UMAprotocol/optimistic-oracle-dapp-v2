@@ -1,9 +1,5 @@
-import type {
-  Handlers,
-  OracleType,
-  Service,
-  ServiceFactory,
-} from "../../types";
+import type { ChainId, OracleType } from "@shared/types";
+import type { Handlers, Service, ServiceFactory } from "../../types";
 
 import { gql as gqlV3 } from "../assertions";
 import { gql as gqlV1 } from "../priceRequests";
@@ -11,7 +7,7 @@ import { gql as gqlV1 } from "../priceRequests";
 export type GqlConfig = {
   source: "gql";
   url: string;
-  chainId: number;
+  chainId: ChainId;
   type: OracleType;
   address: string;
 };
