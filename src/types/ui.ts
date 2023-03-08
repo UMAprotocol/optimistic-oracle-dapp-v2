@@ -9,13 +9,15 @@ import type {
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
-export type ActionType = "Dispute" | "Propose" | "Settle" | undefined;
+export type ActionType = "dispute" | "propose" | "settle" | undefined;
 
 /**
  * Defines the shape of data required by the UI to render a price request or a an assertion.
  * All of the UI components are "dumb", i.e they expect the data to be available, correct, and formatted when they receive it.
  */
 export type OracleQueryUI = {
+  // for price requests `id` is constructed with `identifier-timestamp-ancillaryData`
+  // for assertions `id` is the `assertionId` field
   id: string;
   chainId: ChainId;
   chainName: ChainName;
@@ -24,25 +26,26 @@ export type OracleQueryUI = {
   title: ReactNode;
   identifier: string;
   decodedIdentifier: string;
-  ancillaryData: string;
-  decodedAncillaryData: string;
+  // price requests query text is the ancillary data
+  // for assertions it is the `claim` field
+  queryTextHex: string;
+  queryText: string;
+  // for price requests the value text is undefined until a price is proposed. Then it is the proposed price. After a price is settled it is the settled price.
+  // for assertions the value text is undefined until settlement, after which it is the `settlementResolution` field
+  valueText: string | undefined;
   timeUTC: string;
   timeUNIX: number;
   timeMilliseconds: number;
   timeFormatted: string;
-  livenessEndsMilliseconds: number | undefined;
-  formattedLivenessEndsIn: string | undefined;
+  livenessEndsMilliseconds: number;
+  formattedLivenessEndsIn: string;
   actionType: ActionType | undefined;
-  action: (() => void) | undefined;
   moreInformation: MoreInformationItem[];
-  error: string;
-  setError: (error: string) => void;
   bond: BigNumber | undefined;
   // oo
-  price: string | undefined;
   expiryType: ExpiryType | undefined;
   oracleAddress: string;
-  tokenAddress: string | undefined;
+  tokenAddress: string;
   formattedBond: string | undefined;
   formattedReward: string | undefined;
 };

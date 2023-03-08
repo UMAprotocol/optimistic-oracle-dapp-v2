@@ -1,19 +1,19 @@
 import { chainsById } from "@/constants";
 import { utf8ToHex } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
-import type { Assertion, Assertions, Request } from "@libs/oracle2";
-import { RequestState } from "@libs/oracle2";
 import type {
-  OptimisticPriceRequest,
-  OptimisticPriceRequests,
-} from "@libs/oracle2/services/priceRequests/gql/queries";
+  Assertion,
+  AssertionGraphEntity,
+  PriceRequestGraphEntity,
+} from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import { addMinutes, format, subHours } from "date-fns";
+import { BigNumber } from "ethers/lib/ethers";
 import { graphql } from "msw";
 
 const defaultMockRequest = (
   number = Math.ceil(Math.random() * 100)
-): OptimisticPriceRequest => {
+): PriceRequestGraphEntity => {
   const identifier = utf8ToHex("YES_OR_NO_QUERY");
   const time = Math.floor(
     subHours(new Date(), Math.floor(Math.random() * 10)).getTime() / 1000
@@ -40,37 +40,35 @@ const defaultMockRequest = (
     settlementPrice: "316860000000000",
     settlementPayout: "1500000000",
     settlementRecipient: "0x9a8f92a830a5cb89a3816e3d267cb7791c16b04d",
-    state: RequestState.Proposed,
+    state: "Proposed",
     requestTimestamp: "1642650989",
-    requestBlockNumber: 2455264,
+    requestBlockNumber: "2455264",
     requestHash:
       "0xb5a334e783043c2429c5543bb6c8d782a977c7f369e0b1af226ac78cb39406a3",
-    requestLogIndex: 0,
+    requestLogIndex: "0",
     proposalTimestamp: "1642651674",
-    proposalBlockNumber: 2455506,
+    proposalBlockNumber: "2455506",
     proposalHash:
       "0x99ede462af14b39b3e861d96d8fdbb45b17aac38d35a0a0e9f0337ba929b7b9a",
-    proposalLogIndex: 2,
+    proposalLogIndex: "2",
     disputeTimestamp: "1642651899",
-    disputeBlockNumber: 2455536,
+    disputeBlockNumber: "2455536",
     disputeHash:
       "0x9bf32010749d937c55747bff6aa6821dbe144f822d99b869b9061f432c42a502",
-    disputeLogIndex: 8,
+    disputeLogIndex: "8",
     settlementTimestamp: "1643656746",
-    settlementBlockNumber: 3060556,
+    settlementBlockNumber: "3060556",
     settlementHash:
       "0x5a10991fece83a983f3bef139c9bf351aa4a279e4970991c2d26279376a68a4c",
-    settlementLogIndex: 1,
+    settlementLogIndex: "1",
   };
 };
 
 export const defaultMockAssertion = (
   number = Math.ceil(Math.random() * 100)
-): Assertion => {
+): AssertionGraphEntity => {
   return {
-    chainId: 1,
-    oracleType: "Optimistic Oracle V3",
-    oracleAddress: "0xfb55F43fB9F48F63f9269DB7Dde3BbBe1ebDC0dE",
+    identifier: "ASSERT_TRUTH",
     id: `0x16670def63d2b32468377efd92ed1b2b0c993381a70fc0e818d46c63594b75a2${number}`,
     assertionId:
       "0x16670def63d2b32468377efd92ed1b2b0c993381a70fc0e818d46c63594b75a2",
@@ -83,11 +81,11 @@ export const defaultMockAssertion = (
     caller: "0xdf4e039ebc83eea87981930917a10a0f27ae64a1",
     expirationTime: "1674487332",
     currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
-    bond: "0",
+    bond: BigNumber.from(0),
     disputer: "0x9a8f92a830a5cb89a3816e3d267cb7791c16b04d",
     settlementPayout: null,
     settlementRecipient: "0xdf4e039ebc83eea87981930917a10a0f27ae64a1",
-    settlementResolution: true,
+    settlementResolution: "true",
     assertionTimestamp: "1674480132",
     assertionBlockNumber: "8362232",
     assertionHash:
@@ -167,7 +165,7 @@ export function makeMockAssertions(
 const defaultMockOracleQueryUI: OracleQueryUI = {
   id: `mock-id-${Math.random()}`,
   oracleAddress: "0xA0Ae6609447e57a42c51B50EAe921D701823FFAe",
-  bond: "50000000000",
+  bond: BigNumber.from(50000000000),
   tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   chainId: 1,
   chainName: "Ethereum",
@@ -175,6 +173,8 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
   project: "UMA",
   title:
     "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",
+  identifier: "0x0000000",
+  decodedIdentifier: "0x0000000",
   ancillaryData: `0x713a207469746c653a204469642045756c657220676574206861636b65643f202c206465736372697074696f6e3a205761732074686572652061206861636b2c206275672c2075736572206572726f722c206f72206d616c66656173616e636520726573756c74696e6720696e2061206c6f7373206f72206c6f636b2d7570206f6620746f6b656e7320696e2045756c6572202868747470733a2f2f6170702e65756c65722e6669`,
   decodedAncillaryData: `q: title: Did Euler get hacked? , description: Was there a hack,
   bug, user error, or malfeasance resulting in a loss or lock-up
@@ -185,9 +185,7 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
   timeUTC: new Date().toUTCString(),
   timeMilliseconds: Date.now(),
   timeFormatted: format(new Date(), "Pp"),
-  assertion: undefined,
   price: "123",
-  currency: "USDC",
   formattedBond: "50,000",
   formattedReward: "250,000",
   livenessEndsMilliseconds: addMinutes(new Date(), 53).getTime(),
@@ -285,11 +283,9 @@ export const proposeMockOracleQueryUIs = (count = 3) =>
       {
         title: "With expiry type and weird random currency",
         expiryType: "Time-based",
-        currency: "RY",
       },
       {
         title: "With chain name, oracle type and other known currency",
-        currency: "ETH",
         chainName: "Polygon",
         oracleType: "Skinny Optimistic Oracle",
       },
@@ -304,13 +300,11 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
         title: "With project specified and price",
         project: "Cozy Finance",
         chainName: "Polygon",
-        assertion: undefined,
         price: "123",
       },
       {
         title: "With expiry type and weird random currency and liveness ends",
         expiryType: "Time-based",
-        currency: "RY",
         project: "UMA",
         chainName: "Ethereum",
         oracleType: "Skinny Optimistic Oracle",
@@ -318,7 +312,6 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
       },
       {
         title: "With chain name, oracle type and other known currency",
-        currency: "ETH",
         chainName: "Polygon",
         oracleType: "Skinny Optimistic Oracle",
       },
@@ -333,18 +326,15 @@ export const settledMockOracleQueryUIs = (count = 3) =>
       {
         title: "With project specified and price",
         project: "Cozy Finance",
-        assertion: undefined,
         price: "123",
       },
       {
         title: "With expiry type and weird random currency and liveness ends",
         expiryType: "Time-based",
-        currency: "RY",
         livenessEndsMilliseconds: Date.now() + 10_000,
       },
       {
         title: "With chain name, oracle type and other known currency",
-        currency: "ETH",
         chainName: "Polygon",
         oracleType: "Skinny Optimistic Oracle",
       },
@@ -417,8 +407,8 @@ export function makeQueryNamesForAllOracles() {
 type VersionAndChain = {
   version: 1 | 2 | 3;
   chainId: number;
-  requests?: OptimisticPriceRequests;
-  assertions?: Assertions;
+  requests?: PriceRequestGraphEntity[];
+  assertions?: AssertionGraphEntity[];
 };
 export function makeRequestHandlerForOraclesAndChains(
   versionsAndChains: VersionAndChain[]
@@ -445,8 +435,8 @@ export function makeRequestHandlerForOraclesAndChains(
   return makeQueryNamesForAllOracles().map((queryName) =>
     graphql.query(queryName, (_req, res, ctx) => {
       const isAssertions = queryName.includes("V3");
-      const optimisticPriceRequests: OptimisticPriceRequests = [];
-      const assertions: Assertions = [];
+      const optimisticPriceRequests: PriceRequestGraphEntity[] = [];
+      const assertions: AssertionGraphEntity[] = [];
       if (isAssertions) {
         const mock = assertionsToMock.find(
           ({ mockQueryName }) => mockQueryName === queryName

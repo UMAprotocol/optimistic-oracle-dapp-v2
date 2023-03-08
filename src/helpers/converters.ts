@@ -1,6 +1,6 @@
 import { chainsById, config } from "@/constants";
-import type { ActionType, ChainId, ChainName, OracleQueryUI } from "@/types";
-import type { Assertion, Request, RequestState } from "@shared/types";
+import type { ActionType, ChainId, ChainName, MoreInformationItem, OracleQueryUI } from "@/types";
+import type { Assertion, ParsedOOV2GraphEntity, Request, RequestState } from "@shared/types";
 import { formatNumberForDisplay } from "@shared/utils";
 import { format } from "date-fns";
 import type { BigNumber } from "ethers";
@@ -58,13 +58,13 @@ export function isSupportedChain(chainId: number): chainId is ChainId {
 
 function getRequestActionType(state: RequestState): ActionType {
   if (state === "Requested") {
-    return "Propose";
+    return "propose";
   }
   if (state === "Proposed") {
-    return "Dispute";
+    return "dispute";
   }
   if (state === "Disputed") {
-    return "Settle";
+    return "settle";
   }
 }
 
@@ -74,9 +74,9 @@ function getAssertionActionType({
 }: Assertion): ActionType {
   if (settlementHash) return;
   if (toDate(expirationTime) > new Date()) {
-    return "Settle";
+    return "settle";
   }
-  return "Dispute";
+  return "dispute";
 }
 
 function getLivenessEnds(customLiveness?: string | undefined) {
@@ -84,7 +84,7 @@ function getLivenessEnds(customLiveness?: string | undefined) {
   return toTimeMilliseconds(livenessEndsSeconds);
 }
 
-function getPrice(
+function getPriceRequestValueText(
   proposedPrice: BigNumber | undefined,
   settlementPrice: BigNumber | undefined
 ) {
@@ -93,23 +93,30 @@ function getPrice(
   return formatNumberForDisplay(price, { isFormatEther: true });
 }
 
-export function requestToOracleQuery({
-  id,
-  chainId,
-  oracleType,
-  oracleAddress,
-  ancillaryData,
-  time,
-  identifier,
-  proposedPrice,
-  settlementPrice,
-  currency,
-  state,
-  reward,
-  bond,
-  customLiveness,
-  eventBased,
-}: Request): OracleQueryUI {
+function isOOV2PriceRequest(request: Request): request is ParsedOOV2GraphEntity {
+  return request.oracleType === "Optimistic Oracle V2";
+}
+
+export function requestToOracleQuery(request: Request): OracleQueryUI {
+  const {
+    id,
+    chainId,
+    oracleType,
+    oracleAddress,
+    ancillaryData,
+    time,
+    identifier,
+    proposedPrice,
+    settlementPrice,
+    currency,
+    state,
+    reward,
+  } = request;
+  const {
+    bond = undefined,
+    customLiveness = undefined,
+    eventBased = undefined
+  } = isOOV2PriceRequest(request) ? request : {};
   const livenessEndsMilliseconds = getLivenessEnds(customLiveness);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
   const decodedIdentifier = decodeHexString(identifier);
@@ -118,7 +125,20 @@ export function requestToOracleQuery({
   const project = "UMA";
   const title = "Unknown Title";
   const chainName = getChainName(chainId);
-  const decodedAncillaryData = decodeAncillaryData(ancillaryData);
+  const timeUTC = toTimeUTC(time);
+  const timeUNIX = toTimeUnix(time);
+  const timeMilliseconds = toTimeMilliseconds(time);
+  const timeFormatted = toTimeFormatted(time);
+  const valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
+  const queryTextHex = ancillaryData;
+  const queryText = decodeAncillaryData(ancillaryData);
+  const expiryType = eventBased ? "Event-based" : "Time-based";
+  const tokenAddress = currency;
+  const formattedBond = formatNumberForDisplay(bond, { isFormatEther: true });
+  const formattedReward = formatNumberForDisplay(reward, { isFormatEther: true });
+  const moreInformation: MoreInformationItem[] = [];
+  const actionType = getRequestActionType(state)
+  
   return {
     project,
     title,
@@ -129,31 +149,30 @@ export function requestToOracleQuery({
     oracleAddress,
     identifier,
     decodedIdentifier,
-    ancillaryData,
-    decodedAncillaryData,
-    timeUTC: toTimeUTC(time),
-    timeUNIX: toTimeUnix(time),
-    timeMilliseconds: toTimeMilliseconds(time),
-    timeFormatted: toTimeFormatted(time),
+    queryText,
+    queryTextHex,
+    timeUTC,
+    timeUNIX,
+    timeMilliseconds,
+    timeFormatted,
     livenessEndsMilliseconds,
     formattedLivenessEndsIn,
-    price: getPrice(proposedPrice, settlementPrice),
-    expiryType: eventBased ? "Event-based" : "Time-based",
-    tokenAddress: currency,
+    valueText,
+    expiryType,
+    tokenAddress,
     bond,
-    formattedBond: formatNumberForDisplay(bond, { isFormatEther: true }),
-    formattedReward: formatNumberForDisplay(reward, { isFormatEther: true }),
-    moreInformation: [],
-    actionType: getRequestActionType(state),
-    action: () => undefined,
-    error: "",
-    setError: () => undefined,
+    formattedBond,
+    formattedReward,
+    moreInformation,
+    actionType,
   };
 }
 
-export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
+export function assertionToOracleQuery({
+  assertionId
+}: Assertion): OracleQueryUI {
   return {
-    id: assertion.id,
+    id: assertionId,
     chainId: isSupportedChain(assertion.chainId) ? assertion.chainId : 0,
     chainName: isSupportedChain(assertion.chainId)
       ? getChainName(assertion.chainId)
@@ -165,7 +184,6 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     tokenAddress: assertion.currency,
     livenessEndsMilliseconds: assertion.expirationTime
       ? toTimeMilliseconds(assertion.expirationTime)
-      : undefined,
     formattedLivenessEndsIn: assertion.expirationTime
       ? toTimeFormatted(assertion.expirationTime)
       : undefined,

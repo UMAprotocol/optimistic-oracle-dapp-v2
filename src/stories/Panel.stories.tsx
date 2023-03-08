@@ -131,9 +131,7 @@ export const WithDifferentCurrency: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockOracleQueryUI({
-      currency: "ETH",
-    }),
+    content: makeMockOracleQueryUI(),
   },
 };
 
@@ -144,7 +142,6 @@ export const WithPrice: Story = {
     content: makeMockOracleQueryUI({
       oracleType: "Optimistic Oracle V1",
       price: "200",
-      assertion: undefined,
     }),
   },
 };

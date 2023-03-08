@@ -408,9 +408,6 @@ export type ParsedOOV1GraphEntity = {
   settlementTimestamp: string | undefined;
   settlementBlockNumber: BigNumber | undefined;
   settlementLogIndex: BigNumber | undefined;
-  customLiveness?: string | undefined;
-  bond?: BigNumber | undefined;
-  eventBased?: boolean | undefined;
 };
 
 export type ParsedOOV2GraphEntity = ParsedOOV1GraphEntity & {
