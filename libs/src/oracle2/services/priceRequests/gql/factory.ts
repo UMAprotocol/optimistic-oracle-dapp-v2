@@ -24,7 +24,7 @@ export const Factory =
         parsePriceRequestGraphEntity(request, chainId, address, type)
       );
     }
-    async function fetcher(url: string, chainId: number, type: OracleType) {
+    async function fetcher(url: string, chainId: ChainId, type: OracleType) {
       const isV2 = type === "Optimistic Oracle V2";
       if (isV2) {
         return await getPriceRequests<OOV2GraphQuery>(url, chainId, type);

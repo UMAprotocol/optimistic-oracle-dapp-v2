@@ -1,13 +1,15 @@
-import type { OracleType, PriceRequestQuery } from "@shared/types";
+import { chainsById } from "@shared/constants";
+import type { ChainId, OracleType, PriceRequestQuery } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import request, { gql } from "graphql-request";
 
 export async function getPriceRequests<Result extends PriceRequestQuery>(
   url: string,
-  chainId: number,
+  chainId: ChainId,
   oracleType: OracleType
 ) {
-  const queryName = makeQueryName(oracleType, chainId);
+  const chainName = chainsById[chainId];
+  const queryName = makeQueryName(oracleType, chainName);
   const isV2 = oracleType === "Optimistic Oracle V2";
   const query = gql`
     query ${queryName} {

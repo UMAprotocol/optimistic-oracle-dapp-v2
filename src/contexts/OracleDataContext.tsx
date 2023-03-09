@@ -121,12 +121,14 @@ const assertionReducer = DataReducerFactory(assertionToOracleQuery);
 
 function uniqueList<T>(list: T[], id: (el: T) => string): T[] {
   const init: Record<string, T> = {};
-  return Object.values(
+  const result = Object.values(
     list.reduce((table, el) => {
       table[id(el)] = el;
       return table;
     }, init)
   );
+
+  return result;
 }
 
 function balancesReducer(state: OracleDataContextState, updates: Balances) {
@@ -159,7 +161,6 @@ export function oracleDataReducer(
   action: DispatchActions
 ): OracleDataContextState {
   if (action.type === "requests") {
-    console.log(state, action);
     return requestReducer(state, action.data);
   } else if (action.type === "assertions") {
     return assertionReducer(state, action.data);

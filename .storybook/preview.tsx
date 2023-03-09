@@ -1,14 +1,16 @@
-import { chains, rainbowKitTheme, wagmiClient } from "../src/pages/_app";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { Decorator, Parameters } from "@storybook/react";
 import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
 import { WagmiConfig } from "wagmi";
 import { GlobalStyle } from "../src/components/GlobalStyle";
+import { chains, rainbowKitTheme, wagmiClient } from "../src/pages/_app";
 import "../src/styles/fonts.css";
 import "./rainbow.css";
 
-initialize();
+initialize({
+  onUnhandledRequest: "bypass",
+});
 
 export const parameters: Parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -60,7 +62,7 @@ export const parameters: Parameters = {
   defaultViewport: "mobile",
   layout: "fullscreen",
   chromatic: {
-    viewports: [320, 640, 1024, 1300, 1920]
+    viewports: [320, 640, 1024, 1300, 1920],
   },
   controls: {
     matchers: {

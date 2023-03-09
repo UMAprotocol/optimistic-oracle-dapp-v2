@@ -1,6 +1,6 @@
-import { chainsById } from "@/constants";
 import { utf8ToHex } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
+import { chainNames } from "@shared/constants";
 import type {
   Assertion,
   AssertionGraphEntity,
@@ -8,22 +8,19 @@ import type {
   Request,
 } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
-import { addMinutes, format, subHours } from "date-fns";
-import { BigNumber } from "ethers/lib/ethers";
+import { add, addMinutes, format, sub } from "date-fns";
+import { BigNumber } from "ethers";
+import type { GraphQLHandler, GraphQLRequest, GraphQLVariables } from "msw";
 import { graphql } from "msw";
 
 const defaultMockRequest = (
   number = Math.random()
 ): PriceRequestGraphEntity => {
-  const identifier = utf8ToHex("YES_OR_NO_QUERY");
-  const time = Math.floor(
-    subHours(new Date(), Math.floor(Math.random() * 10)).getTime() / 1000
-  ).toString();
-  const ancillaryData =
-    utf8ToHex(`q: title: Test Polymarket Request with Early Request Option #${number}
-    description: This is a test for the type of Polymarket request that DOES have an option for early request.
-  res_data: p1: 0, p2: 1, p3: 0.5, p4: -57896044618658097711785492504343953926634992332820282019728.792003956564819968
-  Where p1 corresponds to No, p2 to a Yes, p3 to unknown, and p4 to an early request`);
+  const identifier = "YES_OR_NO_QUERY";
+  const time = makeUnixTimestamp("past", { hours: 1 });
+  const ancillaryData = utf8ToHex(
+    `q: Random test data #${number} ${Math.random()}}`
+  );
   const id = `${identifier}-${time}-${ancillaryData}`;
   return {
     requester: "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D",
@@ -34,6 +31,7 @@ const defaultMockRequest = (
     currency: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     reward: "0",
     finalFee: "1500000000",
+    state: "Requested",
     proposer: null,
     proposedPrice: null,
     proposalExpirationTimestamp: null,
@@ -41,7 +39,6 @@ const defaultMockRequest = (
     settlementPrice: null,
     settlementPayout: null,
     settlementRecipient: null,
-    state: "Requested",
     requestTimestamp: null,
     requestBlockNumber: null,
     requestHash: null,
@@ -64,38 +61,56 @@ const defaultMockRequest = (
 export const defaultMockAssertion = (
   number = Math.ceil(Math.random() * 100)
 ): AssertionGraphEntity => {
+  const identifier = "ASSERT_TRUTH";
+  const assertionTimestamp = makeUnixTimestamp("past", { hours: 1 });
+  const expirationTime = assertionTimestamp;
+  const bond = BigNumber.from(1000000000000000);
+  const claim = utf8ToHex(`
+    q: title: Paradoxical test assertion #${number}
+    description: One of these statements is true.
+
+    This sentence is false.
+    The previous sentence is true.
+  `);
+  const currency = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+  const callbackRecipient = "0x0000000000000000000000000000000000000000";
+  const escalationManager = "0x0000000000000000000000000000000000000000";
+  const asserter = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
+  const id = `${identifier}-${assertionTimestamp}-${claim}`;
+  const domainId =
+    "0x0000000000000000000000000000000000000000000000000000000000000000";
+  const assertionId = `0x1234567890${number}`;
   return {
-    identifier: utf8ToHex("ASSERT_TRUTH"),
-    id: `0x16670def63d2b32468377efd92ed1b2b0c993381a70fc0e818d46c63594b75a2${number}`,
-    assertionId: `0x16670def63d2b32468377efd92ed1b2b0c993381a70fc0e818d46c63594b75a2${number}`,
-    domainId:
-      "0x0000000000000000000000000000000000000000000000000000000000000000",
-    claim: utf8ToHex("eat my ass and balls"),
-    asserter: "0xdf4e039ebc83eea87981930917a10a0f27ae64a1",
-    callbackRecipient: "0x0000000000000000000000000000000000000000",
-    escalationManager: "0x0000000000000000000000000000000000000000",
-    caller: "0xdf4e039ebc83eea87981930917a10a0f27ae64a1",
-    expirationTime: `${Date.now() / 1000 + 10000}`,
-    currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
-    bond: BigNumber.from(0),
-    disputer: "0x9a8f92a830a5cb89a3816e3d267cb7791c16b04d",
-    settlementPayout: null,
-    settlementRecipient: "0xdf4e039ebc83eea87981930917a10a0f27ae64a1",
-    settlementResolution: null,
-    assertionTimestamp: "1674480132",
-    assertionBlockNumber: "8362232",
+    identifier,
+    id,
+    assertionId,
+    domainId,
+    claim,
+    asserter,
+    callbackRecipient,
+    escalationManager,
+    caller: asserter,
+    expirationTime,
+    currency,
+    bond,
+    assertionTimestamp,
+    assertionBlockNumber: "8624262",
     assertionHash:
-      "0x8578a249f804d5fa99736424ab26c70ba162752f582ed7e22d9d4f694a7f750c",
-    assertionLogIndex: "55",
-    disputeTimestamp: "1674480300",
-    disputeBlockNumber: "8362243",
-    disputeHash:
-      "0x8a79946f9481929b8b1bcaf86b9b485c8fad4055d0d679a83bb81094ba9e502f",
-    disputeLogIndex: "136",
-    settlementTimestamp: "1674482580",
-    settlementBlockNumber: "8362404",
+      "0x9c06a3cf368e5ec0c43b5591a1d445bf39a1a20ca76d1d59e6afa3cfb9fde729",
+    assertionLogIndex:
+      "0x9c06a3cf368e5ec0c43b5591a1d445bf39a1a20ca76d1d59e6afa3cfb9fde729",
+    disputer: null,
+    settlementPayout: null,
+    settlementRecipient: null,
+    settlementResolution: "true",
+    disputeTimestamp: null,
+    disputeBlockNumber: null,
+    disputeHash: null,
+    disputeLogIndex: null,
+    settlementTimestamp: null,
+    settlementBlockNumber: null,
     settlementHash: null,
-    settlementLogIndex: "81",
+    settlementLogIndex: null,
   };
 };
 
@@ -106,9 +121,11 @@ export function makeMockRequests(
     inputForAll?: Partial<Request> | undefined;
   } = {}
 ) {
-  const { count = 1, inputs = [], inputForAll } = args;
+  const { count, inputs = [], inputForAll } = args;
 
-  const requests = Array.from({ length: count }, () => defaultMockRequest());
+  const length = count || inputs.length;
+
+  const requests = Array.from({ length }, () => defaultMockRequest());
 
   if (inputForAll) {
     requests.forEach((request) => Object.assign(request, inputForAll));
@@ -122,20 +139,14 @@ export function makeMockRequests(
 }
 
 export function makeMockAssertions(
-  {
-    count = 5,
-    inputs = [],
-    inputForAll,
-  }: {
-    count: number;
-    inputs: Partial<Assertion>[];
-    inputForAll: Partial<Assertion> | undefined;
-  } = {
-    count: 5,
-    inputs: [],
-    inputForAll: undefined,
-  }
+  args: {
+    count?: number;
+    inputs?: Partial<Assertion>[];
+    inputForAll?: Partial<Assertion> | undefined;
+  } = {}
 ) {
+  const { count = 1, inputs = [], inputForAll } = args;
+
   const requests = Array.from({ length: count }, () => defaultMockAssertion());
 
   if (inputForAll) {
@@ -153,6 +164,7 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
   id: `mock-id-${Math.random()}`,
   oracleAddress: "0xA0Ae6609447e57a42c51B50EAe921D701823FFAe",
   bond: BigNumber.from(50000000000),
+  reward: BigNumber.from(50000000000),
   tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   chainId: 1,
   chainName: "Ethereum",
@@ -373,74 +385,46 @@ export const mockFilters = {
   },
 };
 
-export function makeQueryNamesOnAllChains(version: 1 | 2 | 3) {
-  return Object.keys(chainsById).map((chainId) =>
-    makeQueryName(`Optimistic Oracle V${version}`, Number(chainId))
-  );
-}
+export function makeGraphqlHandlers(args: {
+  v1?: Record<string, PriceRequestGraphEntity[]>;
+  v2?: Record<string, PriceRequestGraphEntity[]>;
+  v3?: Record<string, AssertionGraphEntity[]>;
+}) {
+  type Handler = GraphQLHandler<GraphQLRequest<GraphQLVariables>>;
 
-export function makeQueryNamesForAllOracles() {
-  return [
-    ...makeQueryNamesOnAllChains(1),
-    ...makeQueryNamesOnAllChains(2),
-    ...makeQueryNamesOnAllChains(3),
-  ];
-}
+  const handlers: Handler[] = [];
 
-type VersionAndChain = {
-  version: 1 | 2 | 3;
-  chainId: number;
-  requests?: PriceRequestGraphEntity[];
-  assertions?: AssertionGraphEntity[];
-};
-export function makeRequestHandlerForOraclesAndChains(
-  versionsAndChains: VersionAndChain[]
-) {
-  const withMockQueryNames = versionsAndChains.map((versionAndChain) => {
-    const { version, chainId, assertions, requests } = versionAndChain;
-    if ((version === 1 || version === 2) && assertions) {
-      throw new Error("Cannot have assertions on OO V1 or V2");
-    }
-    if (version === 3 && requests) {
-      throw new Error("Cannot have requests on OO V3");
-    }
-    return {
-      ...versionAndChain,
-      mockQueryName: makeQueryName(`Optimistic Oracle V${version}`, chainId),
-    };
+  chainNames.forEach((chainName) => {
+    handlers.push(
+      graphql.query(
+        makeQueryName("Optimistic Oracle V1", chainName),
+        (_req, res, ctx) => {
+          const data = { optimisticPriceRequests: args?.v1?.[chainName] };
+          return res(ctx.data(data));
+        }
+      )
+    );
+    handlers.push(
+      graphql.query(
+        makeQueryName("Optimistic Oracle V2", chainName),
+        (_req, res, ctx) => {
+          const data = { optimisticPriceRequests: args?.v2?.[chainName] };
+          return res(ctx.data(data));
+        }
+      )
+    );
+    handlers.push(
+      graphql.query(
+        makeQueryName("Optimistic Oracle V3", chainName),
+        (_req, res, ctx) => {
+          const data = { assertions: args?.v3?.[chainName] };
+          return res(ctx.data(data));
+        }
+      )
+    );
   });
-  const assertionsToMock = withMockQueryNames.filter(({ mockQueryName }) =>
-    mockQueryName.includes("V3")
-  );
-  const optimisticPriceRequestsToMock = withMockQueryNames.filter(
-    ({ mockQueryName }) => !mockQueryName.includes("V3")
-  );
-  return makeQueryNamesForAllOracles().map((queryName) =>
-    graphql.query(queryName, (_req, res, ctx) => {
-      const isAssertions = queryName.includes("V3");
-      const optimisticPriceRequests: PriceRequestGraphEntity[] = [];
-      const assertions: AssertionGraphEntity[] = [];
-      if (isAssertions) {
-        const mock = assertionsToMock.find(
-          ({ mockQueryName }) => mockQueryName === queryName
-        );
-        if (mock) {
-          assertions.push(...(mock?.assertions ?? []));
-        }
-      } else {
-        const mock = optimisticPriceRequestsToMock.find(
-          ({ mockQueryName }) => mockQueryName === queryName
-        );
-        if (mock) {
-          optimisticPriceRequests.push(...(mock.requests ?? []));
-        }
-      }
-      const data = isAssertions
-        ? { assertions, isTest: true }
-        : { optimisticPriceRequests, isTest: true };
-      return res(ctx.data(data));
-    })
-  );
+
+  return handlers;
 }
 
 export function makeMockRouterPathname(pathname = "") {
@@ -449,4 +433,13 @@ export function makeMockRouterPathname(pathname = "") {
       pathname,
     },
   };
+}
+
+export function makeUnixTimestamp(
+  direction: "future" | "past",
+  duration: Duration
+) {
+  const addOrSub = direction === "future" ? add : sub;
+
+  return (addOrSub(new Date(), duration).getTime() / 1000).toString();
 }

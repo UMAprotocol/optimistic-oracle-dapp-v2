@@ -1,9 +1,11 @@
-import type { OOV3GraphQuery } from "@shared/types";
+import { chainsById } from "@shared/constants";
+import type { ChainId, OOV3GraphQuery } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import request, { gql } from "graphql-request";
 
-export async function getAssertions(url: string, chainId: number) {
-  const queryName = makeQueryName("Optimistic Oracle V3", chainId);
+export async function getAssertions(url: string, chainId: ChainId) {
+  const chainName = chainsById[chainId];
+  const queryName = makeQueryName("Optimistic Oracle V3", chainName);
   const query = gql`
     query ${queryName} {
       assertions {

@@ -1,6 +1,7 @@
 import type {
   AssertionGraphEntity,
   ChainId,
+  ChainName,
   OOV2GraphEntity,
   OracleType,
   PriceRequestGraphEntity,
@@ -31,9 +32,10 @@ export function handleGraphqlNullableBoolean(boolean: boolean | null) {
   return boolean;
 }
 
-export function makeQueryName(oracleType: OracleType, chainId: number) {
+export function makeQueryName(oracleType: OracleType, chainName: ChainName) {
   const camelCaseOracleType = oracleType.replaceAll(" ", "");
-  return `${camelCaseOracleType}Chain${chainId}`;
+  const camelCaseChainName = chainName.replaceAll(" ", "");
+  return `${camelCaseOracleType}${camelCaseChainName}`;
 }
 
 export function parsePriceRequestGraphEntity(
@@ -184,16 +186,16 @@ export function parseAssertionGraphEntity(
     expirationTime,
     currency,
     bond,
+    assertionTimestamp: assertionTimestamp,
+    assertionBlockNumber: assertionBlockNumber,
+    assertionHash: assertionHash,
+    assertionLogIndex: assertionLogIndex,
     disputer: handleGraphqlNullableStringOrBytes(disputer),
     settlementPayout: handleGraphqlNullableBigInt(settlementPayout),
     settlementRecipient:
       handleGraphqlNullableStringOrBytes(settlementRecipient),
     settlementResolution:
       handleGraphqlNullableStringOrBytes(settlementResolution),
-    assertionTimestamp: assertionTimestamp,
-    assertionBlockNumber: handleGraphqlNullableBigInt(assertionBlockNumber),
-    assertionHash: handleGraphqlNullableStringOrBytes(assertionHash),
-    assertionLogIndex: handleGraphqlNullableBigInt(assertionLogIndex),
     disputeTimestamp: handleGraphqlNullableStringOrBytes(disputeTimestamp),
     disputeBlockNumber: handleGraphqlNullableBigInt(disputeBlockNumber),
     disputeHash: handleGraphqlNullableStringOrBytes(disputeHash),

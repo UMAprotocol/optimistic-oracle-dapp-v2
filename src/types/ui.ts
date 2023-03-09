@@ -41,6 +41,7 @@ export type OracleQueryUI = {
   actionType: ActionType | undefined;
   moreInformation: MoreInformationItem[];
   bond: BigNumber | undefined;
+  reward: BigNumber | undefined;
   // oo
   expiryType: ExpiryType | undefined;
   oracleAddress: string;

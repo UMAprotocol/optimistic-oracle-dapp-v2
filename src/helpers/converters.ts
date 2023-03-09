@@ -68,31 +68,40 @@ export function isSupportedChain(chainId: number): chainId is ChainId {
 }
 
 function getRequestActionType(state: RequestState): ActionType {
+  // goes to `propose` page
   if (state === "Requested") {
     return "propose";
   }
+  // goes to `verify` page
   if (state === "Proposed") {
     return "dispute";
   }
-  if (state === "Disputed") {
+  // also goes to `verify` page
+  if (state === "Disputed" || state === "Expired") {
     return "settle";
   }
+
+  // TODO: figure out what to do with `state === Resolved`
 }
 
 function getAssertionActionType({
   expirationTime,
   settlementHash,
 }: Assertion): ActionType {
+  // goes to `settled` page
   if (settlementHash) return;
+  // goes to `verify` page
   if (toDate(expirationTime) > new Date()) {
     return "settle";
   }
+  // also goes to `verify` page
   return "dispute";
 }
 
 function getLivenessEnds(customLivenessOrExpirationTime?: string | undefined) {
   const livenessEndsSeconds =
-    customLivenessOrExpirationTime ?? config.defaultLiveness;
+    customLivenessOrExpirationTime ??
+    Date.now() / 1000 + Number(config.defaultLiveness);
   return toTimeMilliseconds(livenessEndsSeconds);
 }
 
@@ -103,6 +112,16 @@ function getPriceRequestValueText(
   const price = proposedPrice ?? settlementPrice;
   if (price === undefined) return;
   return formatNumberForDisplay(price, { isFormatEther: true });
+}
+
+function getFormattedBond(bond: BigNumber | undefined) {
+  if (bond === undefined) return "No bond";
+  return formatNumberForDisplay(bond, { isFormatEther: true });
+}
+
+function getFormattedReward(reward: BigNumber | undefined) {
+  if (reward === undefined) return "No reward";
+  return formatNumberForDisplay(reward, { isFormatEther: true });
 }
 
 function isOOV2PriceRequest(
@@ -136,7 +155,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   // TODO: we need methods to calculate these things
   // need a lookup for project based on price ident or anc data
   const project = "UMA";
-  const title = "Unknown Title";
+  const title = `Price request - ${oracleType}`;
   const chainName = getChainName(chainId);
   const timeUTC = toTimeUTC(time);
   const timeUNIX = toTimeUnix(time);
@@ -147,10 +166,8 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   const queryText = safeDecodeHexString(ancillaryData);
   const expiryType = eventBased ? "Event-based" : "Time-based";
   const tokenAddress = currency;
-  const formattedBond = formatNumberForDisplay(bond, { isFormatEther: true });
-  const formattedReward = formatNumberForDisplay(reward, {
-    isFormatEther: true,
-  });
+  const formattedBond = getFormattedBond(bond);
+  const formattedReward = getFormattedReward(reward);
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getRequestActionType(state);
 
@@ -174,6 +191,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     valueText,
     expiryType,
     tokenAddress,
+    reward,
     bond,
     formattedBond,
     formattedReward,
@@ -202,7 +220,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   // TODO: we need methods to calculate these things
   // need a lookup for project based on price ident or anc data
   const project = "UMA";
-  const title = "Unknown Title";
+  const title = `Assertion - ${oracleType}`;
   const chainName = getChainName(chainId);
   const timeUTC = toTimeUTC(assertionTimestamp);
   const timeUNIX = toTimeUnix(assertionTimestamp);
@@ -214,6 +232,8 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const expiryType = undefined;
   const tokenAddress = currency;
   const formattedBond = formatNumberForDisplay(bond, { isFormatEther: true });
+  // no reward is present on assertions
+  const reward = undefined;
   const formattedReward = undefined;
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getAssertionActionType(assertion);
@@ -242,6 +262,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     moreInformation,
     formattedBond,
     formattedReward,
+    reward,
     bond,
   };
 }

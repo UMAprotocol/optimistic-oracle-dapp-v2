@@ -24,7 +24,7 @@ export const requestStates = [
 export const chainsById = {
   0: "Unsupported Chain" as const,
   1: "Ethereum" as const,
-  5: "Görli" as const,
+  5: "Goerli" as const,
   10: "Optimism" as const,
   100: "Gnosis" as const,
   137: "Polygon" as const,
