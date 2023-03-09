@@ -35,7 +35,6 @@ export const Factory = (config: Config): [Queries, ServiceFactory] => {
       } else if (event.type === "token") {
         handlers.tokens && handlers.tokens([event.data]);
       } else if (event.type === "error") {
-        console.log(event.data);
         handlers.errors && handlers.errors([event.data]);
       }
     });

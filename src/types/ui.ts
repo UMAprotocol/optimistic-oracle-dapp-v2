@@ -25,7 +25,6 @@ export type OracleQueryUI = {
   project: Project;
   title: ReactNode;
   identifier: string;
-  decodedIdentifier: string;
   // price requests query text is the ancillary data
   // for assertions it is the `claim` field
   queryTextHex: string;

@@ -133,7 +133,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   } = isOOV2PriceRequest(request) ? request : {};
   const livenessEndsMilliseconds = getLivenessEnds(customLiveness);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
-  const decodedIdentifier = decodeHexString(identifier);
   // TODO: we need methods to calculate these things
   // need a lookup for project based on price ident or anc data
   const project = "UMA";
@@ -164,7 +163,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     oracleType,
     oracleAddress,
     identifier,
-    decodedIdentifier,
     queryText,
     queryTextHex,
     timeUTC,
@@ -201,7 +199,6 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const oracleType = "Optimistic Oracle V3";
   const livenessEndsMilliseconds = getLivenessEnds(expirationTime);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
-  const decodedIdentifier = decodeHexString(identifier);
   // TODO: we need methods to calculate these things
   // need a lookup for project based on price ident or anc data
   const project = "UMA";
@@ -226,7 +223,6 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     chainId,
     chainName,
     identifier,
-    decodedIdentifier,
     oracleType,
     oracleAddress,
     tokenAddress,

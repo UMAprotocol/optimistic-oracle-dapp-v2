@@ -6,7 +6,6 @@ import SettledPage from "@/pages/settled";
 import type { ErrorMessage } from "@/types";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  makeMockAssertions,
   makeMockRequests,
   makeMockRouterPathname,
   makeRequestHandlerForOraclesAndChains,
@@ -52,14 +51,9 @@ const VerifyTemplate: Story = {
     msw: {
       handlers: makeRequestHandlerForOraclesAndChains([
         {
-          version: 2,
+          version: 1,
           chainId: 1,
           requests: makeMockRequests(),
-        },
-        {
-          version: 3,
-          chainId: 5,
-          assertions: makeMockAssertions(),
         },
       ]),
     },
@@ -73,14 +67,9 @@ const ProposeTemplate: Story = {
     msw: {
       handlers: makeRequestHandlerForOraclesAndChains([
         {
-          version: 2,
+          version: 1,
           chainId: 1,
           requests: makeMockRequests(),
-        },
-        {
-          version: 3,
-          chainId: 5,
-          assertions: makeMockAssertions(),
         },
       ]),
     },
@@ -94,14 +83,9 @@ const SettledTemplate: Story = {
     msw: {
       handlers: makeRequestHandlerForOraclesAndChains([
         {
-          version: 2,
+          version: 1,
           chainId: 1,
           requests: makeMockRequests(),
-        },
-        {
-          version: 3,
-          chainId: 5,
-          assertions: makeMockAssertions(),
         },
       ]),
     },

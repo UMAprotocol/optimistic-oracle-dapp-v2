@@ -159,6 +159,7 @@ export function oracleDataReducer(
   action: DispatchActions
 ): OracleDataContextState {
   if (action.type === "requests") {
+    console.log(state, action);
     return requestReducer(state, action.data);
   } else if (action.type === "assertions") {
     return assertionReducer(state, action.data);
