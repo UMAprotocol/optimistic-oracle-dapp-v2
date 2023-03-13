@@ -339,7 +339,7 @@ export type OOV3GraphEntity = {
 
   currency: string;
 
-  bond: BigNumber;
+  bond: string;
 
   assertionTimestamp: string;
 

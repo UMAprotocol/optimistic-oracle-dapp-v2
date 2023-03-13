@@ -5,7 +5,6 @@ import type {
   Assertion,
   AssertionGraphEntity,
   PriceRequestGraphEntity,
-  Request,
 } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import { add, addMinutes, format, sub } from "date-fns";
@@ -13,7 +12,7 @@ import { BigNumber } from "ethers";
 import type { GraphQLHandler, GraphQLRequest, GraphQLVariables } from "msw";
 import { graphql } from "msw";
 
-const defaultMockRequest = (
+const defaultMockRequestGraphEntity = (
   number = Math.random()
 ): PriceRequestGraphEntity => {
   const identifier = "YES_OR_NO_QUERY";
@@ -29,8 +28,8 @@ const defaultMockRequest = (
     id,
     time,
     currency: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    reward: "15000000000000000000000",
-    finalFee: "1500000000",
+    reward: makeEtherValueString(100),
+    finalFee: makeEtherValueString(100),
     state: "Requested",
     proposer: null,
     proposedPrice: null,
@@ -58,13 +57,13 @@ const defaultMockRequest = (
   };
 };
 
-export const defaultMockAssertion = (
+export const defaultMockAssertionGraphEntity = (
   number = Math.ceil(Math.random() * 100)
 ): AssertionGraphEntity => {
   const identifier = "ASSERT_TRUTH";
   const assertionTimestamp = makeUnixTimestamp("past", { hours: 1 });
   const expirationTime = assertionTimestamp;
-  const bond = BigNumber.from(1000000000000000);
+  const bond = BigNumber.from(1000000000000000).toString();
   const claim = utf8ToHex(`
     q: title: Paradoxical test assertion #${number}
     description: One of these statements is true.
@@ -114,18 +113,20 @@ export const defaultMockAssertion = (
   };
 };
 
-export function makeMockRequests(
+export function makeMockRequestGraphEntities(
   args: {
     count?: number;
-    inputs?: Partial<Request>[];
-    inputForAll?: Partial<Request> | undefined;
+    inputs?: Partial<PriceRequestGraphEntity>[];
+    inputForAll?: Partial<PriceRequestGraphEntity> | undefined;
   } = {}
 ) {
   const { count, inputs = [], inputForAll } = args;
 
   const length = count || inputs.length;
 
-  const requests = Array.from({ length }, () => defaultMockRequest());
+  const requests = Array.from({ length }, () =>
+    defaultMockRequestGraphEntity()
+  );
 
   if (inputForAll) {
     requests.forEach((request) => Object.assign(request, inputForAll));
@@ -149,7 +150,9 @@ export function makeMockAssertions(
 
   const length = count || inputs.length;
 
-  const requests = Array.from({ length }, () => defaultMockAssertion());
+  const requests = Array.from({ length }, () =>
+    defaultMockAssertionGraphEntity()
+  );
 
   if (inputForAll) {
     requests.forEach((request) => Object.assign(request, inputForAll));
@@ -441,17 +444,17 @@ export function makeGraphqlHandlers(args: {
 
 export const handlersForAllPages = makeGraphqlHandlers({
   v1: {
-    Ethereum: makeMockRequests({
+    Ethereum: makeMockRequestGraphEntities({
       inputs: [
         {
           identifier: "TEST_VERIFY",
           state: "Proposed",
-          proposedPrice: BigNumber.from(parseEtherSafe("123")),
+          proposedPrice: makeEtherValueString(123),
         },
         {
           identifier: "TEST_VERIFY",
           state: "Disputed",
-          proposedPrice: BigNumber.from(parseEtherSafe("123")),
+          proposedPrice: makeEtherValueString(123),
         },
         {
           state: "Requested",
@@ -460,56 +463,57 @@ export const handlersForAllPages = makeGraphqlHandlers({
         },
         {
           state: "Requested",
-          identifier: "TEST_PROPOSE",
+          identifier: "TEST_PROPOSE_bond",
+          bond: makeEtherValueString(1230000),
         },
         {
           state: "Settled",
-          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+          settlementPrice: makeEtherValueString(123),
           identifier: "TEST_SETTLED",
         },
       ],
     }),
   },
   v2: {
-    Ethereum: makeMockRequests({
+    Ethereum: makeMockRequestGraphEntities({
       inputs: [
         {
           identifier: "TEST_VERIFY",
           state: "Proposed",
-          proposedPrice: BigNumber.from(parseEtherSafe("456")),
+          proposedPrice: makeEtherValueString(456),
         },
         {
           identifier: "TEST_VERIFY",
           state: "Disputed",
-          proposedPrice: BigNumber.from(parseEtherSafe("456")),
+          proposedPrice: makeEtherValueString(456),
         },
         { state: "Requested", identifier: "TEST_PROPOSE" },
         {
           state: "Settled",
           identifier: "TEST_SETTLED",
-          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+          settlementPrice: makeEtherValueString(123),
         },
       ],
     }),
   },
   skinny: {
-    Ethereum: makeMockRequests({
+    Ethereum: makeMockRequestGraphEntities({
       inputs: [
         {
           identifier: "TEST_VERIFY",
           state: "Proposed",
-          proposedPrice: BigNumber.from(parseEtherSafe("789")),
+          proposedPrice: makeEtherValueString(789),
         },
         {
           identifier: "TEST_VERIFY",
           state: "Disputed",
-          proposedPrice: BigNumber.from(parseEtherSafe("789")),
+          proposedPrice: makeEtherValueString(789),
         },
         { state: "Requested", identifier: "TEST_PROPOSE" },
         {
           state: "Settled",
           identifier: "TEST_SETTLED",
-          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+          settlementPrice: makeEtherValueString(123),
         },
       ],
     }),
@@ -553,4 +557,8 @@ export function makeUnixTimestamp(
   const addOrSub = direction === "future" ? add : sub;
 
   return (addOrSub(new Date(), duration).getTime() / 1000).toString();
+}
+
+export function makeEtherValueString(value: number) {
+  return BigNumber.from(parseEtherSafe(value.toString())).toString();
 }

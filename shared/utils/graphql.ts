@@ -185,7 +185,7 @@ export function parseAssertionGraphEntity(
     caller,
     expirationTime,
     currency,
-    bond,
+    bond: BigNumber.from(bond),
     assertionTimestamp: assertionTimestamp,
     assertionBlockNumber: assertionBlockNumber,
     assertionHash: assertionHash,
