@@ -1,17 +1,20 @@
 import { config } from "@/constants";
 import { assertionToOracleQuery, requestToOracleQuery } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
+import { Client } from "@libs/oracle2";
+import { oracles, tokens } from "@libs/oracle2/services";
 import type {
   Allowance,
   Allowances,
+  Assertion,
+  Assertions,
   Balance,
   Balances,
+  Request,
+  Requests,
   Token,
   Tokens,
-} from "@libs/oracle2";
-import { Client } from "@libs/oracle2";
-import { oracles, tokens } from "@libs/oracle2/services";
-import type { Assertion, Assertions, Request, Requests } from "@shared/types";
+} from "@shared/types";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useReducer, useState } from "react";
 

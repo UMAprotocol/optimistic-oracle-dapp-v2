@@ -1,15 +1,19 @@
-import { currencyIcons } from "@/constants";
+import { useComputed } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
+import { useEffect } from "react";
 import styled from "styled-components";
+import { Currency } from "../Currency";
 import { TD, Text } from "./style";
 
-export function ProposeCells({
-  oracleType,
-  formattedBond,
-  formattedReward,
-}: OracleQueryUI) {
-  const currency = "USDC";
-  const currencyIcon = currency ? currencyIcons[currency] : undefined;
+export function ProposeCells({ query }: { query: OracleQueryUI }) {
+  const { oracleType, formattedBond, formattedReward } = query;
+  const { token, fetchCurrencyTokenInfo } = useComputed(query);
+
+  useEffect(() => {
+    !!fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
+  }, [fetchCurrencyTokenInfo]);
+
+  const hasBond = formattedBond !== undefined;
 
   return (
     <>
@@ -17,15 +21,17 @@ export function ProposeCells({
         <_Text>{oracleType}</_Text>
       </TD>
       <TD>
-        <_Text>
-          {currencyIcon && currencyIcon} {formattedBond?.toString()}{" "}
-          {!currencyIcon && currency}
-        </_Text>
+        {hasBond ? (
+          <_Text>
+            <Currency token={token} formattedAmount={formattedBond} />
+          </_Text>
+        ) : (
+          "No bond"
+        )}
       </TD>
       <TD>
         <_Text>
-          {currencyIcon && currencyIcon} {formattedReward?.toString()}{" "}
-          {!currencyIcon && currency}
+          <Currency token={token} formattedAmount={formattedReward} />
         </_Text>
       </TD>
     </>

@@ -1,9 +1,9 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { commify, formatEther, parseEther } from "@/helpers";
+import type { Allowances, Balances, Token, Tokens } from "@shared/types";
 import { BigNumber } from "ethers";
 import { capitalize, words } from "lodash";
 import { css } from "styled-components";
-import type { Tokens, Token, Balances, Allowances } from "@libs/oracle2";
 
 /**
  * Adds an opacity value to an hsl string

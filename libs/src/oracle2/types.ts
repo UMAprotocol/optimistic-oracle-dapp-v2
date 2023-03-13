@@ -1,4 +1,11 @@
-import type { Assertions, Requests } from "@shared/types";
+import type {
+  Allowances,
+  Assertions,
+  Balances,
+  Requests,
+  Tokens,
+  Transactions,
+} from "@shared/types";
 
 export {
   FallbackProvider,
@@ -7,35 +14,6 @@ export {
   Provider,
   Web3Provider,
 } from "@ethersproject/providers";
-
-export type Token = {
-  chainId: number;
-  tokenAddress: string;
-  name: string;
-  symbol: string;
-  decimals: number;
-};
-export type Tokens = Token[];
-
-export type Balance = {
-  chainId: number;
-  account: string;
-  amount: string;
-  tokenAddress: string;
-};
-export type Balances = Balance[];
-
-export type Allowance = Balance & {
-  spender: string;
-};
-export type Allowances = Allowance[];
-
-export type Transaction = {
-  id: string;
-  state: "created" | "confirmed" | "submitted" | "error";
-  error?: Error;
-};
-export type Transactions = Transaction[];
 
 // This is the data transfer interface from client to view. Use this in a context or reducer to
 // map state to whatever you need for display.

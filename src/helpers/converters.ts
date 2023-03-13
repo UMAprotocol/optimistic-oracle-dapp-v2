@@ -112,12 +112,12 @@ function getPriceRequestValueText(
 }
 
 function getFormattedBond(bond: BigNumber | undefined) {
-  if (bond === undefined) return "No bond";
+  if (bond === undefined) return;
   return formatNumberForDisplay(bond, { isFormatEther: true });
 }
 
 function getFormattedReward(reward: BigNumber | undefined) {
-  if (reward === undefined) return "No reward";
+  if (reward === undefined) return;
   return formatNumberForDisplay(reward, { isFormatEther: true });
 }
 

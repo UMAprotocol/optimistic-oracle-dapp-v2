@@ -19,7 +19,7 @@ export function Row({ page, row }: { page: PageName; row: OracleQueryUI }) {
 
   const innerCells = {
     verify: <VerifyCells {...row} />,
-    propose: <ProposeCells {...row} />,
+    propose: <ProposeCells query={row} />,
     settled: <SettledCells {...row} />,
   };
 

@@ -1,14 +1,12 @@
+import type { Allowance, Balance, Token } from "@shared/types";
 import assert from "assert";
 import { ethers } from "ethers";
 import Events from "events";
 import type {
-  Allowance,
-  Balance,
   Handlers,
   JsonRpcProvider,
   Service,
   ServiceFactory,
-  Token,
 } from "../../types";
 import { TokenClient } from "../../web3-token";
 

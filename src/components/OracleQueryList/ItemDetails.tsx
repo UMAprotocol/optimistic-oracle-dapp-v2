@@ -1,5 +1,7 @@
+import { useComputed } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
+import { useEffect } from "react";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
 import {
@@ -10,13 +12,27 @@ import {
 
 export function ItemDetails({
   page,
-  timeMilliseconds,
-  livenessEndsMilliseconds,
-  formattedBond,
-  formattedReward,
-  valueText,
-}: OracleQueryUI & { page: PageName }) {
-  const currency = "USDC";
+  item,
+}: {
+  item: OracleQueryUI;
+  page: PageName;
+}) {
+  const {
+    timeMilliseconds,
+    livenessEndsMilliseconds,
+    formattedBond,
+    formattedReward,
+    valueText,
+  } = item;
+  const { token, fetchCurrencyTokenInfo } = useComputed(item);
+
+  useEffect(() => {
+    !!fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
+  }, [fetchCurrencyTokenInfo]);
+
+  const hasBond = formattedBond !== undefined;
+  const hasReward = formattedReward !== undefined;
+
   const verifyDetails = (
     <ItemDetailsWrapper>
       <ItemDetailsInnerWrapper>
@@ -37,22 +53,27 @@ export function ItemDetails({
     </ItemDetailsWrapper>
   );
 
-  const proposeDetails = (
-    <ItemDetailsWrapper>
-      <ItemDetailsInnerWrapper>
-        <ItemDetailsText>Bond</ItemDetailsText>
-        <ItemDetailsText>
-          <Currency amount={formattedBond} currency={currency} />
-        </ItemDetailsText>
-      </ItemDetailsInnerWrapper>
-      <ItemDetailsInnerWrapper>
-        <ItemDetailsText>Reward</ItemDetailsText>
-        <ItemDetailsText>
-          <Currency amount={formattedReward} currency={currency} />
-        </ItemDetailsText>
-      </ItemDetailsInnerWrapper>
-    </ItemDetailsWrapper>
-  );
+  const proposeDetails =
+    hasBond || hasReward ? (
+      <ItemDetailsWrapper>
+        {hasBond && (
+          <ItemDetailsInnerWrapper>
+            <ItemDetailsText>Bond</ItemDetailsText>
+            <ItemDetailsText>
+              <Currency formattedAmount={formattedBond} token={token} />
+            </ItemDetailsText>
+          </ItemDetailsInnerWrapper>
+        )}
+        {hasReward && (
+          <ItemDetailsInnerWrapper>
+            <ItemDetailsText>Reward</ItemDetailsText>
+            <ItemDetailsText>
+              <Currency formattedAmount={formattedReward} token={token} />
+            </ItemDetailsText>
+          </ItemDetailsInnerWrapper>
+        )}
+      </ItemDetailsWrapper>
+    ) : null;
 
   const settledDetails = (
     <ItemDetailsWrapper>

@@ -37,7 +37,7 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const [inputValue, setInputValue] = useState("");
-  const actions = useComputed(content);
+  const computed = useComputed(content);
 
   const {
     chainId,
@@ -69,10 +69,10 @@ export function Panel() {
   const isError = error !== "";
 
   useEffect(() => {
-    actions.fetchCurrencyTokenInfo && actions.fetchCurrencyTokenInfo();
-    actions.fetchCurrencyBalance && actions.fetchCurrencyBalance();
-    actions.fetchCurrencyAllowance && actions.fetchCurrencyAllowance();
-  }, [actions]);
+    computed.fetchCurrencyTokenInfo && computed.fetchCurrencyTokenInfo();
+    computed.fetchCurrencyBalance && computed.fetchCurrencyBalance();
+    computed.fetchCurrencyAllowance && computed.fetchCurrencyAllowance();
+  }, [computed]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";

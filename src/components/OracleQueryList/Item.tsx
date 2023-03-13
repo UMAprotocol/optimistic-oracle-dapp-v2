@@ -25,7 +25,7 @@ export function Item({ page, item }: Props) {
           <OracleQueryClickableIcon />
         </ClickableIconWrapper>
       </ItemInnerWrapper>
-      <ItemDetails page={page} {...item} />
+      <ItemDetails page={page} item={item} />
     </ItemWrapper>
   );
 }

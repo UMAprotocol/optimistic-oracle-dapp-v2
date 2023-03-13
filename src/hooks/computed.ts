@@ -2,13 +2,28 @@ import { tokenQueries } from "@/contexts";
 import { findAllowance, findBalance, findToken } from "@/helpers";
 import { useOracleDataContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
+import type { Token } from "@shared/types";
+import type { BigNumber } from "ethers";
 import { useAccount } from "wagmi";
 
+type Computed = {
+  currencyBalance: BigNumber | undefined;
+  fetchCurrencyBalance?: () => void;
+  currencyAllowance: BigNumber | undefined;
+  fetchCurrencyAllowance?: () => void;
+  token: Token | undefined;
+  fetchCurrencyTokenInfo?: () => void;
+  sendCurrencyApprove?: () => void;
+};
 export function useComputed(query: OracleQueryUI | undefined) {
   const { allowances, balances, tokens } = useOracleDataContext();
   const { tokenAddress, chainId, oracleAddress: spender } = query || {};
   const { address: account } = useAccount();
-  const actions: Record<string, () => void> = {};
+  const computed: Computed = {
+    currencyBalance: undefined,
+    currencyAllowance: undefined,
+    token: undefined,
+  };
 
   if (query && account && tokenAddress && chainId && spender) {
     const oracleQueryParams = {
@@ -18,8 +33,9 @@ export function useComputed(query: OracleQueryUI | undefined) {
       spender,
     };
     const currencyBalance = findBalance(balances, oracleQueryParams);
+    computed.currencyBalance = currencyBalance;
     if (!currencyBalance) {
-      actions.fetchCurrencyBalance = () => {
+      computed.fetchCurrencyBalance = () => {
         tokenQueries.balance(
           {
             chainId,
@@ -30,8 +46,9 @@ export function useComputed(query: OracleQueryUI | undefined) {
       };
     }
     const currencyAllowance = findAllowance(allowances, oracleQueryParams);
+    computed.currencyAllowance = currencyAllowance;
     if (!currencyAllowance) {
-      actions.fetchCurrencyAllowance = () => {
+      computed.fetchCurrencyAllowance = () => {
         tokenQueries.allowance(
           {
             chainId,
@@ -41,7 +58,7 @@ export function useComputed(query: OracleQueryUI | undefined) {
         );
       };
     }
-    actions.sendCurrencyApprove = () => {
+    computed.sendCurrencyApprove = () => {
       // TODO: figure out best way to do this
       // prepareWriteContract({
       //   address: tokenAddress as `0x${string}`,
@@ -59,8 +76,10 @@ export function useComputed(query: OracleQueryUI | undefined) {
       tokenAddress,
       chainId,
     });
+    computed.token = token;
+
     if (!token) {
-      actions.fetchCurrencyTokenInfo = () => {
+      computed.fetchCurrencyTokenInfo = () => {
         tokenQueries.token({
           chainId,
           tokenAddress,
@@ -69,5 +88,5 @@ export function useComputed(query: OracleQueryUI | undefined) {
     }
   }
 
-  return actions;
+  return computed;
 }
