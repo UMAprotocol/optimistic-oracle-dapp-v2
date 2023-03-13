@@ -152,7 +152,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   // TODO: we need methods to calculate these things
   // need a lookup for project based on price ident or anc data
   const project = "UMA";
-  const title = `Price request - ${oracleType}`;
+  const title = `Price request - ${identifier} - ${oracleType}`;
   const chainName = getChainName(chainId);
   const timeUTC = toTimeUTC(time);
   const timeUNIX = toTimeUnix(time);
@@ -217,7 +217,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   // TODO: we need methods to calculate these things
   // need a lookup for project based on price ident or anc data
   const project = "UMA";
-  const title = `Assertion - ${oracleType}`;
+  const title = `Assertion - ${identifier} - ${oracleType}`;
   const chainName = getChainName(chainId);
   const timeUTC = toTimeUTC(assertionTimestamp);
   const timeUNIX = toTimeUnix(assertionTimestamp);

@@ -434,19 +434,20 @@ export const handlersForAllPages = makeGraphqlHandlers({
     Ethereum: makeMockRequests({
       inputs: [
         {
-          identifier: "TEST_OO_V1",
+          identifier: "TEST_VERIFY",
           state: "Proposed",
           proposedPrice: BigNumber.from(parseEtherSafe("123")),
         },
         {
-          identifier: "TEST_OO_V1",
+          identifier: "TEST_VERIFY",
           state: "Disputed",
           proposedPrice: BigNumber.from(parseEtherSafe("123")),
         },
-        { state: "Requested" },
+        { state: "Requested", identifier: "TEST_PROPOSE" },
         {
           state: "Settled",
           settlementPrice: BigNumber.from(parseEtherSafe("123")),
+          identifier: "TEST_SETTLED",
         },
       ],
     }),
@@ -455,18 +456,19 @@ export const handlersForAllPages = makeGraphqlHandlers({
     Ethereum: makeMockRequests({
       inputs: [
         {
-          identifier: "TEST_OO_V2",
+          identifier: "TEST_VERIFY",
           state: "Proposed",
           proposedPrice: BigNumber.from(parseEtherSafe("456")),
         },
         {
-          identifier: "TEST_OO_V2",
+          identifier: "TEST_VERIFY",
           state: "Disputed",
           proposedPrice: BigNumber.from(parseEtherSafe("456")),
         },
-        { state: "Requested" },
+        { state: "Requested", identifier: "TEST_PROPOSE" },
         {
           state: "Settled",
+          identifier: "TEST_SETTLED",
           settlementPrice: BigNumber.from(parseEtherSafe("123")),
         },
       ],
@@ -479,12 +481,18 @@ export const handlersForAllPages = makeGraphqlHandlers({
         {
           settlementHash: undefined,
           expirationTime: makeUnixTimestamp("future", { days: 1 }),
+          identifier: "TEST_VERIFY",
         },
         {
           settlementHash: undefined,
           expirationTime: makeUnixTimestamp("past", { days: 1 }),
+          identifier: "TEST_VERIFY",
         },
-        { settlementHash: "0x123", settlementResolution: "false" },
+        {
+          settlementHash: "0x123",
+          settlementResolution: "false",
+          identifier: "TEST_SETTLED",
+        },
       ],
     }),
   },
