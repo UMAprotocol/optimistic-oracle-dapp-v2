@@ -392,6 +392,7 @@ export type Handler = GraphQLHandler<GraphQLRequest<GraphQLVariables>>;
 export function makeGraphqlHandlers(args: {
   v1?: Record<string, PriceRequestGraphEntity[]>;
   v2?: Record<string, PriceRequestGraphEntity[]>;
+  skinny?: Record<string, PriceRequestGraphEntity[]>;
   v3?: Record<string, AssertionGraphEntity[]>;
 }) {
   const handlers: Handler[] = [];
@@ -420,6 +421,15 @@ export function makeGraphqlHandlers(args: {
         makeQueryName("Optimistic Oracle V3", chainName),
         (_req, res, ctx) => {
           const data = { assertions: args?.v3?.[chainName] };
+          return res(ctx.data(data));
+        }
+      )
+    );
+    handlers.push(
+      graphql.query(
+        makeQueryName("Skinny Optimistic Oracle", chainName),
+        (_req, res, ctx) => {
+          const data = { optimisticPriceRequests: args?.skinny?.[chainName] };
           return res(ctx.data(data));
         }
       )
@@ -472,6 +482,28 @@ export const handlersForAllPages = makeGraphqlHandlers({
           identifier: "TEST_VERIFY",
           state: "Disputed",
           proposedPrice: BigNumber.from(parseEtherSafe("456")),
+        },
+        { state: "Requested", identifier: "TEST_PROPOSE" },
+        {
+          state: "Settled",
+          identifier: "TEST_SETTLED",
+          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+        },
+      ],
+    }),
+  },
+  skinny: {
+    Ethereum: makeMockRequests({
+      inputs: [
+        {
+          identifier: "TEST_VERIFY",
+          state: "Proposed",
+          proposedPrice: BigNumber.from(parseEtherSafe("789")),
+        },
+        {
+          identifier: "TEST_VERIFY",
+          state: "Disputed",
+          proposedPrice: BigNumber.from(parseEtherSafe("789")),
         },
         { state: "Requested", identifier: "TEST_PROPOSE" },
         {
