@@ -1,14 +1,6 @@
-import { parseEtherSafe } from "@/helpers";
 import VerifyPage from "@/pages";
 import type { Meta } from "@storybook/react";
-import { BigNumber } from "ethers/lib/ethers";
-import {
-  makeGraphqlHandlers,
-  makeMockAssertions,
-  makeMockRequests,
-  makeMockRouterPathname,
-  makeUnixTimestamp,
-} from "../mocks";
+import { handlersForAllPages, makeMockRouterPathname } from "../mocks";
 import { Template } from "./shared";
 import type { PageStory } from "./types";
 
@@ -35,56 +27,6 @@ const VerifyTemplate: PageStory = {
   ...Template,
   parameters: {
     nextjs: makeMockRouterPathname(),
-    msw: {
-      handlers: makeGraphqlHandlers({
-        v1: {
-          Ethereum: makeMockRequests({
-            inputs: [
-              {
-                identifier: "TEST_OO_V1",
-                state: "Proposed",
-                proposedPrice: BigNumber.from(parseEtherSafe("123")),
-              },
-              {
-                identifier: "TEST_OO_V1",
-                state: "Disputed",
-                proposedPrice: BigNumber.from(parseEtherSafe("123")),
-              },
-            ],
-          }),
-        },
-        v2: {
-          Ethereum: makeMockRequests({
-            inputs: [
-              {
-                identifier: "TEST_OO_V2",
-                state: "Proposed",
-                proposedPrice: BigNumber.from(parseEtherSafe("456")),
-              },
-              {
-                identifier: "TEST_OO_V2",
-                state: "Disputed",
-                proposedPrice: BigNumber.from(parseEtherSafe("456")),
-              },
-            ],
-          }),
-        },
-        v3: {
-          Ethereum: makeMockAssertions({
-            inputs: [
-              {
-                settlementHash: undefined,
-                expirationTime: makeUnixTimestamp("future", { days: 1 }),
-              },
-              {
-                settlementHash: undefined,
-                expirationTime: makeUnixTimestamp("past", { days: 1 }),
-              },
-            ],
-          }),
-        },
-      }),
-    },
   },
 };
 
@@ -92,5 +34,10 @@ export const Verify: PageStory = {
   ...VerifyTemplate,
   args: {
     Component: VerifyPage,
+  },
+  parameters: {
+    msw: {
+      handlers: handlersForAllPages,
+    },
   },
 };

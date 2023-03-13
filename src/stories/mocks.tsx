@@ -1,4 +1,4 @@
-import { utf8ToHex } from "@/helpers";
+import { parseEtherSafe, utf8ToHex } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { chainNames } from "@shared/constants";
 import type {
@@ -385,13 +385,13 @@ export const mockFilters = {
   },
 };
 
+export type Handler = GraphQLHandler<GraphQLRequest<GraphQLVariables>>;
+
 export function makeGraphqlHandlers(args: {
   v1?: Record<string, PriceRequestGraphEntity[]>;
   v2?: Record<string, PriceRequestGraphEntity[]>;
   v3?: Record<string, AssertionGraphEntity[]>;
 }) {
-  type Handler = GraphQLHandler<GraphQLRequest<GraphQLVariables>>;
-
   const handlers: Handler[] = [];
 
   chainNames.forEach((chainName) => {
@@ -426,6 +426,123 @@ export function makeGraphqlHandlers(args: {
 
   return handlers;
 }
+
+export const verifyPageHandlers = makeGraphqlHandlers({
+  v1: {
+    Ethereum: makeMockRequests({
+      inputs: [
+        {
+          identifier: "TEST_OO_V1",
+          state: "Proposed",
+          proposedPrice: BigNumber.from(parseEtherSafe("123")),
+        },
+        {
+          identifier: "TEST_OO_V1",
+          state: "Disputed",
+          proposedPrice: BigNumber.from(parseEtherSafe("123")),
+        },
+      ],
+    }),
+  },
+  v2: {
+    Ethereum: makeMockRequests({
+      inputs: [
+        {
+          identifier: "TEST_OO_V2",
+          state: "Proposed",
+          proposedPrice: BigNumber.from(parseEtherSafe("456")),
+        },
+        {
+          identifier: "TEST_OO_V2",
+          state: "Disputed",
+          proposedPrice: BigNumber.from(parseEtherSafe("456")),
+        },
+      ],
+    }),
+  },
+  v3: {
+    Ethereum: makeMockAssertions({
+      inputs: [
+        {
+          settlementHash: undefined,
+          expirationTime: makeUnixTimestamp("future", { days: 1 }),
+        },
+        {
+          settlementHash: undefined,
+          expirationTime: makeUnixTimestamp("past", { days: 1 }),
+        },
+      ],
+    }),
+  },
+});
+
+export const proposePageHandlers = makeGraphqlHandlers({
+  v1: {
+    Ethereum: makeMockRequests({
+      inputs: [{ state: "Requested" }],
+    }),
+  },
+  v2: {
+    Ethereum: makeMockRequests({
+      inputs: [{ state: "Requested" }],
+    }),
+  },
+  v3: {
+    Ethereum: makeMockAssertions({
+      count: 1,
+    }),
+  },
+});
+
+export const settledPageHandlers = makeGraphqlHandlers({
+  v1: {
+    Ethereum: makeMockRequests({
+      inputs: [
+        {
+          state: "Settled",
+          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+        },
+      ],
+    }),
+    Arbitrum: makeMockRequests({
+      inputs: [
+        {
+          state: "Settled",
+          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+        },
+      ],
+    }),
+  },
+  v2: {
+    Ethereum: makeMockRequests({
+      inputs: [
+        {
+          state: "Settled",
+          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+        },
+      ],
+    }),
+    Arbitrum: makeMockRequests({
+      inputs: [
+        {
+          state: "Settled",
+          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+        },
+      ],
+    }),
+  },
+  v3: {
+    Ethereum: makeMockAssertions({
+      inputs: [{ settlementHash: "0x123", settlementResolution: "false" }],
+    }),
+  },
+});
+
+export const handlersForAllPages = [
+  ...verifyPageHandlers,
+  ...proposePageHandlers,
+  ...settledPageHandlers,
+];
 
 export function makeMockRouterPathname(pathname = "") {
   return {

@@ -1,11 +1,6 @@
 import ProposePage from "@/pages/propose";
 import type { Meta } from "@storybook/react";
-import {
-  makeGraphqlHandlers,
-  makeMockAssertions,
-  makeMockRequests,
-  makeMockRouterPathname,
-} from "../mocks";
+import { handlersForAllPages, makeMockRouterPathname } from "../mocks";
 import { Template } from "./shared";
 import type { PageStory } from "./types";
 
@@ -25,23 +20,7 @@ const ProposeTemplate: PageStory = {
   parameters: {
     nextjs: makeMockRouterPathname("/propose"),
     msw: {
-      handlers: makeGraphqlHandlers({
-        v1: {
-          Ethereum: makeMockRequests({
-            inputs: [{ state: "Requested" }],
-          }),
-        },
-        v2: {
-          Ethereum: makeMockRequests({
-            inputs: [{ state: "Requested" }],
-          }),
-        },
-        v3: {
-          Ethereum: makeMockAssertions({
-            count: 1,
-          }),
-        },
-      }),
+      handlers: handlersForAllPages,
     },
   },
 };
