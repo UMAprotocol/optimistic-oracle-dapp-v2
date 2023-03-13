@@ -427,7 +427,7 @@ export function makeGraphqlHandlers(args: {
   return handlers;
 }
 
-export const verifyPageHandlers = makeGraphqlHandlers({
+export const handlersForAllPages = makeGraphqlHandlers({
   v1: {
     Ethereum: makeMockRequests({
       inputs: [
@@ -440,6 +440,11 @@ export const verifyPageHandlers = makeGraphqlHandlers({
           identifier: "TEST_OO_V1",
           state: "Disputed",
           proposedPrice: BigNumber.from(parseEtherSafe("123")),
+        },
+        { state: "Requested" },
+        {
+          state: "Settled",
+          settlementPrice: BigNumber.from(parseEtherSafe("123")),
         },
       ],
     }),
@@ -457,12 +462,18 @@ export const verifyPageHandlers = makeGraphqlHandlers({
           state: "Disputed",
           proposedPrice: BigNumber.from(parseEtherSafe("456")),
         },
+        { state: "Requested" },
+        {
+          state: "Settled",
+          settlementPrice: BigNumber.from(parseEtherSafe("123")),
+        },
       ],
     }),
   },
   v3: {
     Ethereum: makeMockAssertions({
       inputs: [
+        {},
         {
           settlementHash: undefined,
           expirationTime: makeUnixTimestamp("future", { days: 1 }),
@@ -471,78 +482,11 @@ export const verifyPageHandlers = makeGraphqlHandlers({
           settlementHash: undefined,
           expirationTime: makeUnixTimestamp("past", { days: 1 }),
         },
+        { settlementHash: "0x123", settlementResolution: "false" },
       ],
     }),
   },
 });
-
-export const proposePageHandlers = makeGraphqlHandlers({
-  v1: {
-    Ethereum: makeMockRequests({
-      inputs: [{ state: "Requested" }],
-    }),
-  },
-  v2: {
-    Ethereum: makeMockRequests({
-      inputs: [{ state: "Requested" }],
-    }),
-  },
-  v3: {
-    Ethereum: makeMockAssertions({
-      count: 1,
-    }),
-  },
-});
-
-export const settledPageHandlers = makeGraphqlHandlers({
-  v1: {
-    Ethereum: makeMockRequests({
-      inputs: [
-        {
-          state: "Settled",
-          settlementPrice: BigNumber.from(parseEtherSafe("123")),
-        },
-      ],
-    }),
-    Arbitrum: makeMockRequests({
-      inputs: [
-        {
-          state: "Settled",
-          settlementPrice: BigNumber.from(parseEtherSafe("123")),
-        },
-      ],
-    }),
-  },
-  v2: {
-    Ethereum: makeMockRequests({
-      inputs: [
-        {
-          state: "Settled",
-          settlementPrice: BigNumber.from(parseEtherSafe("123")),
-        },
-      ],
-    }),
-    Arbitrum: makeMockRequests({
-      inputs: [
-        {
-          state: "Settled",
-          settlementPrice: BigNumber.from(parseEtherSafe("123")),
-        },
-      ],
-    }),
-  },
-  v3: {
-    Ethereum: makeMockAssertions({
-      inputs: [{ settlementHash: "0x123", settlementResolution: "false" }],
-    }),
-  },
-});
-
-export const handlersForAllPages = [
-  ...verifyPageHandlers,
-  ...proposePageHandlers,
-  ...settledPageHandlers,
-];
 
 export function makeMockRouterPathname(pathname = "") {
   return {
