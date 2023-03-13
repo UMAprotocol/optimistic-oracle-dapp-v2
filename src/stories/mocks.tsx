@@ -145,9 +145,11 @@ export function makeMockAssertions(
     inputForAll?: Partial<Assertion> | undefined;
   } = {}
 ) {
-  const { count = 1, inputs = [], inputForAll } = args;
+  const { count, inputs = [], inputForAll } = args;
 
-  const requests = Array.from({ length: count }, () => defaultMockAssertion());
+  const length = count || inputs.length;
+
+  const requests = Array.from({ length }, () => defaultMockAssertion());
 
   if (inputForAll) {
     requests.forEach((request) => Object.assign(request, inputForAll));
