@@ -37,7 +37,6 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const [inputValue, setInputValue] = useState("");
-  const computed = useComputed(content);
 
   const {
     chainId,
@@ -58,21 +57,28 @@ export function Panel() {
   } = content ?? {};
 
   const [error, setError] = useState("");
-  const currency = "USDC";
+  const {
+    fetchCurrencyBalance,
+    fetchCurrencyAllowance,
+    token,
+    fetchCurrencyTokenInfo,
+  } = useComputed(content);
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
   const action = () => alert("placeholder action");
   const hasActionButton = action !== undefined && actionType !== undefined;
   const hasInput = page === "propose";
+  const hasBond = formattedBond !== undefined;
+  const hasReward = formattedReward !== undefined;
   const actionsTitle = getActionsTitle();
   const isError = error !== "";
 
   useEffect(() => {
-    computed.fetchCurrencyTokenInfo && computed.fetchCurrencyTokenInfo();
-    computed.fetchCurrencyBalance && computed.fetchCurrencyBalance();
-    computed.fetchCurrencyAllowance && computed.fetchCurrencyAllowance();
-  }, [computed]);
+    fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
+    fetchCurrencyBalance && fetchCurrencyBalance();
+    fetchCurrencyAllowance && fetchCurrencyAllowance();
+  }, [fetchCurrencyTokenInfo, fetchCurrencyBalance, fetchCurrencyAllowance]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
@@ -129,24 +135,28 @@ export function Panel() {
         )}
         {showActionsDetails && (
           <ActionsDetailsWrapper>
-            <ActionWrapper>
-              <ActionText>
-                Bond
-                <InfoIcon />
-              </ActionText>
-              <ActionText>
-                <Currency amount={formattedBond} currency={currency} />
-              </ActionText>
-            </ActionWrapper>
-            <ActionWrapper>
-              <ActionText>
-                Reward
-                <InfoIcon />
-              </ActionText>
-              <ActionText>
-                <Currency amount={formattedReward} currency={currency} />
-              </ActionText>
-            </ActionWrapper>
+            {hasBond && (
+              <ActionWrapper>
+                <ActionText>
+                  Bond
+                  <InfoIcon />
+                </ActionText>
+                <ActionText>
+                  <Currency formattedAmount={formattedBond} token={token} />
+                </ActionText>
+              </ActionWrapper>
+            )}
+            {hasReward && (
+              <ActionWrapper>
+                <ActionText>
+                  Reward
+                  <InfoIcon />
+                </ActionText>
+                <ActionText>
+                  <Currency formattedAmount={formattedReward} token={token} />
+                </ActionText>
+              </ActionWrapper>
+            )}
             <ActionWrapper>
               <ActionText>
                 Challenge period ends in
