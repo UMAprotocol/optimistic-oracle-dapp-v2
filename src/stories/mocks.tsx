@@ -463,7 +463,7 @@ export const handlersForAllPages = makeGraphqlHandlers({
         },
         {
           state: "Requested",
-          identifier: "TEST_PROPOSE_bond",
+          identifier: "TEST_PROPOSE",
           bond: makeEtherValueString(1230000),
         },
         {
@@ -487,7 +487,11 @@ export const handlersForAllPages = makeGraphqlHandlers({
           state: "Disputed",
           proposedPrice: makeEtherValueString(456),
         },
-        { state: "Requested", identifier: "TEST_PROPOSE" },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          bond: makeEtherValueString(123),
+        },
         {
           state: "Settled",
           identifier: "TEST_SETTLED",
