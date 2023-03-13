@@ -2,13 +2,21 @@ import type { parseAssertionGraphEntity } from "@shared/utils";
 import type { BigNumber } from "ethers";
 import type { ChainId, OracleType, RequestState } from "./oracle";
 
-export type PriceRequestQuery = OOV1GraphQuery | OOV2GraphQuery;
+export type PriceRequestsQuery = OOV1GraphQuery | OOV2GraphQuery;
 
-export type AssertionQuery = OOV3GraphQuery;
+export type AssertionsQuery = OOV3GraphQuery;
 
 export type PriceRequestGraphEntity = OOV1GraphEntity | OOV2GraphEntity;
 
 export type AssertionGraphEntity = OOV3GraphEntity;
+
+export type Request = ParsedOOV1GraphEntity | ParsedOOV2GraphEntity;
+
+export type Assertion = ParsedOOV3GraphEntity;
+
+export type Requests = Request[];
+
+export type Assertions = Assertion[];
 
 export type OOV1GraphQuery = {
   optimisticPriceRequests: OOV1GraphEntity[];
@@ -390,8 +398,10 @@ export type ParsedOOV1GraphEntity = {
   proposedPrice: BigNumber | undefined;
   proposalExpirationTimestamp: string | undefined;
   disputer: string | undefined;
+  settlementRecipient: string | undefined;
   settlementPrice: BigNumber | undefined;
   settlementPayout: BigNumber | undefined;
+  settlementHash: string | undefined;
   state: RequestState;
   requestTimestamp: string | undefined;
   requestBlockNumber: BigNumber | undefined;
@@ -419,11 +429,3 @@ export type ParsedOOV2GraphEntity = ParsedOOV1GraphEntity & {
 export type ParsedOOV3GraphEntity = ReturnType<
   typeof parseAssertionGraphEntity
 >;
-
-export type Request = ParsedOOV1GraphEntity | ParsedOOV2GraphEntity;
-
-export type Assertion = ParsedOOV3GraphEntity;
-
-export type Requests = Request[];
-
-export type Assertions = Assertion[];

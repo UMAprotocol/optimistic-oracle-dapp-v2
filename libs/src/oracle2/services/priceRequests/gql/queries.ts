@@ -1,9 +1,9 @@
 import { chainsById } from "@shared/constants";
-import type { ChainId, OracleType, PriceRequestQuery } from "@shared/types";
+import type { ChainId, OracleType, PriceRequestsQuery } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import request, { gql } from "graphql-request";
 
-export async function getPriceRequests<Result extends PriceRequestQuery>(
+export async function getPriceRequests<Result extends PriceRequestsQuery>(
   url: string,
   chainId: ChainId,
   oracleType: OracleType

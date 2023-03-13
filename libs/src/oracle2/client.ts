@@ -1,4 +1,4 @@
-import type { ServiceFactories, Handlers } from "./types";
+import type { Handlers, ServiceFactories } from "./types";
 export function Client(factories: ServiceFactories, handlers: Handlers) {
   const services = factories.map((factory) => factory(handlers));
   async function tick() {

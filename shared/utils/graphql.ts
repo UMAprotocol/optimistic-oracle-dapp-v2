@@ -4,6 +4,8 @@ import type {
   ChainName,
   OOV2GraphEntity,
   OracleType,
+  ParsedOOV1GraphEntity,
+  ParsedOOV2GraphEntity,
   PriceRequestGraphEntity,
   RequestState,
 } from "@shared/types";
@@ -44,7 +46,7 @@ export function parsePriceRequestGraphEntity(
   oracleAddress: string,
   oracleType: OracleType
 ) {
-  const withOOV1Keys = {
+  const parsed: ParsedOOV1GraphEntity | ParsedOOV2GraphEntity = {
     chainId,
     oracleAddress,
     oracleType,
@@ -117,23 +119,20 @@ export function parsePriceRequestGraphEntity(
     ),
   };
 
-  if (oracleType !== "Optimistic Oracle V2") {
-    return withOOV1Keys;
+  if (isOOV2GraphEntity(priceRequest)) {
+    const parsedAsOOV2 = parsed as ParsedOOV2GraphEntity;
+    parsedAsOOV2.customLiveness = handleGraphqlNullableStringOrBytes(
+      priceRequest.customLiveness
+    );
+    parsedAsOOV2.bond = handleGraphqlNullableBigInt(priceRequest.bond);
+    parsedAsOOV2.eventBased = handleGraphqlNullableBoolean(
+      priceRequest.eventBased
+    );
+
+    return parsedAsOOV2;
   }
 
-  const ooV2PriceRequest = priceRequest as OOV2GraphEntity;
-
-  // nullable values
-  // only present in v2
-  return {
-    ...ooV2PriceRequest,
-    ...withOOV1Keys,
-    customLiveness: handleGraphqlNullableStringOrBytes(
-      ooV2PriceRequest.customLiveness
-    ),
-    bond: handleGraphqlNullableBigInt(ooV2PriceRequest.bond),
-    eventBased: handleGraphqlNullableBoolean(ooV2PriceRequest.eventBased),
-  };
+  return parsed;
 }
 
 export function parseAssertionGraphEntity(
@@ -206,4 +205,12 @@ export function parseAssertionGraphEntity(
     settlementHash: handleGraphqlNullableStringOrBytes(settlementHash),
     settlementLogIndex: handleGraphqlNullableBigInt(settlementLogIndex),
   };
+}
+
+function isOOV2GraphEntity(
+  request: PriceRequestGraphEntity
+): request is OOV2GraphEntity {
+  return (
+    "customLiveness" in request || "bond" in request || "eventBased" in request
+  );
 }
