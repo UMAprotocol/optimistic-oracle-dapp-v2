@@ -1,7 +1,8 @@
 import { Button, Panel } from "@/components";
 import type { PanelContextState } from "@/contexts";
 import { PanelContext } from "@/contexts";
-import type { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI } from "@/types";
+import type { PageName } from "@shared/types";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { makeMockOracleQueryUI } from "./mocks";
@@ -16,7 +17,7 @@ type Story = StoryObj<PanelContextState>;
 
 interface Props {
   Component: typeof Panel;
-  page: Page | undefined;
+  page: PageName | undefined;
   content: OracleQueryUI | undefined;
 }
 function Wrapper({ Component, page, content }: Props) {

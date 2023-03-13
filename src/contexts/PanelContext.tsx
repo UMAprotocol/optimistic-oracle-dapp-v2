@@ -1,12 +1,13 @@
-import type { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI } from "@/types";
+import type { PageName } from "@shared/types";
 import type { ReactNode } from "react";
 import { createContext, useState } from "react";
 
 export interface PanelContextState {
   panelOpen: boolean;
-  page: Page | undefined;
+  page: PageName | undefined;
   content: OracleQueryUI | undefined;
-  openPanel: (content: OracleQueryUI, page: Page) => void;
+  openPanel: (content: OracleQueryUI, page: PageName) => void;
   closePanel: () => void;
 }
 
@@ -24,10 +25,10 @@ export const PanelContext = createContext<PanelContextState>(
 
 export function PanelProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<OracleQueryUI | undefined>();
-  const [page, setPage] = useState<Page | undefined>();
+  const [page, setPage] = useState<PageName | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
 
-  function openPanel(content: OracleQueryUI, page: Page) {
+  function openPanel(content: OracleQueryUI, page: PageName) {
     setPage(page);
     setContent(content);
     setPanelOpen(true);

@@ -1,14 +1,14 @@
-import type {
-  chainNames,
-  chainsById,
-  currencies,
-  expiryTypes,
-  oracleTypes,
-  projects,
-} from "@/constants";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import type {
+  ChainId,
+  ChainName,
+  ExpiryType,
+  OracleType,
+  Project,
+} from "@shared/types";
 import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
+
 export type ActionType = "dispute" | "propose" | "settle" | undefined;
 
 /**
@@ -167,31 +167,8 @@ export type SettledQuery = {
 };
 
 export type OracleQuery = SettledQuery | ProposeQuery | VerifyQuery;
+
 export type OracleQueries = OracleQuery[];
-
-export type OracleTypes = typeof oracleTypes;
-
-export type OracleType = OracleTypes[number];
-
-export type ChainsById = typeof chainsById;
-
-export type ChainId = keyof ChainsById;
-
-export type ChainNames = typeof chainNames;
-
-export type ChainName = ChainNames[number];
-
-export type ExpiryTypes = typeof expiryTypes;
-
-export type ExpiryType = ExpiryTypes[number];
-
-export type Projects = typeof projects;
-
-export type Project = Projects[number];
-
-export type Currencies = typeof currencies;
-
-export type Currency = Currencies[number];
 
 export type MoreInformationItem = {
   title: string;
@@ -234,5 +211,3 @@ export type CheckedChangePayload = {
 };
 
 export type OnCheckedChange = (payload: CheckedChangePayload) => void;
-
-export type PageName = "verify" | "propose" | "settled";

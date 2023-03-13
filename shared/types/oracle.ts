@@ -30,3 +30,5 @@ export type ExpiryType = ExpiryTypes[number];
 export type Projects = typeof projects;
 
 export type Project = Projects[number];
+
+export type PageName = "verify" | "propose" | "settled";

@@ -1,13 +1,10 @@
-import { chainsById, config } from "@/constants";
-import type {
-  ActionType,
-  ChainId,
-  ChainName,
-  MoreInformationItem,
-  OracleQueryUI,
-} from "@/types";
+import { config } from "@/constants";
+import type { ActionType, MoreInformationItem, OracleQueryUI } from "@/types";
+import { chainsById } from "@shared/constants";
 import type {
   Assertion,
+  ChainId,
+  ChainName,
   ParsedOOV2GraphEntity,
   Request,
   RequestState,

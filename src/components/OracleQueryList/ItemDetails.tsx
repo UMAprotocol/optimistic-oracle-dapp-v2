@@ -1,4 +1,5 @@
-import type { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI } from "@/types";
+import type { PageName } from "@shared/types";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
 import {
@@ -14,7 +15,7 @@ export function ItemDetails({
   formattedBond,
   formattedReward,
   valueText,
-}: OracleQueryUI & { page: Page }) {
+}: OracleQueryUI & { page: PageName }) {
   const currency = "USDC";
   const verifyDetails = (
     <ItemDetailsWrapper>
