@@ -3,6 +3,7 @@ import type { Handlers, Service, ServiceFactory } from "../../types";
 
 import { gql as gqlV3 } from "../assertions";
 import { gql as gqlV1 } from "../priceRequests";
+import { gql as gqlSkinny } from "../oracleSkinny";
 
 export type GqlConfig = {
   source: "gql";
@@ -23,6 +24,12 @@ export const Factory =
       // note that v2 queries are essentially the same shape as v1, so we reuse the service
       if (config.source === "gql" && config.type === "Optimistic Oracle V2") {
         return gqlV1.Factory(config)(handlers);
+      }
+      if (
+        config.source === "gql" &&
+        config.type === "Skinny Optimistic Oracle"
+      ) {
+        return gqlSkinny.Factory(config)(handlers);
       }
       if (config.source === "gql" && config.type === "Optimistic Oracle V3") {
         return gqlV3.Factory(config)(handlers);
