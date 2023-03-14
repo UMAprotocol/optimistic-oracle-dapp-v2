@@ -21,9 +21,9 @@ export type RequiredParams = {
 export type Config = ChainConfig[];
 export const Factory = (config: Config): [Queries, ServiceFactory] => {
   const events = new Events();
-  const queries = Queries(config, (event: QueryEvent) => {
-    events.emit("event", event);
-  });
+  const queries = Queries(config, (event: QueryEvent) =>
+    events.emit("event", event)
+  );
   function ServiceFactory(handlers: Handlers): Service {
     events.on("event", (event: QueryEvent) => {
       if (event.type === "balance") {
