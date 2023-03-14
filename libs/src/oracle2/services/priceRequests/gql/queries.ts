@@ -3,7 +3,7 @@ import type { ChainId, OracleType, PriceRequestsQuery } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import request, { gql } from "graphql-request";
 
-export async function getPriceRequests<Result extends PriceRequestsQuery>(
+export async function getPriceRequests<Query extends PriceRequestsQuery>(
   url: string,
   chainId: ChainId,
   oracleType: OracleType
@@ -58,6 +58,6 @@ export async function getPriceRequests<Result extends PriceRequestsQuery>(
       }
     }
   `;
-  const result = await request<Result>(url, query);
+  const result = await request<Query>(url, query);
   return result.optimisticPriceRequests;
 }
