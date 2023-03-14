@@ -7,6 +7,11 @@ interface Props {
   token: Token | null;
   formattedAmount: string | null | undefined;
 }
+/**
+ * Displays a currency icon and amount.
+ * If the currency is a known currency, the icon will be displayed.
+ * Otherwise, the currency symbol will be displayed.
+ */
 export function Currency({ token, formattedAmount }: Props) {
   const currency = token?.symbol;
   const currencyIcon = getCurrencyIcon(currency);
