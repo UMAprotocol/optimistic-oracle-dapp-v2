@@ -14,6 +14,11 @@ import { BigNumber } from "ethers";
 export function handleGraphqlNullableStringOrBytes(
   stringOrBytes: string | null
 ) {
+  if (!(typeof stringOrBytes === "string" || Object.is(stringOrBytes, null))) {
+    throw new Error(
+      `Expected string or null, got ${typeof stringOrBytes} instead`
+    );
+  }
   if (stringOrBytes === null) {
     return undefined;
   }
@@ -21,6 +26,9 @@ export function handleGraphqlNullableStringOrBytes(
 }
 
 export function handleGraphqlNullableBigInt(bigInt: string | null) {
+  if (!(typeof bigInt === "string" || Object.is(bigInt, null))) {
+    throw new Error(`Expected string or null, got ${typeof bigInt} instead`);
+  }
   if (bigInt === null) {
     return undefined;
   }
@@ -28,6 +36,9 @@ export function handleGraphqlNullableBigInt(bigInt: string | null) {
 }
 
 export function handleGraphqlNullableBoolean(boolean: boolean | null) {
+  if (!(typeof boolean === "boolean" || Object.is(boolean, null))) {
+    throw new Error(`Expected boolean or null, got ${typeof boolean} instead`);
+  }
   if (boolean === null) {
     return undefined;
   }
