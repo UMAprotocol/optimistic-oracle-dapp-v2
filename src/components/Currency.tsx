@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { LoadingSkeleton } from "./LoadingSkeleton";
 
 interface Props {
-  token: Token | undefined;
-  formattedAmount: string | undefined;
+  token: Token | null;
+  formattedAmount: string | null;
 }
 export function Currency({ token, formattedAmount }: Props) {
   const currency = token?.symbol;

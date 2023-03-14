@@ -7,11 +7,11 @@ import type { BigNumber } from "ethers";
 import { useAccount } from "wagmi";
 
 type Computed = {
-  currencyBalance: BigNumber | undefined;
+  currencyBalance: BigNumber | null;
   fetchCurrencyBalance?: () => void;
-  currencyAllowance: BigNumber | undefined;
+  currencyAllowance: BigNumber | null;
   fetchCurrencyAllowance?: () => void;
-  token: Token | undefined;
+  token: Token | null;
   fetchCurrencyTokenInfo?: () => void;
   sendCurrencyApprove?: () => void;
 };
@@ -20,9 +20,9 @@ export function useComputed(query: OracleQueryUI | undefined) {
   const { tokenAddress, chainId, oracleAddress: spender } = query || {};
   const { address: account } = useAccount();
   const computed: Computed = {
-    currencyBalance: undefined,
-    currencyAllowance: undefined,
-    token: undefined,
+    currencyBalance: null,
+    currencyAllowance: null,
+    token: null,
   };
 
   if (query && account && tokenAddress && chainId && spender) {

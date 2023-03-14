@@ -52,7 +52,7 @@ export function toTimeMilliseconds(timestamp: number | string) {
   return toTimeUnix(timestamp) * 1000;
 }
 export function toTimeFormatted(timestamp: number | string) {
-  return format(toTimeMilliseconds(timestamp), "pP");
+  return format(toTimeMilliseconds(timestamp), "Pp");
 }
 
 export function getChainName(chainId: number): ChainName {
@@ -79,6 +79,8 @@ function getRequestActionType(state: RequestState): ActionType {
   }
 
   // TODO: figure out what to do with `state === Resolved`
+
+  return null;
 }
 
 function getAssertionActionType({
@@ -86,7 +88,7 @@ function getAssertionActionType({
   settlementHash,
 }: Assertion): ActionType {
   // goes to `settled` page
-  if (settlementHash) return;
+  if (settlementHash) return null;
   // goes to `verify` page
   if (toDate(expirationTime) > new Date()) {
     return "settle";
@@ -95,7 +97,7 @@ function getAssertionActionType({
   return "dispute";
 }
 
-function getLivenessEnds(customLivenessOrExpirationTime?: string | undefined) {
+function getLivenessEnds(customLivenessOrExpirationTime?: string | null) {
   const livenessEndsSeconds =
     customLivenessOrExpirationTime ??
     Date.now() / 1000 + Number(config.defaultLiveness);
@@ -103,21 +105,21 @@ function getLivenessEnds(customLivenessOrExpirationTime?: string | undefined) {
 }
 
 function getPriceRequestValueText(
-  proposedPrice: BigNumber | undefined,
-  settlementPrice: BigNumber | undefined
+  proposedPrice: BigNumber | null,
+  settlementPrice: BigNumber | null
 ) {
   const price = proposedPrice ?? settlementPrice;
-  if (price === undefined) return;
+  if (price === null) return null;
   return formatNumberForDisplay(price, { isFormatEther: true });
 }
 
-function getFormattedBond(bond: BigNumber | undefined) {
-  if (bond === undefined) return;
+function getFormattedBond(bond: BigNumber | null) {
+  if (bond === null) return null;
   return formatNumberForDisplay(bond, { isFormatEther: true });
 }
 
-function getFormattedReward(reward: BigNumber | undefined) {
-  if (reward === undefined) return;
+function getFormattedReward(reward: BigNumber | null) {
+  if (reward === null) return null;
   return formatNumberForDisplay(reward, { isFormatEther: true });
 }
 
@@ -143,9 +145,9 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     reward,
   } = request;
   const {
-    bond = undefined,
-    customLiveness = undefined,
-    eventBased = undefined,
+    bond = null,
+    customLiveness = null,
+    eventBased = null,
   } = isOOV2PriceRequest(request) ? request : {};
   const livenessEndsMilliseconds = getLivenessEnds(customLiveness);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
@@ -226,12 +228,12 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const valueText = settlementResolution;
   const queryTextHex = claim;
   const queryText = safeDecodeHexString(claim);
-  const expiryType = undefined;
+  const expiryType = null;
   const tokenAddress = currency;
   const formattedBond = formatNumberForDisplay(bond, { isFormatEther: true });
   // no reward is present on assertions
-  const reward = undefined;
-  const formattedReward = undefined;
+  const reward = null;
+  const formattedReward = null;
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getAssertionActionType(assertion);
 

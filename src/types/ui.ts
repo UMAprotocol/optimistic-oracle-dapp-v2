@@ -9,7 +9,7 @@ import type {
 import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
 
-export type ActionType = "dispute" | "propose" | "settle" | undefined;
+export type ActionType = "dispute" | "propose" | "settle" | null;
 
 /**
  * Defines the shape of data required by the UI to render a price request or a an assertion.
@@ -29,25 +29,25 @@ export type OracleQueryUI = {
   // for assertions it is the `claim` field
   queryTextHex: string;
   queryText: string;
-  // for price requests the value text is undefined until a price is proposed. Then it is the proposed price. After a price is settled it is the settled price.
-  // for assertions the value text is undefined until settlement, after which it is the `settlementResolution` field
-  valueText: string | undefined;
+  // for price requests the value text is null until a price is proposed. Then it is the proposed price. After a price is settled it is the settled price.
+  // for assertions the value text is null until settlement, after which it is the `settlementResolution` field
+  valueText: string | null;
   timeUTC: string;
   timeUNIX: number;
   timeMilliseconds: number;
   timeFormatted: string;
   livenessEndsMilliseconds: number;
   formattedLivenessEndsIn: string;
-  actionType: ActionType | undefined;
+  actionType: ActionType | null;
   moreInformation: MoreInformationItem[];
-  bond: BigNumber | undefined;
-  reward: BigNumber | undefined;
+  bond: BigNumber | null;
+  reward: BigNumber | null;
   // oo
-  expiryType: ExpiryType | undefined;
+  expiryType: ExpiryType | null;
   oracleAddress: string;
   tokenAddress: string;
-  formattedBond: string | undefined;
-  formattedReward: string | undefined;
+  formattedBond: string | null;
+  formattedReward: string | null;
 };
 
 export type BigNumberish = string | number | BigNumber;

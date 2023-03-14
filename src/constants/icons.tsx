@@ -15,12 +15,12 @@ export const currencyIcons: Record<string, JSX.Element> = {
   ETH: <ETH />,
 };
 
-export function getProjectIcon(project: string | undefined) {
+export function getProjectIcon(project: string | null | undefined) {
   if (!project || !(project in projectIcons)) return <UMA />;
   return projectIcons[project];
 }
 
-export function getCurrencyIcon(currency: string | undefined) {
+export function getCurrencyIcon(currency: string | null | undefined) {
   if (!currency || !(currency in currencyIcons)) return;
   return currencyIcons[currency];
 }

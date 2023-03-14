@@ -1,6 +1,6 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { commify, formatEther, parseEther } from "@/helpers";
-import type { Allowances, Balances, Token, Tokens } from "@shared/types";
+import type { Allowances, Balances, Tokens } from "@shared/types";
 import { BigNumber } from "ethers";
 import { capitalize, words } from "lodash";
 import { css } from "styled-components";
@@ -168,16 +168,18 @@ export function makeFilterTitle(filterName: string) {
 export function findToken(
   tokens: Tokens,
   search: { tokenAddress: string; chainId: number }
-): Token | undefined {
-  return tokens.find(({ chainId, tokenAddress }) => {
-    return search.chainId === chainId && search.tokenAddress === tokenAddress;
-  });
+) {
+  return (
+    tokens.find(({ chainId, tokenAddress }) => {
+      return search.chainId === chainId && search.tokenAddress === tokenAddress;
+    }) ?? null
+  );
 }
 
 export function findBalance(
   balances: Balances,
   search: { account: string; tokenAddress: string; chainId: number }
-): BigNumber | undefined {
+) {
   const found = balances.find(({ account, chainId, tokenAddress }) => {
     return (
       search.chainId === chainId &&
@@ -185,7 +187,7 @@ export function findBalance(
       search.tokenAddress === tokenAddress
     );
   });
-  return found ? BigNumber.from(found.amount) : undefined;
+  return found ? BigNumber.from(found.amount) : null;
 }
 
 export function findAllowance(
@@ -196,7 +198,7 @@ export function findAllowance(
     chainId: number;
     spender: string;
   }
-): BigNumber | undefined {
+) {
   const found = allowances.find(
     ({ account, chainId, tokenAddress, spender }) => {
       return (
@@ -207,5 +209,5 @@ export function findAllowance(
       );
     }
   );
-  return found ? BigNumber.from(found.amount) : undefined;
+  return found ? BigNumber.from(found.amount) : null;
 }

@@ -527,12 +527,12 @@ export const handlersForAllPages = makeGraphqlHandlers({
       inputs: [
         {},
         {
-          settlementHash: undefined,
+          settlementHash: null,
           expirationTime: makeUnixTimestamp("future", { days: 1 }),
           identifier: "TEST_VERIFY",
         },
         {
-          settlementHash: undefined,
+          settlementHash: null,
           expirationTime: makeUnixTimestamp("past", { days: 1 }),
           identifier: "TEST_VERIFY",
         },
