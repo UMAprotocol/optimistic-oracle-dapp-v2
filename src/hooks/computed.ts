@@ -15,6 +15,9 @@ type Computed = {
   fetchCurrencyTokenInfo?: () => void;
   sendCurrencyApprove?: () => void;
 };
+/**
+ * Takes a query and returns computed values based on the query.
+ */
 export function useComputed(query: OracleQueryUI | undefined) {
   const { allowances, balances, tokens } = useOracleDataContext();
   const { tokenAddress, chainId, oracleAddress: spender } = query || {};
