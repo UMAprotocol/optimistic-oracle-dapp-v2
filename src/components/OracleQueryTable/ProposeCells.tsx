@@ -13,7 +13,7 @@ export function ProposeCells({ query }: { query: OracleQueryUI }) {
     !!fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
   }, [fetchCurrencyTokenInfo]);
 
-  const hasBond = formattedBond !== undefined;
+  const hasBond = formattedBond !== null;
 
   return (
     <>

@@ -94,22 +94,6 @@ export function bigNumberFromFloatString(value: string | undefined) {
 }
 
 /**
- * Returns a display value for a given price or assertion.
- * React does not show boolean values, so we must convert assertions to strings.
- * Otherwise we return the price as a number.
- */
-export function getValueText({
-  price,
-  assertion,
-}: {
-  price?: string;
-  assertion?: boolean;
-}) {
-  if (assertion !== undefined) return assertion ? "True" : "False";
-  return price;
-}
-
-/**
  * Determines if a route is active.
  * @param pathname - the current pathname
  * @param href - the route to check

@@ -67,10 +67,10 @@ export function Panel() {
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
   const action = () => alert("placeholder action");
-  const hasActionButton = action !== undefined && actionType !== undefined;
+  const hasActionButton = action !== null && actionType !== null;
   const hasInput = page === "propose";
-  const hasBond = formattedBond !== undefined;
-  const hasReward = formattedReward !== undefined;
+  const hasBond = formattedBond !== null;
+  const hasReward = formattedReward !== null;
   const actionsTitle = getActionsTitle();
   const isError = error !== "";
 

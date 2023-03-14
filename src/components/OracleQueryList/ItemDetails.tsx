@@ -30,8 +30,8 @@ export function ItemDetails({
     !!fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
   }, [fetchCurrencyTokenInfo]);
 
-  const hasBond = formattedBond !== undefined;
-  const hasReward = formattedReward !== undefined;
+  const hasBond = formattedBond !== null;
+  const hasReward = formattedReward !== null;
 
   const verifyDetails = (
     <ItemDetailsWrapper>
@@ -39,7 +39,7 @@ export function ItemDetails({
         <ItemDetailsText>Proposal/Assertion</ItemDetailsText>
         <ItemDetailsText>{valueText}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
-      {livenessEndsMilliseconds !== undefined && (
+      {livenessEndsMilliseconds !== null && (
         <ItemDetailsInnerWrapper>
           <ItemDetailsText>Challenge Period Left</ItemDetailsText>
           <LivenessProgressBar

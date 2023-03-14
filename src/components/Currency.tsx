@@ -5,7 +5,7 @@ import { LoadingSkeleton } from "./LoadingSkeleton";
 
 interface Props {
   token: Token | null;
-  formattedAmount: string | null;
+  formattedAmount: string | null | undefined;
 }
 export function Currency({ token, formattedAmount }: Props) {
   const currency = token?.symbol;
