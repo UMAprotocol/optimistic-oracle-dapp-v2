@@ -69,6 +69,12 @@ export function makeQueryName(oracleType: OracleType, chainName: ChainName) {
   return `${camelCaseOracleType}${camelCaseChainName}`;
 }
 
+/**
+ * Takes a price request entity from the graph and parses it into a more usable format
+ * Warns if there are fields that have types we do not expect, since the graph schema is not
+ * linked to this codebase
+ * Handles OOV1, OOV2, and Skinny OO entities
+ */
 export function parsePriceRequestGraphEntity(
   priceRequest: PriceRequestGraphEntity,
   chainId: ChainId,
@@ -182,16 +188,17 @@ export function parsePriceRequestGraphEntity(
   return parsed;
 }
 
+/**
+ * Takes a price request entity from the graph and parses it into a more usable format
+ * Warns if there are fields that have types we do not expect, since the graph schema is not
+ * linked to this codebase
+ * Handles OOV3 entities
+ */
 export function parseAssertionGraphEntity(
   assertion: AssertionGraphEntity,
   chainId: ChainId,
   oracleAddress: string
 ) {
-  Object.entries(assertion).forEach(([key, value]) => {
-    if (value === undefined) {
-      console.log(`requestToOracleQuery: ${key} is undefined`);
-    }
-  });
   const {
     id,
     assertionId,
