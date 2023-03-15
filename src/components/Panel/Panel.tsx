@@ -21,7 +21,7 @@ import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import styled from "styled-components";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
@@ -57,12 +57,7 @@ export function Panel() {
   } = content ?? {};
 
   const [error, setError] = useState("");
-  const {
-    fetchCurrencyBalance,
-    fetchCurrencyAllowance,
-    token,
-    fetchCurrencyTokenInfo,
-  } = useComputed(content);
+  const { token } = useComputed(content);
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
@@ -73,12 +68,6 @@ export function Panel() {
   const hasReward = formattedReward !== null;
   const actionsTitle = getActionsTitle();
   const isError = error !== "";
-
-  useEffect(() => {
-    fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
-    fetchCurrencyBalance && fetchCurrencyBalance();
-    fetchCurrencyAllowance && fetchCurrencyAllowance();
-  }, [fetchCurrencyTokenInfo, fetchCurrencyBalance, fetchCurrencyAllowance]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";

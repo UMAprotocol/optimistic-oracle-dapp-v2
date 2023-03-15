@@ -4,92 +4,94 @@ import { useOracleDataContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import type { Token } from "@shared/types";
 import type { BigNumber } from "ethers";
+import { cloneDeep } from "lodash";
+import { useEffect, useReducer } from "react";
 import { useAccount } from "wagmi";
 
-type Computed = {
-  currencyBalance: BigNumber | null;
-  fetchCurrencyBalance?: () => void;
-  currencyAllowance: BigNumber | null;
-  fetchCurrencyAllowance?: () => void;
+type State = {
+  balance: BigNumber | null;
+  allowance: BigNumber | null;
   token: Token | null;
-  fetchCurrencyTokenInfo?: () => void;
-  sendCurrencyApprove?: () => void;
+};
+
+type Action = {
+  account: `0x${string}` | undefined;
+  query: OracleQueryUI | undefined;
 };
 /**
  * Takes a query and returns computed values based on the query.
  */
 export function useComputed(query: OracleQueryUI | undefined) {
-  const { allowances, balances, tokens } = useOracleDataContext();
-  const { tokenAddress, chainId, oracleAddress: spender } = query || {};
-  const { address: account } = useAccount();
-  const computed: Computed = {
-    currencyBalance: null,
-    currencyAllowance: null,
+  const initialState: State = {
     token: null,
+    balance: null,
+    allowance: null,
   };
 
-  if (query && account && tokenAddress && chainId && spender) {
-    const oracleQueryParams = {
+  const { allowances, balances, tokens } = useOracleDataContext();
+  const { address: account } = useAccount();
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    dispatch({
+      account,
+      query,
+    });
+  }, [account, query, allowances, balances, tokens]);
+
+  function reducer(state: State, { account, query }: Action) {
+    if (!account || !query) return cloneDeep(initialState);
+
+    const newState = cloneDeep(state);
+
+    const { tokenAddress, chainId, oracleAddress: spender } = query;
+
+    const searchParams = {
       account,
       tokenAddress,
       chainId,
       spender,
     };
-    const currencyBalance = findBalance(balances, oracleQueryParams);
-    computed.currencyBalance = currencyBalance;
-    if (!currencyBalance) {
-      computed.fetchCurrencyBalance = () => {
-        tokenQueries.balance(
-          {
-            chainId,
-            tokenAddress,
-          },
-          { account }
-        );
-      };
+
+    const balance = findBalance(balances, searchParams);
+    if (!balance) {
+      tokenQueries.balance(
+        {
+          chainId,
+          tokenAddress,
+        },
+        { account }
+      );
     }
-    const currencyAllowance = findAllowance(allowances, oracleQueryParams);
-    computed.currencyAllowance = currencyAllowance;
-    if (!currencyAllowance) {
-      computed.fetchCurrencyAllowance = () => {
-        tokenQueries.allowance(
-          {
-            chainId,
-            tokenAddress,
-          },
-          { account, spender }
-        );
-      };
+
+    const allowance = findAllowance(allowances, searchParams);
+    if (!allowance) {
+      tokenQueries.allowance(
+        {
+          chainId,
+          tokenAddress,
+        },
+        { account, spender }
+      );
     }
-    computed.sendCurrencyApprove = () => {
-      // TODO: figure out best way to do this
-      // prepareWriteContract({
-      //   address: tokenAddress as `0x${string}`,
-      //   abi: erc20Abi,
-      //   functionName: "approve",
-      //   args: [spender, MaxInt256.toString()],
-      // })
-      // .then(writeContract)
-      // .then(setWatchTransaction)
-      // .catch(err=>console.error('unable to approve',err));
-    };
-  }
-  if (query && tokenAddress && chainId) {
+
     const token = findToken(tokens, {
       tokenAddress,
       chainId,
     });
-    computed.token = token;
-
     if (!token) {
-      computed.fetchCurrencyTokenInfo = () => {
-        tokenQueries.token({
-          chainId,
-          tokenAddress,
-        });
-      };
+      tokenQueries.token({
+        chainId,
+        tokenAddress,
+      });
     }
+
+    newState.balance = balance;
+    newState.allowance = allowance;
+    newState.token = token;
+
+    return newState;
   }
 
-  return computed;
+  return state;
 }

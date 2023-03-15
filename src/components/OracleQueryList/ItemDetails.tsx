@@ -1,7 +1,6 @@
 import { useComputed } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
-import { useEffect } from "react";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
 import {
@@ -24,11 +23,7 @@ export function ItemDetails({
     formattedReward,
     valueText,
   } = item;
-  const { token, fetchCurrencyTokenInfo } = useComputed(item);
-
-  useEffect(() => {
-    !!fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
-  }, [fetchCurrencyTokenInfo]);
+  const { token } = useComputed(item);
 
   const hasBond = formattedBond !== null;
   const hasReward = formattedReward !== null;
