@@ -1,9 +1,8 @@
 import { Filters, Layout, OracleQueries } from "@/components";
 import { usePage } from "@/hooks";
 
-const pageName = "settled";
-export default function Verify() {
-  const page = usePage(pageName);
+export default function Settled() {
+  const page = usePage("settled");
   return (
     <Layout>
       <Filters {...page.filterProps} {...page.searchProps} />

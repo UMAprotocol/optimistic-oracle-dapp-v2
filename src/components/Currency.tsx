@@ -1,19 +1,34 @@
 import { getCurrencyIcon } from "@/constants";
+import type { Token } from "@shared/types";
 import styled from "styled-components";
+import { LoadingSkeleton } from "./LoadingSkeleton";
 
 interface Props {
-  currency: string | undefined;
-  amount: string | number | undefined;
+  token: Token | null;
+  formattedAmount: string | null | undefined;
 }
-export function Currency({ currency, amount }: Props) {
+/**
+ * Displays a currency icon and amount.
+ * If the currency is a known currency, the icon will be displayed.
+ * Otherwise, the currency symbol will be displayed.
+ */
+export function Currency({ token, formattedAmount }: Props) {
+  const currency = token?.symbol;
   const currencyIcon = getCurrencyIcon(currency);
+  const hasCurrencyIcon = !!currencyIcon;
+
+  const isLoading = currency === undefined;
 
   return (
     <Wrapper>
-      {currencyIcon && (
-        <CurrencyIconWrapper>{currencyIcon}</CurrencyIconWrapper>
+      {isLoading ? (
+        <LoadingSkeleton width={80} height={16} />
+      ) : (
+        <>
+          {hasCurrencyIcon && currencyIcon} {formattedAmount}{" "}
+          {!hasCurrencyIcon && currency}
+        </>
       )}
-      {amount} {!currencyIcon && currency}
     </Wrapper>
   );
 }
@@ -23,5 +38,3 @@ const Wrapper = styled.span`
   align-items: center;
   gap: 8px;
 `;
-
-const CurrencyIconWrapper = styled.span``;

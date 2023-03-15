@@ -1,56 +1,55 @@
-import type {
-  chainNames,
-  chainsById,
-  currencies,
-  expiryTypes,
-  oracleTypes,
-  projects,
-} from "@/constants";
-import type { BigNumber } from "ethers";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import type {
+  ChainId,
+  ChainName,
+  ExpiryType,
+  OracleType,
+  Project,
+} from "@shared/types";
+import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
-export type ActionType =
-  | "Dispute"
-  | "Propose"
-  | "Settle"
-  | "Invalid"
-  | "Requested";
+
+export type ActionType = "dispute" | "propose" | "settle" | null;
 
 /**
  * Defines the shape of data required by the UI to render a price request or a an assertion.
  * All of the UI components are "dumb", i.e they expect the data to be available, correct, and formatted when they receive it.
  */
 export type OracleQueryUI = {
+  // for price requests `id` is constructed with `identifier-timestamp-ancillaryData`
+  // for assertions `id` is the `assertionId` field
   id: string;
   chainId: ChainId;
   chainName: ChainName;
   oracleType: OracleType;
   project: Project;
   title: ReactNode;
-  ancillaryData: string;
-  decodedAncillaryData: string;
+  identifier: string;
+  // price requests query text is the ancillary data
+  // for assertions it is the `claim` field
+  queryTextHex: string;
+  queryText: string;
+  // for price requests the value text is null until a price is proposed. Then it is the proposed price. After a price is settled it is the settled price.
+  // for assertions the value text is null until settlement, after which it is the `settlementResolution` field
+  valueText: string | null;
   timeUTC: string;
   timeUNIX: number;
   timeMilliseconds: number;
   timeFormatted: string;
-  livenessEndsMilliseconds: number | undefined;
-  formattedLivenessEndsIn: string | undefined;
-  actionType: ActionType | undefined;
-  action: (() => void) | undefined;
+  livenessEndsMilliseconds: number;
+  formattedLivenessEndsIn: string;
+  actionType: ActionType | null;
   moreInformation: MoreInformationItem[];
-  error: string;
-  setError: (error: string) => void;
-  bond: string | undefined;
+  bond: BigNumber | null;
+  reward: BigNumber | null;
   // oo
-  price: string | undefined;
-  expiryType: ExpiryType | undefined;
-  currency: Currency | undefined;
+  expiryType: ExpiryType | null;
   oracleAddress: string;
-  tokenAddress: string | undefined;
-  formattedBond: string | undefined;
-  formattedReward: string | undefined;
-  assertion: boolean | undefined;
+  tokenAddress: string;
+  formattedBond: string | null;
+  formattedReward: string | null;
 };
+
 export type BigNumberish = string | number | BigNumber;
 
 export type Tag = {
@@ -168,31 +167,8 @@ export type SettledQuery = {
 };
 
 export type OracleQuery = SettledQuery | ProposeQuery | VerifyQuery;
+
 export type OracleQueries = OracleQuery[];
-
-export type OracleTypes = typeof oracleTypes;
-
-export type OracleType = OracleTypes[number];
-
-export type ChainsById = typeof chainsById;
-
-export type ChainId = keyof ChainsById;
-
-export type ChainNames = typeof chainNames;
-
-export type ChainName = ChainNames[number];
-
-export type ExpiryTypes = typeof expiryTypes;
-
-export type ExpiryType = ExpiryTypes[number];
-
-export type Projects = typeof projects;
-
-export type Project = Projects[number];
-
-export type Currencies = typeof currencies;
-
-export type Currency = Currencies[number];
 
 export type MoreInformationItem = {
   title: string;
@@ -235,5 +211,3 @@ export type CheckedChangePayload = {
 };
 
 export type OnCheckedChange = (payload: CheckedChangePayload) => void;
-
-export type PageName = "verify" | "propose" | "settled";

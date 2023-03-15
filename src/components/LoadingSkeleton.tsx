@@ -1,4 +1,4 @@
-import { grey400, white } from "@/constants";
+import { blueGrey400, grey400, white } from "@/constants";
 import { addOpacityToHsla } from "@/helpers";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -26,12 +26,12 @@ export function LoadingSkeleton({
   duration,
 }: Props) {
   const whiteOpacity10 = addOpacityToHsla(white, 0.1);
-  const grey400Opacity10 = addOpacityToHsla(grey400, 0.5);
+  const blueGrey400Opacity10 = addOpacityToHsla(blueGrey400, 0.5);
 
   function getBaseColor() {
     if (baseColor) return baseColor;
 
-    if (variant === "grey") return grey400Opacity10;
+    if (variant === "grey") return blueGrey400Opacity10;
 
     return whiteOpacity10;
   }

@@ -1,9 +1,9 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { commify, formatEther, parseEther } from "@/helpers";
+import type { Allowances, Balances, Tokens } from "@shared/types";
 import { BigNumber } from "ethers";
 import { capitalize, words } from "lodash";
 import { css } from "styled-components";
-import type { Tokens, Token, Balances, Allowances } from "@libs/oracle2";
 
 /**
  * Adds an opacity value to an hsl string
@@ -94,22 +94,6 @@ export function bigNumberFromFloatString(value: string | undefined) {
 }
 
 /**
- * Returns a display value for a given price or assertion.
- * React does not show boolean values, so we must convert assertions to strings.
- * Otherwise we return the price as a number.
- */
-export function getValueText({
-  price,
-  assertion,
-}: {
-  price?: string;
-  assertion?: boolean;
-}) {
-  if (assertion !== undefined) return assertion ? "True" : "False";
-  return price;
-}
-
-/**
  * Determines if a route is active.
  * @param pathname - the current pathname
  * @param href - the route to check
@@ -168,16 +152,18 @@ export function makeFilterTitle(filterName: string) {
 export function findToken(
   tokens: Tokens,
   search: { tokenAddress: string; chainId: number }
-): Token | undefined {
-  return tokens.find(({ chainId, tokenAddress }) => {
-    return search.chainId === chainId && search.tokenAddress === tokenAddress;
-  });
+) {
+  return (
+    tokens.find(({ chainId, tokenAddress }) => {
+      return search.chainId === chainId && search.tokenAddress === tokenAddress;
+    }) ?? null
+  );
 }
 
 export function findBalance(
   balances: Balances,
   search: { account: string; tokenAddress: string; chainId: number }
-): BigNumber | undefined {
+) {
   const found = balances.find(({ account, chainId, tokenAddress }) => {
     return (
       search.chainId === chainId &&
@@ -185,7 +171,7 @@ export function findBalance(
       search.tokenAddress === tokenAddress
     );
   });
-  return found ? BigNumber.from(found.amount) : undefined;
+  return found ? BigNumber.from(found.amount) : null;
 }
 
 export function findAllowance(
@@ -196,7 +182,7 @@ export function findAllowance(
     chainId: number;
     spender: string;
   }
-): BigNumber | undefined {
+) {
   const found = allowances.find(
     ({ account, chainId, tokenAddress, spender }) => {
       return (
@@ -207,5 +193,5 @@ export function findAllowance(
       );
     }
   );
-  return found ? BigNumber.from(found.amount) : undefined;
+  return found ? BigNumber.from(found.amount) : null;
 }

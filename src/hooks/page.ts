@@ -1,5 +1,5 @@
-import { useOracleDataContext, useFilterAndSearch } from "@/hooks";
-import type { PageName } from "@/types";
+import { useFilterAndSearch, useOracleDataContext } from "@/hooks";
+import type { PageName } from "@shared/types";
 
 type FilterState = ReturnType<typeof useFilterAndSearch>;
 type PageState = FilterState & { name: PageName; isLoading: boolean };

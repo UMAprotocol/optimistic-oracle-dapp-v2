@@ -1,10 +1,11 @@
 import assert from "assert";
-import * as ss from "superstruct";
 import { getContractAddress } from "@libs/constants";
+import * as ss from "superstruct";
 
 const Env = ss.object({
   NEXT_PUBLIC_DEFAULT_APY: ss.optional(ss.string()),
   NEXT_PUBLIC_INFURA_ID: ss.string(),
+  NEXT_PUBLIC_DEFAULT_LIVENESS: ss.string(),
   // mainnet
   NEXT_PUBLIC_SUBGRAPH_V1_1: ss.optional(ss.string()),
   // optimism
@@ -96,11 +97,14 @@ const env = ss.create(
     NEXT_PUBLIC_PROVIDER_5: process.env.NEXT_PUBLIC_PROVIDER_5,
     NEXT_PUBLIC_PROVIDER_10: process.env.NEXT_PUBLIC_PROVIDER_10,
     NEXT_PUBLIC_PROVIDER_80001: process.env.NEXT_PUBLIC_PROVIDER_80001,
+    NEXT_PUBLIC_DEFAULT_LIVENESS: process.env.NEXT_PUBLIC_DEFAULT_LIVENESS,
   },
   Env
 );
 
-const ChainId = ss.enums([1, 5, 10, 100, 137, 288, 416, 42161, 43114, 80001]);
+export const ChainId = ss.enums([
+  1, 5, 10, 100, 137, 288, 416, 42161, 43114, 80001,
+]);
 const SubgraphConfig = ss.object({
   source: ss.literal("gql"),
   url: ss.string(),
@@ -129,6 +133,7 @@ export type ProviderConfigs = ss.Infer<typeof ProviderConfigs>;
 const Config = ss.object({
   defaultApy: ss.string(),
   infuraId: ss.string(),
+  defaultLiveness: ss.string(),
   subgraphs: SubgraphConfigs,
   providers: ProviderConfigs,
 });
@@ -548,6 +553,7 @@ function parseEnv(env: Env): Config {
   return {
     defaultApy: env.NEXT_PUBLIC_DEFAULT_APY ?? "30.1",
     infuraId: env.NEXT_PUBLIC_INFURA_ID,
+    defaultLiveness: env.NEXT_PUBLIC_DEFAULT_LIVENESS ?? "7600",
     subgraphs,
     providers,
   };

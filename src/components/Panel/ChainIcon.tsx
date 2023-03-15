@@ -1,6 +1,6 @@
 import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
-import { chainsById } from "@/constants";
-import type { ChainId } from "@/types";
+import { chainsById } from "@shared/constants";
+import type { ChainId } from "@shared/types";
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
 import Avalanche from "public/assets/icons/chains/avax.svg";
 import Boba from "public/assets/icons/chains/boba.svg";
@@ -31,6 +31,7 @@ export function ChainIcon({ chainId }: { chainId: ChainId | undefined }) {
     416: SXIcon,
     43114: AvalancheIcon,
     42161: ArbitrumIcon,
+    80001: PolygonIcon,
   };
 
   const chainName = chainsById[chainId];

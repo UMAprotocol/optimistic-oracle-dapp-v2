@@ -11,8 +11,8 @@ import {
   red500,
   smallMobileAndUnder,
 } from "@/constants";
-import { addOpacityToHsla, getValueText } from "@/helpers";
-import { usePanelContext, useActions } from "@/hooks";
+import { addOpacityToHsla } from "@/helpers";
+import { useComputed, usePanelContext } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -21,7 +21,7 @@ import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
@@ -37,45 +37,48 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const [inputValue, setInputValue] = useState("");
-  const { actions } = useActions();
 
   const {
     chainId,
     oracleType,
     title,
     project,
-    ancillaryData,
-    decodedAncillaryData,
+    valueText,
+    queryText,
+    queryTextHex,
     timeUNIX,
     timeUTC,
-    price,
-    assertion,
-    currency,
     formattedBond,
     formattedReward,
     formattedLivenessEndsIn,
     actionType,
-    action,
     expiryType,
     moreInformation,
-    error,
-    setError,
   } = content ?? {};
 
+  const [error, setError] = useState("");
+  const {
+    fetchCurrencyBalance,
+    fetchCurrencyAllowance,
+    token,
+    fetchCurrencyTokenInfo,
+  } = useComputed(content);
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
-  const hasActionButton = action !== undefined && actionType !== undefined;
+  const action = () => alert("placeholder action");
+  const hasActionButton = action !== null && actionType !== null;
   const hasInput = page === "propose";
-  const valueText = getValueText({ price, assertion });
+  const hasBond = formattedBond !== null;
+  const hasReward = formattedReward !== null;
   const actionsTitle = getActionsTitle();
   const isError = error !== "";
 
   useEffect(() => {
-    actions.fetchCurrencyTokenInfo && actions.fetchCurrencyTokenInfo();
-    actions.fetchCurrencyBalance && actions.fetchCurrencyBalance();
-    actions.fetchCurrencyAllowance && actions.fetchCurrencyAllowance();
-  }, [actions]);
+    fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
+    fetchCurrencyBalance && fetchCurrencyBalance();
+    fetchCurrencyAllowance && fetchCurrencyAllowance();
+  }, [fetchCurrencyTokenInfo, fetchCurrencyBalance, fetchCurrencyAllowance]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
@@ -132,24 +135,28 @@ export function Panel() {
         )}
         {showActionsDetails && (
           <ActionsDetailsWrapper>
-            <ActionWrapper>
-              <ActionText>
-                Bond
-                <InfoIcon />
-              </ActionText>
-              <ActionText>
-                <Currency amount={formattedBond} currency={currency} />
-              </ActionText>
-            </ActionWrapper>
-            <ActionWrapper>
-              <ActionText>
-                Reward
-                <InfoIcon />
-              </ActionText>
-              <ActionText>
-                <Currency amount={formattedReward} currency={currency} />
-              </ActionText>
-            </ActionWrapper>
+            {hasBond && (
+              <ActionWrapper>
+                <ActionText>
+                  Bond
+                  <InfoIcon />
+                </ActionText>
+                <ActionText>
+                  <Currency formattedAmount={formattedBond} token={token} />
+                </ActionText>
+              </ActionWrapper>
+            )}
+            {hasReward && (
+              <ActionWrapper>
+                <ActionText>
+                  Reward
+                  <InfoIcon />
+                </ActionText>
+                <ActionText>
+                  <Currency formattedAmount={formattedReward} token={token} />
+                </ActionText>
+              </ActionWrapper>
+            )}
             <ActionWrapper>
               <ActionText>
                 Challenge period ends in
@@ -194,12 +201,12 @@ export function Panel() {
         <DetailWrapper>
           <SectionTitleWrapper>
             <AncillaryDataIcon />
-            <SectionTitle>Ancillary Data</SectionTitle>
+            <SectionTitle>Additional Text Data</SectionTitle>
           </SectionTitleWrapper>
           <SectionSubTitle>String</SectionSubTitle>
-          <DetailText>{decodedAncillaryData}</DetailText>
+          <DetailText>{queryText}</DetailText>
           <SectionSubTitle>Bytes</SectionSubTitle>
-          <DetailText>{ancillaryData}</DetailText>
+          <DetailText>{queryTextHex}</DetailText>
         </DetailWrapper>
         <DetailWrapper>
           <SectionTitleWrapper>

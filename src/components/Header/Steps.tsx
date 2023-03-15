@@ -1,9 +1,9 @@
 import { tabletAndUnder } from "@/constants";
-import type { Page } from "@/types";
+import type { PageName } from "@shared/types";
 import styled from "styled-components";
 import { Step } from "./Step";
 
-export function Steps({ page }: { page: Exclude<Page, "settled"> }) {
+export function Steps({ page }: { page: Exclude<PageName, "settled"> }) {
   const stepsForPages = {
     verify: [
       "Check if the queries and statements are correct and some more text maybe.",

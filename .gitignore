@@ -25,6 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 build-storybook.log
+.vscode/launch.json
 
 # local env files
 .env*.local

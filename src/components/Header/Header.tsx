@@ -1,12 +1,12 @@
 import { mobileAndUnder } from "@/constants";
-import type { Page } from "@/types";
+import type { PageName } from "@shared/types";
 import styled from "styled-components";
 import { NavBar } from "./NavBar";
 import { Steps } from "./Steps";
 import { Title } from "./Title";
 import { VoteTicker } from "./VoteTicker";
 
-export function Header({ page }: { page: Page }) {
+export function Header({ page }: { page: PageName }) {
   return (
     <OuterWrapper>
       <InnerWrapper>

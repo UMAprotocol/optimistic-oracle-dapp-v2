@@ -35,7 +35,7 @@ export function LivenessProgressBar({
   const currentTime = now.getTime();
   const progress = currentTime - startTime;
   const percent = Math.round((progress / totalTime) * 100);
-  const normalizedPercent = percent < 100 ? percent : 100;
+  const normalizedPercent = percent < 100 && percent >= 0 ? percent : 100;
   const timeRemaining = intervalToDuration({
     start: now,
     end: endTimeAsDate,

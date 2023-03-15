@@ -1,4 +1,4 @@
-import type { OracleType } from "./oracle2/types";
+import type { OracleType } from "@shared/types";
 import { ethers } from "ethers";
 
 const getAddress = ethers.utils.getAddress;

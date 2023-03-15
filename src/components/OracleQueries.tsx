@@ -1,10 +1,11 @@
 import { OracleQueryList, OracleQueryTable } from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
-import type { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI } from "@/types";
+import type { PageName } from "@shared/types";
 import styled from "styled-components";
 
 interface Props {
-  page: Page;
+  page: PageName;
   queries: OracleQueryUI[];
   isLoading: boolean;
 }

@@ -1,10 +1,22 @@
-import { chainsById } from "@/constants";
-import type { ActionType, ChainId, ChainName, OracleQueryUI } from "@/types";
+import { config } from "@/constants";
+import type { ActionType, MoreInformationItem, OracleQueryUI } from "@/types";
+import { chainsById } from "@shared/constants";
+import type {
+  Assertion,
+  ChainId,
+  ChainName,
+  ParsedOOV2GraphEntity,
+  Request,
+  RequestState,
+} from "@shared/types";
+import { formatNumberForDisplay } from "@shared/utils";
 import { format } from "date-fns";
+import type { BigNumber } from "ethers";
 import { ethers } from "ethers";
 
-import type { Assertion, Request } from "@libs/oracle2";
-import { RequestState } from "@libs/oracle2";
+export function utf8ToHex(utf8String: string) {
+  return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
+}
 
 export function decodeHexString(hexString: string) {
   try {
@@ -20,50 +32,27 @@ export function decodeHexString(hexString: string) {
     }
   }
 }
-export function decodeAncillaryData(ancillaryData: string) {
+export function safeDecodeHexString(hexString: string) {
   try {
-    return decodeHexString(ancillaryData);
+    return decodeHexString(hexString);
   } catch (e) {
-    return "Unable to decode ancillary data";
+    return "Unable to decode hex string";
   }
 }
-export function toTimeUnix(timestamp: number | string): number {
+export function toDate(timestamp: number | string) {
+  return new Date(toTimeMilliseconds(timestamp));
+}
+export function toTimeUnix(timestamp: number | string) {
   return Number(timestamp);
 }
-export function toTimeUTC(timestamp: number | string): string {
-  return new Date(toTimeUnix(timestamp)).toUTCString();
+export function toTimeUTC(timestamp: number | string) {
+  return toDate(timestamp).toUTCString();
 }
 export function toTimeMilliseconds(timestamp: number | string) {
   return toTimeUnix(timestamp) * 1000;
 }
 export function toTimeFormatted(timestamp: number | string) {
-  return format(toTimeMilliseconds(timestamp), "pP");
-}
-
-export function requestStateToAction(
-  requestState: RequestState
-): ActionType | undefined {
-  if (requestState === RequestState.Invalid) {
-    return undefined;
-  }
-  if (requestState === RequestState.Requested) {
-    return "Propose";
-  }
-  if (requestState === RequestState.Proposed) {
-    return "Dispute";
-  }
-  if (requestState === RequestState.Expired) {
-    return "Settle";
-  }
-  if (requestState === RequestState.Disputed) {
-    return undefined;
-  }
-  if (requestState === RequestState.Resolved) {
-    return "Settle";
-  }
-  if (requestState === RequestState.Settled) {
-    return undefined;
-  }
+  return format(toTimeMilliseconds(timestamp), "Pp");
 }
 
 export function getChainName(chainId: number): ChainName {
@@ -75,91 +64,204 @@ export function isSupportedChain(chainId: number): chainId is ChainId {
   return chainId in chainsById;
 }
 
+function getRequestActionType(state: RequestState): ActionType {
+  // goes to `propose` page
+  if (state === "Requested") {
+    return "propose";
+  }
+  // goes to `verify` page
+  if (state === "Proposed") {
+    return "dispute";
+  }
+  // also goes to `verify` page
+  if (state === "Disputed" || state === "Expired") {
+    return "settle";
+  }
+
+  // TODO: figure out what to do with `state === Resolved`
+
+  return null;
+}
+
+function getAssertionActionType({
+  expirationTime,
+  settlementHash,
+}: Assertion): ActionType {
+  // goes to `settled` page
+  if (settlementHash) return null;
+  // goes to `verify` page
+  if (toDate(expirationTime) > new Date()) {
+    return "settle";
+  }
+  // also goes to `verify` page
+  return "dispute";
+}
+
+function getLivenessEnds(customLivenessOrExpirationTime?: string | null) {
+  const livenessEndsSeconds =
+    customLivenessOrExpirationTime ??
+    Date.now() / 1000 + Number(config.defaultLiveness);
+  return toTimeMilliseconds(livenessEndsSeconds);
+}
+
+function getPriceRequestValueText(
+  proposedPrice: BigNumber | null,
+  settlementPrice: BigNumber | null
+) {
+  const price = proposedPrice ?? settlementPrice;
+  if (price === null) return null;
+  return formatNumberForDisplay(price, { isFormatEther: true });
+}
+
+function getFormattedBond(bond: BigNumber | null) {
+  if (bond === null) return null;
+  return formatNumberForDisplay(bond, { isFormatEther: true });
+}
+
+function getFormattedReward(reward: BigNumber | null) {
+  if (reward === null) return null;
+  return formatNumberForDisplay(reward, { isFormatEther: true });
+}
+
+function isOOV2PriceRequest(
+  request: Request
+): request is ParsedOOV2GraphEntity {
+  return request.oracleType === "Optimistic Oracle V2";
+}
+
 export function requestToOracleQuery(request: Request): OracleQueryUI {
+  const {
+    id,
+    chainId,
+    oracleType,
+    oracleAddress,
+    ancillaryData,
+    time,
+    identifier,
+    proposedPrice,
+    settlementPrice,
+    currency,
+    state,
+    reward,
+  } = request;
+  const {
+    bond = null,
+    customLiveness = null,
+    eventBased = null,
+  } = isOOV2PriceRequest(request) ? request : {};
+  const livenessEndsMilliseconds = getLivenessEnds(customLiveness);
+  const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
+  // TODO: we need methods to calculate these things
+  // need a lookup for project based on price ident or anc data
+  const project = "UMA";
+  const title = `Price request - ${identifier} - ${oracleType}`;
+  const chainName = getChainName(chainId);
+  const timeUTC = toTimeUTC(time);
+  const timeUNIX = toTimeUnix(time);
+  const timeMilliseconds = toTimeMilliseconds(time);
+  const timeFormatted = toTimeFormatted(time);
+  const valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
+  const queryTextHex = ancillaryData;
+  const queryText = safeDecodeHexString(ancillaryData);
+  const expiryType = eventBased ? "Event-based" : "Time-based";
+  const tokenAddress = currency;
+  const formattedBond = getFormattedBond(bond);
+  const formattedReward = getFormattedReward(reward);
+  const moreInformation: MoreInformationItem[] = [];
+  const actionType = getRequestActionType(state);
+
   return {
-    id: request.id,
-    chainId: isSupportedChain(request.chainId) ? request.chainId : 0,
-    chainName: isSupportedChain(request.chainId)
-      ? getChainName(request.chainId)
-      : getChainName(0),
-    oracleType: request.oracleType,
-    oracleAddress: request.oracleAddress,
-    ancillaryData: request.ancillaryData,
-    decodedAncillaryData: decodeAncillaryData(request.ancillaryData),
-    timeUTC: toTimeUTC(request.timestamp),
-    timeUNIX: toTimeUnix(request.timestamp),
-    timeMilliseconds: toTimeMilliseconds(request.timestamp),
-    timeFormatted: toTimeFormatted(request.timestamp),
-    livenessEndsMilliseconds: request.expirationTime
-      ? toTimeMilliseconds(request.expirationTime)
-      : undefined,
-    formattedLivenessEndsIn: request.expirationTime
-      ? toTimeFormatted(request.expirationTime)
-      : undefined,
-    price: request.price,
-    expiryType: request.eventBased ? "Event-based" : "Time-based",
-    tokenAddress: request.currency,
-    // TODO: we need methods to calculate these things
-    // need a lookup for project based on price ident or anc data?
-    project: "UMA",
-    // need contentful? or a standard way to get this from anc data
-    title: "Unknown Title",
-    actionType: undefined,
-    // need our user client for actions like this
-    action: () => undefined,
-    moreInformation: [],
-    error: "",
-    setError: () => undefined,
-    assertion: false,
-    // need lookup from currency address per chain for this
-    currency: "USDC",
-    // need currency decimals for this
-    formattedBond: request.bond,
-    formattedReward: request.reward,
-    bond: request.bond,
+    project,
+    title,
+    id,
+    chainId,
+    chainName,
+    oracleType,
+    oracleAddress,
+    identifier,
+    queryText,
+    queryTextHex,
+    timeUTC,
+    timeUNIX,
+    timeMilliseconds,
+    timeFormatted,
+    livenessEndsMilliseconds,
+    formattedLivenessEndsIn,
+    valueText,
+    expiryType,
+    tokenAddress,
+    reward,
+    bond,
+    formattedBond,
+    formattedReward,
+    moreInformation,
+    actionType,
   };
 }
 
 export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
+  const {
+    oracleAddress,
+    assertionId,
+    chainId,
+    identifier,
+    expirationTime,
+    assertionTimestamp,
+    settlementResolution,
+    claim,
+    currency,
+    bond,
+  } = assertion;
+  const id = assertionId;
+  const oracleType = "Optimistic Oracle V3";
+  const livenessEndsMilliseconds = getLivenessEnds(expirationTime);
+  const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
+  // TODO: we need methods to calculate these things
+  // need a lookup for project based on price ident or anc data
+  const project = "UMA";
+  const title = `Assertion - ${identifier} - ${oracleType}`;
+  const chainName = getChainName(chainId);
+  const timeUTC = toTimeUTC(assertionTimestamp);
+  const timeUNIX = toTimeUnix(assertionTimestamp);
+  const timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
+  const timeFormatted = toTimeFormatted(assertionTimestamp);
+  const valueText = settlementResolution;
+  const queryTextHex = claim;
+  const queryText = safeDecodeHexString(claim);
+  const expiryType = null;
+  const tokenAddress = currency;
+  const formattedBond = formatNumberForDisplay(bond, { isFormatEther: true });
+  // no reward is present on assertions
+  const reward = null;
+  const formattedReward = null;
+  const moreInformation: MoreInformationItem[] = [];
+  const actionType = getAssertionActionType(assertion);
+
   return {
-    id: assertion.id,
-    chainId: isSupportedChain(assertion.chainId) ? assertion.chainId : 0,
-    chainName: isSupportedChain(assertion.chainId)
-      ? getChainName(assertion.chainId)
-      : getChainName(0),
-    oracleType: "Optimistic Oracle V3",
-    oracleAddress: assertion.oracleAddress,
-    tokenAddress: assertion.currency,
-    livenessEndsMilliseconds: assertion.expirationTime
-      ? toTimeMilliseconds(assertion.expirationTime)
-      : undefined,
-    formattedLivenessEndsIn: assertion.expirationTime
-      ? toTimeFormatted(assertion.expirationTime)
-      : undefined,
-    // unknown how to map data below here yet, will need additional work
-    ancillaryData: "",
-    decodedAncillaryData: "",
-    price: assertion.claim,
-    timeUTC: toTimeUTC(assertion.assertionTimestamp || "0"),
-    timeUNIX: toTimeUnix(assertion.assertionTimestamp || "0"),
-    timeMilliseconds: toTimeMilliseconds(assertion.assertionTimestamp || "0"),
-    timeFormatted: toTimeFormatted(assertion.assertionTimestamp || "0"),
-    expiryType: "Time-based",
-    actionType: undefined,
-    project: "UMA",
-    // need contentful? or a standard way to get this from anc data
-    title: "Unknown Title",
-    // need our user client for actions like this
-    action: () => undefined,
-    moreInformation: [],
-    error: "",
-    setError: () => undefined,
-    assertion: true,
-    // need lookup from currency address per chain for this
-    currency: "USDC",
-    // need currency decimals for this
-    formattedBond: assertion.bond,
-    formattedReward: "0",
-    bond: assertion.bond,
+    id,
+    chainId,
+    chainName,
+    identifier,
+    oracleType,
+    oracleAddress,
+    tokenAddress,
+    valueText,
+    queryText,
+    queryTextHex,
+    livenessEndsMilliseconds,
+    formattedLivenessEndsIn,
+    timeUTC,
+    timeUNIX,
+    timeMilliseconds,
+    timeFormatted,
+    expiryType,
+    actionType,
+    project,
+    title,
+    moreInformation,
+    formattedBond,
+    formattedReward,
+    reward,
+    bond,
   };
 }

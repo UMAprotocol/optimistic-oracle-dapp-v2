@@ -1,15 +1,13 @@
-import Events from "events";
+import type { Allowance, Balance, Token } from "@shared/types";
+import assert from "assert";
 import { ethers } from "ethers";
+import Events from "events";
 import type {
   Handlers,
   JsonRpcProvider,
-  Token,
-  Balance,
-  Allowance,
-  ServiceFactory,
   Service,
+  ServiceFactory,
 } from "../../types";
-import assert from "assert";
 import { TokenClient } from "../../web3-token";
 
 export type ChainConfig = {
@@ -35,7 +33,6 @@ export const Factory = (config: Config): [Queries, ServiceFactory] => {
       } else if (event.type === "token") {
         handlers.tokens && handlers.tokens([event.data]);
       } else if (event.type === "error") {
-        console.log(event.data);
         handlers.errors && handlers.errors([event.data]);
       }
     });
@@ -106,6 +103,7 @@ export function Queries(config: Config, emit: Emit) {
         emit({ type: "token", data: { ...config, ...props } });
       })
       .catch((err) => {
+        console.error(err);
         if (err instanceof Error) {
           emit({ type: "error", data: err });
         }

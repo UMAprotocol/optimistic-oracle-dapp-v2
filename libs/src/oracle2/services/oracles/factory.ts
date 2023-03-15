@@ -1,18 +1,13 @@
-import type {
-  Service,
-  Handlers,
-  ServiceFactory,
-  OracleType,
-} from "../../types";
+import type { ChainId, OracleType } from "@shared/types";
+import type { Handlers, Service, ServiceFactory } from "../../types";
 
-import { gql as gqlV1 } from "../oracleV1";
-import { gql as gqlV3 } from "../oracleV3";
-import { gql as gqlSkinny } from "../oracleSkinny";
+import { gql as gqlAssertions } from "../assertions";
+import { gql as gqlPriceRequests } from "../priceRequests";
 
 export type GqlConfig = {
   source: "gql";
   url: string;
-  chainId: number;
+  chainId: ChainId;
   type: OracleType;
   address: string;
 };
@@ -22,21 +17,16 @@ export const Factory =
   (config: Config): ServiceFactory =>
   (handlers: Handlers): Service => {
     const services: Service[] = config.map((config) => {
-      if (config.source === "gql" && config.type === "Optimistic Oracle V1") {
-        return gqlV1.Factory(config)(handlers);
-      }
-      // note that v2 queries are essentially the same shape as v1, so we reuse the service
-      if (config.source === "gql" && config.type === "Optimistic Oracle V2") {
-        return gqlV1.Factory(config)(handlers);
-      }
       if (
         config.source === "gql" &&
-        config.type === "Skinny Optimistic Oracle"
+        (config.type === "Optimistic Oracle V1" ||
+          config.type === "Optimistic Oracle V2" ||
+          config.type === "Skinny Optimistic Oracle")
       ) {
-        return gqlSkinny.Factory(config)(handlers);
+        return gqlPriceRequests.Factory(config)(handlers);
       }
       if (config.source === "gql" && config.type === "Optimistic Oracle V3") {
-        return gqlV3.Factory(config)(handlers);
+        return gqlAssertions.Factory(config)(handlers);
       }
       throw new Error(
         `Unsupported oracle type ${config.type} from ${config.source}`

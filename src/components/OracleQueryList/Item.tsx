@@ -1,12 +1,13 @@
 import { OracleQueryClickableIcon } from "@/components/style";
 import { usePanelContext } from "@/hooks";
-import type { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI } from "@/types";
+import type { PageName } from "@shared/types";
 import { ItemDetails } from "./ItemDetails";
 import { ItemTitle } from "./ItemTitle";
 import { ClickableIconWrapper, ItemInnerWrapper, ItemWrapper } from "./style";
 
 interface Props {
-  page: Page;
+  page: PageName;
   item: OracleQueryUI;
 }
 export function Item({ page, item }: Props) {
@@ -24,7 +25,7 @@ export function Item({ page, item }: Props) {
           <OracleQueryClickableIcon />
         </ClickableIconWrapper>
       </ItemInnerWrapper>
-      <ItemDetails page={page} {...item} />
+      <ItemDetails page={page} item={item} />
     </ItemWrapper>
   );
 }

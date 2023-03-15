@@ -1,5 +1,7 @@
-import { getValueText } from "@/helpers";
-import type { OracleQueryUI, Page } from "@/types";
+import { useComputed } from "@/hooks";
+import type { OracleQueryUI } from "@/types";
+import type { PageName } from "@shared/types";
+import { useEffect } from "react";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
 import {
@@ -10,21 +12,34 @@ import {
 
 export function ItemDetails({
   page,
-  timeMilliseconds,
-  livenessEndsMilliseconds,
-  currency,
-  formattedBond,
-  formattedReward,
-  price,
-  assertion,
-}: OracleQueryUI & { page: Page }) {
+  item,
+}: {
+  item: OracleQueryUI;
+  page: PageName;
+}) {
+  const {
+    timeMilliseconds,
+    livenessEndsMilliseconds,
+    formattedBond,
+    formattedReward,
+    valueText,
+  } = item;
+  const { token, fetchCurrencyTokenInfo } = useComputed(item);
+
+  useEffect(() => {
+    !!fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
+  }, [fetchCurrencyTokenInfo]);
+
+  const hasBond = formattedBond !== null;
+  const hasReward = formattedReward !== null;
+
   const verifyDetails = (
     <ItemDetailsWrapper>
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Proposal/Assertion</ItemDetailsText>
-        <ItemDetailsText>{getValueText({ price, assertion })}</ItemDetailsText>
+        <ItemDetailsText>{valueText}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
-      {livenessEndsMilliseconds !== undefined && (
+      {livenessEndsMilliseconds !== null && (
         <ItemDetailsInnerWrapper>
           <ItemDetailsText>Challenge Period Left</ItemDetailsText>
           <LivenessProgressBar
@@ -38,28 +53,33 @@ export function ItemDetails({
     </ItemDetailsWrapper>
   );
 
-  const proposeDetails = (
-    <ItemDetailsWrapper>
-      <ItemDetailsInnerWrapper>
-        <ItemDetailsText>Bond</ItemDetailsText>
-        <ItemDetailsText>
-          <Currency amount={formattedBond} currency={currency} />
-        </ItemDetailsText>
-      </ItemDetailsInnerWrapper>
-      <ItemDetailsInnerWrapper>
-        <ItemDetailsText>Reward</ItemDetailsText>
-        <ItemDetailsText>
-          <Currency amount={formattedReward} currency={currency} />
-        </ItemDetailsText>
-      </ItemDetailsInnerWrapper>
-    </ItemDetailsWrapper>
-  );
+  const proposeDetails =
+    hasBond || hasReward ? (
+      <ItemDetailsWrapper>
+        {hasBond && (
+          <ItemDetailsInnerWrapper>
+            <ItemDetailsText>Bond</ItemDetailsText>
+            <ItemDetailsText>
+              <Currency formattedAmount={formattedBond} token={token} />
+            </ItemDetailsText>
+          </ItemDetailsInnerWrapper>
+        )}
+        {hasReward && (
+          <ItemDetailsInnerWrapper>
+            <ItemDetailsText>Reward</ItemDetailsText>
+            <ItemDetailsText>
+              <Currency formattedAmount={formattedReward} token={token} />
+            </ItemDetailsText>
+          </ItemDetailsInnerWrapper>
+        )}
+      </ItemDetailsWrapper>
+    ) : null;
 
   const settledDetails = (
     <ItemDetailsWrapper>
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Settled As</ItemDetailsText>
-        <ItemDetailsText>{getValueText({ price, assertion })}</ItemDetailsText>
+        <ItemDetailsText>{valueText}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
     </ItemDetailsWrapper>
   );

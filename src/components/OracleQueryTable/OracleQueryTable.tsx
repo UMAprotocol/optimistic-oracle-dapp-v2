@@ -1,5 +1,6 @@
 import { defaultResultsPerPage } from "@/constants";
-import type { OracleQueryUI, Page } from "@/types";
+import type { OracleQueryUI } from "@/types";
+import type { PageName } from "@shared/types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Pagination } from "../Pagination";
@@ -8,7 +9,7 @@ import { LoadingRow } from "./LoadingRow";
 import { Row } from "./Row";
 
 interface Props {
-  page: Page;
+  page: PageName;
   rows: OracleQueryUI[];
   isLoading: boolean;
 }

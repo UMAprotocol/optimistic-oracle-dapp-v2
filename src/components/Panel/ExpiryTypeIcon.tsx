@@ -1,5 +1,5 @@
 import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
-import type { ExpiryType } from "@/types";
+import type { ExpiryType } from "@shared/types";
 import Clock from "public/assets/icons/clock.svg";
 import styled from "styled-components";
 

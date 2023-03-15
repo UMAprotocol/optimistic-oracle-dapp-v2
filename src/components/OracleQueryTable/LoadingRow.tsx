@@ -1,6 +1,6 @@
 import { red500 } from "@/constants";
 import { addOpacityToHsla } from "@/helpers";
-import type { Page } from "@/types";
+import type { PageName } from "@shared/types";
 import { LoadingSkeleton } from "../LoadingSkeleton";
 import {
   IconWrapper,
@@ -19,7 +19,7 @@ import {
  * This is shown when the data is still loading
  * @param page - the page of the app, used to determine which columns to show
  */
-export function LoadingRow({ page }: { page: Page }) {
+export function LoadingRow({ page }: { page: PageName }) {
   return (
     <TR>
       {loadingTitleCell}
