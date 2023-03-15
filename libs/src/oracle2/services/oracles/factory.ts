@@ -17,10 +17,20 @@ export const Factory =
   (config: Config): ServiceFactory =>
   (handlers: Handlers): Service => {
     const services: Service[] = config.map((config) => {
+      if (
+        config.source === "gql" &&
+        (config.type === "Optimistic Oracle V1" ||
+          config.type === "Optimistic Oracle V2" ||
+          config.type === "Skinny Optimistic Oracle")
+      ) {
+        return gqlPriceRequests.Factory(config)(handlers);
+      }
       if (config.source === "gql" && config.type === "Optimistic Oracle V3") {
         return gqlAssertions.Factory(config)(handlers);
       }
-      return gqlPriceRequests.Factory(config)(handlers);
+      throw new Error(
+        `Unsupported oracle type ${config.type} from ${config.source}`
+      );
     });
 
     async function tick() {
