@@ -56,19 +56,25 @@ export function Panel() {
     expiryType,
     moreInformation,
     approveBondSpendParams,
+    proposePriceParams,
+    disputePriceParams,
   } = content ?? {};
 
   const [error, setError] = useState("");
   const { token } = useComputed(content);
-  const { config, error: prepareApproveError } = usePrepareContractWrite(
-    approveBondSpendParams ?? {}
-  );
-  const { write: approve, error: approveError } = useContractWrite(config);
+  const { config: approveConfig, error: prepareApproveError } =
+    usePrepareContractWrite(approveBondSpendParams ?? {});
+  const { write: approve, error: approveError } =
+    useContractWrite(approveConfig);
+  const { config: proposePriceConfig, error: prepareProposePriceError } =
+    usePrepareContractWrite(proposePriceParams ?? {});
+  const { write: proposePrice, error: proposePriceError } =
+    useContractWrite(proposePriceConfig);
+  const { config: disputePriceConfig, error: prepareDisputePriceError } =
+    usePrepareContractWrite(disputePriceParams ?? {});
+  const { write: disputePrice, error: disputePriceError } =
+    useContractWrite(disputePriceConfig);
   useEffect(() => {
-    if (!prepareApproveError && !approveError) {
-      setError("");
-      return;
-    }
     if (prepareApproveError) {
       setError(prepareApproveError.message);
       return;
@@ -77,7 +83,30 @@ export function Panel() {
       setError(approveError.message);
       return;
     }
-  }, [prepareApproveError, approveError]);
+    if (prepareProposePriceError) {
+      setError(prepareProposePriceError.message);
+      return;
+    }
+    if (proposePriceError) {
+      setError(proposePriceError.message);
+      return;
+    }
+    if (prepareDisputePriceError) {
+      setError(prepareDisputePriceError.message);
+      return;
+    }
+    if (disputePriceError) {
+      setError(disputePriceError.message);
+      return;
+    }
+  }, [
+    prepareApproveError,
+    approveError,
+    prepareProposePriceError,
+    proposePriceError,
+    prepareDisputePriceError,
+    disputePriceError,
+  ]);
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
@@ -175,14 +204,14 @@ export function Panel() {
             </ActionWrapper>
           </ActionsDetailsWrapper>
         )}
-        {hasActionButton && !!approve && (
+        {hasActionButton && !!proposePrice && (
           <ActionButtonWrapper>
             <Button
               variant="primary"
-              onClick={approve}
+              onClick={proposePrice}
               width="min(100%, 512px)"
             >
-              approve
+              propose
             </Button>
           </ActionButtonWrapper>
         )}

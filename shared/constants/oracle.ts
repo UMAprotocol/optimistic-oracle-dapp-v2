@@ -1,3 +1,10 @@
+import {
+  getOptimisticOracleAbi,
+  getOptimisticOracleV2Abi,
+  getOptimisticOracleV3Abi,
+  getSkinnyOptimisticOracleAbi,
+} from "@uma/contracts-frontend";
+
 export const currencies = ["USDC", "ETH", "RY"] as const;
 
 export const oracleTypes = [
@@ -36,3 +43,8 @@ export const chainsById = {
 };
 
 export const chainNames = Object.values(chainsById);
+
+export const ooV1Abi = getOptimisticOracleAbi();
+export const oov2Abi = getOptimisticOracleV2Abi();
+export const oov3Abi = getOptimisticOracleV3Abi();
+export const skinnyAbi = getSkinnyOptimisticOracleAbi();

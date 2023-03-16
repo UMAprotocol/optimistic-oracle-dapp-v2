@@ -1,5 +1,10 @@
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type {
+  disputeAssertionAbi,
+  disputePriceAbi,
+  proposePriceAbi,
+} from "@shared/constants/abi";
+import type {
   ChainId,
   ChainName,
   ExpiryType,
@@ -49,6 +54,10 @@ export type OracleQueryUI = {
   formattedBond: string | null;
   formattedReward: string | null;
   approveBondSpendParams: ApproveBondSpendParams | null;
+  proposePriceParams: ProposePriceParams | null;
+  disputePriceParams: DisputePriceParams | null;
+  settlePriceParams: SettlePriceParams | null;
+  disputeAssertionParams: DisputeAssertionParams | null;
 };
 
 export type ApproveBondSpendParams = {
@@ -56,9 +65,49 @@ export type ApproveBondSpendParams = {
   address: `0x${string}`;
   abi: typeof erc20ABI;
   functionName: "approve";
-  chainId: number;
+  chainId: ChainId;
   // oracle address and bond
   args: readonly [`0x${string}`, BigNumber];
+};
+
+export type ProposePriceParams = {
+  // the oracle address
+  address: `0x${string}`;
+  abi: typeof proposePriceAbi;
+  functionName: "proposePrice";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData, proposedPrice
+  args: readonly [`0x${string}`, string, BigNumberish, string, BigNumberish];
+};
+
+export type DisputePriceParams = {
+  // the oracle address
+  address: `0x${string}`;
+  abi: typeof disputePriceAbi;
+  functionName: "disputePrice";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData
+  args: readonly [`0x${string}`, string, BigNumberish, string];
+};
+
+export type SettlePriceParams = {
+  // the oracle address
+  address: `0x${string}`;
+  abi: typeof disputePriceAbi;
+  functionName: "settle";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData
+  args: readonly [`0x${string}`, string, BigNumberish, string];
+};
+
+export type DisputeAssertionParams = {
+  // the oracle address
+  address: `0x${string}`;
+  abi: typeof disputeAssertionAbi;
+  functionName: "disputeAssertion";
+  chainId: ChainId;
+  // assertion id, user address
+  args: readonly [string, `0x${string}`];
 };
 
 export type BigNumberish = string | number | BigNumber;

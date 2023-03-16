@@ -504,7 +504,7 @@ export const handlersForAllPages = makeGraphqlHandlers({
       inputs: [
         {
           state: "Requested",
-          identifier: "TEST_PROPOSE",
+          identifier: "MXNUSD",
           bond: makeEtherValueString(456),
           currency: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
         },

@@ -1,6 +1,12 @@
 import { config } from "@/constants";
 import type { ActionType, MoreInformationItem, OracleQueryUI } from "@/types";
 import { chainsById } from "@shared/constants";
+import {
+  disputeAssertionAbi,
+  disputePriceAbi,
+  proposePriceAbi,
+  settlePriceAbi,
+} from "@shared/constants/abi";
 import type {
   Assertion,
   ChainId,
@@ -9,7 +15,7 @@ import type {
   Request,
   RequestState,
 } from "@shared/types";
-import { formatNumberForDisplay } from "@shared/utils";
+import { formatNumberForDisplay, parseEther } from "@shared/utils";
 import { format } from "date-fns";
 import type { BigNumber } from "ethers";
 import { ethers } from "ethers";
@@ -144,12 +150,14 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     currency,
     state,
     reward,
+    requester,
   } = request;
   const {
     bond = null,
     customLiveness = null,
     eventBased = null,
   } = isOOV2PriceRequest(request) ? request : {};
+  const bytes32Identifier = ethers.utils.formatBytes32String(identifier);
   const livenessEndsMilliseconds = getLivenessEnds(customLiveness);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
   // TODO: we need methods to calculate these things
@@ -179,6 +187,46 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
         args: [oracleAddress, bond] as const,
       }
     : null;
+  const proposePriceParams =
+    actionType === "propose"
+      ? {
+          address: oracleAddress,
+          abi: proposePriceAbi,
+          functionName: "proposePrice" as const,
+          chainId,
+          args: [
+            requester,
+            bytes32Identifier,
+            time,
+            ancillaryData,
+            parseEther("1"),
+          ] as const,
+        }
+      : null;
+
+  const disputePriceParams =
+    actionType === "dispute"
+      ? {
+          address: oracleAddress,
+          abi: disputePriceAbi,
+          functionName: "disputePrice" as const,
+          chainId,
+          args: [requester, bytes32Identifier, time, ancillaryData] as const,
+        }
+      : null;
+
+  const settlePriceParams =
+    actionType === "settle"
+      ? {
+          address: oracleAddress,
+          abi: settlePriceAbi,
+          functionName: "settle" as const,
+          chainId,
+          args: [requester, bytes32Identifier, time, ancillaryData] as const,
+        }
+      : null;
+
+  const disputeAssertionParams = null;
 
   return {
     project,
@@ -207,6 +255,10 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     moreInformation,
     actionType,
     approveBondSpendParams,
+    proposePriceParams,
+    disputePriceParams,
+    settlePriceParams,
+    disputeAssertionParams,
   };
 }
 
@@ -256,6 +308,22 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
         args: [oracleAddress, bond] as const,
       }
     : null;
+  const disputeAssertionParams =
+    actionType === "dispute"
+      ? {
+          address: oracleAddress,
+          abi: disputeAssertionAbi,
+          functionName: "disputeAssertion" as const,
+          chainId,
+          args: [
+            assertionId,
+            "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D",
+          ] as const,
+        }
+      : null;
+  const proposePriceParams = null;
+  const disputePriceParams = null;
+  const settlePriceParams = null;
 
   return {
     id,
@@ -284,5 +352,9 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     reward,
     bond,
     approveBondSpendParams,
+    disputeAssertionParams,
+    proposePriceParams,
+    disputePriceParams,
+    settlePriceParams,
   };
 }
