@@ -16,7 +16,7 @@ import type {
   Request,
   RequestState,
 } from "@shared/types";
-import { formatNumberForDisplay } from "@shared/utils";
+import { formatNumberForDisplay, parseEther } from "@shared/utils";
 import { format } from "date-fns";
 import type { BigNumber } from "ethers";
 import { ethers } from "ethers";
@@ -173,19 +173,22 @@ function makeProposePriceParams({
   oracleAddress: `0x${string}`;
   chainId: ChainId;
 }) {
-  return (proposedPrice: string) => ({
-    address: oracleAddress,
-    abi: proposePriceAbi,
-    functionName: "proposePrice" as const,
-    chainId,
-    args: [
-      requester,
-      bytes32Identifier,
-      time,
-      ancillaryData,
-      proposedPrice,
-    ] as const,
-  });
+  return (proposedPrice: string) => {
+    if (!proposedPrice) return;
+    return {
+      address: oracleAddress,
+      abi: proposePriceAbi,
+      functionName: "proposePrice" as const,
+      chainId,
+      args: [
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        parseEther(proposedPrice),
+      ] as const,
+    };
+  };
 }
 
 function makeDisputePriceParams({
@@ -245,13 +248,16 @@ function makeDisputeAssertionParams({
   oracleAddress: `0x${string}`;
   chainId: ChainId;
 }) {
-  return (disputerAddress: `0x${string}`) => ({
-    address: oracleAddress,
-    abi: disputeAssertionAbi,
-    functionName: "disputeAssertion" as const,
-    chainId,
-    args: [assertionId, disputerAddress] as const,
-  });
+  return (disputerAddress: `0x${string}` | undefined) => {
+    if (!disputerAddress) return;
+    return {
+      address: oracleAddress,
+      abi: disputeAssertionAbi,
+      functionName: "disputeAssertion" as const,
+      chainId,
+      args: [assertionId, disputerAddress] as const,
+    };
+  };
 }
 
 function makeSettleAssertionParams({

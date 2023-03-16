@@ -23,7 +23,7 @@ import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
 import { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
@@ -58,29 +58,50 @@ export function Panel() {
     approveBondSpendParams,
     proposePriceParams,
     disputePriceParams,
+    settlePriceParams,
+    disputeAssertionParams,
+    settleAssertionParams,
   } = content ?? {};
 
   const [error, setError] = useState("");
-  const { token } = useComputed(content);
-  const { config: approveConfig, error: prepareApproveError } =
-    usePrepareContractWrite(approveBondSpendParams ?? {});
-  const { write: approve, error: approveError } =
-    useContractWrite(approveConfig);
+  const { token, needsToApprove } = useComputed(content);
+  const { address } = useAccount();
+  const {
+    config: approveBondSpendConfig,
+    error: prepareApproveBondSpendError,
+  } = usePrepareContractWrite(approveBondSpendParams ?? undefined);
+  const { write: approveBondSpend, error: approveBondSpendError } =
+    useContractWrite(approveBondSpendConfig);
   const { config: proposePriceConfig, error: prepareProposePriceError } =
-    usePrepareContractWrite(proposePriceParams ?? {});
+    usePrepareContractWrite(proposePriceParams?.(inputValue) ?? undefined);
   const { write: proposePrice, error: proposePriceError } =
     useContractWrite(proposePriceConfig);
   const { config: disputePriceConfig, error: prepareDisputePriceError } =
-    usePrepareContractWrite(disputePriceParams ?? {});
+    usePrepareContractWrite(disputePriceParams ?? undefined);
   const { write: disputePrice, error: disputePriceError } =
     useContractWrite(disputePriceConfig);
+  const { config: settlePriceConfig, error: prepareSettlePriceError } =
+    usePrepareContractWrite(settlePriceParams ?? {});
+  const { write: settlePrice, error: settlePriceError } =
+    useContractWrite(settlePriceConfig);
+  const {
+    config: disputeAssertionConfig,
+    error: prepareDisputeAssertionError,
+  } = usePrepareContractWrite(disputeAssertionParams?.(address) ?? undefined);
+  const { write: disputeAssertion, error: disputeAssertionError } =
+    useContractWrite(disputeAssertionConfig);
+  const { config: settleAssertionConfig, error: prepareSettleAssertionError } =
+    usePrepareContractWrite(settleAssertionParams ?? undefined);
+  const { write: settleAssertion, error: settleAssertionError } =
+    useContractWrite(settleAssertionConfig);
+
   useEffect(() => {
-    if (prepareApproveError) {
-      setError(prepareApproveError.message);
+    if (prepareApproveBondSpendError) {
+      setError(prepareApproveBondSpendError.message);
       return;
     }
-    if (approveError) {
-      setError(approveError.message);
+    if (approveBondSpendError) {
+      setError(approveBondSpendError.message);
       return;
     }
     if (prepareProposePriceError) {
@@ -99,13 +120,43 @@ export function Panel() {
       setError(disputePriceError.message);
       return;
     }
+    if (prepareSettlePriceError) {
+      setError(prepareSettlePriceError.message);
+      return;
+    }
+    if (settlePriceError) {
+      setError(settlePriceError.message);
+      return;
+    }
+    if (prepareDisputeAssertionError) {
+      setError(prepareDisputeAssertionError.message);
+      return;
+    }
+    if (disputeAssertionError) {
+      setError(disputeAssertionError.message);
+      return;
+    }
+    if (prepareSettleAssertionError) {
+      setError(prepareSettleAssertionError.message);
+      return;
+    }
+    if (settleAssertionError) {
+      setError(settleAssertionError.message);
+      return;
+    }
   }, [
-    prepareApproveError,
-    approveError,
+    prepareApproveBondSpendError,
+    approveBondSpendError,
     prepareProposePriceError,
     proposePriceError,
     prepareDisputePriceError,
     disputePriceError,
+    prepareSettlePriceError,
+    settlePriceError,
+    prepareDisputeAssertionError,
+    disputeAssertionError,
+    prepareSettleAssertionError,
+    settleAssertionError,
   ]);
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
@@ -116,7 +167,19 @@ export function Panel() {
   const hasBond = formattedBond !== null;
   const hasReward = formattedReward !== null;
   const actionsTitle = getActionsTitle();
+  const actionContractInteraction = getActionContractInteraction();
   const isError = error !== "";
+
+  function getActionContractInteraction() {
+    if (needsToApprove) return approveBondSpend;
+    return (
+      proposePrice ||
+      disputePrice ||
+      settlePrice ||
+      disputeAssertion ||
+      settleAssertion
+    );
+  }
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
@@ -204,14 +267,14 @@ export function Panel() {
             </ActionWrapper>
           </ActionsDetailsWrapper>
         )}
-        {hasActionButton && !!proposePrice && (
+        {hasActionButton && !!actionContractInteraction && (
           <ActionButtonWrapper>
             <Button
               variant="primary"
-              onClick={proposePrice}
+              onClick={actionContractInteraction}
               width="min(100%, 512px)"
             >
-              propose
+              {actionType}
             </Button>
           </ActionButtonWrapper>
         )}

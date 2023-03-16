@@ -55,11 +55,15 @@ export type OracleQueryUI = {
   formattedBond: string | null;
   formattedReward: string | null;
   approveBondSpendParams: ApproveBondSpendParams | null;
-  proposePriceParams: ((proposedPrice: string) => ProposePriceParams) | null;
+  proposePriceParams:
+    | ((proposedPrice: string) => ProposePriceParams | undefined)
+    | null;
   disputePriceParams: DisputePriceParams | null;
   settlePriceParams: SettlePriceParams | null;
   disputeAssertionParams:
-    | ((disputerAddress: `0x${string}`) => DisputeAssertionParams)
+    | ((
+        disputerAddress: `0x${string}` | undefined
+      ) => DisputeAssertionParams | undefined)
     | null;
   settleAssertionParams: SettleAssertionParams | null;
 };

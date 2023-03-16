@@ -12,6 +12,7 @@ type State = {
   balance: BigNumber | null;
   allowance: BigNumber | null;
   token: Token | null;
+  needsToApprove: boolean;
 };
 
 type Action = {
@@ -26,6 +27,7 @@ export function useComputed(query: OracleQueryUI | undefined) {
     token: null,
     balance: null,
     allowance: null,
+    needsToApprove: false,
   };
 
   const { allowances, balances, tokens } = useOracleDataContext();
@@ -44,7 +46,7 @@ export function useComputed(query: OracleQueryUI | undefined) {
 
     const newState = cloneDeep(state);
 
-    const { tokenAddress, chainId, oracleAddress: spender } = query;
+    const { tokenAddress, chainId, oracleAddress: spender, bond } = query;
 
     const searchParams = {
       account,
@@ -89,6 +91,7 @@ export function useComputed(query: OracleQueryUI | undefined) {
     newState.balance = balance;
     newState.allowance = allowance;
     newState.token = token;
+    newState.needsToApprove = bond && allowance ? bond.gt(allowance) : false;
 
     return newState;
   }

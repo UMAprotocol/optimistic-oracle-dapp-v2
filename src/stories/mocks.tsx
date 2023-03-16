@@ -577,7 +577,7 @@ export function makeUnixTimestamp(
 ) {
   const addOrSub = direction === "future" ? add : sub;
 
-  return (addOrSub(new Date(), duration).getTime() / 1000).toString();
+  return Math.floor(addOrSub(new Date(), duration).getTime() / 1000).toString();
 }
 
 export function makeEtherValueString(value: number) {
