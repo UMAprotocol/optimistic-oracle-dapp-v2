@@ -78,7 +78,7 @@ export function makeQueryName(oracleType: OracleType, chainName: ChainName) {
 export function parsePriceRequestGraphEntity(
   priceRequest: PriceRequestGraphEntity,
   chainId: ChainId,
-  oracleAddress: string,
+  oracleAddress: `0x${string}`,
   oracleType: OracleType
 ) {
   const {
@@ -197,7 +197,7 @@ export function parsePriceRequestGraphEntity(
 export function parseAssertionGraphEntity(
   assertion: AssertionGraphEntity,
   chainId: ChainId,
-  oracleAddress: string
+  oracleAddress: `0x${string}`
 ) {
   const {
     id,

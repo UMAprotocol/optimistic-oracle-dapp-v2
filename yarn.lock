@@ -5434,6 +5434,11 @@
     web3 "^1.6.0"
     winston "^3.2.1"
 
+"@uma/contracts-frontend@^0.4.12":
+  version "0.4.12"
+  resolved "https://registry.yarnpkg.com/@uma/contracts-frontend/-/contracts-frontend-0.4.12.tgz#c92cd707201ca18ca91c55ff61f979afe7580bd2"
+  integrity sha512-e0gfqSJZOY8fHtSIvAIJr+JKX/70ductElJedTqgwEfeWn08l1u8aEecxET9uaVP3kbhVgSbQBbRH8BkxXJm4w==
+
 "@uma/contracts-frontend@^0.4.9":
   version "0.4.9"
   resolved "https://registry.yarnpkg.com/@uma/contracts-frontend/-/contracts-frontend-0.4.9.tgz#0f28dd93c8985ea70f237b37b3a6e461ab75b6d7"

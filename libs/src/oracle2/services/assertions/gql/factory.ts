@@ -6,7 +6,7 @@ import { getAssertions } from "./queries";
 export type Config = {
   url: string;
   chainId: ChainId;
-  address: string;
+  address: `0x${string}`;
 };
 
 export const Factory =

@@ -8,6 +8,7 @@ import type {
 } from "@shared/types";
 import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
+import type { erc20ABI } from "wagmi";
 
 export type ActionType = "dispute" | "propose" | "settle" | null;
 
@@ -42,12 +43,22 @@ export type OracleQueryUI = {
   moreInformation: MoreInformationItem[];
   bond: BigNumber | null;
   reward: BigNumber | null;
-  // oo
   expiryType: ExpiryType | null;
-  oracleAddress: string;
-  tokenAddress: string;
+  oracleAddress: `0x${string}`;
+  tokenAddress: `0x${string}`;
   formattedBond: string | null;
   formattedReward: string | null;
+  approveBondSpendParams: ApproveBondSpendParams | null;
+};
+
+export type ApproveBondSpendParams = {
+  // the token address
+  address: `0x${string}`;
+  abi: typeof erc20ABI;
+  functionName: "approve";
+  chainId: number;
+  // oracle address and bond
+  args: readonly [`0x${string}`, BigNumber];
 };
 
 export type BigNumberish = string | number | BigNumber;

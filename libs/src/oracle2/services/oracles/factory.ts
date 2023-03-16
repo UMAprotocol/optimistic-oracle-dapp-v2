@@ -9,7 +9,7 @@ export type GqlConfig = {
   url: string;
   chainId: ChainId;
   type: OracleType;
-  address: string;
+  address: `0x${string}`;
 };
 export type Config = GqlConfig[];
 

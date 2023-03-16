@@ -13,6 +13,7 @@ import { formatNumberForDisplay } from "@shared/utils";
 import { format } from "date-fns";
 import type { BigNumber } from "ethers";
 import { ethers } from "ethers";
+import { erc20ABI } from "wagmi";
 
 export function utf8ToHex(utf8String: string) {
   return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
@@ -169,6 +170,15 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   const formattedReward = getFormattedReward(reward);
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getRequestActionType(state);
+  const approveBondSpendParams = !!bond
+    ? {
+        address: tokenAddress,
+        abi: erc20ABI,
+        functionName: "approve" as const,
+        chainId,
+        args: [oracleAddress, bond] as const,
+      }
+    : null;
 
   return {
     project,
@@ -196,6 +206,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     formattedReward,
     moreInformation,
     actionType,
+    approveBondSpendParams,
   };
 }
 
@@ -236,6 +247,15 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const formattedReward = null;
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getAssertionActionType(assertion);
+  const approveBondSpendParams = !!bond
+    ? {
+        address: tokenAddress,
+        abi: erc20ABI,
+        functionName: "approve" as const,
+        chainId,
+        args: [oracleAddress, bond] as const,
+      }
+    : null;
 
   return {
     id,
@@ -263,5 +283,6 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     formattedReward,
     reward,
     bond,
+    approveBondSpendParams,
   };
 }

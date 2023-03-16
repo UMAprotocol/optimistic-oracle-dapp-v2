@@ -212,6 +212,7 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
       href: "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md",
     },
   ],
+  approveBondSpendParams: null,
 };
 
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
@@ -496,6 +497,22 @@ export const handlersForAllPages = makeGraphqlHandlers({
           state: "Settled",
           identifier: "TEST_SETTLED",
           settlementPrice: makeEtherValueString(123),
+        },
+      ],
+    }),
+    Polygon: makeMockRequestGraphEntities({
+      inputs: [
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          bond: makeEtherValueString(456),
+          currency: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          currency: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+          bond: makeEtherValueString(789),
         },
       ],
     }),

@@ -21,8 +21,9 @@ import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
@@ -54,10 +55,29 @@ export function Panel() {
     actionType,
     expiryType,
     moreInformation,
+    approveBondSpendParams,
   } = content ?? {};
 
   const [error, setError] = useState("");
   const { token } = useComputed(content);
+  const { config, error: prepareApproveError } = usePrepareContractWrite(
+    approveBondSpendParams ?? {}
+  );
+  const { write: approve, error: approveError } = useContractWrite(config);
+  useEffect(() => {
+    if (!prepareApproveError && !approveError) {
+      setError("");
+      return;
+    }
+    if (prepareApproveError) {
+      setError(prepareApproveError.message);
+      return;
+    }
+    if (approveError) {
+      setError(approveError.message);
+      return;
+    }
+  }, [prepareApproveError, approveError]);
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
@@ -155,10 +175,14 @@ export function Panel() {
             </ActionWrapper>
           </ActionsDetailsWrapper>
         )}
-        {hasActionButton && (
+        {hasActionButton && !!approve && (
           <ActionButtonWrapper>
-            <Button variant="primary" onClick={action} width="min(100%, 512px)">
-              {actionType}
+            <Button
+              variant="primary"
+              onClick={approve}
+              width="min(100%, 512px)"
+            >
+              approve
             </Button>
           </ActionButtonWrapper>
         )}

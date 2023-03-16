@@ -117,9 +117,9 @@ export type OOV1GraphEntity = {
 
   time: string;
 
-  requester: string;
+  requester: `0x${string}`;
 
-  currency: string;
+  currency: `0x${string}`;
 
   reward: string;
 
@@ -345,7 +345,7 @@ export type OOV3GraphEntity = {
 
   expirationTime: string;
 
-  currency: string;
+  currency: `0x${string}`;
 
   bond: string;
 
@@ -384,14 +384,14 @@ export type OOV3GraphEntity = {
 
 export type ParsedOOV1GraphEntity = {
   chainId: ChainId;
-  oracleAddress: string;
+  oracleAddress: `0x${string}`;
   oracleType: OracleType;
   id: string;
   identifier: string;
   ancillaryData: string;
   time: string;
-  requester: string;
-  currency: string;
+  requester: `0x${string}`;
+  currency: `0x${string}`;
   reward: BigNumber;
   finalFee: BigNumber;
   proposer: string | null;
