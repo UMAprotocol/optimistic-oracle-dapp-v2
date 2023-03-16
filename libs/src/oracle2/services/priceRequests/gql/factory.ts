@@ -6,7 +6,7 @@ import { getPriceRequests } from "./queries";
 export type Config = {
   url: string;
   chainId: ChainId;
-  address: `0x${string}`;
+  address: string;
   type: OracleType;
 };
 
@@ -16,7 +16,12 @@ export const Factory =
     async function fetch({ url, chainId, address, type }: Config) {
       const requests = await getPriceRequests(url, chainId, type);
       return requests.map((request) =>
-        parsePriceRequestGraphEntity(request, chainId, address, type)
+        parsePriceRequestGraphEntity(
+          request,
+          chainId,
+          address as `0x${string}`,
+          type
+        )
       );
     }
     async function tick() {

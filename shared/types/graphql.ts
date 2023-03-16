@@ -363,7 +363,7 @@ export type OOV3GraphEntity = {
 
   settlementRecipient: string | null;
 
-  settlementResolution: string | null;
+  settlementResolution: boolean | null;
 
   disputeTimestamp: string | null;
 

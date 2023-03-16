@@ -243,6 +243,8 @@ export function parseAssertionGraphEntity(
     caller,
     expirationTime,
     currency,
+    settlementResolution:
+      settlementResolution === null ? true : settlementResolution,
     bond: BigNumber.from(bond),
     assertionTimestamp: assertionTimestamp,
     assertionBlockNumber: assertionBlockNumber,
@@ -252,9 +254,6 @@ export function parseAssertionGraphEntity(
     settlementPayout: handleGraphqlNullableBigInt({ settlementPayout }),
     settlementRecipient: handleGraphqlNullableStringOrBytes({
       settlementRecipient,
-    }),
-    settlementResolution: handleGraphqlNullableStringOrBytes({
-      settlementResolution,
     }),
     disputeTimestamp: handleGraphqlNullableStringOrBytes({ disputeTimestamp }),
     disputeBlockNumber: handleGraphqlNullableBigInt({ disputeBlockNumber }),

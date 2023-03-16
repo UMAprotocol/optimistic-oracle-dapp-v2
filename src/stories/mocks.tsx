@@ -101,7 +101,7 @@ export const defaultMockAssertionGraphEntity = (
     disputer: null,
     settlementPayout: null,
     settlementRecipient: null,
-    settlementResolution: "true",
+    settlementResolution: true,
     disputeTimestamp: null,
     disputeBlockNumber: null,
     disputeHash: null,
@@ -213,6 +213,11 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
     },
   ],
   approveBondSpendParams: null,
+  proposePriceParams: null,
+  disputePriceParams: null,
+  settlePriceParams: null,
+  disputeAssertionParams: null,
+  settleAssertionParams: null,
 };
 
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
@@ -555,7 +560,7 @@ export const handlersForAllPages = makeGraphqlHandlers({
         },
         {
           settlementHash: "0x123",
-          settlementResolution: "false",
+          settlementResolution: false,
           identifier: "TEST_SETTLED",
         },
       ],

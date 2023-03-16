@@ -426,7 +426,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const timeUNIX = toTimeUnix(assertionTimestamp);
   const timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
   const timeFormatted = toTimeFormatted(assertionTimestamp);
-  const valueText = settlementResolution;
+  const valueText = settlementResolution.toString();
   const queryTextHex = claim;
   const queryText = safeDecodeHexString(claim);
   const expiryType = null;

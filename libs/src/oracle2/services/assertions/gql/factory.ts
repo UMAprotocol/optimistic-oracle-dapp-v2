@@ -6,7 +6,7 @@ import { getAssertions } from "./queries";
 export type Config = {
   url: string;
   chainId: ChainId;
-  address: `0x${string}`;
+  address: string;
 };
 
 export const Factory =
@@ -15,7 +15,7 @@ export const Factory =
     async function fetch({ url, chainId, address }: Config) {
       const requests = await getAssertions(url, chainId);
       return requests.map((request) =>
-        parseAssertionGraphEntity(request, chainId, address)
+        parseAssertionGraphEntity(request, chainId, address as `0x${string}`)
       );
     }
     async function tick() {
