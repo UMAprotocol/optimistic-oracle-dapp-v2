@@ -3,6 +3,7 @@ import type {
   disputeAssertionAbi,
   disputePriceAbi,
   proposePriceAbi,
+  settleAssertionAbi,
 } from "@shared/constants/abi";
 import type {
   ChainId,
@@ -54,10 +55,13 @@ export type OracleQueryUI = {
   formattedBond: string | null;
   formattedReward: string | null;
   approveBondSpendParams: ApproveBondSpendParams | null;
-  proposePriceParams: ProposePriceParams | null;
+  proposePriceParams: ((proposedPrice: string) => ProposePriceParams) | null;
   disputePriceParams: DisputePriceParams | null;
   settlePriceParams: SettlePriceParams | null;
-  disputeAssertionParams: DisputeAssertionParams | null;
+  disputeAssertionParams:
+    | ((disputerAddress: `0x${string}`) => DisputeAssertionParams)
+    | null;
+  settleAssertionParams: SettleAssertionParams | null;
 };
 
 export type ApproveBondSpendParams = {
@@ -108,6 +112,16 @@ export type DisputeAssertionParams = {
   chainId: ChainId;
   // assertion id, user address
   args: readonly [string, `0x${string}`];
+};
+
+export type SettleAssertionParams = {
+  // the oracle address
+  address: `0x${string}`;
+  abi: typeof settleAssertionAbi;
+  functionName: "settleAssertion";
+  chainId: ChainId;
+  // assertion id
+  args: readonly [string];
 };
 
 export type BigNumberish = string | number | BigNumber;
