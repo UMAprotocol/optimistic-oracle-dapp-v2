@@ -47,25 +47,29 @@ export type OracleQueryUI = {
   formattedLivenessEndsIn: string;
   actionType: ActionType | null;
   moreInformation: MoreInformationItem[];
-  bond: BigNumber | null;
+  // for oo-v1 bond is the final fee
+  // for oo-v2 bond is the final fee unless `setBond` has been called,
+  // it is in the `bond` field returned for the request
+  // for oo-v3 the bond is always the `bond` field returned for the request
+  bond: BigNumber;
   reward: BigNumber | null;
   expiryType: ExpiryType | null;
   oracleAddress: `0x${string}`;
   tokenAddress: `0x${string}`;
   formattedBond: string | null;
   formattedReward: string | null;
-  approveBondSpendParams: ApproveBondSpendParams | null;
+  approveBondSpendParams: ApproveBondSpendParams | undefined;
   proposePriceParams:
     | ((proposedPrice: string) => ProposePriceParams | undefined)
-    | null;
-  disputePriceParams: DisputePriceParams | null;
-  settlePriceParams: SettlePriceParams | null;
+    | undefined;
+  disputePriceParams: DisputePriceParams | undefined;
+  settlePriceParams: SettlePriceParams | undefined;
   disputeAssertionParams:
     | ((
         disputerAddress: `0x${string}` | undefined
       ) => DisputeAssertionParams | undefined)
-    | null;
-  settleAssertionParams: SettleAssertionParams | null;
+    | undefined;
+  settleAssertionParams: SettleAssertionParams | undefined;
 };
 
 export type ApproveBondSpendParams = {

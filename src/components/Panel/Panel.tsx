@@ -11,8 +11,8 @@ import {
   red500,
   smallMobileAndUnder,
 } from "@/constants";
-import { addOpacityToHsla } from "@/helpers";
-import { useComputed, usePanelContext } from "@/hooks";
+import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
+import { useComputed, useContractInteractions, usePanelContext } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -21,9 +21,8 @@ import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import styled from "styled-components";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
@@ -37,7 +36,8 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
  */
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
-  const [inputValue, setInputValue] = useState("");
+  const [proposePriceInput, setProposePriceInput] = useState("");
+  const [inputError, setInputError] = useState("");
 
   const {
     chainId,
@@ -55,109 +55,21 @@ export function Panel() {
     actionType,
     expiryType,
     moreInformation,
-    approveBondSpendParams,
-    proposePriceParams,
-    disputePriceParams,
-    settlePriceParams,
-    disputeAssertionParams,
-    settleAssertionParams,
   } = content ?? {};
 
-  const [error, setError] = useState("");
   const { token, needsToApprove } = useComputed(content);
-  const { address } = useAccount();
   const {
-    config: approveBondSpendConfig,
-    error: prepareApproveBondSpendError,
-  } = usePrepareContractWrite(approveBondSpendParams ?? undefined);
-  const { write: approveBondSpend, error: approveBondSpendError } =
-    useContractWrite(approveBondSpendConfig);
-  const { config: proposePriceConfig, error: prepareProposePriceError } =
-    usePrepareContractWrite(proposePriceParams?.(inputValue) ?? undefined);
-  const { write: proposePrice, error: proposePriceError } =
-    useContractWrite(proposePriceConfig);
-  const { config: disputePriceConfig, error: prepareDisputePriceError } =
-    usePrepareContractWrite(disputePriceParams ?? undefined);
-  const { write: disputePrice, error: disputePriceError } =
-    useContractWrite(disputePriceConfig);
-  const { config: settlePriceConfig, error: prepareSettlePriceError } =
-    usePrepareContractWrite(settlePriceParams ?? {});
-  const { write: settlePrice, error: settlePriceError } =
-    useContractWrite(settlePriceConfig);
-  const {
-    config: disputeAssertionConfig,
-    error: prepareDisputeAssertionError,
-  } = usePrepareContractWrite(disputeAssertionParams?.(address) ?? undefined);
-  const { write: disputeAssertion, error: disputeAssertionError } =
-    useContractWrite(disputeAssertionConfig);
-  const { config: settleAssertionConfig, error: prepareSettleAssertionError } =
-    usePrepareContractWrite(settleAssertionParams ?? undefined);
-  const { write: settleAssertion, error: settleAssertionError } =
-    useContractWrite(settleAssertionConfig);
+    approveBondSpend,
+    proposePrice,
+    disputePrice,
+    settlePrice,
+    disputeAssertion,
+    settleAssertion,
+    isLoading: contractInteractionsLoading,
+    isError,
+    errorMessages,
+  } = useContractInteractions(content, proposePriceInput);
 
-  useEffect(() => {
-    if (prepareApproveBondSpendError) {
-      setError(prepareApproveBondSpendError.message);
-      return;
-    }
-    if (approveBondSpendError) {
-      setError(approveBondSpendError.message);
-      return;
-    }
-    if (prepareProposePriceError) {
-      setError(prepareProposePriceError.message);
-      return;
-    }
-    if (proposePriceError) {
-      setError(proposePriceError.message);
-      return;
-    }
-    if (prepareDisputePriceError) {
-      setError(prepareDisputePriceError.message);
-      return;
-    }
-    if (disputePriceError) {
-      setError(disputePriceError.message);
-      return;
-    }
-    if (prepareSettlePriceError) {
-      setError(prepareSettlePriceError.message);
-      return;
-    }
-    if (settlePriceError) {
-      setError(settlePriceError.message);
-      return;
-    }
-    if (prepareDisputeAssertionError) {
-      setError(prepareDisputeAssertionError.message);
-      return;
-    }
-    if (disputeAssertionError) {
-      setError(disputeAssertionError.message);
-      return;
-    }
-    if (prepareSettleAssertionError) {
-      setError(prepareSettleAssertionError.message);
-      return;
-    }
-    if (settleAssertionError) {
-      setError(settleAssertionError.message);
-      return;
-    }
-  }, [
-    prepareApproveBondSpendError,
-    approveBondSpendError,
-    prepareProposePriceError,
-    proposePriceError,
-    prepareDisputePriceError,
-    disputePriceError,
-    prepareSettlePriceError,
-    settlePriceError,
-    prepareDisputeAssertionError,
-    disputeAssertionError,
-    prepareSettleAssertionError,
-    settleAssertionError,
-  ]);
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
@@ -168,7 +80,6 @@ export function Panel() {
   const hasReward = formattedReward !== null;
   const actionsTitle = getActionsTitle();
   const actionContractInteraction = getActionContractInteraction();
-  const isError = error !== "";
 
   function getActionContractInteraction() {
     if (needsToApprove) return approveBondSpend;
@@ -213,14 +124,13 @@ export function Panel() {
           {actionsIcon}
           <SectionTitle>{actionsTitle}</SectionTitle>
         </SectionTitleWrapper>
-        {hasInput && setError ? (
+        {hasInput ? (
           <InputWrapper>
             <DecimalInput
-              value={inputValue}
-              onInput={setInputValue}
-              disabled={isError}
-              addErrorMessage={setError}
-              removeErrorMessage={() => setError("")}
+              value={proposePriceInput}
+              onInput={setProposePriceInput}
+              addErrorMessage={setInputError}
+              removeErrorMessage={() => setInputError("")}
             />
           </InputWrapper>
         ) : (
@@ -267,22 +177,26 @@ export function Panel() {
             </ActionWrapper>
           </ActionsDetailsWrapper>
         )}
-        {hasActionButton && !!actionContractInteraction && (
+        {hasActionButton && !contractInteractionsLoading && (
           <ActionButtonWrapper>
             <Button
               variant="primary"
               onClick={actionContractInteraction}
               width="min(100%, 512px)"
             >
-              {actionType}
+              {capitalizeFirstLetter(actionType)}
             </Button>
           </ActionButtonWrapper>
         )}
         {isError && (
-          <ErrorWrapper>
-            <WarningIcon />
-            <ErrorText>{error}</ErrorText>
-          </ErrorWrapper>
+          <>
+            {[inputError, ...errorMessages].filter(Boolean).map((message) => (
+              <ErrorWrapper key={message}>
+                <WarningIcon />
+                <ErrorText>{message}</ErrorText>
+              </ErrorWrapper>
+            ))}
+          </>
         )}
       </ActionsWrapper>
       <InfoIconsWrapper>

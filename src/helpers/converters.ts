@@ -98,7 +98,7 @@ function getAssertionActionType({
   // goes to `settled` page
   if (settlementHash) return null;
   // goes to `verify` page
-  if (toDate(expirationTime) > new Date()) {
+  if (toDate(expirationTime) < new Date()) {
     return "settle";
   }
   // also goes to `verify` page
@@ -143,12 +143,11 @@ function makeApproveBondSpendParams({
   oracleAddress,
   chainId,
 }: {
-  bond: BigNumber | null;
+  bond: BigNumber;
   tokenAddress: `0x${string}`;
   oracleAddress: `0x${string}`;
   chainId: ChainId;
 }) {
-  if (bond === null) return null;
   return {
     address: tokenAddress,
     abi: erc20ABI,
@@ -278,6 +277,16 @@ function makeSettleAssertionParams({
   };
 }
 
+function getOOV2SpecificValues(request: Request) {
+  const isV2 = isOOV2PriceRequest(request);
+
+  const bond = isV2 && request.bond ? request.bond : request.finalFee;
+  const customLiveness = isV2 ? request.customLiveness : null;
+  const eventBased = isV2 ? request.eventBased : null;
+
+  return { bond, customLiveness, eventBased };
+}
+
 export function requestToOracleQuery(request: Request): OracleQueryUI {
   const {
     id,
@@ -294,11 +303,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     reward,
     requester,
   } = request;
-  const {
-    bond = null,
-    customLiveness = null,
-    eventBased = null,
-  } = isOOV2PriceRequest(request) ? request : {};
+  const { bond, customLiveness, eventBased } = getOOV2SpecificValues(request);
   const bytes32Identifier = ethers.utils.formatBytes32String(identifier);
   const livenessEndsMilliseconds = getLivenessEnds(customLiveness);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
@@ -336,7 +341,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
           oracleAddress,
           chainId,
         })
-      : null;
+      : undefined;
 
   const disputePriceParams =
     actionType === "dispute"
@@ -348,7 +353,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
           oracleAddress,
           chainId,
         })
-      : null;
+      : undefined;
 
   const settlePriceParams =
     actionType === "settle"
@@ -360,10 +365,10 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
           oracleAddress,
           chainId,
         })
-      : null;
+      : undefined;
 
-  const disputeAssertionParams = null;
-  const settleAssertionParams = null;
+  const disputeAssertionParams = undefined;
+  const settleAssertionParams = undefined;
 
   return {
     project,
@@ -450,7 +455,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
           oracleAddress,
           chainId,
         })
-      : null;
+      : undefined;
 
   const settleAssertionParams =
     actionType === "settle"
@@ -459,11 +464,11 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
           oracleAddress,
           chainId,
         })
-      : null;
+      : undefined;
 
-  const proposePriceParams = null;
-  const disputePriceParams = null;
-  const settlePriceParams = null;
+  const proposePriceParams = undefined;
+  const disputePriceParams = undefined;
+  const settlePriceParams = undefined;
 
   return {
     id,

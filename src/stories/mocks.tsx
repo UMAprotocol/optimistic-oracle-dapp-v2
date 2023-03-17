@@ -556,7 +556,7 @@ export const handlersForAllPages = makeGraphqlHandlers({
         {
           settlementHash: null,
           expirationTime: makeUnixTimestamp("past", { days: 1 }),
-          identifier: "TEST_VERIFY",
+          identifier: "TEST_VERIFY_EXPIRED",
         },
         {
           settlementHash: "0x123",

@@ -37,7 +37,8 @@ export function scaleLightnessHsla(hsla: string, scale: number) {
  */
 export const isExternalLink = (href: string) => !href.startsWith("/");
 
-export function capitalizeFirstLetter(str: string) {
+export function capitalizeFirstLetter(str: string | undefined | null) {
+  if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
