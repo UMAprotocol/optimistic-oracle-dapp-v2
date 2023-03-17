@@ -244,6 +244,7 @@ export function parseAssertionGraphEntity(
     caller,
     expirationTime,
     currency,
+    // assertions are taken to be true until disputed
     settlementResolution:
       settlementResolution === null ? true : settlementResolution,
     bond: BigNumber.from(bond),
