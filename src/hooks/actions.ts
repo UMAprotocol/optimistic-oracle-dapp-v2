@@ -39,7 +39,7 @@ export function useActions(
     config: settlePriceConfig,
     error: prepareSettlePriceError,
     isLoading: isPrepareSettlePriceLoading,
-  } = usePrepareContractWrite(settlePriceParams ?? {});
+  } = usePrepareContractWrite(settlePriceParams);
   const {
     config: disputeAssertionConfig,
     error: prepareDisputeAssertionError,
