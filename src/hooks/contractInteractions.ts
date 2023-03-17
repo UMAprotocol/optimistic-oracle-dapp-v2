@@ -56,37 +56,67 @@ export function useContractInteractions(
     data: approveBondSpendResult,
     error: approveBondSpendError,
     isLoading: isApproveBondSpendLoading,
-  } = useContractWrite(approveBondSpendConfig);
+  } = useContractWrite({
+    ...approveBondSpendConfig,
+    onMutate() {
+      alert(`\`approveBondSpend\` called...`);
+    },
+  });
   const {
     write: proposePrice,
     data: proposePriceResult,
     error: proposePriceError,
     isLoading: isProposePriceLoading,
-  } = useContractWrite(proposePriceConfig);
+  } = useContractWrite({
+    ...proposePriceConfig,
+    onMutate() {
+      alert(`\`proposePrice\` called...`);
+    },
+  });
   const {
     write: disputePrice,
     data: disputePriceResult,
     error: disputePriceError,
     isLoading: isDisputePriceLoading,
-  } = useContractWrite(disputePriceConfig);
+  } = useContractWrite({
+    ...disputePriceConfig,
+    onMutate() {
+      alert(`\`disputePrice\` called...`);
+    },
+  });
   const {
     write: settlePrice,
     data: settlePriceResult,
     error: settlePriceError,
     isLoading: isSettlePriceLoading,
-  } = useContractWrite(settlePriceConfig);
+  } = useContractWrite({
+    ...settlePriceConfig,
+    onMutate() {
+      alert(`\`settlePrice\` called...`);
+    },
+  });
   const {
     write: disputeAssertion,
     data: disputeAssertionResult,
     error: disputeAssertionError,
     isLoading: isDisputeAssertionLoading,
-  } = useContractWrite(disputeAssertionConfig);
+  } = useContractWrite({
+    ...disputeAssertionConfig,
+    onMutate() {
+      alert(`\`disputeAssertion\` called...`);
+    },
+  });
   const {
     write: settleAssertion,
     data: settleAssertionResult,
     error: settleAssertionError,
     isLoading: isSettleAssertionLoading,
-  } = useContractWrite(settleAssertionConfig);
+  } = useContractWrite({
+    ...settleAssertionConfig,
+    onMutate() {
+      alert(`\`settleAssertion\` called...`);
+    },
+  });
 
   const {
     data: approveBondSpendReceipt,

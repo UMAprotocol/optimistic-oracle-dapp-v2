@@ -177,11 +177,12 @@ export function Panel() {
             </ActionWrapper>
           </ActionsDetailsWrapper>
         )}
-        {hasActionButton && !contractInteractionsLoading && (
+        {hasActionButton && (
           <ActionButtonWrapper>
             <Button
               variant="primary"
               onClick={actionContractInteraction}
+              disabled={contractInteractionsLoading}
               width="min(100%, 512px)"
             >
               {capitalizeFirstLetter(actionType)}
