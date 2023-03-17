@@ -20,6 +20,7 @@ import { formatNumberForDisplay, parseEther } from "@shared/utils";
 import { format } from "date-fns";
 import type { BigNumber } from "ethers";
 import { ethers } from "ethers";
+import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
 
 export function utf8ToHex(utf8String: string) {
@@ -144,8 +145,8 @@ function makeApproveBondSpendParams({
   chainId,
 }: {
   bond: BigNumber;
-  tokenAddress: `0x${string}`;
-  oracleAddress: `0x${string}`;
+  tokenAddress: Address;
+  oracleAddress: Address;
   chainId: ChainId;
 }) {
   return {
@@ -165,11 +166,11 @@ function makeProposePriceParams({
   oracleAddress,
   chainId,
 }: {
-  requester: `0x${string}`;
+  requester: Address;
   bytes32Identifier: string;
   time: string;
   ancillaryData: string;
-  oracleAddress: `0x${string}`;
+  oracleAddress: Address;
   chainId: ChainId;
 }) {
   return (proposedPrice: string) => {
@@ -198,11 +199,11 @@ function makeDisputePriceParams({
   oracleAddress,
   chainId,
 }: {
-  requester: `0x${string}`;
+  requester: Address;
   bytes32Identifier: string;
   time: string;
   ancillaryData: string;
-  oracleAddress: `0x${string}`;
+  oracleAddress: Address;
   chainId: ChainId;
 }) {
   return {
@@ -222,11 +223,11 @@ function makeSettlePriceParams({
   oracleAddress,
   chainId,
 }: {
-  requester: `0x${string}`;
+  requester: Address;
   bytes32Identifier: string;
   time: string;
   ancillaryData: string;
-  oracleAddress: `0x${string}`;
+  oracleAddress: Address;
   chainId: ChainId;
 }) {
   return {
@@ -244,10 +245,10 @@ function makeDisputeAssertionParams({
   chainId,
 }: {
   assertionId: string;
-  oracleAddress: `0x${string}`;
+  oracleAddress: Address;
   chainId: ChainId;
 }) {
-  return (disputerAddress: `0x${string}` | undefined) => {
+  return (disputerAddress: Address | undefined) => {
     if (!disputerAddress) return;
     return {
       address: oracleAddress,
@@ -265,7 +266,7 @@ function makeSettleAssertionParams({
   chainId,
 }: {
   assertionId: string;
-  oracleAddress: `0x${string}`;
+  oracleAddress: Address;
   chainId: ChainId;
 }) {
   return {

@@ -10,6 +10,7 @@ import type {
   RequestState,
 } from "@shared/types";
 import { BigNumber } from "ethers";
+import type { Address } from "wagmi";
 
 export function handleGraphqlNullableStringOrBytes<
   EntityKey extends { [key: string]: string | null }
@@ -78,7 +79,7 @@ export function makeQueryName(oracleType: OracleType, chainName: ChainName) {
 export function parsePriceRequestGraphEntity(
   priceRequest: PriceRequestGraphEntity,
   chainId: ChainId,
-  oracleAddress: `0x${string}`,
+  oracleAddress: Address,
   oracleType: OracleType
 ) {
   const {
@@ -197,7 +198,7 @@ export function parsePriceRequestGraphEntity(
 export function parseAssertionGraphEntity(
   assertion: AssertionGraphEntity,
   chainId: ChainId,
-  oracleAddress: `0x${string}`
+  oracleAddress: Address
 ) {
   const {
     id,

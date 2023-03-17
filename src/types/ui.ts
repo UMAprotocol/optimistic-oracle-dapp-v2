@@ -14,7 +14,7 @@ import type {
 } from "@shared/types";
 import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
-import type { erc20ABI } from "wagmi";
+import type { Address, erc20ABI } from "wagmi";
 
 export type ActionType = "dispute" | "propose" | "settle" | null;
 
@@ -54,8 +54,8 @@ export type OracleQueryUI = {
   bond: BigNumber;
   reward: BigNumber | null;
   expiryType: ExpiryType | null;
-  oracleAddress: `0x${string}`;
-  tokenAddress: `0x${string}`;
+  oracleAddress: Address;
+  tokenAddress: Address;
   formattedBond: string | null;
   formattedReward: string | null;
   approveBondSpendParams: ApproveBondSpendParams | undefined;
@@ -66,7 +66,7 @@ export type OracleQueryUI = {
   settlePriceParams: SettlePriceParams | undefined;
   disputeAssertionParams:
     | ((
-        disputerAddress: `0x${string}` | undefined
+        disputerAddress: Address | undefined
       ) => DisputeAssertionParams | undefined)
     | undefined;
   settleAssertionParams: SettleAssertionParams | undefined;
@@ -74,57 +74,57 @@ export type OracleQueryUI = {
 
 export type ApproveBondSpendParams = {
   // the token address
-  address: `0x${string}`;
+  address: Address;
   abi: typeof erc20ABI;
   functionName: "approve";
   chainId: ChainId;
   // oracle address and bond
-  args: readonly [`0x${string}`, BigNumber];
+  args: readonly [Address, BigNumber];
 };
 
 export type ProposePriceParams = {
   // the oracle address
-  address: `0x${string}`;
+  address: Address;
   abi: typeof proposePriceAbi;
   functionName: "proposePrice";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData, proposedPrice
-  args: readonly [`0x${string}`, string, BigNumberish, string, BigNumberish];
+  args: readonly [Address, string, BigNumberish, string, BigNumberish];
 };
 
 export type DisputePriceParams = {
   // the oracle address
-  address: `0x${string}`;
+  address: Address;
   abi: typeof disputePriceAbi;
   functionName: "disputePrice";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData
-  args: readonly [`0x${string}`, string, BigNumberish, string];
+  args: readonly [Address, string, BigNumberish, string];
 };
 
 export type SettlePriceParams = {
   // the oracle address
-  address: `0x${string}`;
+  address: Address;
   abi: typeof disputePriceAbi;
   functionName: "settle";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData
-  args: readonly [`0x${string}`, string, BigNumberish, string];
+  args: readonly [Address, string, BigNumberish, string];
 };
 
 export type DisputeAssertionParams = {
   // the oracle address
-  address: `0x${string}`;
+  address: Address;
   abi: typeof disputeAssertionAbi;
   functionName: "disputeAssertion";
   chainId: ChainId;
   // assertion id, user address
-  args: readonly [string, `0x${string}`];
+  args: readonly [string, Address];
 };
 
 export type SettleAssertionParams = {
   // the oracle address
-  address: `0x${string}`;
+  address: Address;
   abi: typeof settleAssertionAbi;
   functionName: "settleAssertion";
   chainId: ChainId;

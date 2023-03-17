@@ -1,5 +1,6 @@
 import type { parseAssertionGraphEntity } from "@shared/utils";
 import type { BigNumber } from "ethers";
+import type { Address } from "wagmi";
 import type { ChainId, OracleType, RequestState } from "./oracle";
 
 export type PriceRequestsQuery = OOV1GraphQuery | OOV2GraphQuery;
@@ -117,9 +118,9 @@ export type OOV1GraphEntity = {
 
   time: string;
 
-  requester: `0x${string}`;
+  requester: Address;
 
-  currency: `0x${string}`;
+  currency: Address;
 
   reward: string;
 
@@ -345,7 +346,7 @@ export type OOV3GraphEntity = {
 
   expirationTime: string;
 
-  currency: `0x${string}`;
+  currency: Address;
 
   bond: string;
 
@@ -384,14 +385,14 @@ export type OOV3GraphEntity = {
 
 export type ParsedOOV1GraphEntity = {
   chainId: ChainId;
-  oracleAddress: `0x${string}`;
+  oracleAddress: Address;
   oracleType: OracleType;
   id: string;
   identifier: string;
   ancillaryData: string;
   time: string;
-  requester: `0x${string}`;
-  currency: `0x${string}`;
+  requester: Address;
+  currency: Address;
   reward: BigNumber;
   finalFee: BigNumber;
   proposer: string | null;
