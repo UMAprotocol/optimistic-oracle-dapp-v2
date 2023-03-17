@@ -73,13 +73,13 @@ export function Panel() {
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
-  const action = () => alert("placeholder action");
-  const hasActionButton = action !== null && actionType !== null;
+  const action = getActionContractInteraction();
+  const actionButtonTitle = needsToApprove ? "approve bond" : actionType;
+  const hasActionButton = action !== null;
   const hasInput = page === "propose";
   const hasBond = formattedBond !== null;
   const hasReward = formattedReward !== null;
   const actionsTitle = getActionsTitle();
-  const actionContractInteraction = getActionContractInteraction();
 
   function getActionContractInteraction() {
     if (needsToApprove) return approveBondSpend;
@@ -181,11 +181,11 @@ export function Panel() {
           <ActionButtonWrapper>
             <Button
               variant="primary"
-              onClick={actionContractInteraction}
+              onClick={action}
               disabled={contractInteractionsLoading}
               width="min(100%, 512px)"
             >
-              {capitalizeFirstLetter(actionType)}
+              {capitalizeFirstLetter(actionButtonTitle)}
             </Button>
           </ActionButtonWrapper>
         )}

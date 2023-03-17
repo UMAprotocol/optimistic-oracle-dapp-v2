@@ -212,12 +212,12 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
       href: "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md",
     },
   ],
-  approveBondSpendParams: null,
-  proposePriceParams: null,
-  disputePriceParams: null,
-  settlePriceParams: null,
-  disputeAssertionParams: null,
-  settleAssertionParams: null,
+  approveBondSpendParams: undefined,
+  proposePriceParams: undefined,
+  disputePriceParams: undefined,
+  settlePriceParams: undefined,
+  disputeAssertionParams: undefined,
+  settleAssertionParams: undefined,
 };
 
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
@@ -479,6 +479,39 @@ export const handlersForAllPages = makeGraphqlHandlers({
         },
       ],
     }),
+    Goerli: makeMockRequestGraphEntities({
+      inputs: [
+        {
+          identifier: "TEST_VERIFY",
+          state: "Proposed",
+          proposedPrice: makeEtherValueString(123),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          identifier: "TEST_VERIFY",
+          state: "Disputed",
+          proposedPrice: makeEtherValueString(123),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          bond: makeEtherValueString(1230000),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Settled",
+          settlementPrice: makeEtherValueString(123),
+          identifier: "TEST_SETTLED",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+      ],
+    }),
   },
   v2: {
     Ethereum: makeMockRequestGraphEntities({
@@ -502,22 +535,6 @@ export const handlersForAllPages = makeGraphqlHandlers({
           state: "Settled",
           identifier: "TEST_SETTLED",
           settlementPrice: makeEtherValueString(123),
-        },
-      ],
-    }),
-    Polygon: makeMockRequestGraphEntities({
-      inputs: [
-        {
-          state: "Requested",
-          identifier: "MXNUSD",
-          bond: makeEtherValueString(456),
-          currency: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-        },
-        {
-          state: "Requested",
-          identifier: "TEST_PROPOSE",
-          currency: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
-          bond: makeEtherValueString(789),
         },
       ],
     }),
