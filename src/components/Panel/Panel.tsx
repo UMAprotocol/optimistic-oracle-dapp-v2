@@ -12,7 +12,8 @@ import {
   smallMobileAndUnder,
 } from "@/constants";
 import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
-import { useComputed, useContractInteractions, usePanelContext } from "@/hooks";
+import { useContractInteractions, usePanelContext } from "@/hooks";
+import { useTokenInfo } from "@/hooks/tokenInfo";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -49,6 +50,7 @@ export function Panel() {
     queryTextHex,
     timeUNIX,
     timeUTC,
+    bond,
     formattedBond,
     formattedReward,
     formattedLivenessEndsIn,
@@ -57,7 +59,7 @@ export function Panel() {
     moreInformation,
   } = content ?? {};
 
-  const { token, needsToApprove } = useComputed(content);
+  const { token, allowance } = useTokenInfo(content);
   const {
     approveBondSpend,
     proposePrice,
@@ -74,6 +76,8 @@ export function Panel() {
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
   const action = getActionContractInteraction();
+  const needsToApprove =
+    allowance !== undefined && bond !== undefined && allowance.lt(bond);
   const actionButtonTitle = needsToApprove ? "approve bond" : actionType;
   const hasActionButton = action !== null;
   const hasInput = page === "propose";

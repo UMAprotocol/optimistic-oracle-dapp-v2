@@ -1,4 +1,4 @@
-import { useComputed } from "@/hooks";
+import { useTokenInfo } from "@/hooks/tokenInfo";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import { Currency } from "../Currency";
@@ -23,7 +23,7 @@ export function ItemDetails({
     formattedReward,
     valueText,
   } = item;
-  const { token } = useComputed(item);
+  const { token } = useTokenInfo(item);
 
   const hasBond = formattedBond !== null;
   const hasReward = formattedReward !== null;
