@@ -10,6 +10,7 @@ import type {
   RequestState,
 } from "@shared/types";
 import { BigNumber } from "ethers";
+import type { Address } from "wagmi";
 
 export function handleGraphqlNullableStringOrBytes<
   EntityKey extends { [key: string]: string | null }
@@ -78,7 +79,7 @@ export function makeQueryName(oracleType: OracleType, chainName: ChainName) {
 export function parsePriceRequestGraphEntity(
   priceRequest: PriceRequestGraphEntity,
   chainId: ChainId,
-  oracleAddress: string,
+  oracleAddress: Address,
   oracleType: OracleType
 ) {
   const {
@@ -197,7 +198,7 @@ export function parsePriceRequestGraphEntity(
 export function parseAssertionGraphEntity(
   assertion: AssertionGraphEntity,
   chainId: ChainId,
-  oracleAddress: string
+  oracleAddress: Address
 ) {
   const {
     id,
@@ -243,6 +244,9 @@ export function parseAssertionGraphEntity(
     caller,
     expirationTime,
     currency,
+    // assertions are taken to be true until disputed
+    settlementResolution:
+      settlementResolution === null ? true : settlementResolution,
     bond: BigNumber.from(bond),
     assertionTimestamp: assertionTimestamp,
     assertionBlockNumber: assertionBlockNumber,
@@ -252,9 +256,6 @@ export function parseAssertionGraphEntity(
     settlementPayout: handleGraphqlNullableBigInt({ settlementPayout }),
     settlementRecipient: handleGraphqlNullableStringOrBytes({
       settlementRecipient,
-    }),
-    settlementResolution: handleGraphqlNullableStringOrBytes({
-      settlementResolution,
     }),
     disputeTimestamp: handleGraphqlNullableStringOrBytes({ disputeTimestamp }),
     disputeBlockNumber: handleGraphqlNullableBigInt({ disputeBlockNumber }),

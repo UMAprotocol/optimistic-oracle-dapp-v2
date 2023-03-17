@@ -1,6 +1,13 @@
 import { config } from "@/constants";
 import type { ActionType, MoreInformationItem, OracleQueryUI } from "@/types";
 import { chainsById } from "@shared/constants";
+import {
+  disputeAssertionAbi,
+  disputePriceAbi,
+  proposePriceAbi,
+  settleAssertionAbi,
+  settlePriceAbi,
+} from "@shared/constants/abi";
 import type {
   Assertion,
   ChainId,
@@ -9,10 +16,12 @@ import type {
   Request,
   RequestState,
 } from "@shared/types";
-import { formatNumberForDisplay } from "@shared/utils";
+import { formatNumberForDisplay, parseEther } from "@shared/utils";
 import { format } from "date-fns";
 import type { BigNumber } from "ethers";
 import { ethers } from "ethers";
+import type { Address } from "wagmi";
+import { erc20ABI } from "wagmi";
 
 export function utf8ToHex(utf8String: string) {
   return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
@@ -90,7 +99,7 @@ function getAssertionActionType({
   // goes to `settled` page
   if (settlementHash) return null;
   // goes to `verify` page
-  if (toDate(expirationTime) > new Date()) {
+  if (toDate(expirationTime) < new Date()) {
     return "settle";
   }
   // also goes to `verify` page
@@ -129,6 +138,156 @@ function isOOV2PriceRequest(
   return request.oracleType === "Optimistic Oracle V2";
 }
 
+function makeApproveBondSpendParams({
+  bond,
+  tokenAddress,
+  oracleAddress,
+  chainId,
+}: {
+  bond: BigNumber;
+  tokenAddress: Address;
+  oracleAddress: Address;
+  chainId: ChainId;
+}) {
+  return {
+    address: tokenAddress,
+    abi: erc20ABI,
+    functionName: "approve" as const,
+    chainId,
+    args: [oracleAddress, bond] as const,
+  };
+}
+
+function makeProposePriceParams({
+  requester,
+  bytes32Identifier,
+  time,
+  ancillaryData,
+  oracleAddress,
+  chainId,
+}: {
+  requester: Address;
+  bytes32Identifier: string;
+  time: string;
+  ancillaryData: string;
+  oracleAddress: Address;
+  chainId: ChainId;
+}) {
+  return (proposedPrice: string) => {
+    if (!proposedPrice) return;
+    return {
+      address: oracleAddress,
+      abi: proposePriceAbi,
+      functionName: "proposePrice" as const,
+      chainId,
+      args: [
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        parseEther(proposedPrice),
+      ] as const,
+    };
+  };
+}
+
+function makeDisputePriceParams({
+  requester,
+  bytes32Identifier,
+  time,
+  ancillaryData,
+  oracleAddress,
+  chainId,
+}: {
+  requester: Address;
+  bytes32Identifier: string;
+  time: string;
+  ancillaryData: string;
+  oracleAddress: Address;
+  chainId: ChainId;
+}) {
+  return {
+    address: oracleAddress,
+    abi: disputePriceAbi,
+    functionName: "disputePrice" as const,
+    chainId,
+    args: [requester, bytes32Identifier, time, ancillaryData] as const,
+  };
+}
+
+function makeSettlePriceParams({
+  requester,
+  bytes32Identifier,
+  time,
+  ancillaryData,
+  oracleAddress,
+  chainId,
+}: {
+  requester: Address;
+  bytes32Identifier: string;
+  time: string;
+  ancillaryData: string;
+  oracleAddress: Address;
+  chainId: ChainId;
+}) {
+  return {
+    address: oracleAddress,
+    abi: settlePriceAbi,
+    functionName: "settle" as const,
+    chainId,
+    args: [requester, bytes32Identifier, time, ancillaryData] as const,
+  };
+}
+
+function makeDisputeAssertionParams({
+  assertionId,
+  oracleAddress,
+  chainId,
+}: {
+  assertionId: string;
+  oracleAddress: Address;
+  chainId: ChainId;
+}) {
+  return (disputerAddress: Address | undefined) => {
+    if (!disputerAddress) return;
+    return {
+      address: oracleAddress,
+      abi: disputeAssertionAbi,
+      functionName: "disputeAssertion" as const,
+      chainId,
+      args: [assertionId, disputerAddress] as const,
+    };
+  };
+}
+
+function makeSettleAssertionParams({
+  assertionId,
+  oracleAddress,
+  chainId,
+}: {
+  assertionId: string;
+  oracleAddress: Address;
+  chainId: ChainId;
+}) {
+  return {
+    address: oracleAddress,
+    abi: settleAssertionAbi,
+    functionName: "settleAssertion" as const,
+    chainId,
+    args: [assertionId] as const,
+  };
+}
+
+function getOOV2SpecificValues(request: Request) {
+  const isV2 = isOOV2PriceRequest(request);
+
+  const bond = isV2 && request.bond ? request.bond : request.finalFee;
+  const customLiveness = isV2 ? request.customLiveness : null;
+  const eventBased = isV2 ? request.eventBased : null;
+
+  return { bond, customLiveness, eventBased };
+}
+
 export function requestToOracleQuery(request: Request): OracleQueryUI {
   const {
     id,
@@ -143,12 +302,10 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     currency,
     state,
     reward,
+    requester,
   } = request;
-  const {
-    bond = null,
-    customLiveness = null,
-    eventBased = null,
-  } = isOOV2PriceRequest(request) ? request : {};
+  const { bond, customLiveness, eventBased } = getOOV2SpecificValues(request);
+  const bytes32Identifier = ethers.utils.formatBytes32String(identifier);
   const livenessEndsMilliseconds = getLivenessEnds(customLiveness);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
   // TODO: we need methods to calculate these things
@@ -169,6 +326,50 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   const formattedReward = getFormattedReward(reward);
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getRequestActionType(state);
+  const approveBondSpendParams = makeApproveBondSpendParams({
+    bond,
+    tokenAddress,
+    oracleAddress,
+    chainId,
+  });
+  const proposePriceParams =
+    actionType === "propose"
+      ? makeProposePriceParams({
+          requester,
+          bytes32Identifier,
+          time,
+          ancillaryData,
+          oracleAddress,
+          chainId,
+        })
+      : undefined;
+
+  const disputePriceParams =
+    actionType === "dispute"
+      ? makeDisputePriceParams({
+          requester,
+          bytes32Identifier,
+          time,
+          ancillaryData,
+          oracleAddress,
+          chainId,
+        })
+      : undefined;
+
+  const settlePriceParams =
+    actionType === "settle"
+      ? makeSettlePriceParams({
+          requester,
+          bytes32Identifier,
+          time,
+          ancillaryData,
+          oracleAddress,
+          chainId,
+        })
+      : undefined;
+
+  const disputeAssertionParams = undefined;
+  const settleAssertionParams = undefined;
 
   return {
     project,
@@ -196,6 +397,12 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     formattedReward,
     moreInformation,
     actionType,
+    approveBondSpendParams,
+    proposePriceParams,
+    disputePriceParams,
+    settlePriceParams,
+    disputeAssertionParams,
+    settleAssertionParams,
   };
 }
 
@@ -225,7 +432,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const timeUNIX = toTimeUnix(assertionTimestamp);
   const timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
   const timeFormatted = toTimeFormatted(assertionTimestamp);
-  const valueText = settlementResolution;
+  const valueText = settlementResolution.toString();
   const queryTextHex = claim;
   const queryText = safeDecodeHexString(claim);
   const expiryType = null;
@@ -236,6 +443,33 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const formattedReward = null;
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getAssertionActionType(assertion);
+  const approveBondSpendParams = makeApproveBondSpendParams({
+    bond,
+    tokenAddress,
+    oracleAddress,
+    chainId,
+  });
+  const disputeAssertionParams =
+    actionType === "dispute"
+      ? makeDisputeAssertionParams({
+          assertionId,
+          oracleAddress,
+          chainId,
+        })
+      : undefined;
+
+  const settleAssertionParams =
+    actionType === "settle"
+      ? makeSettleAssertionParams({
+          assertionId,
+          oracleAddress,
+          chainId,
+        })
+      : undefined;
+
+  const proposePriceParams = undefined;
+  const disputePriceParams = undefined;
+  const settlePriceParams = undefined;
 
   return {
     id,
@@ -263,5 +497,11 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     formattedReward,
     reward,
     bond,
+    approveBondSpendParams,
+    disputeAssertionParams,
+    proposePriceParams,
+    disputePriceParams,
+    settlePriceParams,
+    settleAssertionParams,
   };
 }

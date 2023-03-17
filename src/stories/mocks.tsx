@@ -101,7 +101,7 @@ export const defaultMockAssertionGraphEntity = (
     disputer: null,
     settlementPayout: null,
     settlementRecipient: null,
-    settlementResolution: "true",
+    settlementResolution: true,
     disputeTimestamp: null,
     disputeBlockNumber: null,
     disputeHash: null,
@@ -212,6 +212,12 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
       href: "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md",
     },
   ],
+  approveBondSpendParams: undefined,
+  proposePriceParams: undefined,
+  disputePriceParams: undefined,
+  settlePriceParams: undefined,
+  disputeAssertionParams: undefined,
+  settleAssertionParams: undefined,
 };
 
 export function makeMockOracleQueryUI(input?: Partial<OracleQueryUI>) {
@@ -473,6 +479,39 @@ export const handlersForAllPages = makeGraphqlHandlers({
         },
       ],
     }),
+    Goerli: makeMockRequestGraphEntities({
+      inputs: [
+        {
+          identifier: "TEST_VERIFY",
+          state: "Proposed",
+          proposedPrice: makeEtherValueString(123),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          identifier: "TEST_VERIFY",
+          state: "Disputed",
+          proposedPrice: makeEtherValueString(123),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          bond: makeEtherValueString(1230000),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Settled",
+          settlementPrice: makeEtherValueString(123),
+          identifier: "TEST_SETTLED",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+      ],
+    }),
   },
   v2: {
     Ethereum: makeMockRequestGraphEntities({
@@ -534,11 +573,11 @@ export const handlersForAllPages = makeGraphqlHandlers({
         {
           settlementHash: null,
           expirationTime: makeUnixTimestamp("past", { days: 1 }),
-          identifier: "TEST_VERIFY",
+          identifier: "TEST_VERIFY_EXPIRED",
         },
         {
           settlementHash: "0x123",
-          settlementResolution: "false",
+          settlementResolution: false,
           identifier: "TEST_SETTLED",
         },
       ],
@@ -560,7 +599,7 @@ export function makeUnixTimestamp(
 ) {
   const addOrSub = direction === "future" ? add : sub;
 
-  return (addOrSub(new Date(), duration).getTime() / 1000).toString();
+  return Math.floor(addOrSub(new Date(), duration).getTime() / 1000).toString();
 }
 
 export function makeEtherValueString(value: number) {

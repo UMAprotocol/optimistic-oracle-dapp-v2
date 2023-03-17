@@ -1,17 +1,12 @@
-import { useComputed } from "@/hooks";
+import { useTokens } from "@/hooks/tokens";
 import type { OracleQueryUI } from "@/types";
-import { useEffect } from "react";
 import styled from "styled-components";
 import { Currency } from "../Currency";
 import { TD, Text } from "./style";
 
 export function ProposeCells({ query }: { query: OracleQueryUI }) {
   const { oracleType, formattedBond, formattedReward } = query;
-  const { token, fetchCurrencyTokenInfo } = useComputed(query);
-
-  useEffect(() => {
-    !!fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
-  }, [fetchCurrencyTokenInfo]);
+  const { token } = useTokens(query);
 
   const hasBond = formattedBond !== null;
 

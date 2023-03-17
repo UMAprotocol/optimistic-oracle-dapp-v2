@@ -1,5 +1,6 @@
 import type { ChainId, OracleType } from "@shared/types";
 import { parsePriceRequestGraphEntity } from "@shared/utils";
+import type { Address } from "wagmi";
 import type { Handlers, Service, ServiceFactory } from "../../../types";
 import { getPriceRequests } from "./queries";
 
@@ -16,7 +17,7 @@ export const Factory =
     async function fetch({ url, chainId, address, type }: Config) {
       const requests = await getPriceRequests(url, chainId, type);
       return requests.map((request) =>
-        parsePriceRequestGraphEntity(request, chainId, address, type)
+        parsePriceRequestGraphEntity(request, chainId, address as Address, type)
       );
     }
     async function tick() {

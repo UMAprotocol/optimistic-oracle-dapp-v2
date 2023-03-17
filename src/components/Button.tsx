@@ -54,24 +54,6 @@ export function Button({
   disabled,
   type = "button",
 }: Props) {
-  if (onClick && href) {
-    throw new Error(
-      "Cannot have both onClick and href. Must behave as either a link or a button."
-    );
-  }
-
-  if (!onClick && !href && type !== "submit") {
-    throw new Error(
-      "Must have either onClick or href unless acting as a submit button. Must behave as either a link, a button, or a submit button."
-    );
-  }
-
-  if (href && disabled) {
-    throw new Error(
-      "`disabled` only makes sense on `button` elements. Cannot be used with `href`. "
-    );
-  }
-
   width = typeof width === "string" ? width : `${width}px`;
   height = typeof height === "string" ? height : `${height}px`;
 
@@ -115,7 +97,7 @@ export function Button({
           {children}
         </_Link>
       ) : null}
-      {onClick || type === "submit" ? (
+      {type === "button" || type === "submit" ? (
         <_Button
           onClick={onClick}
           style={style}

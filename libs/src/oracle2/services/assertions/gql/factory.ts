@@ -1,5 +1,6 @@
 import type { ChainId } from "@shared/types";
 import { parseAssertionGraphEntity } from "@shared/utils";
+import type { Address } from "wagmi";
 import type { Handlers, Service, ServiceFactory } from "../../../types";
 import { getAssertions } from "./queries";
 
@@ -15,7 +16,7 @@ export const Factory =
     async function fetch({ url, chainId, address }: Config) {
       const requests = await getAssertions(url, chainId);
       return requests.map((request) =>
-        parseAssertionGraphEntity(request, chainId, address)
+        parseAssertionGraphEntity(request, chainId, address as Address)
       );
     }
     async function tick() {

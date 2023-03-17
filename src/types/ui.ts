@@ -1,5 +1,11 @@
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type {
+  disputeAssertionAbi,
+  disputePriceAbi,
+  proposePriceAbi,
+  settleAssertionAbi,
+} from "@shared/constants/abi";
+import type {
   ChainId,
   ChainName,
   ExpiryType,
@@ -8,6 +14,7 @@ import type {
 } from "@shared/types";
 import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
+import type { Address, erc20ABI } from "wagmi";
 
 export type ActionType = "dispute" | "propose" | "settle" | null;
 
@@ -40,14 +47,89 @@ export type OracleQueryUI = {
   formattedLivenessEndsIn: string;
   actionType: ActionType | null;
   moreInformation: MoreInformationItem[];
-  bond: BigNumber | null;
+  // for oo-v1 bond is the final fee
+  // for oo-v2 bond is the final fee unless `setBond` has been called,
+  // it is in the `bond` field returned for the request
+  // for oo-v3 the bond is always the `bond` field returned for the request
+  bond: BigNumber;
   reward: BigNumber | null;
-  // oo
   expiryType: ExpiryType | null;
-  oracleAddress: string;
-  tokenAddress: string;
+  oracleAddress: Address;
+  tokenAddress: Address;
   formattedBond: string | null;
   formattedReward: string | null;
+  approveBondSpendParams: ApproveBondSpendParams | undefined;
+  proposePriceParams:
+    | ((proposedPrice: string) => ProposePriceParams | undefined)
+    | undefined;
+  disputePriceParams: DisputePriceParams | undefined;
+  settlePriceParams: SettlePriceParams | undefined;
+  disputeAssertionParams:
+    | ((
+        disputerAddress: Address | undefined
+      ) => DisputeAssertionParams | undefined)
+    | undefined;
+  settleAssertionParams: SettleAssertionParams | undefined;
+};
+
+export type ApproveBondSpendParams = {
+  // the token address
+  address: Address;
+  abi: typeof erc20ABI;
+  functionName: "approve";
+  chainId: ChainId;
+  // oracle address and bond
+  args: readonly [Address, BigNumber];
+};
+
+export type ProposePriceParams = {
+  // the oracle address
+  address: Address;
+  abi: typeof proposePriceAbi;
+  functionName: "proposePrice";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData, proposedPrice
+  args: readonly [Address, string, BigNumberish, string, BigNumberish];
+};
+
+export type DisputePriceParams = {
+  // the oracle address
+  address: Address;
+  abi: typeof disputePriceAbi;
+  functionName: "disputePrice";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData
+  args: readonly [Address, string, BigNumberish, string];
+};
+
+export type SettlePriceParams = {
+  // the oracle address
+  address: Address;
+  abi: typeof disputePriceAbi;
+  functionName: "settle";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData
+  args: readonly [Address, string, BigNumberish, string];
+};
+
+export type DisputeAssertionParams = {
+  // the oracle address
+  address: Address;
+  abi: typeof disputeAssertionAbi;
+  functionName: "disputeAssertion";
+  chainId: ChainId;
+  // assertion id, user address
+  args: readonly [string, Address];
+};
+
+export type SettleAssertionParams = {
+  // the oracle address
+  address: Address;
+  abi: typeof settleAssertionAbi;
+  functionName: "settleAssertion";
+  chainId: ChainId;
+  // assertion id
+  args: readonly [string];
 };
 
 export type BigNumberish = string | number | BigNumber;

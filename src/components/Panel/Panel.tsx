@@ -11,8 +11,9 @@ import {
   red500,
   smallMobileAndUnder,
 } from "@/constants";
-import { addOpacityToHsla } from "@/helpers";
-import { useComputed, usePanelContext } from "@/hooks";
+import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
+import { useActions, usePanelContext } from "@/hooks";
+import { useTokens } from "@/hooks/tokens";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -21,8 +22,9 @@ import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import styled from "styled-components";
+import { useAccount } from "wagmi";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
@@ -36,8 +38,8 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
  */
 export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
-  const [inputValue, setInputValue] = useState("");
-
+  const [proposePriceInput, setProposePriceInput] = useState("");
+  const [inputError, setInputError] = useState("");
   const {
     chainId,
     oracleType,
@@ -48,6 +50,7 @@ export function Panel() {
     queryTextHex,
     timeUNIX,
     timeUTC,
+    bond,
     formattedBond,
     formattedReward,
     formattedLivenessEndsIn,
@@ -56,29 +59,43 @@ export function Panel() {
     moreInformation,
   } = content ?? {};
 
-  const [error, setError] = useState("");
+  const { token, allowance } = useTokens(content);
   const {
-    fetchCurrencyBalance,
-    fetchCurrencyAllowance,
-    token,
-    fetchCurrencyTokenInfo,
-  } = useComputed(content);
+    approveBondSpend,
+    proposePrice,
+    disputePrice,
+    settlePrice,
+    disputeAssertion,
+    settleAssertion,
+    isLoading,
+    isError,
+    errorMessages,
+  } = useActions(content, proposePriceInput);
+  const { address } = useAccount();
+
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
-  const action = () => alert("placeholder action");
-  const hasActionButton = action !== null && actionType !== null;
+  const needsToApprove =
+    allowance !== undefined && bond !== undefined && allowance.lt(bond);
+  const actionButtonTitle = needsToApprove ? "approve bond" : actionType;
+  const action = getAction();
+  const hasActionButton = !!address && (!!actionType || needsToApprove);
   const hasInput = page === "propose";
   const hasBond = formattedBond !== null;
   const hasReward = formattedReward !== null;
   const actionsTitle = getActionsTitle();
-  const isError = error !== "";
 
-  useEffect(() => {
-    fetchCurrencyTokenInfo && fetchCurrencyTokenInfo();
-    fetchCurrencyBalance && fetchCurrencyBalance();
-    fetchCurrencyAllowance && fetchCurrencyAllowance();
-  }, [fetchCurrencyTokenInfo, fetchCurrencyBalance, fetchCurrencyAllowance]);
+  function getAction() {
+    if (needsToApprove) return approveBondSpend;
+    return (
+      proposePrice ||
+      disputePrice ||
+      settlePrice ||
+      disputeAssertion ||
+      settleAssertion
+    );
+  }
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
@@ -112,14 +129,14 @@ export function Panel() {
           {actionsIcon}
           <SectionTitle>{actionsTitle}</SectionTitle>
         </SectionTitleWrapper>
-        {hasInput && setError ? (
+        {hasInput ? (
           <InputWrapper>
             <DecimalInput
-              value={inputValue}
-              onInput={setInputValue}
-              disabled={isError}
-              addErrorMessage={setError}
-              removeErrorMessage={() => setError("")}
+              value={proposePriceInput}
+              onInput={setProposePriceInput}
+              addErrorMessage={setInputError}
+              disabled={!address}
+              removeErrorMessage={() => setInputError("")}
             />
           </InputWrapper>
         ) : (
@@ -168,16 +185,25 @@ export function Panel() {
         )}
         {hasActionButton && (
           <ActionButtonWrapper>
-            <Button variant="primary" onClick={action} width="min(100%, 512px)">
-              {actionType}
+            <Button
+              variant="primary"
+              onClick={action}
+              disabled={isLoading}
+              width="min(100%, 512px)"
+            >
+              {capitalizeFirstLetter(actionButtonTitle)}
             </Button>
           </ActionButtonWrapper>
         )}
         {isError && (
-          <ErrorWrapper>
-            <WarningIcon />
-            <ErrorText>{error}</ErrorText>
-          </ErrorWrapper>
+          <>
+            {[inputError, ...errorMessages].filter(Boolean).map((message) => (
+              <ErrorWrapper key={message}>
+                <WarningIcon />
+                <ErrorText>{message}</ErrorText>
+              </ErrorWrapper>
+            ))}
+          </>
         )}
       </ActionsWrapper>
       <InfoIconsWrapper>

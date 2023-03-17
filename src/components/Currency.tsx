@@ -1,10 +1,10 @@
 import { getCurrencyIcon } from "@/constants";
-import type { Token } from "@shared/types";
+import type { FetchTokenResult } from "@wagmi/core";
 import styled from "styled-components";
 import { LoadingSkeleton } from "./LoadingSkeleton";
 
 interface Props {
-  token: Token | null;
+  token: FetchTokenResult | undefined;
   formattedAmount: string | null | undefined;
 }
 /**
