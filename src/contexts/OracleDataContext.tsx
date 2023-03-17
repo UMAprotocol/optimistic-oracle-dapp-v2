@@ -2,7 +2,7 @@ import { config } from "@/constants";
 import { assertionToOracleQuery, requestToOracleQuery } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { Client } from "@libs/oracle2";
-import { oracles, tokens } from "@libs/oracle2/services";
+import { oracles } from "@libs/oracle2/services";
 import type {
   Allowance,
   Allowances,
@@ -19,10 +19,8 @@ import type { ReactNode } from "react";
 import { createContext, useEffect, useReducer, useState } from "react";
 
 const oraclesService = oracles.Factory(config.subgraphs);
-const [tokenQueries, tokenService] = tokens.Factory(config.providers);
 
-// tokenQueries has {token,allowance,balance} which you have to pass in chainid plus args for each call
-export { oraclesService, tokenService, tokenQueries };
+export { oraclesService };
 
 export type OracleQueryList = OracleQueryUI[];
 export type OracleQueryTable = Record<string, OracleQueryUI>;
@@ -187,16 +185,10 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // its important this client only gets initialized once
-    Client([oraclesService, tokenService], {
+    Client([oraclesService], {
       requests: (requests) => dispatch({ type: "requests", data: requests }),
       assertions: (assertions) =>
         dispatch({ type: "assertions", data: assertions }),
-      balances: (balances) => dispatch({ type: "balances", data: balances }),
-      allowances: (allowances) =>
-        dispatch({ type: "allowances", data: allowances }),
-      tokens: (tokens) => {
-        dispatch({ type: "tokens", data: tokens });
-      },
       errors: setErrors,
     });
   }, []);

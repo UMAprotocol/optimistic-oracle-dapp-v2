@@ -7,7 +7,7 @@ import {
   useToken,
 } from "wagmi";
 
-export function useTokenInfo(query: OracleQueryUI | undefined) {
+export function useTokens(query: OracleQueryUI | undefined) {
   const { address } = useAccount();
   const { tokenAddress, oracleAddress, chainId } = query ?? {};
   const { data: token } = useToken({

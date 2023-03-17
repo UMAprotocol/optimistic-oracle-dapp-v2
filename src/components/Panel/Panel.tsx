@@ -12,8 +12,8 @@ import {
   smallMobileAndUnder,
 } from "@/constants";
 import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
-import { useContractInteractions, usePanelContext } from "@/hooks";
-import { useTokenInfo } from "@/hooks/tokenInfo";
+import { useActions, usePanelContext } from "@/hooks";
+import { useTokens } from "@/hooks/tokens";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -59,7 +59,7 @@ export function Panel() {
     moreInformation,
   } = content ?? {};
 
-  const { token, allowance } = useTokenInfo(content);
+  const { token, allowance } = useTokens(content);
   const {
     approveBondSpend,
     proposePrice,
@@ -70,7 +70,7 @@ export function Panel() {
     isLoading: contractInteractionsLoading,
     isError,
     errorMessages,
-  } = useContractInteractions(content, proposePriceInput);
+  } = useActions(content, proposePriceInput);
 
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;

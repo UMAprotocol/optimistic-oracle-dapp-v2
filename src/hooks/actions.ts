@@ -6,7 +6,7 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 
-export function useContractInteractions(
+export function useActions(
   query: OracleQueryUI | undefined,
   proposePriceInput: string
 ) {
