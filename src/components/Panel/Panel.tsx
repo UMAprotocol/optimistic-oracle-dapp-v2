@@ -39,7 +39,6 @@ export function Panel() {
   const { content, page, panelOpen, closePanel } = usePanelContext();
   const [proposePriceInput, setProposePriceInput] = useState("");
   const [inputError, setInputError] = useState("");
-
   const {
     chainId,
     oracleType,
@@ -67,7 +66,7 @@ export function Panel() {
     settlePrice,
     disputeAssertion,
     settleAssertion,
-    isLoading: contractInteractionsLoading,
+    isLoading,
     isError,
     errorMessages,
   } = useActions(content, proposePriceInput);
@@ -75,17 +74,17 @@ export function Panel() {
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
-  const action = getActionContractInteraction();
   const needsToApprove =
     allowance !== undefined && bond !== undefined && allowance.lt(bond);
   const actionButtonTitle = needsToApprove ? "approve bond" : actionType;
-  const hasActionButton = action !== null;
+  const action = getAction();
+  const hasActionButton = Boolean(actionType || needsToApprove);
   const hasInput = page === "propose";
   const hasBond = formattedBond !== null;
   const hasReward = formattedReward !== null;
   const actionsTitle = getActionsTitle();
 
-  function getActionContractInteraction() {
+  function getAction() {
     if (needsToApprove) return approveBondSpend;
     return (
       proposePrice ||
@@ -186,7 +185,7 @@ export function Panel() {
             <Button
               variant="primary"
               onClick={action}
-              disabled={contractInteractionsLoading}
+              disabled={isLoading}
               width="min(100%, 512px)"
             >
               {capitalizeFirstLetter(actionButtonTitle)}

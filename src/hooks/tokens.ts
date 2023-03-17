@@ -13,15 +13,19 @@ export function useTokens(query: OracleQueryUI | undefined) {
   const { data: token } = useToken({
     address: tokenAddress,
     chainId,
+    enabled: !!tokenAddress && !!chainId,
   });
   const { data: balance } = useBalance({
     address,
     token: tokenAddress,
+    chainId,
+    enabled: !!address && !!tokenAddress && !!chainId,
   });
   const { data: allowance } = useContractRead({
     address: tokenAddress,
     abi: erc20ABI,
     functionName: "allowance",
+    chainId,
     // typecast is safe because hook is only enabled when these
     // values are defined (see below)
     args: [address as `0x${string}`, oracleAddress as `0x${string}`],

@@ -97,7 +97,7 @@ export function Button({
           {children}
         </_Link>
       ) : null}
-      {onClick || type === "submit" ? (
+      {type === "button" || type === "submit" ? (
         <_Button
           onClick={onClick}
           style={style}
