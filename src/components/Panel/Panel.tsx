@@ -24,6 +24,7 @@ import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
 import { Fragment, useState } from "react";
 import styled from "styled-components";
+import { useAccount } from "wagmi";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
@@ -70,6 +71,7 @@ export function Panel() {
     isError,
     errorMessages,
   } = useActions(content, proposePriceInput);
+  const { address } = useAccount();
 
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
@@ -78,7 +80,7 @@ export function Panel() {
     allowance !== undefined && bond !== undefined && allowance.lt(bond);
   const actionButtonTitle = needsToApprove ? "approve bond" : actionType;
   const action = getAction();
-  const hasActionButton = Boolean(actionType || needsToApprove);
+  const hasActionButton = !!address && (!!actionType || needsToApprove);
   const hasInput = page === "propose";
   const hasBond = formattedBond !== null;
   const hasReward = formattedReward !== null;
@@ -133,6 +135,7 @@ export function Panel() {
               value={proposePriceInput}
               onInput={setProposePriceInput}
               addErrorMessage={setInputError}
+              disabled={!address}
               removeErrorMessage={() => setInputError("")}
             />
           </InputWrapper>
