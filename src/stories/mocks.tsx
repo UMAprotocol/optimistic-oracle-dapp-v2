@@ -189,8 +189,6 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
   timeMilliseconds: Date.now(),
   timeFormatted: format(new Date(), "Pp"),
   valueText: "123",
-  formattedBond: "50,000",
-  formattedReward: "250,000",
   livenessEndsMilliseconds: addMinutes(new Date(), 53).getTime(),
   formattedLivenessEndsIn: "53 min 11 sec",
   actionType: "dispute",
