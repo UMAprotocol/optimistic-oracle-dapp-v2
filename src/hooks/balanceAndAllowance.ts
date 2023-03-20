@@ -1,21 +1,10 @@
 import type { OracleQueryUI } from "@/types";
 import type { Address } from "wagmi";
-import {
-  erc20ABI,
-  useAccount,
-  useBalance,
-  useContractRead,
-  useToken,
-} from "wagmi";
+import { erc20ABI, useAccount, useBalance, useContractRead } from "wagmi";
 
-export function useTokens(query: OracleQueryUI | undefined) {
+export function useBalanceAndAllowance(query: OracleQueryUI | undefined) {
   const { address } = useAccount();
   const { tokenAddress, oracleAddress, chainId } = query ?? {};
-  const { data: token } = useToken({
-    address: tokenAddress,
-    chainId,
-    enabled: !!tokenAddress && !!chainId,
-  });
   const { data: balance } = useBalance({
     address,
     token: tokenAddress,
@@ -34,7 +23,6 @@ export function useTokens(query: OracleQueryUI | undefined) {
   });
 
   return {
-    token,
     balance,
     allowance,
   };

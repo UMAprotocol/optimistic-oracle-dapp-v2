@@ -13,7 +13,7 @@ import {
 } from "@/constants";
 import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
 import { useActions, usePanelContext } from "@/hooks";
-import { useTokens } from "@/hooks/tokens";
+import { useBalanceAndAllowance } from "@/hooks/balanceAndAllowance";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -59,7 +59,7 @@ export function Panel() {
     moreInformation,
   } = content ?? {};
 
-  const { allowance } = useTokens(content);
+  const { allowance } = useBalanceAndAllowance(content);
   const {
     approveBondSpend,
     proposePrice,
