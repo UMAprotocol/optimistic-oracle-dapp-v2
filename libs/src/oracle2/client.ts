@@ -1,17 +1,33 @@
 import type { Handlers, ServiceFactories } from "./types";
+
+const isRejected = (
+  input: PromiseSettledResult<unknown>
+): input is PromiseRejectedResult => input.status === "rejected";
+
 export function Client(factories: ServiceFactories, handlers: Handlers) {
   const services = factories.map((factory) => factory(handlers));
   async function tick() {
-    await Promise.all(services.map((service) => service.tick()));
-  }
-  // this will be changed eventually, we will need to re-request data
-  // on an interval, but it depends on the source of data. for now this
-  // is just an example.
-  setTimeout(() => {
-    tick().catch((err) => {
-      if (err instanceof Error) {
-        handlers.errors && handlers.errors([err]);
+    const results = await Promise.allSettled(
+      services.map((service) => service.tick())
+    );
+    const errors: (Error | undefined)[] = results.map((result) => {
+      if (isRejected(result)) {
+        if (result.reason instanceof Error) {
+          return result.reason;
+        } else {
+          return new Error("Unknown error");
+        }
       }
+      return undefined;
     });
+    handlers.errors && handlers.errors(errors);
+  }
+
+  // this will be changed eventually, we will need to re-request data
+  // on an interval, but it depends on the source of data.
+  setTimeout(() => {
+    tick().catch((err) =>
+      console.error("Uncaught error in oracle service:", err)
+    );
   });
 }
