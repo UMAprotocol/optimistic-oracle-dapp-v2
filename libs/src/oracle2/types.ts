@@ -1,11 +1,4 @@
-import type {
-  Allowances,
-  Assertions,
-  Balances,
-  Requests,
-  Tokens,
-  Transactions,
-} from "@shared/types";
+import type { Assertions, Requests, Transactions } from "@shared/types";
 
 export {
   FallbackProvider,
@@ -21,9 +14,6 @@ export type Handlers = {
   requests?: (requests: Requests) => void;
   assertions?: (assertions: Assertions) => void;
   transactions?: (transactions: Transactions) => void;
-  tokens?: (tokens: Tokens) => void;
-  balances?: (balances: Balances) => void;
-  allowances?: (allowances: Allowances) => void;
   // errors array indexes into server list. use this to determine which servers are failing
   errors?: (errors: Error[]) => void;
 };
