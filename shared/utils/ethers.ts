@@ -49,20 +49,36 @@ export function parsePriceStringWithPrecision(
 
 export const formatEther = ethers.utils.formatEther;
 
+export const formatUnits = ethers.utils.formatUnits;
+
 export const parseEther = ethers.utils.parseEther;
 
 export const commify = ethers.utils.commify;
 
+/**
+ * Formats a number for display.
+ * Commas are added to the number, and it is truncated to a certain number of decimals.
+ * @param number - the number to format
+ * @param options.decimals - the number of decimals to truncate to, defaults to 2
+ * @param options.isFormatEther - whether to format the number as ether, defaults to false
+ * @returns the formatted number
+ */
 export function formatNumberForDisplay(
-  number: BigNumber | undefined,
+  number: BigNumber | string | undefined,
   options?: { decimals?: number; isFormatEther?: boolean }
 ) {
   if (!number) return "0.0";
-  const { decimals = 2, isFormatEther = true } = options || {};
+  const { decimals = 2, isFormatEther = false } = options || {};
   const _number = isFormatEther ? formatEther(number) : number.toString();
   return truncateDecimals(commify(_number), decimals);
 }
 
+/**
+ * Truncates a number to a certain number of decimals
+ * @param number - the number to truncate
+ * @param decimals - the number of decimals to truncate to
+ * @returns the truncated number
+ */
 export function truncateDecimals(number: string | number, decimals: number) {
   const [whole, decimal] = number.toString().split(".");
   if (!decimal) return number.toString();
@@ -73,6 +89,12 @@ export function truncateDecimals(number: string | number, decimals: number) {
   return `${whole}.${truncated}`;
 }
 
+/**
+ * Converts a float string to a BigNumber.
+ * Truncates the float string to 18 decimals to avoid overflow.
+ * @param value - the float string to convert
+ * @returns the BigNumber
+ */
 export function bigNumberFromFloatString(value: string | undefined) {
   if (!value) return BigNumber.from(0);
   const truncated = truncateDecimals(value, 18);
