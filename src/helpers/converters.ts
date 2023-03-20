@@ -122,16 +122,6 @@ function getPriceRequestValueText(
   return formatNumberForDisplay(price, { isFormatEther: true });
 }
 
-function getFormattedBond(bond: BigNumber | null) {
-  if (bond === null) return null;
-  return formatNumberForDisplay(bond, { isFormatEther: true });
-}
-
-function getFormattedReward(reward: BigNumber | null) {
-  if (reward === null) return null;
-  return formatNumberForDisplay(reward, { isFormatEther: true });
-}
-
 function isOOV2PriceRequest(
   request: Request
 ): request is ParsedOOV2GraphEntity {
@@ -322,8 +312,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   const queryText = safeDecodeHexString(ancillaryData);
   const expiryType = eventBased ? "Event-based" : "Time-based";
   const tokenAddress = currency;
-  const formattedBond = getFormattedBond(bond);
-  const formattedReward = getFormattedReward(reward);
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getRequestActionType(state);
   const approveBondSpendParams = makeApproveBondSpendParams({
@@ -393,8 +381,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     tokenAddress,
     reward,
     bond,
-    formattedBond,
-    formattedReward,
     moreInformation,
     actionType,
     approveBondSpendParams,
@@ -437,10 +423,8 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const queryText = safeDecodeHexString(claim);
   const expiryType = null;
   const tokenAddress = currency;
-  const formattedBond = formatNumberForDisplay(bond, { isFormatEther: true });
   // no reward is present on assertions
   const reward = null;
-  const formattedReward = null;
   const moreInformation: MoreInformationItem[] = [];
   const actionType = getAssertionActionType(assertion);
   const approveBondSpendParams = makeApproveBondSpendParams({
@@ -493,8 +477,6 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     project,
     title,
     moreInformation,
-    formattedBond,
-    formattedReward,
     reward,
     bond,
     approveBondSpendParams,

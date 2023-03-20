@@ -56,8 +56,6 @@ export type OracleQueryUI = {
   expiryType: ExpiryType | null;
   oracleAddress: Address;
   tokenAddress: Address;
-  formattedBond: string | null;
-  formattedReward: string | null;
   approveBondSpendParams: ApproveBondSpendParams | undefined;
   proposePriceParams:
     | ((proposedPrice: string) => ProposePriceParams | undefined)

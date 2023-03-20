@@ -1,7 +1,4 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
-import { commify, formatEther, parseEther } from "@/helpers";
-import type { Allowances, Balances, Tokens } from "@shared/types";
-import { BigNumber } from "ethers";
 import { capitalize, words } from "lodash";
 import { css } from "styled-components";
 
@@ -46,52 +43,6 @@ export function determinePage(pathname: string) {
   if (pathname === "/propose") return "propose";
   if (pathname === "/settled") return "settled";
   return "verify";
-}
-
-/**
- * Formats a number for display.
- * Commas are added to the number, and it is truncated to a certain number of decimals.
- * @param number - the number to format
- * @param options.decimals - the number of decimals to truncate to, defaults to 2
- * @param options.isFormatEther - whether to format the number as ether, defaults to true
- * @returns the formatted number
- */
-export function formatNumberForDisplay(
-  number: BigNumber | undefined,
-  options?: { decimals?: number; isFormatEther?: boolean }
-) {
-  if (!number) return "0.0";
-  const { decimals = 2, isFormatEther = true } = options || {};
-  const _number = isFormatEther ? formatEther(number) : number.toString();
-  return truncateDecimals(commify(_number), decimals);
-}
-
-/**
- * Truncates a number to a certain number of decimals
- * @param number - the number to truncate
- * @param decimals - the number of decimals to truncate to
- * @returns the truncated number
- */
-export function truncateDecimals(number: string | number, decimals: number) {
-  const [whole, decimal] = number.toString().split(".");
-  if (!decimal) return number.toString();
-  if (decimals === 0) return whole.toString();
-  const truncated = decimal.slice(0, decimals);
-  // if the truncated value is just 0, return the whole number
-  if (Number(truncated) === 0) return whole.toString();
-  return `${whole}.${truncated}`;
-}
-
-/**
- * Converts a float string to a BigNumber.
- * Truncates the float string to 18 decimals to avoid overflow.
- * @param value - the float string to convert
- * @returns the BigNumber
- */
-export function bigNumberFromFloatString(value: string | undefined) {
-  if (!value) return BigNumber.from(0);
-  const truncated = truncateDecimals(value, 18);
-  return BigNumber.from(parseEther(truncated));
 }
 
 /**
@@ -148,51 +99,4 @@ export const showOnMobileAndUnder = css`
 
 export function makeFilterTitle(filterName: string) {
   return capitalize(words(filterName)[0]);
-}
-
-export function findToken(
-  tokens: Tokens,
-  search: { tokenAddress: string; chainId: number }
-) {
-  return (
-    tokens.find(({ chainId, tokenAddress }) => {
-      return search.chainId === chainId && search.tokenAddress === tokenAddress;
-    }) ?? null
-  );
-}
-
-export function findBalance(
-  balances: Balances,
-  search: { account: string; tokenAddress: string; chainId: number }
-) {
-  const found = balances.find(({ account, chainId, tokenAddress }) => {
-    return (
-      search.chainId === chainId &&
-      search.account === account &&
-      search.tokenAddress === tokenAddress
-    );
-  });
-  return found ? BigNumber.from(found.amount) : null;
-}
-
-export function findAllowance(
-  allowances: Allowances,
-  search: {
-    account: string;
-    tokenAddress: string;
-    chainId: number;
-    spender: string;
-  }
-) {
-  const found = allowances.find(
-    ({ account, chainId, tokenAddress, spender }) => {
-      return (
-        search.spender === spender &&
-        search.chainId === chainId &&
-        search.account === account &&
-        search.tokenAddress === tokenAddress
-      );
-    }
-  );
-  return found ? BigNumber.from(found.amount) : null;
 }

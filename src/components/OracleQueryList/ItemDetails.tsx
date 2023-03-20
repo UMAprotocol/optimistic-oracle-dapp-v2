@@ -1,4 +1,3 @@
-import { useTokens } from "@/hooks/tokens";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import { Currency } from "../Currency";
@@ -19,14 +18,15 @@ export function ItemDetails({
   const {
     timeMilliseconds,
     livenessEndsMilliseconds,
-    formattedBond,
-    formattedReward,
+    tokenAddress,
+    chainId,
+    bond,
+    reward,
     valueText,
   } = item;
-  const { token } = useTokens(item);
 
-  const hasBond = formattedBond !== null;
-  const hasReward = formattedReward !== null;
+  const hasBond = bond !== null;
+  const hasReward = reward !== null;
 
   const verifyDetails = (
     <ItemDetailsWrapper>
@@ -55,7 +55,7 @@ export function ItemDetails({
           <ItemDetailsInnerWrapper>
             <ItemDetailsText>Bond</ItemDetailsText>
             <ItemDetailsText>
-              <Currency formattedAmount={formattedBond} token={token} />
+              <Currency address={tokenAddress} chainId={chainId} value={bond} />
             </ItemDetailsText>
           </ItemDetailsInnerWrapper>
         )}
@@ -63,7 +63,11 @@ export function ItemDetails({
           <ItemDetailsInnerWrapper>
             <ItemDetailsText>Reward</ItemDetailsText>
             <ItemDetailsText>
-              <Currency formattedAmount={formattedReward} token={token} />
+              <Currency
+                address={tokenAddress}
+                chainId={chainId}
+                value={reward}
+              />
             </ItemDetailsText>
           </ItemDetailsInnerWrapper>
         )}
