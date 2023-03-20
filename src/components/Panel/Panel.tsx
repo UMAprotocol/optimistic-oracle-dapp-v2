@@ -50,16 +50,16 @@ export function Panel() {
     queryTextHex,
     timeUNIX,
     timeUTC,
+    tokenAddress,
     bond,
-    formattedBond,
-    formattedReward,
+    reward,
     formattedLivenessEndsIn,
     actionType,
     expiryType,
     moreInformation,
   } = content ?? {};
 
-  const { token, allowance } = useTokens(content);
+  const { allowance } = useTokens(content);
   const {
     approveBondSpend,
     proposePrice,
@@ -82,8 +82,7 @@ export function Panel() {
   const action = getAction();
   const hasActionButton = !!address && (!!actionType || needsToApprove);
   const hasInput = page === "propose";
-  const hasBond = formattedBond !== null;
-  const hasReward = formattedReward !== null;
+  const hasReward = reward !== null;
   const actionsTitle = getActionsTitle();
 
   function getAction() {
@@ -152,17 +151,19 @@ export function Panel() {
         )}
         {showActionsDetails && (
           <ActionsDetailsWrapper>
-            {hasBond && (
-              <ActionWrapper>
-                <ActionText>
-                  Bond
-                  <InfoIcon />
-                </ActionText>
-                <ActionText>
-                  <Currency formattedAmount={formattedBond} token={token} />
-                </ActionText>
-              </ActionWrapper>
-            )}
+            <ActionWrapper>
+              <ActionText>
+                Bond
+                <InfoIcon />
+              </ActionText>
+              <ActionText>
+                <Currency
+                  address={tokenAddress}
+                  chainId={chainId}
+                  value={bond}
+                />
+              </ActionText>
+            </ActionWrapper>
             {hasReward && (
               <ActionWrapper>
                 <ActionText>
@@ -170,7 +171,11 @@ export function Panel() {
                   <InfoIcon />
                 </ActionText>
                 <ActionText>
-                  <Currency formattedAmount={formattedReward} token={token} />
+                  <Currency
+                    address={tokenAddress}
+                    chainId={chainId}
+                    value={reward}
+                  />
                 </ActionText>
               </ActionWrapper>
             )}
