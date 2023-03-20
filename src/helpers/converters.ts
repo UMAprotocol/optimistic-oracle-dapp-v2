@@ -1,5 +1,10 @@
 import { config } from "@/constants";
-import type { ActionType, MoreInformationItem, OracleQueryUI } from "@/types";
+import type {
+  ActionType,
+  MoreInformationItem,
+  OracleQueryUI,
+  SolidityRequest,
+} from "@/types";
 import { chainsById } from "@shared/constants";
 import {
   disputeAssertionAbi,
@@ -7,6 +12,9 @@ import {
   proposePriceAbi,
   settleAssertionAbi,
   settlePriceAbi,
+  skinnyProposePriceAbi,
+  skinnyDisputePriceAbi,
+  skinnySettlePriceAbi,
 } from "@shared/constants/abi";
 import type {
   Assertion,
@@ -18,10 +26,47 @@ import type {
 } from "@shared/types";
 import { formatNumberForDisplay, parseEther } from "@shared/utils";
 import { format } from "date-fns";
-import type { BigNumber } from "ethers";
+import { BigNumber } from "ethers";
 import { ethers } from "ethers";
 import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
+
+export type RequiredRequest = Omit<
+  Request,
+  "currency" | "bond" | "customLiveness"
+> & {
+  currency: Address;
+  bond: BigNumber | null | undefined;
+  customLiveness: BigNumber | null | undefined;
+};
+function canConvertToSolidityRequest(
+  request: Request
+): request is RequiredRequest {
+  return Boolean(request.currency);
+}
+function convertToSolidityRequest(request: RequiredRequest): SolidityRequest {
+  return {
+    proposer: request.proposer || "0x0",
+    disputer: request.disputer || "0x0",
+    currency: request.currency,
+    settled: request.settlementHash ? true : false,
+    proposedPrice: request.proposedPrice
+      ? request.proposedPrice
+      : BigNumber.from(0),
+    resolvedPrice: request.settlementPrice
+      ? request.settlementPrice
+      : BigNumber.from(0),
+    expirationTime: request.proposalExpirationTimestamp
+      ? BigNumber.from(request.proposalExpirationTimestamp)
+      : BigNumber.from(0),
+    reward: request.reward,
+    finalFee: request.finalFee,
+    bond: request.bond ? BigNumber.from(request.bond) : BigNumber.from(0),
+    customLiveness: request.customLiveness
+      ? BigNumber.from(request.customLiveness)
+      : BigNumber.from(0),
+  };
+}
 
 export function utf8ToHex(utf8String: string) {
   return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
@@ -181,6 +226,68 @@ function makeProposePriceParams({
   };
 }
 
+function makeProposePriceSkinnyParams({
+  requester,
+  bytes32Identifier,
+  time,
+  ancillaryData,
+  oracleAddress,
+  chainId,
+  request,
+}: {
+  requester: Address;
+  bytes32Identifier: string;
+  time: string;
+  ancillaryData: string;
+  oracleAddress: Address;
+  chainId: ChainId;
+  request: SolidityRequest;
+}) {
+  return (proposedPrice: string) => {
+    if (!proposedPrice) return;
+    return {
+      address: oracleAddress,
+      abi: skinnyProposePriceAbi,
+      functionName: "proposePrice" as const,
+      chainId,
+      args: [
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        request,
+        parseEther(proposedPrice),
+      ] as const,
+    };
+  };
+}
+
+function makeDisputePriceSkinnyParams({
+  requester,
+  bytes32Identifier,
+  time,
+  ancillaryData,
+  oracleAddress,
+  chainId,
+  request,
+}: {
+  requester: Address;
+  bytes32Identifier: string;
+  time: string;
+  ancillaryData: string;
+  oracleAddress: Address;
+  chainId: ChainId;
+  request: SolidityRequest;
+}) {
+  return {
+    address: oracleAddress,
+    abi: skinnyDisputePriceAbi,
+    functionName: "disputePrice" as const,
+    chainId,
+    args: [requester, bytes32Identifier, time, ancillaryData, request] as const,
+  };
+}
+
 function makeDisputePriceParams({
   requester,
   bytes32Identifier,
@@ -226,6 +333,32 @@ function makeSettlePriceParams({
     functionName: "settle" as const,
     chainId,
     args: [requester, bytes32Identifier, time, ancillaryData] as const,
+  };
+}
+
+function makeSettlePriceSkinnyParams({
+  requester,
+  bytes32Identifier,
+  time,
+  ancillaryData,
+  oracleAddress,
+  chainId,
+  request,
+}: {
+  requester: Address;
+  bytes32Identifier: string;
+  time: string;
+  ancillaryData: string;
+  oracleAddress: Address;
+  chainId: ChainId;
+  request: SolidityRequest;
+}) {
+  return {
+    address: oracleAddress,
+    abi: skinnySettlePriceAbi,
+    functionName: "settle" as const,
+    chainId,
+    args: [requester, bytes32Identifier, time, ancillaryData, request] as const,
   };
 }
 
@@ -320,41 +453,85 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     oracleAddress,
     chainId,
   });
-  const proposePriceParams =
-    actionType === "propose"
-      ? makeProposePriceParams({
-          requester,
-          bytes32Identifier,
-          time,
-          ancillaryData,
-          oracleAddress,
-          chainId,
-        })
-      : undefined;
+  let proposePriceParams: OracleQueryUI["proposePriceParams"] = undefined;
+  if (actionType === "propose") {
+    if (
+      oracleType === "Skinny Optimistic Oracle" &&
+      canConvertToSolidityRequest(request)
+    ) {
+      proposePriceParams = makeProposePriceSkinnyParams({
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        oracleAddress,
+        chainId,
+        request: convertToSolidityRequest(request),
+      });
+    } else {
+      proposePriceParams = makeProposePriceParams({
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        oracleAddress,
+        chainId,
+      });
+    }
+  }
+  let disputePriceParams: OracleQueryUI["disputePriceParams"] = undefined;
+  if (actionType === "dispute") {
+    if (
+      oracleType === "Skinny Optimistic Oracle" &&
+      canConvertToSolidityRequest(request)
+    ) {
+      disputePriceParams = makeDisputePriceSkinnyParams({
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        oracleAddress,
+        chainId,
+        request: convertToSolidityRequest(request),
+      });
+    } else {
+      disputePriceParams = makeDisputePriceParams({
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        oracleAddress,
+        chainId,
+      });
+    }
+  }
 
-  const disputePriceParams =
-    actionType === "dispute"
-      ? makeDisputePriceParams({
-          requester,
-          bytes32Identifier,
-          time,
-          ancillaryData,
-          oracleAddress,
-          chainId,
-        })
-      : undefined;
-
-  const settlePriceParams =
-    actionType === "settle"
-      ? makeSettlePriceParams({
-          requester,
-          bytes32Identifier,
-          time,
-          ancillaryData,
-          oracleAddress,
-          chainId,
-        })
-      : undefined;
+  let settlePriceParams: OracleQueryUI["settlePriceParams"] = undefined;
+  if (actionType === "settle") {
+    if (
+      oracleType === "Skinny Optimistic Oracle" &&
+      canConvertToSolidityRequest(request)
+    ) {
+      settlePriceParams = makeSettlePriceSkinnyParams({
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        oracleAddress,
+        chainId,
+        request: convertToSolidityRequest(request),
+      });
+    } else {
+      settlePriceParams = makeSettlePriceParams({
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        oracleAddress,
+        chainId,
+      });
+    }
+  }
 
   const disputeAssertionParams = undefined;
   const settleAssertionParams = undefined;

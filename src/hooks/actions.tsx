@@ -32,6 +32,9 @@ export function useActions(
     config: proposePriceConfig,
     error: prepareProposePriceError,
     isLoading: isPrepareProposePriceLoading,
+    // unable to get this to pass typescript, something wrong with abi type
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
   } = usePrepareContractWrite(proposePriceParams?.(proposePriceInput));
   const {
     config: disputePriceConfig,
@@ -42,6 +45,9 @@ export function useActions(
     config: settlePriceConfig,
     error: prepareSettlePriceError,
     isLoading: isPrepareSettlePriceLoading,
+    // unable to get this to pass typescript, something wrong with abi type
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
   } = usePrepareContractWrite(settlePriceParams);
   const {
     config: disputeAssertionConfig,
