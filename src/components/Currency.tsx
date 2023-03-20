@@ -1,23 +1,39 @@
 import { getCurrencyIcon } from "@/constants";
-import type { FetchTokenResult } from "@wagmi/core";
+import type { ChainId } from "@shared/types";
+import type { Address } from "@wagmi/core";
+import type { BigNumber } from "ethers";
 import styled from "styled-components";
+import { useToken } from "wagmi";
+import { FormattedTokenValue } from "./FormattedTokenValue";
 import { LoadingSkeleton } from "./LoadingSkeleton";
 
 interface Props {
-  token: FetchTokenResult | undefined;
-  formattedAmount: string | null | undefined;
+  address: Address | undefined;
+  chainId: ChainId | undefined;
+  value: BigNumber | undefined;
 }
 /**
  * Displays a currency icon and amount.
  * If the currency is a known currency, the icon will be displayed.
  * Otherwise, the currency symbol will be displayed.
  */
-export function Currency({ token, formattedAmount }: Props) {
-  const currency = token?.symbol;
-  const currencyIcon = getCurrencyIcon(currency);
-  const hasCurrencyIcon = !!currencyIcon;
-
-  const isLoading = currency === undefined;
+export function Currency(props: Props) {
+  const { address, chainId, value } = props;
+  const { data: token, isLoading: tokenLoading } = useToken({
+    address,
+    chainId,
+    enabled: !!address && !!chainId,
+  });
+  const symbol = token?.symbol;
+  const decimals = token?.decimals;
+  const icon = getCurrencyIcon(symbol);
+  const hasIcon = !!icon;
+  const isLoading =
+    tokenLoading ||
+    value === undefined ||
+    decimals === undefined ||
+    address === undefined ||
+    chainId === undefined;
 
   return (
     <Wrapper>
@@ -25,8 +41,9 @@ export function Currency({ token, formattedAmount }: Props) {
         <LoadingSkeleton width={80} height={16} />
       ) : (
         <>
-          {hasCurrencyIcon && currencyIcon} {formattedAmount}{" "}
-          {!hasCurrencyIcon && currency}
+          {hasIcon && icon}{" "}
+          <FormattedTokenValue value={value} decimals={decimals} />{" "}
+          {!hasIcon && symbol}
         </>
       )}
     </Wrapper>
