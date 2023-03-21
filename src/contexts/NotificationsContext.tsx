@@ -1,4 +1,4 @@
-import Events from "events";
+import { events } from "@/helpers";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useState } from "react";
 import type {
@@ -26,7 +26,6 @@ export const NotificationsContext = createContext(
   defaultNotificationsContextState
 );
 
-const events = new Events();
 export function NotificationsProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<NotificationsById>({});
 

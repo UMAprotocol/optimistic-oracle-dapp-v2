@@ -1,4 +1,5 @@
 import type { OracleQueryUI } from "@/types";
+import { TransactionNotifier } from "@/helpers";
 import {
   useAccount,
   useContractWrite,
@@ -58,9 +59,11 @@ export function useActions(
     isLoading: isApproveBondSpendLoading,
   } = useContractWrite({
     ...approveBondSpendConfig,
-    onMutate() {
-      alert(`\`approveBondSpend\` called...`);
-    },
+    ...TransactionNotifier({
+      pending: "Approving bond",
+      success: "Bond Approved",
+      error: "Failed to approve bond",
+    }),
   });
   const {
     write: proposePrice,
@@ -69,9 +72,11 @@ export function useActions(
     isLoading: isProposePriceLoading,
   } = useContractWrite({
     ...proposePriceConfig,
-    onMutate() {
-      alert(`\`proposePrice\` called...`);
-    },
+    ...TransactionNotifier({
+      pending: "Proposing answer",
+      success: "Answer proposed",
+      error: "Failed to propose answer",
+    }),
   });
   const {
     write: disputePrice,
@@ -80,9 +85,11 @@ export function useActions(
     isLoading: isDisputePriceLoading,
   } = useContractWrite({
     ...disputePriceConfig,
-    onMutate() {
-      alert(`\`disputePrice\` called...`);
-    },
+    ...TransactionNotifier({
+      pending: "Disputing answer",
+      success: "Answer disputed",
+      error: "Failed to dispute answer",
+    }),
   });
   const {
     write: settlePrice,
@@ -91,9 +98,11 @@ export function useActions(
     isLoading: isSettlePriceLoading,
   } = useContractWrite({
     ...settlePriceConfig,
-    onMutate() {
-      alert(`\`settlePrice\` called...`);
-    },
+    ...TransactionNotifier({
+      pending: "Settling answer",
+      success: "Answer settled",
+      error: "Failed to settle answer",
+    }),
   });
   const {
     write: disputeAssertion,
@@ -102,9 +111,11 @@ export function useActions(
     isLoading: isDisputeAssertionLoading,
   } = useContractWrite({
     ...disputeAssertionConfig,
-    onMutate() {
-      alert(`\`disputeAssertion\` called...`);
-    },
+    ...TransactionNotifier({
+      pending: "Disputing answer",
+      success: "Answer disputed",
+      error: "Failed to dispute answer",
+    }),
   });
   const {
     write: settleAssertion,
@@ -113,9 +124,11 @@ export function useActions(
     isLoading: isSettleAssertionLoading,
   } = useContractWrite({
     ...settleAssertionConfig,
-    onMutate() {
-      alert(`\`settleAssertion\` called...`);
-    },
+    ...TransactionNotifier({
+      pending: "Disputing answer",
+      success: "Answer disputed",
+      error: "Failed to dispute answer",
+    }),
   });
 
   const {
