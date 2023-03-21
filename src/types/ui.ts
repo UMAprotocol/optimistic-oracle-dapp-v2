@@ -93,6 +93,23 @@ export type OracleQueryUI = {
   settlePriceParams: SettlePriceParams | SettlePriceSkinnyParams | undefined;
   disputeAssertionParams: DisputeAssertionParamsFactory | undefined;
   settleAssertionParams: SettleAssertionParams | undefined;
+
+  // additional searchable properties, note these get parsed to strings even if bigint so we can compare with ==
+  requestTimestamp?: string | null;
+  requestHash?: string | null;
+  requestLogIndex?: string | null;
+  proposalTimestamp?: string | null;
+  proposalHash?: string | null;
+  proposalLogIndex?: string | null;
+  assertionTimestamp?: string | null;
+  assertionHash?: string | null;
+  assertionLogIndex?: string | null;
+  disputeTimestamp?: string | null;
+  disputeHash?: string | null;
+  disputeLogIndex?: string | null;
+  settlementTimestamp?: string | null;
+  settlementHash?: string | null;
+  settlementLogIndex?: string | null;
 };
 
 export type ApproveBondSpendParams = {

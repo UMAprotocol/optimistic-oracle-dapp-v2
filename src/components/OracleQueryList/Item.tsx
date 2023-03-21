@@ -1,6 +1,6 @@
 import { OracleQueryClickableIcon } from "@/components/style";
-import { usePanelContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
+import { useQueryRouter } from "@/hooks";
 import type { PageName } from "@shared/types";
 import { ItemDetails } from "./ItemDetails";
 import { ItemTitle } from "./ItemTitle";
@@ -11,14 +11,10 @@ interface Props {
   item: OracleQueryUI;
 }
 export function Item({ page, item }: Props) {
-  const { openPanel } = usePanelContext();
-
-  function onClick() {
-    openPanel(item, page);
-  }
+  const { open } = useQueryRouter();
 
   return (
-    <ItemWrapper onClick={onClick}>
+    <ItemWrapper onClick={() => open(item)}>
       <ItemInnerWrapper>
         <ItemTitle {...item} />
         <ClickableIconWrapper>
