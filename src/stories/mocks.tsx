@@ -1,3 +1,4 @@
+import { Currency } from "@/components";
 import type { NotificationsById } from "@/contexts";
 import { parseEtherSafe, utf8ToHex } from "@/helpers";
 import type { Notification, OracleQueryUI } from "@/types";
@@ -514,6 +515,39 @@ export const handlersForAllPages = makeGraphqlHandlers({
     }),
   },
   v2: {
+    Goerli: makeMockRequestGraphEntities({
+      inputs: [
+        {
+          identifier: "TEST_VERIFY",
+          state: "Proposed",
+          proposedPrice: makeEtherValueString(123),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          identifier: "TEST_VERIFY",
+          state: "Disputed",
+          proposedPrice: makeEtherValueString(123),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          bond: "1230000001",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Settled",
+          settlementPrice: makeEtherValueString(123),
+          identifier: "TEST_SETTLED",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+      ],
+    }),
     Ethereum: makeMockRequestGraphEntities({
       inputs: [
         {
@@ -610,7 +644,7 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
   const notifications: NotificationsById = {};
 
   const defaultMessage = "Test notification";
-  const defaultLink =
+  const defaultTransactionHash =
     "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
   const defaultType = "pending";
 
@@ -619,7 +653,7 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
     notifications[id] = {
       id,
       message: input.message ?? defaultMessage,
-      link: input.link ?? defaultLink,
+      transactionHash: input.transactionHash ?? defaultTransactionHash,
       type: input.type ?? defaultType,
     };
   });
@@ -629,18 +663,31 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
 
 export const defaultMockNotifications = makeMockNotifications([
   {
-    message: "Test notification. Disputing a price or something",
-    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+    message: (
+      <>
+        Approving{" "}
+        <Currency
+          address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+          value={BigNumber.from(50000000000)}
+          chainId={1}
+          showIcon={false}
+        />
+      </>
+    ),
+    transactionHash:
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
     type: "pending",
   },
   {
     message: "Testing testing one two three",
-    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdea",
+    transactionHash:
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdea",
     type: "error",
   },
   {
     message: "Another one. DJ Khaled!",
-    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdee",
+    transactionHash:
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdee",
     type: "success",
   },
 ]);

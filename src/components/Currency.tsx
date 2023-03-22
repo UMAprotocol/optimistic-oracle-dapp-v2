@@ -11,6 +11,7 @@ interface Props {
   address: Address | undefined;
   chainId: ChainId | undefined;
   value: BigNumber | undefined;
+  showIcon?: boolean;
 }
 /**
  * Displays a currency icon and amount.
@@ -18,7 +19,7 @@ interface Props {
  * Otherwise, the currency symbol will be displayed.
  */
 export function Currency(props: Props) {
-  const { address, chainId, value } = props;
+  const { address, chainId, value, showIcon = true } = props;
   const { data: token, isLoading: tokenLoading } = useToken({
     address,
     chainId,
@@ -27,7 +28,7 @@ export function Currency(props: Props) {
   const symbol = token?.symbol;
   const decimals = token?.decimals;
   const icon = getCurrencyIcon(symbol);
-  const hasIcon = !!icon;
+  const hasIcon = !!icon && showIcon;
   const isLoading =
     tokenLoading ||
     value === undefined ||
@@ -51,7 +52,7 @@ export function Currency(props: Props) {
 }
 
 const Wrapper = styled.span`
-  display: flex;
-  align-items: center;
+  display: inline-flex;
+  align-items: baseline;
   gap: 8px;
 `;

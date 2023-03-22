@@ -13,7 +13,7 @@ import { useWindowSize } from "usehooks-ts";
 export function Notification({
   message,
   id,
-  link,
+  transactionHash,
   type,
   dismiss,
   style,
@@ -73,8 +73,12 @@ export function Notification({
       </IndicatorWrapper>
       <TextWrapper>
         <Message>{message}</Message>
-        {link && (
-          <Link href={link} target="_blank">
+        {transactionHash && (
+          <Link
+            /* todo: add transaction link handlers for all chains */
+            href={`https://goerli.etherscan.io/tx/${transactionHash}`}
+            target="_blank"
+          >
             View on Etherscan
           </Link>
         )}
