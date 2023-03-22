@@ -224,6 +224,7 @@ export function useActions(
           value={query?.bond}
           chainId={query?.chainId}
           address={query?.tokenAddress}
+          showIcon={false}
         />
       );
       void handleNotifications(approveBondSpendTransaction, {

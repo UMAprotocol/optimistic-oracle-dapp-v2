@@ -1,3 +1,4 @@
+import { Currency } from "@/components";
 import type { NotificationsById } from "@/contexts";
 import { parseEtherSafe, utf8ToHex } from "@/helpers";
 import type { Notification, OracleQueryUI } from "@/types";
@@ -662,7 +663,17 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
 
 export const defaultMockNotifications = makeMockNotifications([
   {
-    message: "Test notification. Disputing a price or something",
+    message: (
+      <>
+        Approving{" "}
+        <Currency
+          address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+          value={BigNumber.from(50000000000)}
+          chainId={1}
+          showIcon={false}
+        />
+      </>
+    ),
     transactionHash:
       "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
     type: "pending",
