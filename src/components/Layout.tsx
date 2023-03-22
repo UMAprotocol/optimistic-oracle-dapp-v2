@@ -1,4 +1,4 @@
-import { ErrorBanner, Header, Panel } from "@/components";
+import { ErrorBanner, Header, Notifications, Panel } from "@/components";
 import { siteDescription, siteTitle } from "@/constants";
 import { capitalizeFirstLetter, determinePage } from "@/helpers";
 import Head from "next/head";
@@ -24,6 +24,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <Header page={page} />
         {children}
         <Panel />
+        <Notifications />
       </Main>
     </>
   );

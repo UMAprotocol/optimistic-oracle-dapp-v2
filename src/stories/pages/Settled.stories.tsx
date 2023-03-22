@@ -1,7 +1,11 @@
 import SettledPage from "@/pages/settled";
 import type { Meta } from "@storybook/react";
-import { handlersForAllPages, makeMockRouterPathname } from "../mocks";
-import { Template } from "./shared";
+import {
+  defaultMockNotifications,
+  handlersForAllPages,
+  makeMockRouterPathname,
+} from "../mocks";
+import { NotificationsDecorator, Template } from "./shared";
 import type { PageStory } from "./types";
 
 const meta: Meta = {
@@ -29,4 +33,13 @@ export const Settled: PageStory = {
   args: {
     Component: SettledPage,
   },
+};
+
+export const WithNotifications: PageStory = {
+  ...Settled,
+  args: {
+    ...Settled.args,
+    notifications: defaultMockNotifications,
+  },
+  decorators: [NotificationsDecorator],
 };

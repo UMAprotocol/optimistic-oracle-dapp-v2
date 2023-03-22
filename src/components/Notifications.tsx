@@ -1,7 +1,7 @@
-import styled from "styled-components";
-import { Portal } from "@reach/portal";
-import { animated, useTransition } from "@react-spring/web";
 import { useNotificationsContext } from "@/hooks";
+import { Root as Portal } from "@radix-ui/react-portal";
+import { animated, useTransition } from "@react-spring/web";
+import styled from "styled-components";
 import { Notification } from "./Notification";
 
 export function Notifications() {

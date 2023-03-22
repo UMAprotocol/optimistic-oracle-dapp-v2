@@ -1,10 +1,14 @@
-import { LoadingSpinner } from ".";
+import { LoadingSpinner } from "@/components";
+import { mobile, smallMobile, tablet } from "@/constants";
+import type { Notification, UniqueId } from "@/types";
 import NextLink from "next/link";
-import Success from "public/assets/icons/success.svg";
 import Close from "public/assets/icons/close.svg";
 import Failure from "public/assets/icons/failure.svg";
+import Success from "public/assets/icons/success.svg";
+import { useEffect, useState } from "react";
+import type { CSSProperties } from "styled-components";
 import styled from "styled-components";
-import type { NotificationT, UniqueIdT } from "@/types";
+import { useWindowSize } from "usehooks-ts";
 
 export function Notification({
   message,
@@ -13,16 +17,49 @@ export function Notification({
   type,
   dismiss,
   style,
-}: NotificationT & {
+}: Notification & {
   style: {
     opacity: number;
   };
-  dismiss: (id: UniqueIdT) => void;
+  dismiss: (id: UniqueId) => void;
 }) {
+  const [iconSize, setIconSize] = useState(32);
+  const { width } = useWindowSize();
+
+  useEffect(() => {
+    if (!width) return;
+
+    if (width <= smallMobile) {
+      setIconSize(16);
+      return;
+    }
+
+    if (width <= mobile) {
+      setIconSize(20);
+      return;
+    }
+
+    if (width <= tablet) {
+      setIconSize(28);
+      return;
+    }
+
+    setIconSize(32);
+  }, [width]);
+
   return (
-    <Wrapper style={style}>
+    <Wrapper
+      style={
+        {
+          ...style,
+          "--icon-size": `${iconSize}px`,
+        } as CSSProperties
+      }
+    >
       <IndicatorWrapper>
-        {type === "pending" && <LoadingSpinner variant="black" size={32} />}
+        {type === "pending" && (
+          <LoadingSpinner variant="black" size={iconSize} />
+        )}
         {type === "error" && (
           <IconWrapper>
             <Failure />
@@ -30,7 +67,7 @@ export function Notification({
         )}
         {type === "success" && (
           <IconWrapper>
-            <SuccessIcon />
+            <Success />
           </IconWrapper>
         )}
       </IndicatorWrapper>
@@ -54,15 +91,16 @@ export function Notification({
 const Wrapper = styled.div`
   position: relative;
   display: flex;
-  gap: 18px;
+  gap: calc(var(--icon-size) / 2);
   align-items: center;
-  width: 320px;
+  width: min(100%, 320px);
   min-height: 90px;
-  padding: 20px;
-  font: var(--text-sm);
-  color: var(--black);
+  padding: calc(var(--icon-size) / 2);
+  padding-right: 20px;
+  font: var(--body-sm);
+  color: var(--dark-text);
   background: var(--white);
-  border: 1px solid var(--black);
+  border: 1px solid var(--blue-grey-700);
   border-radius: 5px;
   box-shadow: var(--shadow-3);
 `;
@@ -70,15 +108,7 @@ const Wrapper = styled.div`
 const IndicatorWrapper = styled.div``;
 
 const IconWrapper = styled.div`
-  width: 32px;
-  height: 32px;
-`;
-
-const SuccessIcon = styled(Success)`
-  path {
-    fill: var(--white);
-    stroke: var(--green);
-  }
+  width: var(--icon-size);
 `;
 
 const TextWrapper = styled.div`
@@ -106,7 +136,7 @@ const CloseIconWrapper = styled.div`
 
 const CloseIcon = styled(Close)`
   path {
-    fill: var(--black);
+    fill: var(--dark-text);
   }
 `;
 const CloseButton = styled.button`
