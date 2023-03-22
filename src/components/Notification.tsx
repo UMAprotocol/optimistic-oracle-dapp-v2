@@ -1,10 +1,10 @@
-import { LoadingSpinner } from ".";
+import { LoadingSpinner } from "@/components";
+import type { Notification, UniqueId } from "@/types";
 import NextLink from "next/link";
-import Success from "public/assets/icons/success.svg";
 import Close from "public/assets/icons/close.svg";
 import Failure from "public/assets/icons/failure.svg";
+import Success from "public/assets/icons/success.svg";
 import styled from "styled-components";
-import type { NotificationT, UniqueIdT } from "@/types";
 
 export function Notification({
   message,
@@ -13,11 +13,11 @@ export function Notification({
   type,
   dismiss,
   style,
-}: NotificationT & {
+}: Notification & {
   style: {
     opacity: number;
   };
-  dismiss: (id: UniqueIdT) => void;
+  dismiss: (id: UniqueId) => void;
 }) {
   return (
     <Wrapper style={style}>
@@ -30,7 +30,7 @@ export function Notification({
         )}
         {type === "success" && (
           <IconWrapper>
-            <SuccessIcon />
+            <Success />
           </IconWrapper>
         )}
       </IndicatorWrapper>
@@ -59,10 +59,10 @@ const Wrapper = styled.div`
   width: 320px;
   min-height: 90px;
   padding: 20px;
-  font: var(--text-sm);
-  color: var(--black);
+  font: var(--body-sm);
+  color: var(--dark-text);
   background: var(--white);
-  border: 1px solid var(--black);
+  border: 1px solid var(--blue-grey-700);
   border-radius: 5px;
   box-shadow: var(--shadow-3);
 `;
@@ -72,13 +72,6 @@ const IndicatorWrapper = styled.div``;
 const IconWrapper = styled.div`
   width: 32px;
   height: 32px;
-`;
-
-const SuccessIcon = styled(Success)`
-  path {
-    fill: var(--white);
-    stroke: var(--green);
-  }
 `;
 
 const TextWrapper = styled.div`
@@ -106,7 +99,7 @@ const CloseIconWrapper = styled.div`
 
 const CloseIcon = styled(Close)`
   path {
-    fill: var(--black);
+    fill: var(--dark-text);
   }
 `;
 const CloseButton = styled.button`
