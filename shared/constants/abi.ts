@@ -14,7 +14,7 @@ export const proposePriceAbi = [
   },
 ];
 
-export const skinnyProposePriceAbi = {
+export const skinnyProposePriceAbi = [{
   inputs: [
     { internalType: "address", name: "requester", type: "address" },
     { internalType: "bytes32", name: "identifier", type: "bytes32" },
@@ -48,7 +48,7 @@ export const skinnyProposePriceAbi = {
   outputs: [{ internalType: "uint256", name: "totalBond", type: "uint256" }],
   stateMutability: "nonpayable",
   type: "function",
-};
+}];
 
 export const disputePriceAbi = [
   {
