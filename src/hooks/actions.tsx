@@ -1,5 +1,7 @@
+import { Currency } from "@/components";
+import { handleNotifications } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
-import { TransactionNotifier } from "@/helpers";
+import { useEffect } from "react";
 import {
   useAccount,
   useContractWrite,
@@ -54,172 +56,82 @@ export function useActions(
 
   const {
     write: approveBondSpend,
-    data: approveBondSpendResult,
+    data: approveBondSpendTransaction,
     error: approveBondSpendError,
     isLoading: isApproveBondSpendLoading,
-  } = useContractWrite({
-    ...approveBondSpendConfig,
-    ...TransactionNotifier({
-      pending: "Approving bond",
-      success: "Bond Approved",
-      error: "Failed to approve bond",
-    }),
-  });
+  } = useContractWrite(approveBondSpendConfig);
   const {
     write: proposePrice,
-    data: proposePriceResult,
+    data: proposePriceTransaction,
     error: proposePriceError,
     isLoading: isProposePriceLoading,
-  } = useContractWrite({
-    ...proposePriceConfig,
-    ...TransactionNotifier({
-      pending: "Proposing answer",
-      success: "Answer proposed",
-      error: "Failed to propose answer",
-    }),
-  });
+  } = useContractWrite(proposePriceConfig);
   const {
     write: disputePrice,
-    data: disputePriceResult,
+    data: disputePriceTransaction,
     error: disputePriceError,
     isLoading: isDisputePriceLoading,
-  } = useContractWrite({
-    ...disputePriceConfig,
-    ...TransactionNotifier({
-      pending: "Disputing answer",
-      success: "Answer disputed",
-      error: "Failed to dispute answer",
-    }),
-  });
+  } = useContractWrite(disputePriceConfig);
   const {
     write: settlePrice,
-    data: settlePriceResult,
+    data: settlePriceTransaction,
     error: settlePriceError,
     isLoading: isSettlePriceLoading,
-  } = useContractWrite({
-    ...settlePriceConfig,
-    ...TransactionNotifier({
-      pending: "Settling answer",
-      success: "Answer settled",
-      error: "Failed to settle answer",
-    }),
-  });
+  } = useContractWrite(settlePriceConfig);
   const {
     write: disputeAssertion,
-    data: disputeAssertionResult,
+    data: disputeAssertionTransaction,
     error: disputeAssertionError,
     isLoading: isDisputeAssertionLoading,
-  } = useContractWrite({
-    ...disputeAssertionConfig,
-    ...TransactionNotifier({
-      pending: "Disputing answer",
-      success: "Answer disputed",
-      error: "Failed to dispute answer",
-    }),
-  });
+  } = useContractWrite(disputeAssertionConfig);
   const {
     write: settleAssertion,
-    data: settleAssertionResult,
+    data: settleAssertionTransaction,
     error: settleAssertionError,
     isLoading: isSettleAssertionLoading,
-  } = useContractWrite({
-    ...settleAssertionConfig,
-    ...TransactionNotifier({
-      pending: "Disputing answer",
-      success: "Answer disputed",
-      error: "Failed to dispute answer",
-    }),
-  });
+  } = useContractWrite(settleAssertionConfig);
 
   const {
     data: approveBondSpendReceipt,
     isLoading: isApprovingBondSpend,
     error: approvingBondSpendError,
   } = useWaitForTransaction({
-    hash: approveBondSpendResult?.hash,
-    onSettled(receipt, error) {
-      if (error) {
-        alert(`\`approveBondSpend\` failed: ${error.message}`);
-      }
-      if (receipt) {
-        alert(`\`approveBondSpend\` succeeded: ${receipt.transactionHash}`);
-      }
-    },
+    hash: approveBondSpendTransaction?.hash,
   });
   const {
     data: proposePriceReceipt,
     isLoading: isProposingPrice,
     error: proposingPriceError,
   } = useWaitForTransaction({
-    hash: proposePriceResult?.hash,
-    onSettled(receipt, error) {
-      if (error) {
-        alert(`\`proposePrice\` failed: ${error.message}`);
-      }
-      if (receipt) {
-        alert(`\`proposePrice\` succeeded: ${receipt.transactionHash}`);
-      }
-    },
+    hash: proposePriceTransaction?.hash,
   });
   const {
     data: disputePriceReceipt,
     isLoading: isDisputingPrice,
     error: disputingPriceError,
   } = useWaitForTransaction({
-    hash: disputePriceResult?.hash,
-    onSettled(receipt, error) {
-      if (error) {
-        alert(`\`disputePrice\` failed: ${error.message}`);
-      }
-      if (receipt) {
-        alert(`\`disputePrice\` succeeded: ${receipt.transactionHash}`);
-      }
-    },
+    hash: disputePriceTransaction?.hash,
   });
   const {
     data: settlePriceReceipt,
     isLoading: isSettlingPrice,
     error: settlingPriceError,
   } = useWaitForTransaction({
-    hash: settlePriceResult?.hash,
-    onSettled(receipt, error) {
-      if (error) {
-        alert(`\`settlePrice\` failed: ${error.message}`);
-      }
-      if (receipt) {
-        alert(`\`settlePrice\` succeeded: ${receipt.transactionHash}`);
-      }
-    },
+    hash: settlePriceTransaction?.hash,
   });
   const {
     data: disputeAssertionReceipt,
     isLoading: isDisputingAssertion,
     error: disputingAssertionError,
   } = useWaitForTransaction({
-    hash: disputeAssertionResult?.hash,
-    onSettled(receipt, error) {
-      if (error) {
-        alert(`\`disputeAssertion\` failed: ${error.message}`);
-      }
-      if (receipt) {
-        alert(`\`disputeAssertion\` succeeded: ${receipt.transactionHash}`);
-      }
-    },
+    hash: disputeAssertionTransaction?.hash,
   });
   const {
     data: settleAssertionReceipt,
     isLoading: isSettlingAssertion,
     error: settlingAssertionError,
   } = useWaitForTransaction({
-    hash: settleAssertionResult?.hash,
-    onSettled(receipt, error) {
-      if (error) {
-        alert(`\`settleAssertion\` failed: ${error.message}`);
-      }
-      if (receipt) {
-        alert(`\`settleAssertion\` succeeded: ${receipt.transactionHash}`);
-      }
-    },
+    hash: settleAssertionTransaction?.hash,
   });
 
   const isPrepareLoading =
@@ -279,8 +191,8 @@ export function useActions(
   const isError = isPrepareError || isActionError || isInteractionError;
 
   const errorMessages = [
-    ...new Set(
-      [
+    new Set(
+      ...[
         prepareApproveBondSpendError,
         prepareProposePriceError,
         prepareDisputePriceError,
@@ -304,6 +216,66 @@ export function useActions(
         .map(({ message }) => message)
     ),
   ];
+
+  useEffect(() => {
+    if (approveBondSpendTransaction) {
+      const currencyComponent = (
+        <Currency
+          value={query?.bond}
+          chainId={query?.chainId}
+          address={query?.tokenAddress}
+        />
+      );
+      void handleNotifications(approveBondSpendTransaction, {
+        pending: <>Approving {currencyComponent}</>,
+        success: <>Approved {currencyComponent}</>,
+        error: <>Failed to approve {currencyComponent}</>,
+      });
+    }
+    if (proposePriceTransaction) {
+      void handleNotifications(proposePriceTransaction, {
+        pending: <>Proposing price</>,
+        success: <>Proposed price</>,
+        error: <>Failed to propose price</>,
+      });
+    }
+    if (disputePriceTransaction) {
+      void handleNotifications(disputePriceTransaction, {
+        pending: <>Disputing price</>,
+        success: <>Disputed price</>,
+        error: <>Failed to dispute price</>,
+      });
+    }
+    if (settlePriceTransaction) {
+      void handleNotifications(settlePriceTransaction, {
+        pending: <>Settling price</>,
+        success: <>Settled price</>,
+        error: <>Failed to settle price</>,
+      });
+    }
+    if (disputeAssertionTransaction) {
+      void handleNotifications(disputeAssertionTransaction, {
+        pending: <>Disputing assertion</>,
+        success: <>Disputed assertion</>,
+        error: <>Failed to dispute assertion</>,
+      });
+    }
+    if (settleAssertionTransaction) {
+      void handleNotifications(settleAssertionTransaction, {
+        pending: <>Settling assertion</>,
+        success: <>Settled assertion</>,
+        error: <>Failed to settle assertion</>,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    approveBondSpendTransaction,
+    proposePriceTransaction,
+    disputePriceTransaction,
+    settlePriceTransaction,
+    disputeAssertionTransaction,
+    settleAssertionTransaction,
+  ]);
 
   return {
     approveBondSpend,

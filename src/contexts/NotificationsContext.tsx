@@ -1,10 +1,10 @@
+import { events } from "@/helpers";
 import type {
   Notification,
   PendingNotification,
-  SettledEventT,
+  SettledEvent,
   UniqueId,
 } from "@/types";
-import { events } from "@/helpers";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useState } from "react";
 
@@ -30,16 +30,20 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<NotificationsById>({});
 
   useEffect(() => {
-    function handlePendingEvent({ message, id, link }: PendingNotification) {
+    function handlePendingEvent({
+      message,
+      id,
+      transactionHash,
+    }: PendingNotification) {
       addNotification({
         id,
         message,
-        link,
+        transactionHash,
         type: "pending",
       });
     }
 
-    function handleSuccessEvent({ message, pendingId }: SettledEventT) {
+    function handleSuccessEvent({ message, pendingId }: SettledEvent) {
       updatePendingNotification(pendingId, message, "success");
 
       setTimeout(() => {
@@ -47,7 +51,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
       }, 5000);
     }
 
-    function handleErrorEvent({ message, pendingId }: SettledEventT) {
+    function handleErrorEvent({ message, pendingId }: SettledEvent) {
       updatePendingNotification(pendingId, message, "error");
 
       setTimeout(() => {
@@ -81,7 +85,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
         message,
         type,
         id,
-        link: prev[id]?.link,
+        transactionHash: prev[id]?.transactionHash,
       },
     }));
   }

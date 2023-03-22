@@ -297,12 +297,12 @@ export type UniqueId = string | number;
 export type Notification = {
   message: ReactNode;
   id: UniqueId;
-  link?: string;
+  transactionHash?: string;
   type: "success" | "error" | "pending";
 };
 export type PendingNotification = Notification;
 
-export type SettledEventT = {
+export type SettledEvent = {
   message: ReactNode;
   id: UniqueId;
   pendingId: UniqueId;

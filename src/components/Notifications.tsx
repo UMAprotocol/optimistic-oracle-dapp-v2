@@ -2,9 +2,11 @@ import { useNotificationsContext } from "@/hooks";
 import { Root as Portal } from "@radix-ui/react-portal";
 import { animated, useTransition } from "@react-spring/web";
 import styled from "styled-components";
+import { useIsClient } from "usehooks-ts";
 import { Notification } from "./Notification";
 
 export function Notifications() {
+  const isClient = useIsClient();
   const { notifications, removeNotification } = useNotificationsContext();
 
   const transitions = useTransition(Object.values(notifications), {
@@ -14,6 +16,8 @@ export function Notifications() {
     leave: { opacity: 0 },
     config: { mass: 1, tension: 500, friction: 40 },
   });
+
+  if (!isClient) return null;
 
   return (
     <Portal>

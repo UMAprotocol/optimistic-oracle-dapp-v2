@@ -1,44 +1,52 @@
+import type { SendTransactionResult } from "@wagmi/core";
 import Events from "events";
-import type { ReactNode } from "react";
 import uniqueId from "lodash/uniqueId";
+import type { ReactNode } from "react";
+
 export const events = new Events();
 
 export function emitSuccessEvent(successEvent: {
   message: ReactNode;
-  id: string;
+  pendingId: string;
 }) {
-  events.emit("success", { ...successEvent });
+  const id = uniqueId();
+  events.emit("success", { ...successEvent, id });
+  return id;
 }
 
-export function emitErrorEvent(errorEvent: { message: ReactNode; id: string }) {
-  events.emit("error", { ...errorEvent });
+export function emitErrorEvent(errorEvent: {
+  message: ReactNode;
+  pendingId: string;
+}) {
+  const id = uniqueId();
+  events.emit("error", { ...errorEvent, id: uniqueId() });
+  return id;
 }
 
 export function emitPendingEvent(pendingEvent: {
   message: ReactNode;
-  id: string;
-}) {
-  events.emit("pending", { ...pendingEvent });
-}
-
-export function TransactionNotifier(messages: {
-  pending: ReactNode;
-  success: ReactNode;
-  error: ReactNode;
+  transactionHash: string;
 }) {
   const id = uniqueId();
-  return {
-    // Function fires before the contract write function and is passed same variables the contract write function would receive.
-    onMutate() {
-      emitPendingEvent({ message: messages.pending, id });
-    },
-    // Function to invoke when write is successful.
-    onSuccess() {
-      emitSuccessEvent({ message: messages.success, id });
-    },
-    // Function to invoke when an error is thrown while attempting to write.
-    onError() {
-      emitErrorEvent({ message: messages.error, id });
-    },
-  };
+  events.emit("pending", { ...pendingEvent, id });
+  return id;
+}
+
+export async function handleNotifications(
+  tx: SendTransactionResult,
+  messages: { pending: ReactNode; success: ReactNode; error: ReactNode }
+) {
+  const transactionHash = tx.hash;
+  const pendingId = emitPendingEvent({
+    message: messages.pending,
+    transactionHash,
+  });
+  try {
+    const result = await tx.wait();
+    emitSuccessEvent({ message: messages.success, pendingId });
+    return result;
+  } catch (e) {
+    emitErrorEvent({ message: messages.error, pendingId });
+    throw e;
+  }
 }
