@@ -21,6 +21,7 @@
     "@radix-ui/react-portal": "^1.0.1",
     "@radix-ui/react-progress": "^1.0.1",
     "@rainbow-me/rainbowkit": "^0.8.1",
+    "@react-spring/web": "^9.7.1",
     "@uma/common": "^2.29.1",
     "@uma/contracts-frontend": "^0.4.12",
     "@uma/sdk": "^0.32.4",

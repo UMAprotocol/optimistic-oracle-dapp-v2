@@ -6,7 +6,12 @@ import {
   walletsAndConnectors,
   white,
 } from "@/constants";
-import { ErrorProvider, OracleDataProvider, PanelProvider } from "@/contexts";
+import {
+  ErrorProvider,
+  OracleDataProvider,
+  PanelProvider,
+  NotificationsProvider,
+} from "@/contexts";
 import "@/styles/fonts.css";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -39,14 +44,16 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
-        <OracleDataProvider>
-          <ErrorProvider>
-            <PanelProvider>
-              <GlobalStyle />
-              <Component {...pageProps} />
-            </PanelProvider>
-          </ErrorProvider>
-        </OracleDataProvider>
+        <NotificationsProvider>
+          <OracleDataProvider>
+            <ErrorProvider>
+              <PanelProvider>
+                <GlobalStyle />
+                <Component {...pageProps} />
+              </PanelProvider>
+            </ErrorProvider>
+          </OracleDataProvider>
+        </NotificationsProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

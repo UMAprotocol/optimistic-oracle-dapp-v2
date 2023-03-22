@@ -291,3 +291,19 @@ export type CheckedChangePayload = {
 };
 
 export type OnCheckedChange = (payload: CheckedChangePayload) => void;
+
+export type UniqueId = string | number;
+
+export type Notification = {
+  message: ReactNode;
+  id: UniqueId;
+  link?: string;
+  type: "success" | "error" | "pending";
+};
+export type PendingNotification = Notification;
+
+export type SettledEventT = {
+  message: ReactNode;
+  id: UniqueId;
+  pendingId: UniqueId;
+};

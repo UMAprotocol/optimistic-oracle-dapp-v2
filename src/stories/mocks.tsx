@@ -1,5 +1,6 @@
+import type { NotificationsById } from "@/contexts";
 import { parseEtherSafe, utf8ToHex } from "@/helpers";
-import type { OracleQueryUI } from "@/types";
+import type { Notification, OracleQueryUI } from "@/types";
 import { chainNames } from "@shared/constants";
 import type {
   Assertion,
@@ -9,6 +10,7 @@ import type {
 import { makeQueryName } from "@shared/utils";
 import { add, addMinutes, format, sub } from "date-fns";
 import { BigNumber } from "ethers";
+import { uniqueId } from "lodash";
 import type { GraphQLHandler, GraphQLRequest, GraphQLVariables } from "msw";
 import { graphql } from "msw";
 
@@ -603,3 +605,42 @@ export function makeUnixTimestamp(
 export function makeEtherValueString(value: number) {
   return BigNumber.from(parseEtherSafe(value.toString())).toString();
 }
+
+export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
+  const notifications: NotificationsById = {};
+
+  const defaultMessage = "Test notification";
+  const defaultLink =
+    "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
+  const defaultType = "pending";
+
+  inputs.forEach((input) => {
+    const id = uniqueId();
+    notifications[id] = {
+      id,
+      message: input.message ?? defaultMessage,
+      link: input.link ?? defaultLink,
+      type: input.type ?? defaultType,
+    };
+  });
+
+  return notifications;
+}
+
+export const defaultMockNotifications = makeMockNotifications([
+  {
+    message: "Test notification. Disputing a price or something",
+    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+    type: "pending",
+  },
+  {
+    message: "Testing testing one two three",
+    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdea",
+    type: "error",
+  },
+  {
+    message: "Another one. DJ Khaled!",
+    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdee",
+    type: "success",
+  },
+]);
