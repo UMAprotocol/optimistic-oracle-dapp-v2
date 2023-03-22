@@ -610,7 +610,7 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
   const notifications: NotificationsById = {};
 
   const defaultMessage = "Test notification";
-  const defaultLink =
+  const defaultTransactionHash =
     "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
   const defaultType = "pending";
 
@@ -619,7 +619,7 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
     notifications[id] = {
       id,
       message: input.message ?? defaultMessage,
-      link: input.link ?? defaultLink,
+      transactionHash: input.transactionHash ?? defaultTransactionHash,
       type: input.type ?? defaultType,
     };
   });
@@ -630,17 +630,20 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
 export const defaultMockNotifications = makeMockNotifications([
   {
     message: "Test notification. Disputing a price or something",
-    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+    transactionHash:
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
     type: "pending",
   },
   {
     message: "Testing testing one two three",
-    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdea",
+    transactionHash:
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdea",
     type: "error",
   },
   {
     message: "Another one. DJ Khaled!",
-    link: "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdee",
+    transactionHash:
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdee",
     type: "success",
   },
 ]);
