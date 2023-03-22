@@ -3,7 +3,11 @@ import type {
   disputeAssertionAbi,
   disputePriceAbi,
   proposePriceAbi,
+  settlePriceAbi,
   settleAssertionAbi,
+  skinnyProposePriceAbi,
+  skinnyDisputePriceAbi,
+  skinnySettlePriceAbi,
 } from "@shared/constants/abi";
 import type {
   ChainId,
@@ -18,6 +22,30 @@ import type { Address, erc20ABI } from "wagmi";
 
 export type ActionType = "dispute" | "propose" | "settle" | null;
 
+// request type that needs to be passed to skinny oo
+export interface SolidityRequest {
+  proposer: string; // Address of the proposer.
+  disputer: string; // Address of the disputer.
+  currency: string; // ERC20 token used to pay rewards and fees.
+  settled: boolean; // True if the request is settled.
+  proposedPrice: BigNumber; // Price that the proposer submitted.
+  resolvedPrice: BigNumber; // Price resolved once the request is settled.
+  expirationTime: BigNumber; // Time at which the request auto-settles without a dispute.
+  reward: BigNumber; // Amount of the currency to pay to the proposer on settlement.
+  finalFee: BigNumber; // Final fee to pay to the Store upon request to the DVM.
+  bond: BigNumber; // Bond that the proposer and disputer must pay on top of the final fee.
+  customLiveness: BigNumber; // Custom liveness value set by the requester.
+}
+
+export type ProposePriceParamsFactory = (
+  proposedPrice: string
+) => ProposePriceParams | undefined;
+export type ProposePriceSkinnyParamsFactory = (
+  proposedPrice: string
+) => ProposePriceSkinnyParams | undefined;
+export type DisputeAssertionParamsFactory = (
+  disputerAddress: Address | undefined
+) => DisputeAssertionParams | undefined;
 /**
  * Defines the shape of data required by the UI to render a price request or a an assertion.
  * All of the UI components are "dumb", i.e they expect the data to be available, correct, and formatted when they receive it.
@@ -58,15 +86,12 @@ export type OracleQueryUI = {
   tokenAddress: Address;
   approveBondSpendParams: ApproveBondSpendParams | undefined;
   proposePriceParams:
-    | ((proposedPrice: string) => ProposePriceParams | undefined)
+    | ProposePriceParamsFactory
+    | ProposePriceSkinnyParamsFactory
     | undefined;
-  disputePriceParams: DisputePriceParams | undefined;
-  settlePriceParams: SettlePriceParams | undefined;
-  disputeAssertionParams:
-    | ((
-        disputerAddress: Address | undefined
-      ) => DisputeAssertionParams | undefined)
-    | undefined;
+  disputePriceParams: DisputePriceParams | DisputePriceSkinnyParams | undefined;
+  settlePriceParams: SettlePriceParams | SettlePriceSkinnyParams | undefined;
+  disputeAssertionParams: DisputeAssertionParamsFactory | undefined;
   settleAssertionParams: SettleAssertionParams | undefined;
 };
 
@@ -90,6 +115,23 @@ export type ProposePriceParams = {
   args: readonly [Address, string, BigNumberish, string, BigNumberish];
 };
 
+export type ProposePriceSkinnyParams = {
+  // the oracle address
+  address: Address;
+  abi: typeof skinnyProposePriceAbi;
+  functionName: "proposePrice";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData, request, proposedPrice
+  args: readonly [
+    Address,
+    string,
+    BigNumberish,
+    string,
+    SolidityRequest,
+    BigNumberish
+  ];
+};
+
 export type DisputePriceParams = {
   // the oracle address
   address: Address;
@@ -100,14 +142,34 @@ export type DisputePriceParams = {
   args: readonly [Address, string, BigNumberish, string];
 };
 
+export type DisputePriceSkinnyParams = {
+  // the oracle address
+  address: Address;
+  abi: typeof skinnyDisputePriceAbi;
+  functionName: "disputePrice";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData, request
+  args: readonly [Address, string, BigNumberish, string, SolidityRequest];
+};
+
 export type SettlePriceParams = {
   // the oracle address
   address: Address;
-  abi: typeof disputePriceAbi;
+  abi: typeof settlePriceAbi;
   functionName: "settle";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData
   args: readonly [Address, string, BigNumberish, string];
+};
+
+export type SettlePriceSkinnyParams = {
+  // the oracle address
+  address: Address;
+  abi: typeof skinnySettlePriceAbi;
+  functionName: "settle";
+  chainId: ChainId;
+  // requester, identifier, timestamp, ancillaryData, request
+  args: readonly [Address, string, BigNumberish, string, SolidityRequest];
 };
 
 export type DisputeAssertionParams = {
