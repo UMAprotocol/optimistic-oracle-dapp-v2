@@ -1,7 +1,11 @@
 import VerifyPage from "@/pages";
 import type { Meta } from "@storybook/react";
-import { handlersForAllPages, makeMockRouterPathname } from "../mocks";
-import { Template } from "./shared";
+import {
+  defaultMockNotifications,
+  handlersForAllPages,
+  makeMockRouterPathname,
+} from "../mocks";
+import { NotificationsDecorator, Template } from "./shared";
 import type { PageStory } from "./types";
 
 const meta: Meta = {
@@ -40,4 +44,13 @@ export const Verify: PageStory = {
       handlers: handlersForAllPages,
     },
   },
+};
+
+export const WithNotifications: PageStory = {
+  ...Verify,
+  args: {
+    ...Verify.args,
+    notifications: defaultMockNotifications,
+  },
+  decorators: [NotificationsDecorator],
 };
