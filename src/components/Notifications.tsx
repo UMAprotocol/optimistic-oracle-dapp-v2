@@ -40,7 +40,7 @@ export function Notifications() {
 const AnimatedNotification = animated(Notification);
 
 const Wrapper = styled.div`
-  z-index: 1;
+  z-index: 2;
   position: fixed;
   top: 0;
   left: 0;
