@@ -93,8 +93,7 @@ const Wrapper = styled.div`
   display: flex;
   gap: calc(var(--icon-size) / 2);
   align-items: center;
-  min-width: 320px;
-  max-width: 100%;
+  width: min(100%, 320px);
   min-height: 90px;
   padding: calc(var(--icon-size) / 2);
   padding-right: 20px;
