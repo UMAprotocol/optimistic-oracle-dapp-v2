@@ -4,6 +4,7 @@ import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
 import { WagmiConfig } from "wagmi";
 import { GlobalStyle } from "../src/components/GlobalStyle";
+import { NotificationsProvider } from "../src/contexts";
 import { chains, rainbowKitTheme, wagmiClient } from "../src/pages/_app";
 import "../src/styles/fonts.css";
 import "./rainbow.css";
@@ -73,7 +74,6 @@ export const parameters: Parameters = {
 };
 
 export const decorators: Decorator[] = [
-  // @ts-expect-error mswDecorator has not updated to the storybook v7 types
   mswDecorator,
   (Story) => (
     <>
@@ -84,7 +84,9 @@ export const decorators: Decorator[] = [
   (Story) => (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
-        <Story />
+        <NotificationsProvider>
+          <Story />
+        </NotificationsProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   ),

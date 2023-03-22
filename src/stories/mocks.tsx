@@ -514,6 +514,39 @@ export const handlersForAllPages = makeGraphqlHandlers({
     }),
   },
   v2: {
+    Goerli: makeMockRequestGraphEntities({
+      inputs: [
+        {
+          identifier: "TEST_VERIFY",
+          state: "Proposed",
+          proposedPrice: makeEtherValueString(123),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          identifier: "TEST_VERIFY",
+          state: "Disputed",
+          proposedPrice: makeEtherValueString(123),
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Requested",
+          identifier: "TEST_PROPOSE",
+          bond: "1230000001",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+        {
+          state: "Settled",
+          settlementPrice: makeEtherValueString(123),
+          identifier: "TEST_SETTLED",
+          currency: "0x07865c6e87b9f70255377e024ace6630c1eaa37f",
+        },
+      ],
+    }),
     Ethereum: makeMockRequestGraphEntities({
       inputs: [
         {

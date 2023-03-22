@@ -55,37 +55,37 @@ export function useActions(
   } = usePrepareContractWrite(settleAssertionParams);
 
   const {
-    write: approveBondSpend,
+    writeAsync: approveBondSpend,
     data: approveBondSpendTransaction,
     error: approveBondSpendError,
     isLoading: isApproveBondSpendLoading,
   } = useContractWrite(approveBondSpendConfig);
   const {
-    write: proposePrice,
+    writeAsync: proposePrice,
     data: proposePriceTransaction,
     error: proposePriceError,
     isLoading: isProposePriceLoading,
   } = useContractWrite(proposePriceConfig);
   const {
-    write: disputePrice,
+    writeAsync: disputePrice,
     data: disputePriceTransaction,
     error: disputePriceError,
     isLoading: isDisputePriceLoading,
   } = useContractWrite(disputePriceConfig);
   const {
-    write: settlePrice,
+    writeAsync: settlePrice,
     data: settlePriceTransaction,
     error: settlePriceError,
     isLoading: isSettlePriceLoading,
   } = useContractWrite(settlePriceConfig);
   const {
-    write: disputeAssertion,
+    writeAsync: disputeAssertion,
     data: disputeAssertionTransaction,
     error: disputeAssertionError,
     isLoading: isDisputeAssertionLoading,
   } = useContractWrite(disputeAssertionConfig);
   const {
-    write: settleAssertion,
+    writeAsync: settleAssertion,
     data: settleAssertionTransaction,
     error: settleAssertionError,
     isLoading: isSettleAssertionLoading,
@@ -191,8 +191,8 @@ export function useActions(
   const isError = isPrepareError || isActionError || isInteractionError;
 
   const errorMessages = [
-    new Set(
-      ...[
+    ...new Set(
+      [
         prepareApproveBondSpendError,
         prepareProposePriceError,
         prepareDisputePriceError,
