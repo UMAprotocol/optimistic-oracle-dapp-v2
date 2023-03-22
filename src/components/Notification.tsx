@@ -1,10 +1,14 @@
 import { LoadingSpinner } from "@/components";
+import { mobile, smallMobile, tablet } from "@/constants";
 import type { Notification, UniqueId } from "@/types";
 import NextLink from "next/link";
 import Close from "public/assets/icons/close.svg";
 import Failure from "public/assets/icons/failure.svg";
 import Success from "public/assets/icons/success.svg";
+import { useEffect, useState } from "react";
+import type { CSSProperties } from "styled-components";
 import styled from "styled-components";
+import { useWindowSize } from "usehooks-ts";
 
 export function Notification({
   message,
@@ -19,10 +23,43 @@ export function Notification({
   };
   dismiss: (id: UniqueId) => void;
 }) {
+  const [iconSize, setIconSize] = useState(32);
+  const { width } = useWindowSize();
+
+  useEffect(() => {
+    if (!width) return;
+
+    if (width <= smallMobile) {
+      setIconSize(16);
+      return;
+    }
+
+    if (width <= mobile) {
+      setIconSize(20);
+      return;
+    }
+
+    if (width <= tablet) {
+      setIconSize(28);
+      return;
+    }
+
+    setIconSize(32);
+  }, [width]);
+
   return (
-    <Wrapper style={style}>
+    <Wrapper
+      style={
+        {
+          ...style,
+          "--icon-size": `${iconSize}px`,
+        } as CSSProperties
+      }
+    >
       <IndicatorWrapper>
-        {type === "pending" && <LoadingSpinner variant="black" size={32} />}
+        {type === "pending" && (
+          <LoadingSpinner variant="black" size={iconSize} />
+        )}
         {type === "error" && (
           <IconWrapper>
             <Failure />
@@ -54,11 +91,13 @@ export function Notification({
 const Wrapper = styled.div`
   position: relative;
   display: flex;
-  gap: 18px;
+  gap: calc(var(--icon-size) / 2);
   align-items: center;
-  width: 320px;
+  min-width: 320px;
+  max-width: 100%;
   min-height: 90px;
-  padding: 20px;
+  padding: calc(var(--icon-size) / 2);
+  padding-right: 20px;
   font: var(--body-sm);
   color: var(--dark-text);
   background: var(--white);
@@ -70,8 +109,7 @@ const Wrapper = styled.div`
 const IndicatorWrapper = styled.div``;
 
 const IconWrapper = styled.div`
-  width: 32px;
-  height: 32px;
+  width: var(--icon-size);
 `;
 
 const TextWrapper = styled.div`
