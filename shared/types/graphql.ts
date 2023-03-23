@@ -405,20 +405,20 @@ export type ParsedOOV1GraphEntity = {
   settlementHash: string | null;
   state: RequestState;
   requestTimestamp: string | null;
-  requestBlockNumber: BigNumber | null;
+  requestBlockNumber: string | null;
   requestHash: string | null;
-  requestLogIndex: BigNumber | null;
+  requestLogIndex: string | null;
   proposalTimestamp: string | null;
-  proposalBlockNumber: BigNumber | null;
+  proposalBlockNumber: string | null;
   proposalHash: string | null;
-  proposalLogIndex: BigNumber | null;
+  proposalLogIndex: string | null;
   disputeTimestamp: string | null;
-  disputeBlockNumber: BigNumber | null;
+  disputeBlockNumber: string | null;
   disputeHash: string | null;
-  disputeLogIndex: BigNumber | null;
+  disputeLogIndex: string | null;
   settlementTimestamp: string | null;
-  settlementBlockNumber: BigNumber | null;
-  settlementLogIndex: BigNumber | null;
+  settlementBlockNumber: string | null;
+  settlementLogIndex: string | null;
 };
 
 export type ParsedOOV2GraphEntity = ParsedOOV1GraphEntity & {

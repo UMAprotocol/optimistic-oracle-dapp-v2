@@ -12,7 +12,7 @@ import {
   smallMobileAndUnder,
 } from "@/constants";
 import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
-import { useActions, usePanelContext } from "@/hooks";
+import { useActions, usePanelContext, useQueryRouter } from "@/hooks";
 import { useBalanceAndAllowance } from "@/hooks/balanceAndAllowance";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
@@ -37,7 +37,8 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
  * @see `PanelContext`
  */
 export function Panel() {
-  const { content, page, panelOpen, closePanel } = usePanelContext();
+  const { content, page, panelOpen } = usePanelContext();
+  const { close: closePanel } = useQueryRouter();
   const [proposePriceInput, setProposePriceInput] = useState("");
   const [inputError, setInputError] = useState("");
   const {
