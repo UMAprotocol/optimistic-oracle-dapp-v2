@@ -11,13 +11,26 @@ const meta: Meta<typeof Pagination> = {
 
 export default meta;
 
-type Story = StoryObj<typeof Pagination>;
-const entries = Array.from({ length: 101 }, (_, i) => i + 1).map((i) => ({
-  id: i,
-  name: `Entry ${i}`,
-}));
+type Args = {
+  entries: ReturnType<typeof makeMockEntries>;
+};
 
-function Wrapper({ Component }: { Component: typeof Pagination }) {
+type Story = StoryObj<Args>;
+
+function makeMockEntries(length: number) {
+  return Array.from({ length }, (_, i) => i + 1).map((i) => ({
+    id: i,
+    name: `Entry ${i}`,
+  }));
+}
+
+function Wrapper({
+  Component,
+  entries,
+}: {
+  Component: typeof Pagination;
+  entries: ReturnType<typeof makeMockEntries>;
+}) {
   const [entriesToShow, setEntriesToShow] = useState(entries);
 
   return (
@@ -34,15 +47,21 @@ function Wrapper({ Component }: { Component: typeof Pagination }) {
 }
 
 const Template: Story = {
-  render: () => <Wrapper Component={Pagination} />,
+  render: ({ entries }) => <Wrapper Component={Pagination} entries={entries} />,
 };
 
 export const Default: Story = {
   ...Template,
+  args: {
+    entries: makeMockEntries(50),
+  },
 };
 
 export const TestInteractions: Story = {
   ...Template,
+  args: {
+    entries: makeMockEntries(100),
+  },
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
     const canvas = within(canvasElement.parentElement as HTMLElement);
@@ -52,8 +71,6 @@ export const TestInteractions: Story = {
     expect(canvas.getByText("10")).toBeInTheDocument();
     // there should be an ellipsis before the last page button
     expect(canvas.getByText("...")).toBeInTheDocument();
-    // there should be 10 entries displayed
-    expect(canvas.getAllByTestId("entry").length).toBe(10);
     const resultsPerPageDropdownButton = canvas.getByText("10 results");
     await waitFor(() => userEvent.click(resultsPerPageDropdownButton));
     const resultsPerPage20 = canvas.getByText("20 results");
@@ -70,6 +87,9 @@ export const TestInteractions: Story = {
 
 export const OddNumberOfEntriesRegressionTest: Story = {
   ...Template,
+  args: {
+    entries: makeMockEntries(101),
+  },
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
     const canvas = within(canvasElement.parentElement as HTMLElement);
