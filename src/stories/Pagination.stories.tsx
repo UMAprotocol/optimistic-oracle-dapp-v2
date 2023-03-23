@@ -1,5 +1,5 @@
 import { Pagination } from "@/components";
-import { defaultResultsPerPage } from "@/constants";
+import { white } from "@/constants";
 import { expect } from "@storybook/jest";
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, waitFor, within } from "@storybook/testing-library";
@@ -12,16 +12,13 @@ const meta: Meta<typeof Pagination> = {
 export default meta;
 
 type Story = StoryObj<typeof Pagination>;
+const entries = Array.from({ length: 101 }, (_, i) => i + 1).map((i) => ({
+  id: i,
+  name: `Entry ${i}`,
+}));
 
 function Wrapper({ Component }: { Component: typeof Pagination }) {
-  const entries = Array.from({ length: 100 }, (_, i) => i + 1).map((i) => ({
-    id: i,
-    name: `Entry ${i}`,
-  }));
-
-  const [entriesToShow, setEntriesToShow] = useState(
-    entries.slice(0, defaultResultsPerPage)
-  );
+  const [entriesToShow, setEntriesToShow] = useState(entries);
 
   return (
     <div>
@@ -68,5 +65,24 @@ export const TestInteractions: Story = {
     await waitFor(() => userEvent.click(resultsPerPage50));
     // there should be 50 entries
     expect(canvas.getAllByTestId("entry").length).toBe(50);
+  },
+};
+
+export const OddNumberOfEntriesRegressionTest: Story = {
+  ...Template,
+  play: async ({ canvasElement }) => {
+    // use the parent element because the portal is outside the canvas (appended to body)
+    const canvas = within(canvasElement.parentElement as HTMLElement);
+    const resultsPerPageDropdownButton = canvas.getByText("10 results");
+    await waitFor(() => userEvent.click(resultsPerPageDropdownButton));
+    const resultsPerPage50 = canvas.getByText("50 results");
+    await waitFor(() => userEvent.click(resultsPerPage50));
+    const lastButton = canvas.getByText("3");
+    await waitFor(() => userEvent.click(lastButton));
+    await waitFor(() => userEvent.click(resultsPerPageDropdownButton));
+    const resultsPerPage10 = canvas.getByText("10 results");
+    await waitFor(() => userEvent.click(resultsPerPage10));
+    const lastButton11 = canvas.getByText("11");
+    expect(lastButton11).toHaveStyle({ color: white });
   },
 };
