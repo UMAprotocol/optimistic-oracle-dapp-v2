@@ -81,10 +81,11 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
   }
 
   function updateResultsPerPage(newResultsPerPage: number) {
+    const firstItemIndex = (pageNumber - 1) * resultsPerPage;
+    const newPageNumber = Math.ceil((firstItemIndex + 1) / newResultsPerPage);
     setResultsPerPage(newResultsPerPage);
-    const newPageNumber = Math.ceil(numberOfEntries / newResultsPerPage);
-    updateEntries({ newPageNumber, newResultsPerPage });
     setPageNumber(newPageNumber);
+    updateEntries({ newPageNumber, newResultsPerPage });
   }
 
   function updateEntries(params?: {
@@ -155,14 +156,14 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
 
   return (
     <Wrapper>
-      <ResultsPerPageWrapper>
+      <ResultsPerPageWrapper data-testid="results-per-page">
         <RadioDropdown
           items={resultsPerPageOptions}
           selected={getSelectedResultsPerPage()}
           onSelect={(option) => updateResultsPerPage(Number(option.value))}
         />
       </ResultsPerPageWrapper>
-      <ButtonsWrapper>
+      <ButtonsWrapper data-testid="page-buttons">
         {showFirstButton && (
           <>
             <PageButton
