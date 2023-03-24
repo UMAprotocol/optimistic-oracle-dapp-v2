@@ -12,7 +12,7 @@ const meta: Meta<typeof Pagination> = {
 export default meta;
 
 type Args = {
-  entries: ReturnType<typeof makeMockEntries>;
+  numberOfEntries: number;
 };
 
 type Story = StoryObj<Args>;
@@ -47,20 +47,32 @@ function Wrapper({
 }
 
 const Template: Story = {
-  render: ({ entries }) => <Wrapper Component={Pagination} entries={entries} />,
+  render: ({ numberOfEntries }) => (
+    <Wrapper
+      Component={Pagination}
+      entries={makeMockEntries(numberOfEntries)}
+    />
+  ),
 };
 
-export const Default: Story = {
+export const EvenNumberOfEntries: Story = {
   ...Template,
   args: {
-    entries: makeMockEntries(100),
+    numberOfEntries: 100,
+  },
+};
+
+export const OddNumberOfEntries: Story = {
+  ...Template,
+  args: {
+    numberOfEntries: 101,
   },
 };
 
 export const TestInteractions: Story = {
   ...Template,
   args: {
-    entries: makeMockEntries(100),
+    numberOfEntries: 100,
   },
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
@@ -88,7 +100,7 @@ export const TestInteractions: Story = {
 export const OddNumberOfEntriesRegressionTest: Story = {
   ...Template,
   args: {
-    entries: makeMockEntries(101),
+    numberOfEntries: 101,
   },
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
@@ -127,7 +139,7 @@ export const OddNumberOfEntriesRegressionTest: Story = {
 export const EvenNumberOfEntriesRegressionTest: Story = {
   ...Template,
   args: {
-    entries: makeMockEntries(100),
+    numberOfEntries: 100,
   },
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
