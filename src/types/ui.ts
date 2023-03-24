@@ -38,10 +38,10 @@ export interface SolidityRequest {
 }
 
 export type ProposePriceParamsFactory = (
-  proposedPrice: string
+  proposedPrice?: string
 ) => ProposePriceParams | undefined;
 export type ProposePriceSkinnyParamsFactory = (
-  proposedPrice: string
+  proposedPrice?: string
 ) => ProposePriceSkinnyParams | undefined;
 export type DisputeAssertionParamsFactory = (
   disputerAddress: Address | undefined
@@ -84,16 +84,19 @@ export type OracleQueryUI = {
   expiryType: ExpiryType | null;
   oracleAddress: Address;
   tokenAddress: Address;
-  approveBondSpendParams: ApproveBondSpendParams | undefined;
-  proposePriceParams:
+  approveBondSpendParams?: ApproveBondSpendParams | undefined;
+  proposePriceParams?:
     | ProposePriceParamsFactory
     | ProposePriceSkinnyParamsFactory
     | undefined;
-  disputePriceParams: DisputePriceParams | DisputePriceSkinnyParams | undefined;
-  settlePriceParams: SettlePriceParams | SettlePriceSkinnyParams | undefined;
-  disputeAssertionParams: DisputeAssertionParamsFactory | undefined;
-  settleAssertionParams: SettleAssertionParams | undefined;
-
+  disputePriceParams?:
+    | DisputePriceParams
+    | DisputePriceSkinnyParams
+    | undefined;
+  settlePriceParams?: SettlePriceParams | SettlePriceSkinnyParams | undefined;
+  disputeAssertionParams?: DisputeAssertionParamsFactory | undefined;
+  settleAssertionParams?: SettleAssertionParams | undefined;
+  state?: string | undefined;
   // additional searchable properties, note these get parsed to strings even if bigint so we can compare with ==
   requestTimestamp?: string | null;
   requestHash?: string | null;

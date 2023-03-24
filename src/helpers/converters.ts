@@ -208,7 +208,7 @@ function makeProposePriceParams({
   oracleAddress: Address;
   chainId: ChainId;
 }) {
-  return (proposedPrice: string) => {
+  return (proposedPrice?: string) => {
     if (!proposedPrice) return;
     return {
       address: oracleAddress,
@@ -243,7 +243,7 @@ function makeProposePriceSkinnyParams({
   chainId: ChainId;
   request: SolidityRequest;
 }) {
-  return (proposedPrice: string) => {
+  return (proposedPrice?: string) => {
     if (!proposedPrice) return;
     return {
       address: oracleAddress,
@@ -591,6 +591,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     proposalTimestamp,
     proposalHash,
     proposalLogIndex,
+    state,
   };
 }
 

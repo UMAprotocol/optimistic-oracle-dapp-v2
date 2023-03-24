@@ -4,6 +4,7 @@ import {
   Currency,
   DecimalInput,
   PanelBase,
+  ConnectButton,
 } from "@/components";
 import {
   blueGrey700,
@@ -12,8 +13,11 @@ import {
   smallMobileAndUnder,
 } from "@/constants";
 import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
-import { useActions, usePanelContext, useQueryRouter } from "@/hooks";
-import { useBalanceAndAllowance } from "@/hooks/balanceAndAllowance";
+import {
+  usePrimaryPanelAction,
+  usePanelContext,
+  useQueryRouter,
+} from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -24,7 +28,7 @@ import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
 import { Fragment, useState } from "react";
 import styled from "styled-components";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
@@ -55,47 +59,30 @@ export function Panel() {
     bond,
     reward,
     formattedLivenessEndsIn,
-    actionType,
     expiryType,
     moreInformation,
   } = content ?? {};
 
-  const { allowance } = useBalanceAndAllowance(content);
-  const {
-    approveBondSpend,
-    proposePrice,
-    disputePrice,
-    settlePrice,
-    disputeAssertion,
-    settleAssertion,
-    isLoading,
-    isError,
-    errorMessages,
-  } = useActions(content, proposePriceInput);
+  const primaryAction = usePrimaryPanelAction({
+    query: content,
+    proposePriceInput,
+  });
+
   const { address } = useAccount();
+  const { chain: connectedChain } = useNetwork();
 
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
-  const needsToApprove =
-    allowance !== undefined && bond !== undefined && allowance.lt(bond);
-  const actionButtonTitle = needsToApprove ? "approve bond" : actionType;
-  const action = getAction();
-  const hasActionButton = !!address && (!!actionType || needsToApprove);
-  const hasInput = page === "propose";
+  const hideInput = page !== "propose";
+  const disableInput = !address || connectedChain?.id !== chainId;
   const hasReward = reward !== null;
   const actionsTitle = getActionsTitle();
-
-  function getAction() {
-    if (needsToApprove) return approveBondSpend;
-    return (
-      proposePrice ||
-      disputePrice ||
-      settlePrice ||
-      disputeAssertion ||
-      settleAssertion
-    );
-  }
+  const errors: string[] = [
+    inputError,
+    ...(primaryAction?.errors || []),
+  ].filter(Boolean);
+  const isError = errors.length > 0;
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
@@ -129,13 +116,13 @@ export function Panel() {
           {actionsIcon}
           <SectionTitle>{actionsTitle}</SectionTitle>
         </SectionTitleWrapper>
-        {hasInput ? (
+        {!hideInput ? (
           <InputWrapper>
             <DecimalInput
               value={proposePriceInput}
               onInput={setProposePriceInput}
               addErrorMessage={setInputError}
-              disabled={!address}
+              disabled={disableInput}
               removeErrorMessage={() => setInputError("")}
             />
           </InputWrapper>
@@ -189,21 +176,24 @@ export function Panel() {
             </ActionWrapper>
           </ActionsDetailsWrapper>
         )}
-        {hasActionButton && (
+        {primaryAction && !primaryAction.hidden && (
           <ActionButtonWrapper>
             <Button
               variant="primary"
-              onClick={action}
-              disabled={isLoading}
+              onClick={primaryAction.action}
+              disabled={primaryAction.disabled}
               width="min(100%, 512px)"
             >
-              {capitalizeFirstLetter(actionButtonTitle)}
+              {capitalizeFirstLetter(primaryAction.title)}
             </Button>
           </ActionButtonWrapper>
         )}
+        {primaryAction && primaryAction.title === "Connect wallet" ? (
+          <ConnectButton />
+        ) : undefined}
         {isError && (
           <>
-            {[inputError, ...errorMessages].filter(Boolean).map((message) => (
+            {errors.map((message) => (
               <ErrorWrapper key={message}>
                 <WarningIcon />
                 <ErrorText>{message}</ErrorText>
