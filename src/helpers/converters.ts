@@ -426,6 +426,19 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     state,
     reward,
     requester,
+    // searchable properties
+    requestTimestamp,
+    requestHash,
+    requestLogIndex,
+    disputeTimestamp,
+    disputeHash,
+    disputeLogIndex,
+    settlementTimestamp,
+    settlementHash,
+    settlementLogIndex,
+    proposalTimestamp,
+    proposalHash,
+    proposalLogIndex,
   } = request;
   const { bond, customLiveness, eventBased } = getOOV2SpecificValues(request);
   const bytes32Identifier = ethers.utils.formatBytes32String(identifier);
@@ -566,6 +579,18 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     settlePriceParams,
     disputeAssertionParams,
     settleAssertionParams,
+    requestTimestamp,
+    requestHash,
+    requestLogIndex,
+    disputeTimestamp,
+    disputeHash,
+    disputeLogIndex,
+    settlementTimestamp,
+    settlementHash,
+    settlementLogIndex,
+    proposalTimestamp,
+    proposalHash,
+    proposalLogIndex,
   };
 }
 
@@ -581,6 +606,14 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     claim,
     currency,
     bond,
+    assertionHash,
+    assertionLogIndex,
+    disputeTimestamp,
+    disputeHash,
+    disputeLogIndex,
+    settlementTimestamp,
+    settlementHash,
+    settlementLogIndex,
   } = assertion;
   const id = assertionId;
   const oracleType = "Optimistic Oracle V3";
@@ -662,5 +695,15 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     disputePriceParams,
     settlePriceParams,
     settleAssertionParams,
+    // searchable properties
+    assertionTimestamp,
+    assertionHash,
+    assertionLogIndex,
+    disputeTimestamp,
+    disputeHash,
+    disputeLogIndex,
+    settlementTimestamp,
+    settlementHash,
+    settlementLogIndex,
   };
 }
