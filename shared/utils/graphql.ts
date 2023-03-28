@@ -134,7 +134,7 @@ export function parsePriceRequestGraphEntity(
 
   const now = Date.now();
   let adjustedState = state;
-  if (state === "Proposed" && now > Number(proposalExpirationTimestamp)){
+  if (state === "Proposed" && now > Number(proposalExpirationTimestamp) * 1000){
     adjustedState = "Expired";
   }
 
