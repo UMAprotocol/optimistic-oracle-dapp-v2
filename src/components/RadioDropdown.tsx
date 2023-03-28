@@ -62,6 +62,10 @@ const _Content = styled(DropdownContent)`
 `;
 
 const _RadioItem = styled(RadioItem)`
+  display: flex;
+  align-items: center;
   width: 100%;
-  margin-block: 8px;
+  min-height: 40px;
+  padding-left: 18px;
+  padding-right: 18px;
 `;
