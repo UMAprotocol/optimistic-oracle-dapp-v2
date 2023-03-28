@@ -10,6 +10,7 @@ export { ErrorMessage } from "./ErrorMessage";
 export { Filters } from "./Filters/Filters";
 export { GlobalStyle } from "./GlobalStyle";
 export { Header } from "./Header/Header";
+export { ConnectButton } from "./Header/ConnectButton";
 export { IconWrapper } from "./IconWrapper";
 export { Layout } from "./Layout";
 export { OracleQueries } from "./OracleQueries";
