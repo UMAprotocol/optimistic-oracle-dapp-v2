@@ -1,11 +1,7 @@
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
-import type {
-  CheckboxItemsByFilterName,
-  CheckedFiltersByFilterName,
-  OnCheckedChange,
-} from "@/types";
+import { usePage } from "@/hooks";
+import type { PageName } from "@shared/types";
 import Sliders from "public/assets/icons/sliders.svg";
-import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import { CheckedFilters } from "./CheckedFilters";
@@ -14,31 +10,15 @@ import { MobileFilters } from "./MobileFilters";
 import { Search } from "./Search";
 
 interface Props {
-  filters: CheckboxItemsByFilterName;
-  checkedFilters: CheckedFiltersByFilterName;
-  onCheckedChange: OnCheckedChange;
-  reset: () => void;
-  searchTerm: string;
-  setSearchTerm: Dispatch<SetStateAction<string>>;
+  page: PageName;
 }
-/**
- * Component for searching and filtering queries
- * @param filters The filters that are used to create the dropdown menus.
- * @param checkedFilters The checked filters
- * @param onCheckedChange A callback function that is called when a checkbox is checked or unchecked.
- * @param reset A callback function that is called when the "Clear filters" button is clicked
- * @param searchTerm The search term
- * @param setSearchTerm A callback function that is called when the search term is changed
- */
-export function Filters({
-  filters,
-  checkedFilters,
-  onCheckedChange,
-  reset,
-  searchTerm,
-  setSearchTerm,
-}: Props) {
+export function Filters({ page }: Props) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const {
+    filterProps: { filters, checkedFilters, onCheckedChange, reset },
+    searchProps: { searchTerm, setSearchTerm },
+  } = usePage(page);
 
   function openMobileFilters() {
     setMobileFiltersOpen(true);
