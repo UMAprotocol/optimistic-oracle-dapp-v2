@@ -131,6 +131,13 @@ export function parsePriceRequestGraphEntity(
     settlementHash,
     settlementLogIndex,
   } = priceRequest;
+
+  const now = Date.now();
+  let adjustedState = state;
+  if (state === "Proposed" && now > Number(proposalExpirationTimestamp)){
+    adjustedState = "Expired";
+  }
+
   const parsed: ParsedOOV1GraphEntity | ParsedOOV2GraphEntity = {
     chainId,
     oracleAddress,
@@ -159,7 +166,7 @@ export function parsePriceRequestGraphEntity(
       settlementRecipient,
     }),
     state:
-      (handleGraphqlNullableStringOrBytes({ state }) as RequestState) ??
+      (handleGraphqlNullableStringOrBytes({ state:adjustedState }) as RequestState) ??
       "Invalid",
     requestTimestamp: handleGraphqlNullableStringOrBytes({ requestTimestamp }),
     requestBlockNumber: handleGraphqlNullableBigIntToString({ requestBlockNumber }),

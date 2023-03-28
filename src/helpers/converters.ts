@@ -439,10 +439,11 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     proposalTimestamp,
     proposalHash,
     proposalLogIndex,
+    proposalExpirationTimestamp,
   } = request;
-  const { bond, customLiveness, eventBased } = getOOV2SpecificValues(request);
+  const { bond, eventBased } = getOOV2SpecificValues(request);
   const bytes32Identifier = ethers.utils.formatBytes32String(identifier);
-  const livenessEndsMilliseconds = getLivenessEnds(customLiveness);
+  const livenessEndsMilliseconds = getLivenessEnds(proposalExpirationTimestamp);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
   // TODO: we need methods to calculate these things
   // need a lookup for project based on price ident or anc data
