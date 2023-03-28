@@ -15,9 +15,7 @@ export function VoteTicker() {
   function getMillisecondsUntilMidnight() {
     const now = new Date();
     const midnight = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
     );
     return midnight.getTime() - now.getTime();
   }
@@ -27,7 +25,9 @@ export function VoteTicker() {
     const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
-    return `${hours}:${minutes % 60}:${seconds % 60}`;
+    return `${hours.toString().padStart(2, "0")}:${(minutes % 60)
+      .toString()
+      .padStart(2, "0")}:${(seconds % 60).toString().padStart(2, "0")}`;
   }
 
   useInterval(() => {
