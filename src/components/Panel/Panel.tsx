@@ -1,10 +1,10 @@
 import {
   Button,
   CloseButton,
+  ConnectButton,
   Currency,
   DecimalInput,
   PanelBase,
-  ConnectButton,
 } from "@/components";
 import {
   blueGrey700,
@@ -13,11 +13,7 @@ import {
   smallMobileAndUnder,
 } from "@/constants";
 import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
-import {
-  usePrimaryPanelAction,
-  usePanelContext,
-  useQueryRouter,
-} from "@/hooks";
+import { usePanelContext, usePrimaryPanelAction } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -41,8 +37,7 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
  * @see `PanelContext`
  */
 export function Panel() {
-  const { content, page, panelOpen } = usePanelContext();
-  const { close: closePanel } = useQueryRouter();
+  const { content, page, panelOpen, closePanel } = usePanelContext();
   const [proposePriceInput, setProposePriceInput] = useState("");
   const [inputError, setInputError] = useState("");
   const {

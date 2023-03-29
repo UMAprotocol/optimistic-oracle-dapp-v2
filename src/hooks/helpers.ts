@@ -1,9 +1,7 @@
-import { useRouter } from "next/router";
 import { walletsAndConnectors } from "@/constants";
 import type { ChangeEvent } from "react";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import type { OracleQueryUI } from "@/types";
 
 interface DecimalInput {
   onInput: (value: string) => void;
@@ -102,43 +100,4 @@ export function useWalletIcon() {
   }, [connector, iconsAndIds, walletIcon]);
 
   return walletIcon;
-}
-
-// this is a utility to make an interface around routing side panel changes. usePage handles the logic
-// when routes change.
-export function useQueryRouter() {
-  const router = useRouter();
-  function open(query: OracleQueryUI) {
-    if (query.requestHash && query.requestLogIndex) {
-      router
-        .push({
-          query: {
-            requestHash: query.requestHash,
-            requestLogIndex: query.requestLogIndex.toString(),
-          },
-        })
-        .catch(console.error);
-    } else if (query.assertionHash && query.assertionLogIndex) {
-      router
-        .push({
-          query: {
-            assertionHash: query.assertionHash,
-            assertionLogIndex: query.assertionLogIndex.toString(),
-          },
-        })
-        .catch(console.error);
-    }
-  }
-
-  function close() {
-    router
-      .push({
-        query: {},
-      })
-      .catch(console.error);
-  }
-  return {
-    open,
-    close,
-  };
 }

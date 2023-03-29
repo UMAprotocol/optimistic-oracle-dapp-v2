@@ -1,5 +1,5 @@
-import { useQueryRouter } from "@/hooks";
 import { OracleQueryClickableIcon } from "@/components/style";
+import { usePanelContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import { ProposeCells } from "./ProposeCells";
@@ -15,7 +15,7 @@ import { VerifyCells } from "./VerifyCells";
  * @param row - the row to show
  */
 export function Row({ page, row }: { page: PageName; row: OracleQueryUI }) {
-  const { open } = useQueryRouter();
+  const { openPanel } = usePanelContext();
 
   const innerCells = {
     verify: <VerifyCells {...row} />,
@@ -26,7 +26,7 @@ export function Row({ page, row }: { page: PageName; row: OracleQueryUI }) {
   const innerCellsComponent = innerCells[page];
 
   return (
-    <TR onClick={() => open(row)}>
+    <TR onClick={() => openPanel(row, page)}>
       <TitleCell {...row} />
       {innerCellsComponent}
       <TD>
