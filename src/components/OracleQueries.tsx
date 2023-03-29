@@ -1,22 +1,15 @@
 import { OracleQueryList, OracleQueryTable } from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
-import type { OracleQueryUI } from "@/types";
+import { usePage } from "@/hooks";
 import type { PageName } from "@shared/types";
 import styled from "styled-components";
 
 interface Props {
   page: PageName;
-  queries: OracleQueryUI[];
-  isLoading: boolean;
 }
-/**
- * Renders a list or a table of oracle queries.
- * Shows a list on mobile and a table on desktop.
- * @param page The page the queries are being rendered on.
- * @param queries The queries to render.
- * @param isLoading Whether the queries are still loading.
- */
-export function OracleQueries({ page, queries, isLoading }: Props) {
+
+export function OracleQueries({ page }: Props) {
+  const { results: queries, isLoading } = usePage(page);
   return (
     <>
       <DesktopWrapper>

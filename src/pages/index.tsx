@@ -1,16 +1,5 @@
-import { Filters, Layout, OracleQueries } from "@/components";
-import { usePage } from "@/hooks";
+import { OracleQueries } from "@/components";
 
 export default function Verify() {
-  const page = usePage("verify");
-  return (
-    <Layout>
-      <Filters {...page.filterProps} {...page.searchProps} />
-      <OracleQueries
-        queries={page.results}
-        isLoading={page.isLoading}
-        page={page.name}
-      />
-    </Layout>
-  );
+  return <OracleQueries page="verify" />;
 }

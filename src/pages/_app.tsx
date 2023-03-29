@@ -1,16 +1,16 @@
-import { GlobalStyle } from "@/components";
+import { GlobalStyle, Layout } from "@/components";
 import {
+  chains as supportedChains,
   config,
   red500,
-  chains as supportedChains,
   walletsAndConnectors,
   white,
 } from "@/constants";
 import {
   ErrorProvider,
+  NotificationsProvider,
   OracleDataProvider,
   PanelProvider,
-  NotificationsProvider,
 } from "@/contexts";
 import "@/styles/fonts.css";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
@@ -48,8 +48,10 @@ export default function App({ Component, pageProps }: AppProps) {
           <OracleDataProvider>
             <ErrorProvider>
               <PanelProvider>
-                <GlobalStyle />
-                <Component {...pageProps} />
+                <Layout>
+                  <GlobalStyle />
+                  <Component {...pageProps} />
+                </Layout>
               </PanelProvider>
             </ErrorProvider>
           </OracleDataProvider>

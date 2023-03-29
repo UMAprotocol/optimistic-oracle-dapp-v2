@@ -12,13 +12,11 @@ export default meta;
 type Story = StoryObj<typeof Filters>;
 
 function Wrapper() {
-  const { results, searchProps, filterProps } = useFilterAndSearch(
-    verifyMockOracleQueryUIs()
-  );
+  const { results } = useFilterAndSearch(verifyMockOracleQueryUIs());
 
   return (
     <div>
-      <Filters {...filterProps} {...searchProps} />
+      <Filters page="propose" />
       <div>{JSON.stringify(results)}</div>
     </div>
   );
