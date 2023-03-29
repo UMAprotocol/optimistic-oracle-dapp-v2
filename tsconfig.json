@@ -22,5 +22,11 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules","**/*.e2e.ts", "**/*.test.ts"]
+  "exclude": ["node_modules", "**/*.e2e.ts", "**/*.test.ts"],
+  "ts-node": {
+    "swc": true,
+    "compilerOptions": {
+      "module": "NodeNext"
+    }
+  }
 }
