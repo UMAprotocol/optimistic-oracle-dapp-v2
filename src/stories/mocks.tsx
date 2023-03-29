@@ -17,7 +17,9 @@ import { graphql } from "msw";
 
 export const mockDate = new Date("2023-03-26 12:00:00");
 
-const defaultMockRequestGraphEntity = (number = 1): PriceRequestGraphEntity => {
+const defaultMockRequestGraphEntity = (
+  number: number
+): PriceRequestGraphEntity => {
   const identifier = "YES_OR_NO_QUERY";
   const time = makeUnixTimestamp("past", { hours: 1 });
   const ancillaryData = utf8ToHex(`q: Random test data #${number}`);
@@ -59,7 +61,7 @@ const defaultMockRequestGraphEntity = (number = 1): PriceRequestGraphEntity => {
 };
 
 export const defaultMockAssertionGraphEntity = (
-  number = 1
+  number: number
 ): AssertionGraphEntity => {
   const identifier = "ASSERT_TRUTH";
   const assertionTimestamp = makeUnixTimestamp("past", { hours: 1 });
@@ -125,8 +127,8 @@ export function makeMockRequestGraphEntities(
 
   const length = count || inputs.length;
 
-  const requests = Array.from({ length }, () =>
-    defaultMockRequestGraphEntity()
+  const requests = Array.from({ length }, (_, i) =>
+    defaultMockRequestGraphEntity(i)
   );
 
   if (inputForAll) {
@@ -151,8 +153,8 @@ export function makeMockAssertions(
 
   const length = count || inputs.length;
 
-  const requests = Array.from({ length }, () =>
-    defaultMockAssertionGraphEntity()
+  const requests = Array.from({ length }, (_, i) =>
+    defaultMockAssertionGraphEntity(i)
   );
 
   if (inputForAll) {
