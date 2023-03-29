@@ -1,7 +1,8 @@
-import { Panel } from "@/components";
+import { Layout } from "@/components";
 import {
   ErrorProvider,
   NotificationsContext,
+  NotificationsProvider,
   OracleDataProvider,
   PanelProvider,
 } from "@/contexts";
@@ -15,14 +16,17 @@ interface Props {
 }
 export function Wrapper({ Component }: Props) {
   return (
-    <OracleDataProvider>
-      <ErrorProvider>
-        <PanelProvider>
-          <Component />
-          <Panel />
-        </PanelProvider>
-      </ErrorProvider>
-    </OracleDataProvider>
+    <NotificationsProvider>
+      <OracleDataProvider>
+        <ErrorProvider>
+          <PanelProvider>
+            <Layout>
+              <Component />
+            </Layout>
+          </PanelProvider>
+        </ErrorProvider>
+      </OracleDataProvider>
+    </NotificationsProvider>
   );
 }
 

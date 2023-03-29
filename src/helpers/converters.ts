@@ -1,4 +1,5 @@
 import { config } from "@/constants";
+import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type {
   ActionType,
   MoreInformationItem,
@@ -12,22 +13,26 @@ import {
   proposePriceAbi,
   settleAssertionAbi,
   settlePriceAbi,
-  skinnyProposePriceAbi,
   skinnyDisputePriceAbi,
+  skinnyProposePriceAbi,
   skinnySettlePriceAbi,
 } from "@shared/constants/abi";
 import type {
   Assertion,
   ChainId,
   ChainName,
+  ParsedOOV1GraphEntity,
   ParsedOOV2GraphEntity,
   Request,
   RequestState,
 } from "@shared/types";
-import { formatNumberForDisplay, parseEther } from "@shared/utils";
+import {
+  formatNumberForDisplay,
+  makeBlockExplorerLink,
+  parseEther,
+} from "@shared/utils";
 import { format } from "date-fns";
-import { BigNumber } from "ethers";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
 
@@ -167,10 +172,20 @@ function getPriceRequestValueText(
   return formatNumberForDisplay(price, { isFormatEther: true });
 }
 
+function isOOV1PriceRequest(
+  request: Request | Assertion
+): request is ParsedOOV1GraphEntity {
+  return request.oracleType === "Optimistic Oracle V1";
+}
+
 function isOOV2PriceRequest(
-  request: Request
+  request: Request | Assertion
 ): request is ParsedOOV2GraphEntity {
   return request.oracleType === "Optimistic Oracle V2";
+}
+
+function isAssertion(request: Request | Assertion): request is Assertion {
+  return request.oracleType === "Optimistic Oracle V3";
 }
 
 function makeApproveBondSpendParams({
@@ -411,6 +426,176 @@ function getOOV2SpecificValues(request: Request) {
   return { bond, customLiveness, eventBased };
 }
 
+function makeMoreInformationList(query: Request | Assertion) {
+  const moreInformation: MoreInformationItem[] = [];
+
+  moreInformation.push({
+    title: query.oracleType,
+    text: query.oracleAddress,
+    href: makeBlockExplorerLink(query.oracleAddress, query.chainId, "address"),
+  });
+
+  const identifierDetails = approvedIdentifiers[query.identifier];
+  if (identifierDetails) {
+    moreInformation.push({
+      title: "UMIP",
+      text: identifierDetails.umipLink.number,
+      href: identifierDetails.umipLink.url,
+    });
+  }
+
+  if (isOOV1PriceRequest(query) || isOOV2PriceRequest(query)) {
+    moreInformation.push(
+      {
+        title: "Identifier",
+        text: query.identifier,
+        href: "https://docs.uma.xyz/resources/approved-price-identifiers",
+      },
+      {
+        title: "Requester",
+        text: query.requester,
+        href: makeBlockExplorerLink(query.requester, query.chainId, "address"),
+      }
+    );
+
+    if (query.requestHash) {
+      moreInformation.push({
+        title: "Request Transaction",
+        text: query.requestHash,
+        href: makeBlockExplorerLink(query.requestHash, query.chainId, "tx"),
+      });
+    }
+
+    if (query.proposer) {
+      moreInformation.push({
+        title: "Proposer",
+        text: query.proposer,
+        href: makeBlockExplorerLink(query.proposer, query.chainId, "address"),
+      });
+    }
+
+    if (query.proposalHash) {
+      moreInformation.push({
+        title: "Proposal Transaction",
+        text: query.proposalHash,
+        href: makeBlockExplorerLink(query.proposalHash, query.chainId, "tx"),
+      });
+    }
+
+    if (query.disputer) {
+      moreInformation.push({
+        title: "Disputer",
+        text: query.disputer,
+        href: makeBlockExplorerLink(query.disputer, query.chainId, "address"),
+      });
+    }
+
+    if (query.disputeHash) {
+      moreInformation.push({
+        title: "Dispute Transaction",
+        text: query.disputeHash,
+        href: makeBlockExplorerLink(query.disputeHash, query.chainId, "tx"),
+      });
+    }
+
+    if (query.settlementRecipient) {
+      moreInformation.push({
+        title: "Settlement Recipient",
+        text: query.settlementRecipient,
+        href: makeBlockExplorerLink(
+          query.settlementRecipient,
+          query.chainId,
+          "address"
+        ),
+      });
+    }
+
+    if (query.settlementHash) {
+      moreInformation.push({
+        title: "Settlement Transaction",
+        text: query.settlementHash,
+        href: makeBlockExplorerLink(query.settlementHash, query.chainId, "tx"),
+      });
+    }
+  }
+
+  if (isAssertion(query)) {
+    moreInformation.push(
+      {
+        title: "Asserter",
+        text: query.asserter,
+        href: makeBlockExplorerLink(query.asserter, query.chainId, "address"),
+      },
+      {
+        title: "Assertion Transaction",
+        text: query.assertionHash,
+        href: makeBlockExplorerLink(query.assertionHash, query.chainId, "tx"),
+      },
+      {
+        title: "Caller",
+        text: query.caller,
+        href: makeBlockExplorerLink(query.caller, query.chainId, "address"),
+      },
+      {
+        title: "Callback Recipient",
+        text: query.callbackRecipient,
+        href: makeBlockExplorerLink(
+          query.callbackRecipient,
+          query.chainId,
+          "address"
+        ),
+      },
+      {
+        title: "Escalation Manager",
+        text: query.escalationManager,
+        href: makeBlockExplorerLink(
+          query.escalationManager,
+          query.chainId,
+          "address"
+        ),
+      }
+    );
+
+    if (query.disputer) {
+      moreInformation.push({
+        title: "Disputer",
+        text: query.disputer,
+        href: makeBlockExplorerLink(query.disputer, query.chainId, "address"),
+      });
+    }
+
+    if (query.disputeHash) {
+      moreInformation.push({
+        title: "Dispute Transaction",
+        text: query.disputeHash,
+        href: makeBlockExplorerLink(query.disputeHash, query.chainId, "tx"),
+      });
+    }
+
+    if (query.settlementRecipient) {
+      moreInformation.push({
+        title: "Settlement Recipient",
+        text: query.settlementRecipient,
+        href: makeBlockExplorerLink(
+          query.settlementRecipient,
+          query.chainId,
+          "address"
+        ),
+      });
+    }
+
+    if (query.settlementHash) {
+      moreInformation.push({
+        title: "Settlement Transaction",
+        text: query.settlementHash,
+        href: makeBlockExplorerLink(query.settlementHash, query.chainId, "tx"),
+      });
+    }
+  }
+
+  return moreInformation;
+}
+
 export function requestToOracleQuery(request: Request): OracleQueryUI {
   const {
     id,
@@ -459,7 +644,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   const queryText = safeDecodeHexString(ancillaryData);
   const expiryType = eventBased ? "Event-based" : "Time-based";
   const tokenAddress = currency;
-  const moreInformation: MoreInformationItem[] = [];
+  const moreInformation = makeMoreInformationList(request);
   const actionType = getRequestActionType(state);
   const approveBondSpendParams = makeApproveBondSpendParams({
     bond,
@@ -637,7 +822,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const tokenAddress = currency;
   // no reward is present on assertions
   const reward = null;
-  const moreInformation: MoreInformationItem[] = [];
+  const moreInformation = makeMoreInformationList(assertion);
   const actionType = getAssertionActionType(assertion);
   const approveBondSpendParams = makeApproveBondSpendParams({
     bond,

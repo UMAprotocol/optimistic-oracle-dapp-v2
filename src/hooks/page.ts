@@ -3,11 +3,11 @@ import {
   useOracleDataContext,
   usePanelContext,
 } from "@/hooks";
-import { useEffect } from "react";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
-import { useRouter } from "next/router";
 import filter from "lodash/filter";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 type FilterState = ReturnType<typeof useFilterAndSearch>;
 type PageState = FilterState & {
@@ -16,8 +16,8 @@ type PageState = FilterState & {
 };
 export function usePage(name: PageName): PageState {
   const { settled, propose, verify } = useOracleDataContext();
-  const { query } = useRouter();
-  const { openPanel, closePanel } = usePanelContext();
+  const router = useRouter();
+  const { openPanel, panelOpen } = usePanelContext();
   const queries =
     name === "verify"
       ? verify
@@ -32,14 +32,16 @@ export function usePage(name: PageName): PageState {
   // there should only be one place that watches the url query params for changes
   // currently this is in the use page component
   useEffect(() => {
-    const hasQueryUrl = Object.keys(query).length > 0;
-    const queryResults: OracleQueryUI[] = filter<OracleQueryUI>(queries, query);
-    if (hasQueryUrl && queryResults.length === 1) {
-      openPanel(queryResults[0], name);
-    } else {
-      closePanel();
+    const hasQueryUrl = Object.keys(router.query).length > 0;
+    const queryResults: OracleQueryUI[] = filter<OracleQueryUI>(
+      queries,
+      router.query
+    );
+    if (hasQueryUrl && queryResults.length === 1 && !panelOpen) {
+      openPanel(queryResults[0], name, false);
     }
-  }, [query, openPanel, closePanel, name, queries]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query, queries]);
 
   return {
     name,

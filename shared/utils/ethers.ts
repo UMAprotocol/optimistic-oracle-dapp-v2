@@ -1,4 +1,5 @@
 import { parseFixed } from "@ethersproject/bignumber";
+import type { ChainId } from "@shared/types";
 import { BigNumber, ethers } from "ethers";
 
 // Blacklisted price identifiers that will not automatically display on voter clients.
@@ -99,4 +100,43 @@ export function bigNumberFromFloatString(value: string | undefined) {
   if (!value) return BigNumber.from(0);
   const truncated = truncateDecimals(value, 18);
   return BigNumber.from(parseEther(truncated));
+}
+
+function getBlockExplorerUrlForChain(chainId: ChainId) {
+  switch (chainId) {
+    case 0:
+      return;
+    case 1:
+      return "https://etherscan.io";
+    case 5:
+      return "https://goerli.etherscan.io";
+    case 10:
+      return "https://optimistic.etherscan.io";
+    case 100:
+      return "https://gnosisscan.io";
+    case 137:
+      return "https://polygonscan.com";
+    case 288:
+      return "https://bobascan.com";
+    case 416:
+      return "https://explorer.sx.technology";
+    case 43114:
+      return "https://snowtrace.io";
+    case 42161:
+      return "https://arbiscan.io";
+    case 80001:
+      return "https://mumbai.polygonscan.com";
+  }
+}
+
+export function makeBlockExplorerLink(
+  hash: string,
+  chainId: ChainId,
+  type: "tx" | "address" | "block"
+) {
+  const url = getBlockExplorerUrlForChain(chainId);
+
+  if (!url) return "";
+
+  return `${url}/${type}/${hash}`;
 }

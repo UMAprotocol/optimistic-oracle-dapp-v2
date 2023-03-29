@@ -3,10 +3,10 @@ import type {
   disputeAssertionAbi,
   disputePriceAbi,
   proposePriceAbi,
-  settlePriceAbi,
   settleAssertionAbi,
-  skinnyProposePriceAbi,
+  settlePriceAbi,
   skinnyDisputePriceAbi,
+  skinnyProposePriceAbi,
   skinnySettlePriceAbi,
 } from "@shared/constants/abi";
 import type {
@@ -379,6 +379,7 @@ export type UniqueId = string | number;
 export type Notification = {
   message: ReactNode;
   id: UniqueId;
+  chainId?: ChainId;
   transactionHash?: string;
   type: "success" | "error" | "pending";
 };
@@ -388,4 +389,15 @@ export type SettledEvent = {
   message: ReactNode;
   id: UniqueId;
   pendingId: UniqueId;
+};
+
+export type UmipLink = {
+  number: string;
+  url: string;
+};
+
+export type IdentifierDetails = {
+  identifier: string;
+  summary: string;
+  umipLink: UmipLink;
 };

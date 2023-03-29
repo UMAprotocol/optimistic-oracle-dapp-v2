@@ -72,7 +72,10 @@ function DataReducerFactory<Input extends Request | Assertion>(
     const queries = Object.values(all).reduce((result, query) => {
       if (query.actionType === "propose") {
         result.propose.push(query);
-      } else if (query.actionType === "dispute") {
+      } else if (
+        query.actionType === "dispute" ||
+        query.actionType === "settle"
+      ) {
         result.verify.push(query);
       } else {
         result.settled.push(query);

@@ -1,6 +1,7 @@
 import { LoadingSpinner } from "@/components";
 import { mobile, smallMobile, tablet } from "@/constants";
 import type { Notification, UniqueId } from "@/types";
+import { makeBlockExplorerLink } from "@shared/utils";
 import NextLink from "next/link";
 import Close from "public/assets/icons/close.svg";
 import Failure from "public/assets/icons/failure.svg";
@@ -13,6 +14,7 @@ import { useWindowSize } from "usehooks-ts";
 export function Notification({
   message,
   id,
+  chainId,
   transactionHash,
   type,
   dismiss,
@@ -73,10 +75,9 @@ export function Notification({
       </IndicatorWrapper>
       <TextWrapper>
         <Message>{message}</Message>
-        {transactionHash && (
+        {transactionHash && chainId && (
           <Link
-            /* todo: add transaction link handlers for all chains */
-            href={`https://goerli.etherscan.io/tx/${transactionHash}`}
+            href={makeBlockExplorerLink(transactionHash, chainId, "tx")}
             target="_blank"
           >
             View on Etherscan

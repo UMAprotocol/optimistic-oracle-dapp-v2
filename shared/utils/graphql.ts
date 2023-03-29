@@ -58,7 +58,7 @@ export function handleGraphqlNullableBigIntToString<
       `Wrong type in \`handleGraphqlNullableBigIntToString\`: Expected string or null for ${property}, got ${typeof bigInt} instead`
     );
   }
-  return bigInt
+  return bigInt;
 }
 
 export function handleGraphqlNullableBoolean<
@@ -134,7 +134,10 @@ export function parsePriceRequestGraphEntity(
 
   const now = Date.now();
   let adjustedState = state;
-  if (state === "Proposed" && now > Number(proposalExpirationTimestamp) * 1000){
+  if (
+    state === "Proposed" &&
+    now > Number(proposalExpirationTimestamp) * 1000
+  ) {
     adjustedState = "Expired";
   }
 
@@ -166,20 +169,27 @@ export function parsePriceRequestGraphEntity(
       settlementRecipient,
     }),
     state:
-      (handleGraphqlNullableStringOrBytes({ state:adjustedState }) as RequestState) ??
-      "Invalid",
+      (handleGraphqlNullableStringOrBytes({
+        state: adjustedState,
+      }) as RequestState) ?? "Invalid",
     requestTimestamp: handleGraphqlNullableStringOrBytes({ requestTimestamp }),
-    requestBlockNumber: handleGraphqlNullableBigIntToString({ requestBlockNumber }),
+    requestBlockNumber: handleGraphqlNullableBigIntToString({
+      requestBlockNumber,
+    }),
     requestHash: handleGraphqlNullableStringOrBytes({ requestHash }),
     requestLogIndex: handleGraphqlNullableBigIntToString({ requestLogIndex }),
     proposalTimestamp: handleGraphqlNullableStringOrBytes({
       proposalTimestamp,
     }),
-    proposalBlockNumber: handleGraphqlNullableBigIntToString({ proposalBlockNumber }),
+    proposalBlockNumber: handleGraphqlNullableBigIntToString({
+      proposalBlockNumber,
+    }),
     proposalHash: handleGraphqlNullableStringOrBytes({ proposalHash }),
     proposalLogIndex: handleGraphqlNullableBigIntToString({ proposalLogIndex }),
     disputeTimestamp: handleGraphqlNullableStringOrBytes({ disputeTimestamp }),
-    disputeBlockNumber: handleGraphqlNullableBigIntToString({ disputeBlockNumber }),
+    disputeBlockNumber: handleGraphqlNullableBigIntToString({
+      disputeBlockNumber,
+    }),
     disputeHash: handleGraphqlNullableStringOrBytes({ disputeHash }),
     disputeLogIndex: handleGraphqlNullableBigIntToString({ disputeLogIndex }),
     settlementTimestamp: handleGraphqlNullableStringOrBytes({
@@ -189,7 +199,9 @@ export function parsePriceRequestGraphEntity(
       settlementBlockNumber,
     }),
     settlementHash: handleGraphqlNullableStringOrBytes({ settlementHash }),
-    settlementLogIndex: handleGraphqlNullableBigIntToString({ settlementLogIndex }),
+    settlementLogIndex: handleGraphqlNullableBigIntToString({
+      settlementLogIndex,
+    }),
   };
 
   if (isOOV2GraphEntity(priceRequest)) {
@@ -254,6 +266,7 @@ export function parseAssertionGraphEntity(
   } = assertion;
   return {
     chainId,
+    oracleType: "Optimistic Oracle V3",
     oracleAddress,
     id,
     assertionId,
@@ -280,7 +293,9 @@ export function parseAssertionGraphEntity(
       settlementRecipient,
     }),
     disputeTimestamp: handleGraphqlNullableStringOrBytes({ disputeTimestamp }),
-    disputeBlockNumber: handleGraphqlNullableBigIntToString({ disputeBlockNumber }),
+    disputeBlockNumber: handleGraphqlNullableBigIntToString({
+      disputeBlockNumber,
+    }),
     disputeHash: handleGraphqlNullableStringOrBytes({ disputeHash }),
     disputeLogIndex: handleGraphqlNullableBigIntToString({ disputeLogIndex }),
     settlementTimestamp: handleGraphqlNullableStringOrBytes({
@@ -290,7 +305,9 @@ export function parseAssertionGraphEntity(
       settlementBlockNumber,
     }),
     settlementHash: handleGraphqlNullableStringOrBytes({ settlementHash }),
-    settlementLogIndex: handleGraphqlNullableBigIntToString({ settlementLogIndex }),
+    settlementLogIndex: handleGraphqlNullableBigIntToString({
+      settlementLogIndex,
+    }),
   };
 }
 
