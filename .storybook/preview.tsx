@@ -2,10 +2,12 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { Decorator, Parameters } from "@storybook/react";
 import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
+import { mockDateDecorator } from "storybook-mock-date-decorator";
 import { WagmiConfig } from "wagmi";
 import { GlobalStyle } from "../src/components/GlobalStyle";
 import { NotificationsProvider } from "../src/contexts";
 import { chains, rainbowKitTheme, wagmiClient } from "../src/pages/_app";
+import { mockDate } from "../src/stories/mocks";
 import "../src/styles/fonts.css";
 import "./rainbow.css";
 
@@ -71,9 +73,11 @@ export const parameters: Parameters = {
       date: /Date$/,
     },
   },
+  date: mockDate,
 };
 
 export const decorators: Decorator[] = [
+  mockDateDecorator,
   mswDecorator,
   (Story) => (
     <>

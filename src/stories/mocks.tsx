@@ -15,6 +15,8 @@ import { uniqueId } from "lodash";
 import type { GraphQLHandler, GraphQLRequest, GraphQLVariables } from "msw";
 import { graphql } from "msw";
 
+export const mockDate = new Date("2023-03-26 12:00:00");
+
 const defaultMockRequestGraphEntity = (
   number = Math.random()
 ): PriceRequestGraphEntity => {
@@ -187,12 +189,12 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
   of tokens in Euler (https://app.euler.finance/) at any point
   after Ethereum Mainnet block number 16175802? This will revert
   if a non-YES answer is proposed.`,
-  timeUNIX: Math.floor(Date.now() / 1000),
-  timeUTC: new Date().toUTCString(),
-  timeMilliseconds: Date.now(),
-  timeFormatted: format(new Date(), "Pp"),
+  timeUNIX: Math.floor(mockDate.getTime() / 1000),
+  timeUTC: mockDate.toUTCString(),
+  timeMilliseconds: mockDate.getTime(),
+  timeFormatted: format(mockDate, "Pp"),
   valueText: "123",
-  livenessEndsMilliseconds: addMinutes(new Date(), 53).getTime(),
+  livenessEndsMilliseconds: addMinutes(mockDate, 53).getTime(),
   formattedLivenessEndsIn: "53 min 11 sec",
   actionType: "dispute",
   expiryType: "Event-based",
@@ -315,7 +317,7 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
         project: "UMA",
         chainName: "Ethereum",
         oracleType: "Skinny Optimistic Oracle",
-        livenessEndsMilliseconds: Date.now() + 10_000,
+        livenessEndsMilliseconds: mockDate.getTime() + 10_000,
       },
       {
         title: "With chain name, oracle type and other known currency",
@@ -338,7 +340,7 @@ export const settledMockOracleQueryUIs = (count = 3) =>
       {
         title: "With expiry type and weird random currency and liveness ends",
         expiryType: "Time-based",
-        livenessEndsMilliseconds: Date.now() + 10_000,
+        livenessEndsMilliseconds: mockDate.getTime() + 10_000,
       },
       {
         title: "With chain name, oracle type and other known currency",
@@ -611,6 +613,7 @@ export const handlersForAllPages = makeGraphqlHandlers({
         },
         {
           settlementHash: "0x123",
+          expirationTime: makeUnixTimestamp("past", { days: 1 }),
           settlementResolution: false,
           identifier: "TEST_SETTLED",
         },
@@ -633,7 +636,7 @@ export function makeUnixTimestamp(
 ) {
   const addOrSub = direction === "future" ? add : sub;
 
-  return Math.floor(addOrSub(new Date(), duration).getTime() / 1000).toString();
+  return Math.floor(addOrSub(mockDate, duration).getTime() / 1000).toString();
 }
 
 export function makeEtherValueString(value: number) {
