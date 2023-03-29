@@ -17,15 +17,11 @@ import { graphql } from "msw";
 
 export const mockDate = new Date("2023-03-26 12:00:00");
 
-const defaultMockRequestGraphEntity = (
-  number = Math.random()
-): PriceRequestGraphEntity => {
+const defaultMockRequestGraphEntity = (number = 1): PriceRequestGraphEntity => {
   const identifier = "YES_OR_NO_QUERY";
   const time = makeUnixTimestamp("past", { hours: 1 });
-  const ancillaryData = utf8ToHex(
-    `q: Random test data #${number} ${Math.random()}}`
-  );
-  const id = `${identifier}-${time}-${ancillaryData}`;
+  const ancillaryData = utf8ToHex(`q: Random test data #${number}`);
+  const id = `${identifier}-${time}-${ancillaryData}-${uniqueId()}`;
   return {
     requester: "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D",
     identifier,
@@ -63,7 +59,7 @@ const defaultMockRequestGraphEntity = (
 };
 
 export const defaultMockAssertionGraphEntity = (
-  number = Math.ceil(Math.random() * 100)
+  number = 1
 ): AssertionGraphEntity => {
   const identifier = "ASSERT_TRUTH";
   const assertionTimestamp = makeUnixTimestamp("past", { hours: 1 });
@@ -83,7 +79,7 @@ export const defaultMockAssertionGraphEntity = (
   const id = `${identifier}-${assertionTimestamp}-${claim}`;
   const domainId =
     "0x0000000000000000000000000000000000000000000000000000000000000000";
-  const assertionId = `0x1234567890${number}`;
+  const assertionId = uniqueId();
   return {
     identifier,
     id,
@@ -171,7 +167,7 @@ export function makeMockAssertions(
 }
 
 const defaultMockOracleQueryUI: OracleQueryUI = {
-  id: `mock-id-${Math.random()}`,
+  id: uniqueId(),
   oracleAddress: "0xA0Ae6609447e57a42c51B50EAe921D701823FFAe",
   bond: BigNumber.from(50000000000),
   reward: BigNumber.from(50000000000),
@@ -254,34 +250,6 @@ export function makeMockOracleQueryUIs({
   });
 
   return defaultMocks;
-}
-
-export function makeRandomTitle() {
-  const words = [
-    "fun",
-    "random",
-    "title",
-    "for",
-    "a",
-    "mock",
-    "oracle",
-    "query",
-    "ui",
-    "component",
-    "in",
-    "storybook",
-    "and",
-    "react",
-    "typescript",
-    "nextjs",
-  ];
-
-  const randomWords = Array.from(
-    { length: words.length },
-    () => words[Math.floor(Math.random() * words.length)]
-  ).join(" ");
-
-  return randomWords + ` ${Math.random() * 10000000}`;
 }
 
 export const proposeMockOracleQueryUIs = (count = 3) =>
