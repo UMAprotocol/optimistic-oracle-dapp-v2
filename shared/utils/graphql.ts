@@ -266,6 +266,7 @@ export function parseAssertionGraphEntity(
   } = assertion;
   return {
     chainId,
+    oracleType: "Optimistic Oracle V3",
     oracleAddress,
     id,
     assertionId,
