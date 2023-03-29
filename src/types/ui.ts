@@ -379,6 +379,7 @@ export type UniqueId = string | number;
 export type Notification = {
   message: ReactNode;
   id: UniqueId;
+  chainId?: ChainId;
   transactionHash?: string;
   type: "success" | "error" | "pending";
 };

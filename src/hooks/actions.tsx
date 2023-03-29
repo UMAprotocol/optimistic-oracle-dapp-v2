@@ -1,15 +1,15 @@
 import { Currency } from "@/components";
-import { useBalanceAndAllowance } from "@/hooks";
 import { handleNotifications } from "@/helpers";
+import { useBalanceAndAllowance } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import { useEffect } from "react";
 import {
   useAccount,
-  useContractWrite,
-  usePrepareContractWrite,
-  useNetwork,
-  useSwitchNetwork,
   useConnect,
+  useContractWrite,
+  useNetwork,
+  usePrepareContractWrite,
+  useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
 
@@ -129,7 +129,7 @@ export function useApproveBondAction({
 
   // notify based on approval
   useEffect(() => {
-    if (!approveBondSpendTransaction) return;
+    if (!approveBondSpendTransaction || !chainId) return;
     const currencyComponent = (
       <Currency
         value={bond}
@@ -138,7 +138,7 @@ export function useApproveBondAction({
         showIcon={false}
       />
     );
-    handleNotifications(approveBondSpendTransaction, {
+    handleNotifications(approveBondSpendTransaction, chainId, {
       pending: <>Approving {currencyComponent}</>,
       success: <>Approved {currencyComponent}</>,
       error: <>Failed to approve {currencyComponent}</>,
@@ -148,7 +148,7 @@ export function useApproveBondAction({
   if (actionType !== "propose" && actionType !== "dispute") return undefined;
   if (balance && bond && balance.value?.lt(bond)) {
     return {
-      title: "Insuffiicent balance",
+      title: "Insufficient balance",
       disabled: true,
     };
   }
@@ -187,7 +187,7 @@ export function useProposeAction({
   query?: OracleQueryUI;
   proposePriceInput?: string;
 }): ActionState | undefined {
-  const { proposePriceParams } = query ?? {};
+  const { proposePriceParams, chainId } = query ?? {};
   const {
     config: proposePriceConfig,
     error: prepareProposePriceError,
@@ -204,13 +204,13 @@ export function useProposeAction({
   });
   // notify based on proposal tx
   useEffect(() => {
-    if (!proposePriceTransaction) return;
-    handleNotifications(proposePriceTransaction, {
+    if (!proposePriceTransaction || !chainId) return;
+    handleNotifications(proposePriceTransaction, chainId, {
       pending: <>Proposing price</>,
       success: <>Proposed price</>,
       error: <>Failed to propose price</>,
     }).catch(console.error);
-  }, [proposePriceTransaction]);
+  }, [proposePriceTransaction, chainId]);
 
   if (proposePriceParams === undefined) return undefined;
 
@@ -246,7 +246,7 @@ export function useDisputeAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { disputePriceParams } = query ?? {};
+  const { disputePriceParams, chainId } = query ?? {};
   const {
     config: disputePriceConfig,
     error: prepareDisputePriceError,
@@ -264,13 +264,13 @@ export function useDisputeAction({
   });
   // notify based on dispute tx
   useEffect(() => {
-    if (!disputePriceTransaction) return;
-    handleNotifications(disputePriceTransaction, {
+    if (!disputePriceTransaction || !chainId) return;
+    handleNotifications(disputePriceTransaction, chainId, {
       pending: <>Disputing price</>,
       success: <>Disputed price</>,
       error: <>Failed to dispute price</>,
     }).catch(console.error);
-  }, [disputePriceTransaction]);
+  }, [disputePriceTransaction, chainId]);
 
   if (disputePriceParams === undefined) return undefined;
 
@@ -297,7 +297,7 @@ export function useDisputeAssertionAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { disputeAssertionParams } = query ?? {};
+  const { disputeAssertionParams, chainId } = query ?? {};
   const { address } = useAccount();
   const {
     config: disputeAssertionConfig,
@@ -316,13 +316,13 @@ export function useDisputeAssertionAction({
 
   // notify based on dispute tx
   useEffect(() => {
-    if (!disputeAssertionTransaction) return;
-    handleNotifications(disputeAssertionTransaction, {
+    if (!disputeAssertionTransaction || !chainId) return;
+    handleNotifications(disputeAssertionTransaction, chainId, {
       pending: <>Disputing assertion</>,
       success: <>Disputed assertion</>,
       error: <>Failed to dispute assertion</>,
     }).catch(console.error);
-  }, [disputeAssertionTransaction]);
+  }, [disputeAssertionTransaction, chainId]);
 
   if (disputeAssertionParams === undefined) return undefined;
 
@@ -353,7 +353,7 @@ export function useSettlePriceAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { settlePriceParams } = query ?? {};
+  const { settlePriceParams, chainId } = query ?? {};
   const {
     config: settlePriceConfig,
     error: prepareSettlePriceError,
@@ -369,13 +369,13 @@ export function useSettlePriceAction({
     hash: settlePriceTransaction?.hash,
   });
   useEffect(() => {
-    if (!settlePriceTransaction) return;
-    handleNotifications(settlePriceTransaction, {
+    if (!settlePriceTransaction || !chainId) return;
+    handleNotifications(settlePriceTransaction, chainId, {
       pending: <>Settling price</>,
       success: <>Settled price</>,
       error: <>Failed to settle price</>,
     }).catch(console.error);
-  }, [settlePriceTransaction]);
+  }, [settlePriceTransaction, chainId]);
 
   if (settlePriceParams === undefined) return undefined;
 
@@ -409,7 +409,7 @@ export function useSettleAssertionAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { settleAssertionParams } = query ?? {};
+  const { settleAssertionParams, chainId } = query ?? {};
   const {
     config: settleAssertionConfig,
     error: prepareSettleAssertionError,
@@ -425,13 +425,13 @@ export function useSettleAssertionAction({
     hash: settleAssertionTransaction?.hash,
   });
   useEffect(() => {
-    if (!settleAssertionTransaction) return;
-    handleNotifications(settleAssertionTransaction, {
+    if (!settleAssertionTransaction || !chainId) return;
+    handleNotifications(settleAssertionTransaction, chainId, {
       pending: <>Settling assertion</>,
       success: <>Settled assertion</>,
       error: <>Failed to settle assertion</>,
     }).catch(console.error);
-  }, [settleAssertionTransaction]);
+  }, [settleAssertionTransaction, chainId]);
 
   if (settleAssertionParams === undefined) return undefined;
 

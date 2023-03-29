@@ -1,3 +1,4 @@
+import type { ChainId } from "@shared/types";
 import type { SendTransactionResult } from "@wagmi/core";
 import Events from "events";
 import uniqueId from "lodash/uniqueId";
@@ -25,6 +26,7 @@ export function emitErrorEvent(errorEvent: {
 
 export function emitPendingEvent(pendingEvent: {
   message: ReactNode;
+  chainId: ChainId;
   transactionHash: string;
 }) {
   const id = uniqueId();
@@ -34,11 +36,13 @@ export function emitPendingEvent(pendingEvent: {
 
 export async function handleNotifications(
   tx: SendTransactionResult,
+  chainId: ChainId,
   messages: { pending: ReactNode; success: ReactNode; error: ReactNode }
 ) {
   const transactionHash = tx.hash;
   const pendingId = emitPendingEvent({
     message: messages.pending,
+    chainId,
     transactionHash,
   });
   try {

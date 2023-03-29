@@ -647,6 +647,7 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
   const notifications: NotificationsById = {};
 
   const defaultMessage = "Test notification";
+  const defaultChainId = 1;
   const defaultTransactionHash =
     "https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
   const defaultType = "pending";
@@ -656,6 +657,7 @@ export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
     notifications[id] = {
       id,
       message: input.message ?? defaultMessage,
+      chainId: input.chainId ?? defaultChainId,
       transactionHash: input.transactionHash ?? defaultTransactionHash,
       type: input.type ?? defaultType,
     };

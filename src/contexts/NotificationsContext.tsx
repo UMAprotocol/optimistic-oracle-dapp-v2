@@ -33,11 +33,13 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     function handlePendingEvent({
       message,
       id,
+      chainId,
       transactionHash,
     }: PendingNotification) {
       addNotification({
         id,
         message,
+        chainId,
         transactionHash,
         type: "pending",
       });
@@ -85,6 +87,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
         message,
         type,
         id,
+        chainId: prev[id]?.chainId,
         transactionHash: prev[id]?.transactionHash,
       },
     }));
