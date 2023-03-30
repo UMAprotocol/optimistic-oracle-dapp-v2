@@ -12,6 +12,7 @@ import {
   useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
+import { oracleEthersApis } from "@/contexts";
 
 // This represents an action button, and the state we need to render it
 export type ActionState = Partial<{
@@ -209,8 +210,15 @@ export function useProposeAction({
       pending: <>Proposing price</>,
       success: <>Proposed price</>,
       error: <>Failed to propose price</>,
-    }).catch(console.error);
-  }, [proposePriceTransaction, chainId]);
+    })
+      .then((receipt) => {
+        if (receipt && query)
+          oracleEthersApis?.[query.oracleType]?.[
+            chainId
+          ]?.updateFromTransactionReceipt(receipt);
+      })
+      .catch(console.error);
+  }, [proposePriceTransaction, chainId, query]);
 
   if (proposePriceParams === undefined) return undefined;
 
@@ -269,8 +277,15 @@ export function useDisputeAction({
       pending: <>Disputing price</>,
       success: <>Disputed price</>,
       error: <>Failed to dispute price</>,
-    }).catch(console.error);
-  }, [disputePriceTransaction, chainId]);
+    })
+      .then((receipt) => {
+        if (receipt && query)
+          oracleEthersApis?.[query.oracleType]?.[
+            chainId
+          ]?.updateFromTransactionReceipt(receipt);
+      })
+      .catch(console.error);
+  }, [disputePriceTransaction, chainId, query]);
 
   if (disputePriceParams === undefined) return undefined;
 

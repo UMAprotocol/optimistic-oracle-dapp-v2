@@ -35,7 +35,9 @@ export const Factory =
     });
 
     async function tick() {
-      await Promise.all(services.map(async (service) => service.tick()));
+      await Promise.all(
+        services.map(async (service) => (service ? service.tick() : undefined))
+      );
     }
 
     return {

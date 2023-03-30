@@ -1,12 +1,19 @@
-import type { Contract, ethers, providers, Event } from "ethers";
+import type { Contract, ethers, providers, Event, BigNumberish } from "ethers";
 import type {
   TypedEventFilterEthers as TypedEventFilter,
   TypedEventEthers as TypedEvent,
 } from "@uma/contracts-frontend";
 import type { Provider } from "@ethersproject/providers";
 import type { Signer } from "@ethersproject/abstract-signer";
+export type { Log } from "@ethersproject/abstract-provider";
+export type {
+  TransactionRequest,
+  TransactionReceipt,
+  TransactionResponse,
+} from "@ethersproject/abstract-provider";
 
 type Result = ethers.utils.Result;
+export type { Result, BigNumberish };
 
 export interface MakeId<I, D> {
   (d: D): I;
