@@ -32,8 +32,10 @@ import {
 } from "@shared/utils";
 import { format } from "date-fns";
 import { BigNumber, ethers } from "ethers";
+import { upperCase } from "lodash";
 import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
+import { formatBytes32String } from "./ethers";
 import { getQueryMetaData } from "./queryParsing";
 
 export type RequiredRequest = Omit<
@@ -442,7 +444,7 @@ function makeMoreInformationList(
   if (umipNumber && umipUrl) {
     moreInformation.push({
       title: "UMIP",
-      text: umipNumber,
+      text: upperCase(umipNumber),
       href: umipUrl,
     });
   }
@@ -634,7 +636,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     ancillaryData
   );
   const { bond, eventBased } = getOOV2SpecificValues(request);
-  const bytes32Identifier = ethers.utils.formatBytes32String(identifier);
+  const bytes32Identifier = formatBytes32String(identifier);
   const livenessEndsMilliseconds = getLivenessEnds(proposalExpirationTimestamp);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
   const chainName = getChainName(chainId);
@@ -643,8 +645,10 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   const timeMilliseconds = toTimeMilliseconds(time);
   const timeFormatted = toTimeFormatted(time);
   const valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
-  const queryTextHex = ancillaryData;
-  const queryText = safeDecodeHexString(ancillaryData);
+  const queryTextHex = ethers.utils.hexlify(
+    ethers.utils.toUtf8Bytes(ancillaryData)
+  );
+  const queryText = ancillaryData;
   const expiryType = eventBased ? "Event-based" : "Time-based";
   const tokenAddress = currency;
   const moreInformation = makeMoreInformationList(request, umipNumber, umipUrl);
@@ -817,8 +821,8 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
   const timeFormatted = toTimeFormatted(assertionTimestamp);
   const valueText = settlementResolution.toString();
-  const queryTextHex = claim;
-  const queryText = safeDecodeHexString(claim);
+  const queryTextHex = ethers.utils.toUtf8Bytes(claim).join("");
+  const queryText = claim;
   const expiryType = null;
   const tokenAddress = currency;
   // no reward is present on assertions
