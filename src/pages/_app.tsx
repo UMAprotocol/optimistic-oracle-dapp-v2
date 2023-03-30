@@ -8,8 +8,10 @@ import {
 } from "@/constants";
 import {
   ErrorProvider,
+  FilterAndSearchProvider,
   NotificationsProvider,
   OracleDataProvider,
+  PageProvider,
   PanelProvider,
 } from "@/contexts";
 import "@/styles/fonts.css";
@@ -44,18 +46,22 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
-        <NotificationsProvider>
-          <OracleDataProvider>
-            <ErrorProvider>
-              <PanelProvider>
-                <Layout>
-                  <GlobalStyle />
-                  <Component {...pageProps} />
-                </Layout>
-              </PanelProvider>
-            </ErrorProvider>
-          </OracleDataProvider>
-        </NotificationsProvider>
+        <PageProvider>
+          <NotificationsProvider>
+            <OracleDataProvider>
+              <ErrorProvider>
+                <PanelProvider>
+                  <FilterAndSearchProvider>
+                    <Layout>
+                      <GlobalStyle />
+                      <Component {...pageProps} />
+                    </Layout>
+                  </FilterAndSearchProvider>
+                </PanelProvider>
+              </ErrorProvider>
+            </OracleDataProvider>
+          </NotificationsProvider>
+        </PageProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );
