@@ -1,5 +1,8 @@
 import { OracleQueries } from "@/components";
+import { usePage } from "@/hooks";
 
 export default function Propose() {
-  return <OracleQueries page="propose" />;
+  const page = "propose";
+  usePage(page);
+  return <OracleQueries page={page} />;
 }

@@ -16,7 +16,7 @@ function Wrapper() {
 
   return (
     <div>
-      <Filters page="propose" />
+      <Filters />
       <div>{JSON.stringify(results)}</div>
     </div>
   );
