@@ -39,12 +39,6 @@ export function capitalizeFirstLetter(str: string | undefined | null) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function determinePage(pathname: string) {
-  if (pathname === "/propose") return "propose";
-  if (pathname === "/settled") return "settled";
-  return "verify";
-}
-
 /**
  * Determines if a route is active.
  * @param pathname - the current pathname

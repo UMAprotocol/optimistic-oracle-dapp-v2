@@ -1,10 +1,10 @@
 import SearchIcon from "public/assets/icons/search.svg";
-import type { Dispatch, FormEvent, SetStateAction } from "react";
+import type { FormEvent } from "react";
 import styled from "styled-components";
 
 interface Props {
   searchTerm: string;
-  setSearchTerm: Dispatch<SetStateAction<string>>;
+  setSearchTerm: (searchTerm: string) => void;
 }
 /**
  * Component for searching queries

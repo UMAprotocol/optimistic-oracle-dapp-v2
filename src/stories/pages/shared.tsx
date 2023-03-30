@@ -1,9 +1,11 @@
 import { Layout } from "@/components";
 import {
   ErrorProvider,
+  FilterAndSearchProvider,
   NotificationsContext,
   NotificationsProvider,
   OracleDataProvider,
+  PageProvider,
   PanelProvider,
 } from "@/contexts";
 import type { UniqueId } from "@/types";
@@ -16,17 +18,21 @@ interface Props {
 }
 export function Wrapper({ Component }: Props) {
   return (
-    <NotificationsProvider>
-      <OracleDataProvider>
-        <ErrorProvider>
-          <PanelProvider>
-            <Layout>
-              <Component />
-            </Layout>
-          </PanelProvider>
-        </ErrorProvider>
-      </OracleDataProvider>
-    </NotificationsProvider>
+    <PageProvider>
+      <NotificationsProvider>
+        <OracleDataProvider>
+          <ErrorProvider>
+            <FilterAndSearchProvider>
+              <PanelProvider>
+                <Layout>
+                  <Component />
+                </Layout>
+              </PanelProvider>
+            </FilterAndSearchProvider>
+          </ErrorProvider>
+        </OracleDataProvider>
+      </NotificationsProvider>
+    </PageProvider>
   );
 }
 
