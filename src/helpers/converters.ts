@@ -1,5 +1,4 @@
 import { config } from "@/constants";
-import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type {
   ActionType,
   MoreInformationItem,
@@ -35,6 +34,7 @@ import { format } from "date-fns";
 import { BigNumber, ethers } from "ethers";
 import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
+import { getQueryMetaData } from "./queryParsing";
 
 export type RequiredRequest = Omit<
   Request,
@@ -426,7 +426,11 @@ function getOOV2SpecificValues(request: Request) {
   return { bond, customLiveness, eventBased };
 }
 
-function makeMoreInformationList(query: Request | Assertion) {
+function makeMoreInformationList(
+  query: Request | Assertion,
+  umipNumber?: string | undefined,
+  umipUrl?: string | undefined
+) {
   const moreInformation: MoreInformationItem[] = [];
 
   moreInformation.push({
@@ -435,12 +439,11 @@ function makeMoreInformationList(query: Request | Assertion) {
     href: makeBlockExplorerLink(query.oracleAddress, query.chainId, "address"),
   });
 
-  const identifierDetails = approvedIdentifiers[query.identifier];
-  if (identifierDetails) {
+  if (umipNumber && umipUrl) {
     moreInformation.push({
       title: "UMIP",
-      text: identifierDetails.umipLink.number,
-      href: identifierDetails.umipLink.url,
+      text: umipNumber,
+      href: umipUrl,
     });
   }
 
@@ -626,14 +629,14 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     proposalLogIndex,
     proposalExpirationTimestamp,
   } = request;
+  const { title, description, umipUrl, umipNumber, project } = getQueryMetaData(
+    identifier,
+    ancillaryData
+  );
   const { bond, eventBased } = getOOV2SpecificValues(request);
   const bytes32Identifier = ethers.utils.formatBytes32String(identifier);
   const livenessEndsMilliseconds = getLivenessEnds(proposalExpirationTimestamp);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
-  // TODO: we need methods to calculate these things
-  // need a lookup for project based on price ident or anc data
-  const project = "UMA";
-  const title = `Price request - ${identifier} - ${oracleType}`;
   const chainName = getChainName(chainId);
   const timeUTC = toTimeUTC(time);
   const timeUNIX = toTimeUnix(time);
@@ -644,7 +647,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   const queryText = safeDecodeHexString(ancillaryData);
   const expiryType = eventBased ? "Event-based" : "Time-based";
   const tokenAddress = currency;
-  const moreInformation = makeMoreInformationList(request);
+  const moreInformation = makeMoreInformationList(request, umipNumber, umipUrl);
   const actionType = getRequestActionType(state);
   const approveBondSpendParams = makeApproveBondSpendParams({
     bond,
@@ -738,6 +741,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   return {
     project,
     title,
+    description,
     id,
     chainId,
     chainName,
@@ -802,14 +806,11 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     settlementHash,
     settlementLogIndex,
   } = assertion;
+  const { title, description, project } = getQueryMetaData(identifier, claim);
   const id = assertionId;
   const oracleType = "Optimistic Oracle V3";
   const livenessEndsMilliseconds = getLivenessEnds(expirationTime);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
-  // TODO: we need methods to calculate these things
-  // need a lookup for project based on price ident or anc data
-  const project = "UMA";
-  const title = `Assertion - ${identifier} - ${oracleType}`;
   const chainName = getChainName(chainId);
   const timeUTC = toTimeUTC(assertionTimestamp);
   const timeUNIX = toTimeUnix(assertionTimestamp);
@@ -873,6 +874,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     actionType,
     project,
     title,
+    description,
     moreInformation,
     reward,
     bond,

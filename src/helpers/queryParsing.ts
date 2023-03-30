@@ -1,4 +1,5 @@
 import approvedIdentifiers from "@/data/approvedIdentifiersTable";
+import type { MetaData } from "@/types";
 
 export function checkIfIsPolymarket(
   decodedIdentifier: string,
@@ -16,8 +17,8 @@ export function checkIfIsPolymarket(
 
 export function getQueryMetaData(
   decodedIdentifier: string,
-  decodedAncillaryData: string
-) {
+  decodedAncillaryDataOrClaim: string
+): MetaData {
   const isAcross = decodedIdentifier === "ACROSS-V2";
   if (isAcross) {
     const title = "Across V2";
@@ -37,12 +38,15 @@ export function getQueryMetaData(
 
   const isPolymarket = checkIfIsPolymarket(
     decodedIdentifier,
-    decodedAncillaryData
+    decodedAncillaryDataOrClaim
   );
   if (isPolymarket) {
-    const ancillaryDataTitle = getTitleFromAncillaryData(decodedAncillaryData);
-    const ancillaryDataDescription =
-      getDescriptionFromAncillaryData(decodedAncillaryData);
+    const ancillaryDataTitle = getTitleFromAncillaryData(
+      decodedAncillaryDataOrClaim
+    );
+    const ancillaryDataDescription = getDescriptionFromAncillaryData(
+      decodedAncillaryDataOrClaim
+    );
     const title = ancillaryDataTitle ?? decodedIdentifier;
     const description =
       ancillaryDataDescription ?? "No description was found for this request.";
@@ -82,7 +86,8 @@ export function getQueryMetaData(
     title: decodedIdentifier,
     description: "No description found for this request.",
     umipUrl: undefined,
-    project: "UMA",
+    umipNumber: undefined,
+    project: "UMA" as const,
   };
 }
 
