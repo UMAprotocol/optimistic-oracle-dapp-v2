@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "prebuild": "yarn update-approved-identifiers",
+    "predev": "yarn update-approved-identifiers",
     "start": "next start",
     "lint": "next lint",
     "lint-fix": "next lint --fix && yarn lint:libs",
