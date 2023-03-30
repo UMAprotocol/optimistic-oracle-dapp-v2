@@ -1,13 +1,11 @@
 import { emptyCheckedFilters, emptyFilters } from "@/constants";
-import { determinePage } from "@/helpers";
-import { useFilterAndSearch, useOracleDataContext } from "@/hooks";
+import { useFilterAndSearch, useQueriesCurrentForPage } from "@/hooks";
 import type {
   CheckboxItemsByFilterName,
   CheckedChangePayload,
   CheckedFiltersByFilterName,
   OracleQueryUI,
 } from "@/types";
-import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { createContext } from "react";
 
@@ -40,18 +38,7 @@ export const FilterAndSearchContext = createContext(
 );
 
 export function FilterAndSearchProvider({ children }: { children: ReactNode }) {
-  const { settled, propose, verify } = useOracleDataContext();
-  const router = useRouter();
-  const pathname = router.pathname;
-  const page = determinePage(pathname);
-  const queries =
-    page === "verify"
-      ? verify
-      : page === "propose"
-      ? propose
-      : page === "settled"
-      ? settled
-      : undefined;
+  const queries = useQueriesCurrentForPage();
   const filterAndSearchState = useFilterAndSearch(queries);
 
   return (
