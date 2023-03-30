@@ -1,4 +1,5 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
+import type { OracleQueryList } from "@/contexts";
 import { capitalize, words } from "lodash";
 import { css } from "styled-components";
 
@@ -99,4 +100,20 @@ export const showOnMobileAndUnder = css`
 
 export function makeFilterTitle(filterName: string) {
   return capitalize(words(filterName)[0]);
+}
+
+export function sortQueriesByDate({
+  verify,
+  propose,
+  settled,
+}: {
+  verify: OracleQueryList;
+  propose: OracleQueryList;
+  settled: OracleQueryList;
+}) {
+  return {
+    verify: verify.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
+    propose: propose.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
+    settled: settled.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
+  };
 }
