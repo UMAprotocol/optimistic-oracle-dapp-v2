@@ -6,6 +6,35 @@ import type {
   projects,
   requestStates,
 } from "@shared/constants";
+import type { Address } from "wagmi";
+import {ParsedOOV1GraphEntity,ParsedOOV2GraphEntity,ParsedOOV3GraphEntity} from "./graphql";
+
+export type Request = {
+  chainId: ChainId;
+  oracleAddress: Address;
+  oracleType: OracleType;
+  id: string;
+  identifier: string;
+  ancillaryData: string;
+  time: string;
+  requester: Address;
+} & (Partial<ParsedOOV1GraphEntity> | Partial<ParsedOOV2GraphEntity>);
+
+export type Assertion = {
+  chainId: ChainId;
+  oracleAddress: Address;
+  oracleType: OracleType;
+  id:string,
+  identifier: string;
+  asserter: string;
+  claim: string;
+  assertionTimestamp: string;
+  assertionId: string;
+} & Partial<ParsedOOV3GraphEntity>;
+
+export type Requests = Request[];
+
+export type Assertions = Assertion[];
 
 export type OracleTypes = typeof oracleTypes;
 
