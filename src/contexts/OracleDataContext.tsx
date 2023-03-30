@@ -1,5 +1,9 @@
 import { config } from "@/constants";
-import { assertionToOracleQuery, requestToOracleQuery } from "@/helpers";
+import {
+  assertionToOracleQuery,
+  requestToOracleQuery,
+  sortQueriesByDate,
+} from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { Client } from "@libs/oracle2";
 import { oracles } from "@libs/oracle2/services";
@@ -86,10 +90,11 @@ function DataReducerFactory<Input extends Request | Assertion>(
     return {
       ...state,
       all: { ...all },
-      ...queries,
+      ...sortQueriesByDate(queries),
     };
   };
 }
+
 const requestReducer = DataReducerFactory(requestToOracleQuery);
 const assertionReducer = DataReducerFactory(assertionToOracleQuery);
 
