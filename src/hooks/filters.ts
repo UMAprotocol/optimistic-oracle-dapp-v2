@@ -1,4 +1,4 @@
-import { keys } from "@/constants";
+import { emptyCheckedFilters, emptyFilters, keys } from "@/constants";
 import type {
   CheckboxItems,
   CheckboxItemsByFilterName,
@@ -24,8 +24,8 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
 
   return {
     results,
-    filterProps,
-    searchProps,
+    ...filterProps,
+    ...searchProps,
   };
 }
 
@@ -86,16 +86,12 @@ type CheckedChange = {
 export function useFilters(queries: OracleQueryUI[]) {
   const initialState: State = {
     filters: {
-      project: { All: { checked: true, count: 0 } },
-      chainName: { All: { checked: true, count: 0 } },
-      oracleType: { All: { checked: true, count: 0 } },
+      ...emptyFilters,
     },
     checkedFilters: {
-      project: [],
-      chainName: [],
-      oracleType: [],
+      ...emptyCheckedFilters,
     },
-    filteredQueries: cloneDeep(queries),
+    filteredQueries: queries,
   };
   const [state, dispatch] = useReducer(filtersReducer(queries), initialState);
 
@@ -122,6 +118,14 @@ export function useFilters(queries: OracleQueryUI[]) {
   };
 }
 
+function countQueriesByFilter(
+  queries: OracleQueryUI[],
+  filterName: FilterName,
+  itemName: string
+) {
+  return queries.filter((query) => query[filterName] === itemName).length;
+}
+
 function filtersReducer(queries: OracleQueryUI[]) {
   // use currying to capture queries
   return function reducer(state: State, action: Action) {
@@ -129,37 +133,27 @@ function filtersReducer(queries: OracleQueryUI[]) {
       case "make-entries": {
         const newState = cloneDeep(state);
 
+        newState.filters.project.All.count = queries.length;
+        newState.filters.chainName.All.count = queries.length;
+        newState.filters.oracleType.All.count = queries.length;
+
         queries.forEach((query) => {
           const { project, chainName, oracleType } = query;
 
-          // for all filters, increment the count for the "All" item
-          newState.filters.project.All.count++;
-          newState.filters.chainName.All.count++;
-          newState.filters.oracleType.All.count++;
+          newState.filters.project[project] = {
+            checked: newState.filters.project[project]?.checked ?? false,
+            count: countQueriesByFilter(queries, "project", project),
+          };
 
-          if (newState.filters.project[project]) {
-            newState.filters.project[project].count++;
-          } else {
-            newState.filters.project[project] = { checked: false, count: 1 };
-          }
+          newState.filters.chainName[chainName] = {
+            checked: newState.filters.chainName[chainName]?.checked ?? false,
+            count: countQueriesByFilter(queries, "chainName", chainName),
+          };
 
-          if (newState.filters.chainName[chainName]) {
-            newState.filters.chainName[chainName].count++;
-          } else {
-            newState.filters.chainName[chainName] = {
-              checked: false,
-              count: 1,
-            };
-          }
-
-          if (newState.filters.oracleType[oracleType]) {
-            newState.filters.oracleType[oracleType].count++;
-          } else {
-            newState.filters.oracleType[oracleType] = {
-              checked: false,
-              count: 1,
-            };
-          }
+          newState.filters.oracleType[oracleType] = {
+            checked: newState.filters.oracleType[oracleType]?.checked ?? false,
+            count: countQueriesByFilter(queries, "oracleType", oracleType),
+          };
         });
 
         newState.checkedFilters = makeCheckedFilters(newState);
