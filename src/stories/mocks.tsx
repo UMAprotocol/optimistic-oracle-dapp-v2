@@ -428,20 +428,31 @@ export const handlersForAllPages = makeGraphqlHandlers({
       inputs: [
         {
           identifier: "YES_OR_NO_QUERY",
-          ancillaryData: `q: title: Test Polymarket Request with Early Request Option 1234
+          ancillaryData:
+            utf8ToHex(`q: title: Test Polymarket Request with Early Request Option 1234
           description: This is a test for the type of Polymarket request that DOES have an option for early request.
           res_data: p1: 0, p2: 1, p3: 0.5, p4: -57896044618658097711785492504343953926634992332820282019728.792003956564819968
-          Where p1 corresponds to Something, p2 to Another, p3 to unknown, and p4 to an early request`,
+          Where p1 corresponds to Something, p2 to Another, p3 to unknown, and p4 to an early request`),
           state: "Proposed",
           proposedPrice: makeEtherValueString(123),
         },
         {
-          identifier: "TEST_VERIFY",
+          identifier: "YES_OR_NO_QUERY",
+          ancillaryData: utf8ToHex(
+            `q: title: Cozy Finance Request
+            This will revert if a non-YES answer is proposed.
+            `
+          ),
           state: "Disputed",
           proposedPrice: makeEtherValueString(123),
         },
         {
           identifier: "ACROSS-V2",
+          state: "Disputed",
+          proposedPrice: makeEtherValueString(123),
+        },
+        {
+          identifier: "SHERLOCK_CLAIM",
           state: "Disputed",
           proposedPrice: makeEtherValueString(123),
         },

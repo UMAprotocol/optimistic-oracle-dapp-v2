@@ -4,12 +4,14 @@ import Cozy from "public/assets/icons/projects/cozy.svg";
 import Polymarket from "public/assets/icons/projects/polymarket.svg";
 import UMA from "public/assets/icons/projects/uma.svg";
 import Across from "public/assets/icons/projects/across.svg";
+import Sherlock from "public/assets/icons/projects/sherlock.svg";
 
 export const projectIcons: Record<string, JSX.Element> = {
   UMA: <UMA />,
   "Cozy Finance": <Cozy />,
   Polymarket: <Polymarket />,
   Across: <Across />,
+  Sherlock: <Sherlock />,
 };
 
 export const currencyIcons: Record<string, JSX.Element> = {

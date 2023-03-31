@@ -631,9 +631,12 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     proposalLogIndex,
     proposalExpirationTimestamp,
   } = request;
+  const valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
+  const queryTextHex = ancillaryData;
+  const queryText = safeDecodeHexString(ancillaryData);
   const { title, description, umipUrl, umipNumber, project } = getQueryMetaData(
     identifier,
-    ancillaryData
+    queryText
   );
   const { bond, eventBased } = getOOV2SpecificValues(request);
   const bytes32Identifier = formatBytes32String(identifier);
@@ -644,9 +647,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   const timeUNIX = toTimeUnix(time);
   const timeMilliseconds = toTimeMilliseconds(time);
   const timeFormatted = toTimeFormatted(time);
-  const valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
-  const queryTextHex = ancillaryData;
-  const queryText = safeDecodeHexString(ancillaryData);
   const expiryType = eventBased ? "Event-based" : "Time-based";
   const tokenAddress = currency;
   const moreInformation = makeMoreInformationList(request, umipNumber, umipUrl);

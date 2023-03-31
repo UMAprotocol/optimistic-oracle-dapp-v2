@@ -1,6 +1,14 @@
 import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type { MetaData } from "@/types";
 
+export function checkIfIsCozy(decodedAncillaryData: string) {
+  const cozyToken = "This will revert if a non-YES answer is proposed.";
+  if (decodedAncillaryData.includes(cozyToken)) {
+    return true;
+  }
+  return false;
+}
+
 export function checkIfIsPolymarket(
   decodedIdentifier: string,
   decodedAncillaryData: string
@@ -17,11 +25,11 @@ export function checkIfIsPolymarket(
 
 export function getQueryMetaData(
   decodedIdentifier: string,
-  decodedAncillaryDataOrClaim: string
+  decodedQueryText: string
 ): MetaData {
   const isAcross = decodedIdentifier === "ACROSS-V2";
   if (isAcross) {
-    const title = "Across V2";
+    const title = "Across V2 Request";
     const description = `Across is an optimistic insured bridge that relies on a decentralized group of relayers to fulfill user deposit requests from EVM to EVM networks. Relayer funds are insured by liquidity providers in a single pool on Ethereum and refunds are processed via the UMA Optimistic Oracle. [Learn more.](https://docs.across.to/)`;
     const umipUrl =
       "https://github.com/UMAprotocol/UMIPs/blob/448375e1b9d2bd24dfd0627805ef6a7c2d72f74f/UMIPs/umip-157.md";
@@ -36,17 +44,11 @@ export function getQueryMetaData(
     };
   }
 
-  const isPolymarket = checkIfIsPolymarket(
-    decodedIdentifier,
-    decodedAncillaryDataOrClaim
-  );
+  const isPolymarket = checkIfIsPolymarket(decodedIdentifier, decodedQueryText);
   if (isPolymarket) {
-    const ancillaryDataTitle = getTitleFromAncillaryData(
-      decodedAncillaryDataOrClaim
-    );
-    const ancillaryDataDescription = getDescriptionFromAncillaryData(
-      decodedAncillaryDataOrClaim
-    );
+    const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
+    const ancillaryDataDescription =
+      getDescriptionFromAncillaryData(decodedQueryText);
     const title = ancillaryDataTitle ?? decodedIdentifier;
     const description =
       ancillaryDataDescription ?? "No description was found for this request.";
@@ -63,21 +65,42 @@ export function getQueryMetaData(
     };
   }
 
-  // if we are dealing with a request for an approved price identifier, get the title, description and UMIP url from the hard-coded approvedIdentifiersTable json file
-  // we know we are dealing with a request for an approved price identifier if the decodedIdentifier matches an approved identifier
-  const identifierDetails = approvedIdentifiers[decodedIdentifier];
-  const isApprovedIdentifier = Boolean(identifierDetails);
-  if (isApprovedIdentifier) {
-    const title = identifierDetails.identifier;
-    const description = identifierDetails.summary;
-    const umipUrl = identifierDetails.umipLink.url;
-    const umipNumber = identifierDetails.umipLink.number;
+  const isCozy = checkIfIsCozy(decodedQueryText);
+  if (isCozy) {
+    const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
+    const ancillaryDataDescription =
+      getDescriptionFromAncillaryData(decodedQueryText);
+    const title = ancillaryDataTitle ?? decodedIdentifier;
+    const description =
+      ancillaryDataDescription ?? "No description was found for this request.";
+    const umipNumber = "umip-107";
+    const umipUrl =
+      "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
+
     return {
       title,
       description,
       umipUrl,
       umipNumber,
-      project: "UMA",
+      project: "Cozy Finance",
+    };
+  }
+
+  const identifierDetails = approvedIdentifiers[decodedIdentifier];
+  const isApprovedIdentifier = Boolean(identifierDetails);
+  if (isApprovedIdentifier) {
+    const isSherlock = decodedIdentifier === "SHERLOCK_CLAIM";
+    const title = isSherlock ? "Sherlock Claim" : identifierDetails.identifier;
+    const description = identifierDetails.summary;
+    const umipUrl = identifierDetails.umipLink.url;
+    const umipNumber = identifierDetails.umipLink.number;
+    const project = isSherlock ? "Sherlock" : "UMA";
+    return {
+      title,
+      description,
+      umipUrl,
+      umipNumber,
+      project,
     };
   }
 
@@ -87,7 +110,7 @@ export function getQueryMetaData(
     description: "No description found for this request.",
     umipUrl: undefined,
     umipNumber: undefined,
-    project: "UMA" as const,
+    project: "UMA",
   };
 }
 

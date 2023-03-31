@@ -14,6 +14,7 @@ export const projects = [
   "Polymarket",
   "Cozy Finance",
   "Across",
+  "Sherlock",
 ] as const;
 
 export const requestStates = [
