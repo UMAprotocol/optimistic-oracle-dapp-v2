@@ -1,7 +1,22 @@
 import { Currency } from "@/components";
+import {
+  approveSpend,
+  approvingSpend,
+  changeChain,
+  changingChains,
+  connectWallet,
+  connectingWallet,
+  dispute,
+  disputing,
+  insufficientBalance,
+  propose,
+  settle,
+  settled,
+  settling,
+} from "@/constants";
 import { handleNotifications } from "@/helpers";
 import { useBalanceAndAllowance } from "@/hooks";
-import type { OracleQueryUI } from "@/types";
+import type { ActionTitle, OracleQueryUI } from "@/types";
 import { useEffect } from "react";
 import {
   useAccount,
@@ -18,7 +33,7 @@ export type ActionState = Partial<{
   action: () => void;
   disabled: boolean;
   hidden: boolean;
-  title: string;
+  title: ActionTitle;
   errors: (string | null | undefined)[];
 }>;
 export function usePrimaryPanelAction({
@@ -64,7 +79,7 @@ export function useAccountAction({
   // users wallet is connecting
   if (isWalletLoading) {
     return {
-      title: "Connecting Wallet...",
+      title: connectingWallet,
       disabled: true,
     };
   }
@@ -72,7 +87,7 @@ export function useAccountAction({
   // change chains is loading
   if (isNetworkLoading) {
     return {
-      title: "Changing Chains...",
+      title: changingChains,
       disabled: true,
     };
   }
@@ -80,12 +95,12 @@ export function useAccountAction({
   // and hide this button until we are connected.
   if (!isConnected) {
     return {
-      title: "Connect wallet",
+      title: connectWallet,
       hidden: true,
     };
   }
 
-  // we dont know users connected chain yet, do not allow any actions
+  // we don't know users connected chain yet, do not allow any actions
   if (connectedChain === undefined) {
     return {
       hidden: true,
@@ -95,7 +110,7 @@ export function useAccountAction({
   // we cannot allow any transactions until user is on correct chain for current request
   if (connectedChain.id !== chainId) {
     return {
-      title: "Change Chain",
+      title: changeChain,
       action: () => {
         switchNetwork(chainId);
       },
@@ -148,7 +163,7 @@ export function useApproveBondAction({
   if (actionType !== "propose" && actionType !== "dispute") return undefined;
   if (balance && bond && balance.value?.lt(bond)) {
     return {
-      title: "Insufficient balance",
+      title: insufficientBalance,
       disabled: true,
     };
   }
@@ -159,19 +174,19 @@ export function useApproveBondAction({
 
   if (isPrepareApproveBondSpendLoading) {
     return {
-      title: "Approve Spending",
+      title: approveSpend,
       disabled: true,
     };
   }
   if (isApproveBondSpendLoading || isApprovingBondSpend) {
     return {
-      title: "Approving Spending...",
+      title: approvingSpend,
       disabled: true,
     };
   }
 
   return {
-    title: "Approve Spending",
+    title: approveSpend,
     action: approveBondSpend,
     errors: [
       prepareApproveBondSpendError?.message,
@@ -217,14 +232,14 @@ export function useProposeAction({
   // TODO validate input
   if (proposePriceInput === undefined || proposePriceInput?.length === 0) {
     return {
-      title: "Propose",
+      title: propose,
       disabled: true,
     };
   }
 
   if (isPrepareProposePriceLoading) {
     return {
-      title: "Propose",
+      title: propose,
       disabled: true,
     };
   }
@@ -235,7 +250,7 @@ export function useProposeAction({
     };
   }
   return {
-    title: "Propose",
+    title: propose,
     action: proposePrice,
     errors: [prepareProposePriceError?.message, proposePriceError?.message],
   };
@@ -276,18 +291,18 @@ export function useDisputeAction({
 
   if (isPrepareDisputePriceLoading) {
     return {
-      title: "Dispute",
+      title: dispute,
       disabled: true,
     };
   }
   if (isDisputePriceLoading || isDisputingPrice) {
     return {
-      title: "Disputing...",
+      title: disputing,
       disabled: true,
     };
   }
   return {
-    title: "Dispute",
+    title: dispute,
     action: disputePrice,
     errors: [prepareDisputePriceError?.message, disputePriceError?.message],
   };
@@ -328,18 +343,18 @@ export function useDisputeAssertionAction({
 
   if (isPrepareDisputeAssertionLoading) {
     return {
-      title: "Dispute",
+      title: dispute,
       disabled: true,
     };
   }
   if (isDisputeAssertionLoading || isDisputingAssertion) {
     return {
-      title: "Disputing...",
+      title: disputing,
       disabled: true,
     };
   }
   return {
-    title: "Dispute",
+    title: dispute,
     action: disputeAssertion,
     errors: [
       prepareDisputeAssertionError?.message,
@@ -381,25 +396,25 @@ export function useSettlePriceAction({
 
   if (isPrepareSettlePriceLoading) {
     return {
-      title: "Settle",
+      title: settle,
       disabled: true,
     };
   }
   if (isSettlePriceLoading || isSettlingPrice) {
     return {
-      title: "Settling...",
+      title: settling,
       disabled: true,
     };
   }
   // unique to settle, if we have an error preparing the transaction, this usually means the request has been settled
   if (prepareSettlePriceError) {
     return {
-      title: "Settled",
+      title: settled,
       disabled: true,
     };
   }
   return {
-    title: "Settle",
+    title: settle,
     action: settlePrice,
     errors: [settlePriceError?.message],
   };
@@ -437,25 +452,25 @@ export function useSettleAssertionAction({
 
   if (isPrepareSettleAssertionLoading) {
     return {
-      title: "Settle",
+      title: settle,
       disabled: true,
     };
   }
   if (isSettleAssertionLoading || isSettlingAssertion) {
     return {
-      title: "Settling...",
+      title: settling,
       disabled: true,
     };
   }
   // unique to settle, if we have an error preparing the transaction, this usually means the request has been settled
   if (prepareSettleAssertionError) {
     return {
-      title: "Settled",
+      title: settled,
       disabled: true,
     };
   }
   return {
-    title: "Settle",
+    title: settle,
     action: settleAssertion,
     errors: [settleAssertionError?.message],
   };

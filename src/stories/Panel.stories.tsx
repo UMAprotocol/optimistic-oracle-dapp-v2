@@ -2,7 +2,6 @@ import { Button, Panel } from "@/components";
 import type { PanelContextState } from "@/contexts";
 import { PanelContext } from "@/contexts";
 import type { OracleQueryUI } from "@/types";
-import type { PageName } from "@shared/types";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { makeMockOracleQueryUI } from "./mocks";
@@ -17,10 +16,9 @@ type Story = StoryObj<PanelContextState>;
 
 interface Props {
   Component: typeof Panel;
-  page: PageName | undefined;
   content: OracleQueryUI | undefined;
 }
-function Wrapper({ Component, page, content }: Props) {
+function Wrapper({ Component, content }: Props) {
   const [panelOpen, setPanelOpen] = useState(true);
 
   if (!content) return null;
@@ -28,7 +26,6 @@ function Wrapper({ Component, page, content }: Props) {
   return (
     <PanelContext.Provider
       value={{
-        page,
         panelOpen,
         openPanel: () => setPanelOpen(true),
         closePanel: () => setPanelOpen(false),
@@ -52,7 +49,6 @@ const Template: Story = {
 export const VerifyWithDispute: Story = {
   ...Template,
   args: {
-    page: "verify",
     content: makeMockOracleQueryUI({
       actionType: "dispute",
     }),
@@ -62,7 +58,6 @@ export const VerifyWithDispute: Story = {
 export const VerifyWithSettle: Story = {
   ...Template,
   args: {
-    page: "verify",
     content: makeMockOracleQueryUI({
       actionType: "settle",
     }),
@@ -72,7 +67,6 @@ export const VerifyWithSettle: Story = {
 export const Propose: Story = {
   ...Template,
   args: {
-    page: "propose",
     content: makeMockOracleQueryUI({
       actionType: "propose",
     }),
@@ -82,7 +76,6 @@ export const Propose: Story = {
 export const Settled: Story = {
   ...Template,
   args: {
-    page: "settled",
     content: makeMockOracleQueryUI({
       actionType: undefined,
     }),
@@ -92,7 +85,6 @@ export const Settled: Story = {
 export const WithError: Story = {
   ...Template,
   args: {
-    page: "verify",
     content: makeMockOracleQueryUI(),
   },
 };
@@ -100,7 +92,6 @@ export const WithError: Story = {
 export const WithDifferentProject: Story = {
   ...Template,
   args: {
-    page: "verify",
     content: makeMockOracleQueryUI({
       project: "Polymarket",
     }),
@@ -110,7 +101,6 @@ export const WithDifferentProject: Story = {
 export const WithDifferentInfoIcons: Story = {
   ...Template,
   args: {
-    page: "verify",
     content: makeMockOracleQueryUI({
       oracleType: "Skinny Optimistic Oracle",
       chainId: 137,
@@ -122,7 +112,6 @@ export const WithDifferentInfoIcons: Story = {
 export const WithDifferentCurrency: Story = {
   ...Template,
   args: {
-    page: "verify",
     content: makeMockOracleQueryUI(),
   },
 };
@@ -130,7 +119,6 @@ export const WithDifferentCurrency: Story = {
 export const WithPrice: Story = {
   ...Template,
   args: {
-    page: "verify",
     content: makeMockOracleQueryUI({
       oracleType: "Optimistic Oracle V1",
       valueText: "200",

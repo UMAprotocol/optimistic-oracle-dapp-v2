@@ -9,6 +9,7 @@ import {
 import {
   blueGrey700,
   getProjectIcon,
+  propose,
   red500,
   smallMobileAndUnder,
 } from "@/constants";
@@ -37,7 +38,7 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
  * @see `PanelContext`
  */
 export function Panel() {
-  const { content, page, panelOpen, closePanel } = usePanelContext();
+  const { content, panelOpen, closePanel } = usePanelContext();
   const [proposePriceInput, setProposePriceInput] = useState("");
   const [inputError, setInputError] = useState("");
   const {
@@ -66,10 +67,11 @@ export function Panel() {
   const { address } = useAccount();
   const { chain: connectedChain } = useNetwork();
 
+  const hasAction = primaryAction !== undefined;
   const projectIcon = getProjectIcon(project);
-  const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
-  const showActionsDetails = page !== "settled";
-  const hideInput = page !== "propose";
+  const actionsIcon = hasAction ? <PencilIcon /> : <SettledIcon />;
+  const showActionsDetails = hasAction;
+  const hideInput = primaryAction?.title !== propose;
   const disableInput = !address || connectedChain?.id !== chainId;
   const hasReward = reward !== null;
   const actionsTitle = getActionsTitle();
@@ -80,7 +82,7 @@ export function Panel() {
   const isError = errors.length > 0;
 
   function getActionsTitle() {
-    if (page === "settled") return "Settled as";
+    if (!hasAction) return "Settled as";
     if (oracleType === "Optimistic Oracle V3")
       return (
         <>

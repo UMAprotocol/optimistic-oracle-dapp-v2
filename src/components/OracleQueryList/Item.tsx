@@ -14,7 +14,7 @@ export function Item({ page, item }: Props) {
   const { openPanel } = usePanelContext();
 
   return (
-    <ItemWrapper onClick={() => openPanel(item, page)}>
+    <ItemWrapper onClick={() => openPanel(item)}>
       <ItemInnerWrapper>
         <ItemTitle {...item} />
         <ClickableIconWrapper>
