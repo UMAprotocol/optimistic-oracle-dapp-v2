@@ -808,9 +808,8 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     settlementHash,
     settlementLogIndex,
   } = assertion;
-  const { title, description, project } = getQueryMetaData(identifier, claim);
-  const id = assertionId;
   const oracleType = "Optimistic Oracle V3";
+  const id = assertionId;
   const livenessEndsMilliseconds = getLivenessEnds(expirationTime);
   const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
   const chainName = getChainName(chainId);
@@ -821,6 +820,9 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const valueText = settlementResolution.toString();
   const queryTextHex = claim;
   const queryText = safeDecodeHexString(claim);
+  const title = queryText;
+  const description = queryText;
+  const project = "UMA";
   const expiryType = null;
   const tokenAddress = currency;
   // no reward is present on assertions
