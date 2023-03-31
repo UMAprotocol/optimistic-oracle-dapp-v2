@@ -2,8 +2,8 @@ import type { ChainId, OracleType } from "@shared/types";
 import type { Handlers, Service, ServiceFactory } from "../../types";
 
 // gql1 covers skinny, v1, v2
-import { gql as gql1 } from "../oracle1";
-import { gql as gql3 } from "../oracle3";
+import { gql as gql1 } from "../oraclev1";
+import { gql as gql3 } from "../oraclev3";
 
 export type GqlConfig = {
   source: "gql";

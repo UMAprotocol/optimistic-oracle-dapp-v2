@@ -5,8 +5,8 @@ import {
   sortQueriesByDate,
 } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
-import { Client } from "@libs/oracle2";
-import { oracles } from "@libs/oracle2/services";
+import { Client } from "@libs/oracle-sdk-v2";
+import { oracles } from "@libs/oracle-sdk-v2/services";
 import type { Assertion, Assertions, Request, Requests } from "@shared/types";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useReducer, useState } from "react";
