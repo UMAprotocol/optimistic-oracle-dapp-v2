@@ -1,5 +1,8 @@
 import { OracleQueries } from "@/components";
+import { usePage } from "@/hooks";
 
 export default function Settled() {
-  return <OracleQueries page="settled" />;
+  const page = "settled";
+  usePage(page);
+  return <OracleQueries page={page} />;
 }

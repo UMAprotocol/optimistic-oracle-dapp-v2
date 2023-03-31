@@ -6,16 +6,15 @@ import {
   Panel,
 } from "@/components";
 import { siteDescription, siteTitle } from "@/constants";
-import { capitalizeFirstLetter, determinePage } from "@/helpers";
+import { capitalizeFirstLetter } from "@/helpers";
+import { useHandleQueryInUrl, usePageContext } from "@/hooks";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import styled from "styled-components";
 
 export function Layout({ children }: { children: ReactNode }) {
-  const router = useRouter();
-  const pathname = router?.pathname;
-  const page = determinePage(pathname);
+  const { page } = usePageContext();
+  useHandleQueryInUrl();
 
   return (
     <>
@@ -28,7 +27,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <Main>
         <ErrorBanner />
         <Header page={page} />
-        <Filters page={page} />
+        <Filters />
         {children}
         <Panel />
         <Notifications />

@@ -1,6 +1,5 @@
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
-import { usePage } from "@/hooks";
-import type { PageName } from "@shared/types";
+import { useFilterAndSearchContext } from "@/hooks";
 import Sliders from "public/assets/icons/sliders.svg";
 import { useState } from "react";
 import styled from "styled-components";
@@ -9,16 +8,17 @@ import { Dropdowns } from "./Dropdowns";
 import { MobileFilters } from "./MobileFilters";
 import { Search } from "./Search";
 
-interface Props {
-  page: PageName;
-}
-export function Filters({ page }: Props) {
+export function Filters() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const {
-    filterProps: { filters, checkedFilters, onCheckedChange, reset },
-    searchProps: { searchTerm, setSearchTerm },
-  } = usePage(page);
+    filters,
+    checkedFilters,
+    onCheckedChange,
+    reset,
+    searchTerm,
+    setSearchTerm,
+  } = useFilterAndSearchContext();
 
   function openMobileFilters() {
     setMobileFiltersOpen(true);

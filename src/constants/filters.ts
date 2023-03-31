@@ -29,3 +29,15 @@ export const keys = [
   "proposalHash",
   "proposalLogIndex",
 ];
+
+export const emptyFilters = {
+  project: { All: { checked: true, count: 0 } },
+  chainName: { All: { checked: true, count: 0 } },
+  oracleType: { All: { checked: true, count: 0 } },
+};
+
+export const emptyCheckedFilters = {
+  project: [],
+  chainName: [],
+  oracleType: [],
+};
