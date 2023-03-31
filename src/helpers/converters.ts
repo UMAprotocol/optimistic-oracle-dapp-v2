@@ -64,8 +64,8 @@ function convertToSolidityRequest(request: RequiredRequest): SolidityRequest {
     expirationTime: request.proposalExpirationTimestamp
       ? BigNumber.from(request.proposalExpirationTimestamp)
       : BigNumber.from(0),
-    reward: request.reward,
-    finalFee: request.finalFee,
+    reward: request.reward ? request.reward : BigNumber.from(0),
+    finalFee: request.finalFee ? request.finalFee : BigNumber.from(0),
     bond: request.bond ? BigNumber.from(request.bond) : BigNumber.from(0),
     customLiveness: request.customLiveness
       ? BigNumber.from(request.customLiveness)
@@ -123,7 +123,7 @@ export function isSupportedChain(chainId: number): chainId is ChainId {
   return chainId in chainsById;
 }
 
-function getRequestActionType(state: RequestState): ActionType {
+function getRequestActionType(state: RequestState | undefined): ActionType {
   // goes to `propose` page
   if (state === "Requested") {
     return "propose";
@@ -149,7 +149,7 @@ function getAssertionActionType({
   // goes to `settled` page
   if (settlementHash) return null;
   // goes to `verify` page
-  if (toDate(expirationTime) < new Date()) {
+  if (expirationTime && toDate(expirationTime) < new Date()) {
     return "settle";
   }
   // also goes to `verify` page
@@ -164,11 +164,11 @@ function getLivenessEnds(customLivenessOrExpirationTime?: string | null) {
 }
 
 function getPriceRequestValueText(
-  proposedPrice: BigNumber | null,
-  settlementPrice: BigNumber | null
+  proposedPrice: BigNumber | null | undefined,
+  settlementPrice: BigNumber | null | undefined
 ) {
   const price = proposedPrice ?? settlementPrice;
-  if (price === null) return null;
+  if (price === null || price === undefined) return null;
   return formatNumberForDisplay(price, { isFormatEther: true });
 }
 
@@ -194,11 +194,12 @@ function makeApproveBondSpendParams({
   oracleAddress,
   chainId,
 }: {
-  bond: BigNumber;
-  tokenAddress: Address;
+  bond?: BigNumber;
+  tokenAddress?: Address;
   oracleAddress: Address;
   chainId: ChainId;
 }) {
+  if (!bond || !tokenAddress) return undefined;
   return {
     address: tokenAddress,
     abi: erc20ABI,
@@ -435,13 +436,15 @@ function makeMoreInformationList(query: Request | Assertion) {
     href: makeBlockExplorerLink(query.oracleAddress, query.chainId, "address"),
   });
 
-  const identifierDetails = approvedIdentifiers[query.identifier];
-  if (identifierDetails) {
-    moreInformation.push({
-      title: "UMIP",
-      text: identifierDetails.umipLink.number,
-      href: identifierDetails.umipLink.url,
-    });
+  if (query.identifier) {
+    const identifierDetails = approvedIdentifiers[query.identifier];
+    if (identifierDetails) {
+      moreInformation.push({
+        title: "UMIP",
+        text: identifierDetails.umipLink.number,
+        href: identifierDetails.umipLink.url,
+      });
+    }
   }
 
   if (isOOV1PriceRequest(query) || isOOV2PriceRequest(query)) {
@@ -520,32 +523,13 @@ function makeMoreInformationList(query: Request | Assertion) {
   }
 
   if (isAssertion(query)) {
-    moreInformation.push(
-      {
-        title: "Asserter",
-        text: query.asserter,
-        href: makeBlockExplorerLink(query.asserter, query.chainId, "address"),
-      },
-      {
-        title: "Assertion Transaction",
-        text: query.assertionHash,
-        href: makeBlockExplorerLink(query.assertionHash, query.chainId, "tx"),
-      },
-      {
-        title: "Caller",
-        text: query.caller,
-        href: makeBlockExplorerLink(query.caller, query.chainId, "address"),
-      },
-      {
-        title: "Callback Recipient",
-        text: query.callbackRecipient,
-        href: makeBlockExplorerLink(
-          query.callbackRecipient,
-          query.chainId,
-          "address"
-        ),
-      },
-      {
+    moreInformation.push({
+      title: "Asserter",
+      text: query.asserter,
+      href: makeBlockExplorerLink(query.asserter, query.chainId, "address"),
+    });
+    if (query.escalationManager) {
+      moreInformation.push({
         title: "Escalation Manager",
         text: query.escalationManager,
         href: makeBlockExplorerLink(
@@ -553,9 +537,33 @@ function makeMoreInformationList(query: Request | Assertion) {
           query.chainId,
           "address"
         ),
-      }
-    );
-
+      });
+    }
+    if (query.callbackRecipient) {
+      moreInformation.push({
+        title: "Callback Recipient",
+        text: query.callbackRecipient,
+        href: makeBlockExplorerLink(
+          query.callbackRecipient,
+          query.chainId,
+          "address"
+        ),
+      });
+    }
+    if (query.caller) {
+      moreInformation.push({
+        title: "Caller",
+        text: query.caller,
+        href: makeBlockExplorerLink(query.caller, query.chainId, "address"),
+      });
+    }
+    if (query.assertionHash) {
+      moreInformation.push({
+        title: "Assertion Transaction",
+        text: query.assertionHash,
+        href: makeBlockExplorerLink(query.assertionHash, query.chainId, "tx"),
+      });
+    }
     if (query.disputer) {
       moreInformation.push({
         title: "Disputer",
@@ -563,7 +571,6 @@ function makeMoreInformationList(query: Request | Assertion) {
         href: makeBlockExplorerLink(query.disputer, query.chainId, "address"),
       });
     }
-
     if (query.disputeHash) {
       moreInformation.push({
         title: "Dispute Transaction",
@@ -571,7 +578,6 @@ function makeMoreInformationList(query: Request | Assertion) {
         href: makeBlockExplorerLink(query.disputeHash, query.chainId, "tx"),
       });
     }
-
     if (query.settlementRecipient) {
       moreInformation.push({
         title: "Settlement Recipient",
@@ -583,7 +589,6 @@ function makeMoreInformationList(query: Request | Assertion) {
         ),
       });
     }
-
     if (query.settlementHash) {
       moreInformation.push({
         title: "Settlement Transaction",
@@ -815,7 +820,9 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const timeUNIX = toTimeUnix(assertionTimestamp);
   const timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
   const timeFormatted = toTimeFormatted(assertionTimestamp);
-  const valueText = settlementResolution.toString();
+  const valueText = settlementResolution
+    ? settlementResolution.toString()
+    : null;
   const queryTextHex = claim;
   const queryText = safeDecodeHexString(claim);
   const expiryType = null;

@@ -60,6 +60,8 @@ export type OracleQueryUI = {
   project: Project;
   title: ReactNode;
   identifier: string;
+  expiryType: ExpiryType | null;
+  oracleAddress: Address;
   // price requests query text is the ancillary data
   // for assertions it is the `claim` field
   queryTextHex: string;
@@ -79,11 +81,9 @@ export type OracleQueryUI = {
   // for oo-v2 bond is the final fee unless `setBond` has been called,
   // it is in the `bond` field returned for the request
   // for oo-v3 the bond is always the `bond` field returned for the request
-  bond: BigNumber;
-  reward: BigNumber | null;
-  expiryType: ExpiryType | null;
-  oracleAddress: Address;
-  tokenAddress: Address;
+  bond?: BigNumber;
+  reward?: BigNumber | null;
+  tokenAddress?: Address;
   approveBondSpendParams?: ApproveBondSpendParams | undefined;
   proposePriceParams?:
     | ProposePriceParamsFactory
