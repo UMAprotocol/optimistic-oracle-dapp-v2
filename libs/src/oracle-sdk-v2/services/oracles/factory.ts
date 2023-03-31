@@ -1,8 +1,9 @@
 import type { ChainId, OracleType } from "@shared/types";
 import type { Handlers, Service, ServiceFactory } from "../../types";
 
-import { gql as gqlAssertions } from "../assertions";
-import { gql as gqlPriceRequests } from "../priceRequests";
+// gql1 covers skinny, v1, v2
+import { gql as gql1 } from "../oraclev1";
+import { gql as gql3 } from "../oraclev3";
 
 export type GqlConfig = {
   source: "gql";
@@ -23,10 +24,10 @@ export const Factory =
           config.type === "Optimistic Oracle V2" ||
           config.type === "Skinny Optimistic Oracle")
       ) {
-        return gqlPriceRequests.Factory(config)(handlers);
+        return gql1.Factory(config)(handlers);
       }
       if (config.source === "gql" && config.type === "Optimistic Oracle V3") {
-        return gqlAssertions.Factory(config)(handlers);
+        return gql3.Factory(config)(handlers);
       }
       throw new Error(
         `Unsupported oracle type ${config.type} from ${config.source}`
