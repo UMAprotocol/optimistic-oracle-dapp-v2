@@ -46,6 +46,7 @@
     "wagmi": "^0.10.14"
   },
   "devDependencies": {
+    "@uma/contracts-node": "^0.4.14",
     "@storybook/addon-essentials": "^7.0.0-rc.10",
     "@storybook/addon-interactions": "^7.0.0-rc.10",
     "@storybook/addon-links": "^7.0.0-rc.10",
