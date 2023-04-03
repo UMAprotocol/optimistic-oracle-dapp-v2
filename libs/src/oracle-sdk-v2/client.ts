@@ -8,7 +8,7 @@ export function Client(factories: ServiceFactories, handlers: Handlers) {
   const services = factories.map((factory) => factory(handlers));
   async function tick() {
     const results = await Promise.allSettled(
-      services.map((service) => service.tick())
+      services.map((service) => (service ? service.tick() : undefined))
     );
     const errors: (Error | undefined)[] = results.map((result) => {
       if (isRejected(result)) {

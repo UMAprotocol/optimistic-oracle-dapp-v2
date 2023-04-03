@@ -6,14 +6,55 @@ import {
 } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { Client } from "@libs/oracle-sdk-v2";
-import { oracles } from "@libs/oracle-sdk-v2/services";
-import type { Assertion, Assertions, Request, Requests } from "@shared/types";
+import { oracles, oracle1Ethers } from "@libs/oracle-sdk-v2/services";
+import type { Api } from "@libs/oracle-sdk-v2/services/oraclev1/ethers";
+import type { ServiceFactories, ServiceFactory } from "@libs/oracle-sdk-v2";
+import type { ProviderConfig } from "@/constants";
+import type {
+  Assertion,
+  Assertions,
+  Request,
+  Requests,
+  ChainId,
+  OracleType,
+} from "@shared/types";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useReducer, useState } from "react";
 
 const oraclesService = oracles.Factory(config.subgraphs);
 
-export { oraclesService };
+//TODO: hate this approach, will need to refactor in future, current services interface does not make it easy to define custom functions
+// this will be moved somewhere else in future pr.
+type EthersServicesList = [
+  ServiceFactories,
+  Partial<Record<OracleType, Partial<Record<ChainId, Api>>>>
+];
+const ethersServicesListInit: EthersServicesList = [[], {}];
+const [oracleEthersServices, oracleEthersApis] = config.providers
+  // TODO: this needs to be updated with oracle v2, v3, skinny based on config
+  .map((config): [ProviderConfig, ServiceFactory, Api] => [
+    config,
+    ...oracle1Ethers.Factory(config),
+  ])
+  .reduce(
+    (
+      result: EthersServicesList,
+      [config, service, api]
+    ): EthersServicesList => {
+      const apiRecords = {
+        ...result[1],
+        [config.type]: {
+          ...(result[1][config.type] || {}),
+          [config.chainId]: api,
+        },
+      };
+      return [[...result[0], service], apiRecords];
+    },
+    ethersServicesListInit
+  );
+
+// This exposes any api calls to services to other parts of app
+export { oraclesService, oracleEthersApis };
 
 export type OracleQueryList = OracleQueryUI[];
 export type OracleQueryTable = Record<string, OracleQueryUI>;
@@ -45,8 +86,11 @@ type DispatchAction<Type extends string, Data> = {
   type: Type;
   data: Data;
 };
+// replace many requests, used when querying data from the graph
 type ProcessRequestsAction = DispatchAction<"requests", Requests>;
+// same thing with assertions
 type ProcessAssertionsAction = DispatchAction<"assertions", Assertions>;
+
 type DispatchActions = ProcessRequestsAction | ProcessAssertionsAction;
 
 function DataReducerFactory<Input extends Request | Assertion>(
@@ -120,7 +164,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // its important this client only gets initialized once
-    Client([oraclesService], {
+    Client([oraclesService, ...oracleEthersServices], {
       requests: (requests) => dispatch({ type: "requests", data: requests }),
       assertions: (assertions) =>
         dispatch({ type: "assertions", data: assertions }),

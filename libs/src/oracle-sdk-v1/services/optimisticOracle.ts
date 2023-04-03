@@ -1,4 +1,4 @@
-import { optimisticOracleV2 } from "@libs/clients";
+import { optimisticOracle } from "@libs/clients";
 import type {
   BigNumberish,
   Provider,
@@ -20,11 +20,11 @@ import {
   isUnique,
 } from "../utils";
 
-type RequestPrice = optimisticOracleV2.RequestPrice;
-type ProposePrice = optimisticOracleV2.ProposePrice;
-type DisputePrice = optimisticOracleV2.DisputePrice;
-type Settle = optimisticOracleV2.Settle;
-type RawRequest = optimisticOracleV2.Request;
+type RequestPrice = optimisticOracle.RequestPrice;
+type ProposePrice = optimisticOracle.ProposePrice;
+type DisputePrice = optimisticOracle.DisputePrice;
+type Settle = optimisticOracle.Settle;
+type RawRequest = optimisticOracle.Request;
 
 export type OptimisticOracleEvent =
   | RequestPrice
@@ -35,7 +35,7 @@ export type OptimisticOracleEvent =
 export type { RequestPrice, ProposePrice, DisputePrice, Settle };
 
 export class OptimisticOracle implements OracleInterface {
-  private readonly contract: optimisticOracleV2.Instance;
+  private readonly contract: optimisticOracle.Instance;
   private readonly events: OptimisticOracleEvent[] = [];
   private requests: Record<string, Request> = {};
   constructor(
@@ -43,7 +43,7 @@ export class OptimisticOracle implements OracleInterface {
     protected address: string,
     public readonly chainId: number
   ) {
-    this.contract = optimisticOracleV2.connect(address, provider);
+    this.contract = optimisticOracle.connect(address, provider);
   }
   private upsertRequest = (request: RawRequest): Request => {
     const id = requestId(request);
@@ -103,7 +103,7 @@ export class OptimisticOracle implements OracleInterface {
         insertOrderedAscending(this.events, event, eventKey);
       }
     });
-    const { requests = {} } = optimisticOracleV2.getEventState(this.events);
+    const { requests = {} } = optimisticOracle.getEventState(this.events);
     Object.values(requests).map((request) => this.upsertRequest(request));
   };
   async fetchRequest({
@@ -143,7 +143,7 @@ export class OptimisticOracle implements OracleInterface {
     signer: Signer,
     { requester, identifier, timestamp, ancillaryData }: RequestKey
   ): Promise<TransactionResponse> {
-    const contract = optimisticOracleV2.connect(this.address, signer);
+    const contract = optimisticOracle.connect(this.address, signer);
     const tx = await contract.disputePrice(
       requester,
       identifier,
@@ -161,7 +161,7 @@ export class OptimisticOracle implements OracleInterface {
     { requester, identifier, timestamp, ancillaryData }: RequestKey,
     price: BigNumberish
   ): Promise<TransactionResponse> {
-    const contract = optimisticOracleV2.connect(this.address, signer);
+    const contract = optimisticOracle.connect(this.address, signer);
     const tx = await contract.proposePrice(
       requester,
       identifier,
@@ -179,7 +179,7 @@ export class OptimisticOracle implements OracleInterface {
     signer: Signer,
     { requester, identifier, timestamp, ancillaryData }: RequestKey
   ): Promise<TransactionResponse> {
-    const contract = optimisticOracleV2.connect(this.address, signer);
+    const contract = optimisticOracle.connect(this.address, signer);
     const tx = await contract.settle(
       requester,
       identifier,
@@ -205,7 +205,16 @@ export class OptimisticOracle implements OracleInterface {
     };
   }
   updateFromTransactionReceipt(receipt: TransactionReceipt): void {
-    const events = receipt.logs.map((log) => this.parseLog(log));
+    const events = receipt.logs
+      .map((log) => {
+        try {
+          return this.parseLog(log);
+        } catch (err) {
+          console.warn("Failed parsing log for oov1:", err);
+          return undefined;
+        }
+      })
+      .filter(Boolean);
     this.updateFromEvents(events as unknown[] as OptimisticOracleEvent[]);
   }
   listRequests(): Request[] {
