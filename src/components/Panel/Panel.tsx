@@ -44,6 +44,7 @@ export function Panel() {
     chainId,
     oracleType,
     title,
+    description,
     project,
     valueText,
     queryText,
@@ -220,8 +221,14 @@ export function Panel() {
             <AncillaryDataIcon />
             <SectionTitle>Additional Text Data</SectionTitle>
           </SectionTitleWrapper>
-          <SectionSubTitle>String</SectionSubTitle>
-          <DetailText>{queryText}</DetailText>
+          <SectionSubTitle>Description</SectionSubTitle>
+          <DetailText>{description}</DetailText>
+          {queryText !== "" && (
+            <>
+              <SectionSubTitle>String</SectionSubTitle>
+              <DetailText>{queryText}</DetailText>
+            </>
+          )}
           <SectionSubTitle>Bytes</SectionSubTitle>
           <DetailText>{queryTextHex}</DetailText>
         </DetailWrapper>

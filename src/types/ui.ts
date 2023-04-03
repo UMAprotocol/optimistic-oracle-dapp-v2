@@ -59,6 +59,7 @@ export type OracleQueryUI = {
   oracleType: OracleType;
   project: Project;
   title: ReactNode;
+  description: ReactNode;
   identifier: string;
   expiryType: ExpiryType | null;
   oracleAddress: Address;
@@ -400,4 +401,12 @@ export type IdentifierDetails = {
   identifier: string;
   summary: string;
   umipLink: UmipLink;
+};
+
+export type MetaData = {
+  title: string;
+  description: string;
+  umipUrl: string | undefined;
+  umipNumber: string | undefined;
+  project: Project;
 };
