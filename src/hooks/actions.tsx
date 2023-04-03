@@ -74,7 +74,12 @@ export function useAccountAction({
   const { chainId, actionType } = query ?? {};
   const { switchNetwork, isLoading: isNetworkLoading } = useSwitchNetwork();
   // do not display a button for settle queries
-  if (actionType !== "dispute" && actionType !== "propose") return undefined;
+  if (
+    actionType !== "dispute" &&
+    actionType !== "propose" &&
+    actionType !== "settle"
+  )
+    return undefined;
 
   // users wallet is connecting
   if (isWalletLoading) {
