@@ -12,6 +12,7 @@ interface Props {
   page: PageName;
   rows: OracleQueryUI[];
   isLoading: boolean;
+  findQueryIndex?: number | undefined;
 }
 /**
  * Table for showing oracle queries.
@@ -20,7 +21,12 @@ interface Props {
  * @param rows - the rows to show in the table
  * @param isLoading - whether the table is loading
  */
-export function OracleQueryTable({ page, rows, isLoading }: Props) {
+export function OracleQueryTable({
+  page,
+  rows,
+  isLoading,
+  findQueryIndex,
+}: Props) {
   const [rowsToShow, setRowsToShow] = useState(rows);
 
   useEffect(() => {
@@ -52,7 +58,11 @@ export function OracleQueryTable({ page, rows, isLoading }: Props) {
       </_Table>
       {rows.length > defaultResultsPerPage && !isLoading && (
         <PaginationWrapper>
-          <Pagination entries={rows} setEntriesToShow={setRowsToShow} />
+          <Pagination
+            entries={rows}
+            setEntriesToShow={setRowsToShow}
+            findIndex={findQueryIndex}
+          />
         </PaginationWrapper>
       )}
     </Wrapper>

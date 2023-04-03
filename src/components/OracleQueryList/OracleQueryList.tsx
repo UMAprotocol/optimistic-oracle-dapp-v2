@@ -11,6 +11,7 @@ interface Props {
   page: PageName;
   items: OracleQueryUI[];
   isLoading: boolean;
+  findQueryIndex?: number | undefined;
 }
 /**
  * Renders a list of oracle queries.
@@ -19,7 +20,12 @@ interface Props {
  * @param items The queries to render.
  * @param isLoading Whether the queries are still loading.
  */
-export function OracleQueryList({ page, items, isLoading }: Props) {
+export function OracleQueryList({
+  page,
+  items,
+  isLoading,
+  findQueryIndex,
+}: Props) {
   const [itemsToShow, setItemsToShow] = useState(items);
 
   useEffect(() => {
@@ -45,7 +51,11 @@ export function OracleQueryList({ page, items, isLoading }: Props) {
       )}
       {items.length > defaultResultsPerPage && !isLoading && (
         <PaginationWrapper>
-          <Pagination entries={items} setEntriesToShow={setItemsToShow} />
+          <Pagination
+            entries={items}
+            setEntriesToShow={setItemsToShow}
+            findIndex={findQueryIndex}
+          />
         </PaginationWrapper>
       )}
     </Wrapper>
