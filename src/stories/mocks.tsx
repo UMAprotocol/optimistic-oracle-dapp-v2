@@ -180,6 +180,7 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
   project: "UMA",
   title:
     "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",
+  description: "some description",
   identifier: "YES_OR_NO_QUERY",
   queryTextHex: `0x713a207469746c653a204469642045756c657220676574206861636b65643f202c206465736372697074696f6e3a205761732074686572652061206861636b2c206275672c2075736572206572726f722c206f72206d616c66656173616e636520726573756c74696e6720696e2061206c6f7373206f72206c6f636b2d7570206f6620746f6b656e7320696e2045756c6572202868747470733a2f2f6170702e65756c65722e6669`,
   queryText: `q: title: Did Euler get hacked? , description: Was there a hack,
@@ -426,12 +427,32 @@ export const handlersForAllPages = makeGraphqlHandlers({
     Ethereum: makeMockRequestGraphEntities({
       inputs: [
         {
-          identifier: "TEST_VERIFY",
+          identifier: "YES_OR_NO_QUERY",
+          ancillaryData:
+            utf8ToHex(`q: title: Test Polymarket Request with Early Request Option 1234
+          description: This is a test for the type of Polymarket request that DOES have an option for early request.
+          res_data: p1: 0, p2: 1, p3: 0.5, p4: -57896044618658097711785492504343953926634992332820282019728.792003956564819968
+          Where p1 corresponds to Something, p2 to Another, p3 to unknown, and p4 to an early request`),
           state: "Proposed",
           proposedPrice: makeEtherValueString(123),
         },
         {
-          identifier: "TEST_VERIFY",
+          identifier: "YES_OR_NO_QUERY",
+          ancillaryData: utf8ToHex(
+            `q: title: Cozy Finance Request
+            This will revert if a non-YES answer is proposed.
+            `
+          ),
+          state: "Disputed",
+          proposedPrice: makeEtherValueString(123),
+        },
+        {
+          identifier: "ACROSS-V2",
+          state: "Disputed",
+          proposedPrice: makeEtherValueString(123),
+        },
+        {
+          identifier: "SHERLOCK_CLAIM",
           state: "Disputed",
           proposedPrice: makeEtherValueString(123),
         },
