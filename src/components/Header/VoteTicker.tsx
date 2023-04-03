@@ -36,8 +36,6 @@ export function VoteTicker() {
     setTimeRemaining(formatMillisecondsUntilMidnight());
   }, 1000);
 
-  console.log({ data });
-
   if (!data) return null;
 
   return (

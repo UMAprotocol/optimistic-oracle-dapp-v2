@@ -1,7 +1,7 @@
 import { Button, Panel } from "@/components";
 import type { PanelContextState } from "@/contexts";
-import { PanelContext } from "@/contexts";
-import type { OracleQueryUI } from "@/types";
+import { PageContext, PanelContext } from "@/contexts";
+import type { PageName } from "@shared/types";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { makeMockOracleQueryUI } from "./mocks";
@@ -12,43 +12,44 @@ const meta: Meta<typeof Panel> = {
 
 export default meta;
 
-type Story = StoryObj<PanelContextState>;
-
-interface Props {
-  Component: typeof Panel;
-  content: OracleQueryUI | undefined;
+interface Args extends PanelContextState {
+  page: PageName;
 }
-function Wrapper({ Component, content }: Props) {
+
+type Story = StoryObj<Args>;
+
+function Wrapper({ content, page }: Args) {
   const [panelOpen, setPanelOpen] = useState(true);
 
   if (!content) return null;
 
   return (
-    <PanelContext.Provider
-      value={{
-        panelOpen,
-        openPanel: () => setPanelOpen(true),
-        closePanel: () => setPanelOpen(false),
-        content: {
-          ...content,
-        },
-      }}
-    >
-      <Button variant="primary" onClick={() => setPanelOpen(true)}>
-        Open panel
-      </Button>
-      <Component />
-    </PanelContext.Provider>
+    <PageContext.Provider value={{ page, setPage: () => null }}>
+      <PanelContext.Provider
+        value={{
+          panelOpen,
+          openPanel: () => Promise.resolve(setPanelOpen(true)),
+          closePanel: () => Promise.resolve(setPanelOpen(false)),
+          content,
+        }}
+      >
+        <Button variant="primary" onClick={() => setPanelOpen(true)}>
+          Open panel
+        </Button>
+        <Panel />
+      </PanelContext.Provider>
+    </PageContext.Provider>
   );
 }
 
 const Template: Story = {
-  render: (args) => <Wrapper Component={Panel} {...args} />,
+  render: (args) => <Wrapper {...args} />,
 };
 
 export const VerifyWithDispute: Story = {
   ...Template,
   args: {
+    page: "verify",
     content: makeMockOracleQueryUI({
       actionType: "dispute",
     }),
@@ -58,8 +59,19 @@ export const VerifyWithDispute: Story = {
 export const VerifyWithSettle: Story = {
   ...Template,
   args: {
+    page: "verify",
     content: makeMockOracleQueryUI({
       actionType: "settle",
+    }),
+  },
+};
+
+export const VerifyAlreadySettled: Story = {
+  ...Template,
+  args: {
+    page: "verify",
+    content: makeMockOracleQueryUI({
+      actionType: undefined,
     }),
   },
 };
@@ -67,8 +79,39 @@ export const VerifyWithSettle: Story = {
 export const Propose: Story = {
   ...Template,
   args: {
+    page: "propose",
     content: makeMockOracleQueryUI({
       actionType: "propose",
+    }),
+  },
+};
+
+export const ProposeAlreadyProposedWithDispute: Story = {
+  ...Template,
+  args: {
+    page: "propose",
+    content: makeMockOracleQueryUI({
+      actionType: "dispute",
+    }),
+  },
+};
+
+export const ProposeAlreadyProposedWithSettle: Story = {
+  ...Template,
+  args: {
+    page: "propose",
+    content: makeMockOracleQueryUI({
+      actionType: "settle",
+    }),
+  },
+};
+
+export const ProposeAlreadySettled: Story = {
+  ...Template,
+  args: {
+    page: "propose",
+    content: makeMockOracleQueryUI({
+      actionType: undefined,
     }),
   },
 };
