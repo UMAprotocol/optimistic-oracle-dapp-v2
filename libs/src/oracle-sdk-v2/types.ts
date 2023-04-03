@@ -20,7 +20,7 @@ export type Handlers = {
 
 export type Service = {
   tick: () => Promise<void>;
-};
+} | void;
 
 // this is the interface to implement a server, servers gather information about requests/assertions from any source
 export type ServiceFactory = (handlers: Handlers) => Service;

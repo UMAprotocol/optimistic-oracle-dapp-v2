@@ -67,6 +67,10 @@ export type Request = RequestKey &
     proposeBlockNumber: number;
     disputeBlockNumber: number;
     settleBlockNumber: number;
+    requestLogIndex: number;
+    proposeLogIndex: number;
+    disputeLogIndex: number;
+    settleLogIndex: number;
   }>;
 
 export interface EventState {
@@ -76,13 +80,12 @@ export interface EventState {
 export function requestId(
   request: Omit<RequestKey, "timestamp"> & { timestamp: BigNumberish }
 ): string {
-  // if enabling sorting, put timestamp first
+  // this matches how we generate ids in the subgraph
   return [
-    request.timestamp.toString(),
     request.identifier,
-    request.requester,
+    request.timestamp.toString(),
     request.ancillaryData,
-  ].join("!");
+  ].join("-");
 }
 
 export function reduceEvents(state: EventState, event: Event): EventState {
@@ -114,6 +117,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
         state: RequestState.Requested,
         requestTx: event.transactionHash,
         requestBlockNumber: event.blockNumber,
+        requestLogIndex: event.logIndex,
       };
       break;
     }
@@ -146,6 +150,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
         state: RequestState.Proposed,
         proposeTx: event.transactionHash,
         proposeBlockNumber: event.blockNumber,
+        proposeLogIndex: event.logIndex,
       };
       break;
     }
@@ -176,6 +181,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
         state: RequestState.Disputed,
         disputeTx: event.transactionHash,
         disputeBlockNumber: event.blockNumber,
+        disputeLogIndex: event.logIndex,
       };
       break;
     }
@@ -209,6 +215,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
         state: RequestState.Settled,
         settleTx: event.transactionHash,
         settleBlockNumber: event.blockNumber,
+        settleLogIndex: event.logIndex,
       };
       break;
     }

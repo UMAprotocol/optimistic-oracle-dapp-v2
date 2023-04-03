@@ -3,6 +3,7 @@ import type { Contract } from "ethers";
 import { BigNumber } from "ethers";
 import type Multicall2 from "./multicall2";
 import zip from "lodash/zip";
+import sortedLastIndexBy from "lodash/sortedLastIndexBy";
 
 export type BigNumberish = number | string | BigNumber;
 // check if a value is not null or undefined, useful for numbers which could be 0.
@@ -141,4 +142,52 @@ export async function estimateBlocksElapsed(
   const cushionMultiplier = cushionPercentage + 1.0;
   const averageBlockTime = await averageBlockTimeSeconds();
   return Math.floor((seconds * cushionMultiplier) / averageBlockTime);
+}
+
+/**
+ * eventKey. Make a unique and sortable identifier string for an event
+ *
+ * @param {Event} event
+ * @returns {string} - the unique id
+ */
+export function eventKey(event: {
+  blockNumber: BigNumberish;
+  transactionIndex: BigNumberish;
+  logIndex: BigNumberish;
+}): string {
+  return [
+    // we pad these because numbers of varying lengths will not sort correctly, ie "10" will incorrectly sort before "9", but "09" will be correct.
+    event.blockNumber.toString().padStart(16, "0"),
+    event.transactionIndex.toString().padStart(16, "0"),
+    event.logIndex?.toString().padStart(16, "0"),
+    // ~ is the last printable ascii char, so it does not interfere with sorting
+  ].join("~");
+}
+/**
+ * insertOrdered. Inserts items in an array maintaining sorted order, in this case lowest to highest. Does not check duplicates.
+ * Mainly used for caching all known events, in order of oldest to newest.
+ *
+ * @param {T[]} array
+ * @param {T} element
+ * @param {Function} orderBy
+ */
+export function insertOrderedAscending<T>(
+  array: T[],
+  element: T,
+  orderBy: (element: T) => string | number
+): T[] {
+  const index = sortedLastIndexBy(array, element, orderBy);
+  array.splice(index, 0, element);
+  return array;
+}
+export function isUnique<T>(
+  array: T[],
+  element: T,
+  id: (element: T) => string | number
+): boolean {
+  const elementId = id(element);
+  const found = array.find((next: T) => {
+    return id(next) === elementId;
+  });
+  return found === undefined;
 }
