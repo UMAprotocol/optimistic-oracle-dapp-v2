@@ -133,11 +133,19 @@ function filtersReducer(queries: OracleQueryUI[]) {
   return function reducer(oldState: State, action: Action) {
     switch (action.type) {
       case "make-entries": {
-        const newState = cloneDeep(initialState);
+        const newState = cloneDeep(oldState);
 
         newState.filters.project.All.count = queries.length;
         newState.filters.chainName.All.count = queries.length;
         newState.filters.oracleType.All.count = queries.length;
+
+        Object.values(newState.filters).forEach((filter) => {
+          Object.entries(filter).forEach(([itemName, item]) => {
+            if (itemName !== "All") {
+              item.count = 0;
+            }
+          });
+        });
 
         queries.forEach((query) => {
           const { project, chainName, oracleType } = query;
