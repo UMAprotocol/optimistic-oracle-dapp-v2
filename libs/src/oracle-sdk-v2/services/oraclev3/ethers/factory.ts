@@ -2,6 +2,7 @@ import Events from "events";
 import { ethers } from "ethers";
 import type { Interface } from "@ethersproject/abi";
 import { assertAddress } from "@shared/utils";
+import { parseIdentifier } from "@libs/utils";
 import type { Assertion as SharedAssertion, ChainId } from "@shared/types";
 import type { Address } from "wagmi";
 import type {
@@ -67,7 +68,7 @@ const ConvertToSharedAssertion =
     };
     if (claim) result.claim = claim;
     if (asserter) result.asserter = asserter;
-    if (identifier) result.identifier = identifier;
+    if (identifier) result.identifier = parseIdentifier(identifier);
     if (callbackRecipient) result.callbackRecipient = callbackRecipient;
     if (escalationManagerSettings?.escalationManager)
       result.escalationManager = escalationManagerSettings.escalationManager;

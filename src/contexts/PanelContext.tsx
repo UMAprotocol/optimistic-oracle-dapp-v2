@@ -3,6 +3,7 @@ import type { OracleQueryUI } from "@/types";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useState } from "react";
+import { useOracleDataContext } from "@/hooks";
 
 export interface PanelContextState {
   panelOpen: boolean;
@@ -26,7 +27,8 @@ export const PanelContext = createContext<PanelContextState>(
 );
 
 export function PanelProvider({ children }: { children: ReactNode }) {
-  const [content, setContent] = useState<OracleQueryUI | undefined>();
+  const { all } = useOracleDataContext();
+  const [id, setId] = useState<string | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
   const router = useRouter();
 
@@ -55,9 +57,11 @@ export function PanelProvider({ children }: { children: ReactNode }) {
       await router.push({ query });
     }
 
-    setContent(content);
+    setId(content.id);
     setPanelOpen(true);
   }
+  const content: OracleQueryUI | undefined =
+    all !== undefined && id !== undefined ? all[id] : undefined;
 
   async function closePanel() {
     await router.push({ query: {} });

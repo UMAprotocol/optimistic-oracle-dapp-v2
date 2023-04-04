@@ -8,10 +8,10 @@ import {
   connectingWallet,
   dispute,
   disputing,
+  disputed,
   insufficientBalance,
   propose,
   settle,
-  settled,
   settling,
 } from "@/constants";
 import { handleNotifications } from "@/helpers";
@@ -50,17 +50,17 @@ export function usePrimaryPanelAction({
   const proposeAction = useProposeAction({ query, proposePriceInput });
   const disputeAction = useDisputeAction({ query });
   const disputeAssertionAction = useDisputeAssertionAction({ query });
-  // TODO: work out settle logic. need to clarify how we can detect when to show settle, and interactions
-  // between change chain action, settle action and showing settled when on wrong chain
-  // const settlePriceAction = useSettlePriceAction({ query });
-  // const settleAssertionAction = useSettleAssertionAction({ query });
+  const settlePriceAction = useSettlePriceAction({ query });
+  const settleAssertionAction = useSettleAssertionAction({ query });
 
   return (
     accountAction ||
     approveBondAction ||
     proposeAction ||
     disputeAction ||
-    disputeAssertionAction
+    disputeAssertionAction ||
+    settlePriceAction ||
+    settleAssertionAction
   );
 }
 
@@ -238,7 +238,8 @@ export function useProposeAction({
           ]?.updateFromTransactionReceipt(receipt);
       })
       .catch(console.error);
-  }, [proposePriceTransaction, chainId, query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [proposePriceTransaction]);
 
   if (proposePriceParams === undefined) return undefined;
 
@@ -305,7 +306,8 @@ export function useDisputeAction({
           ]?.updateFromTransactionReceipt(receipt);
       })
       .catch(console.error);
-  }, [disputePriceTransaction, chainId, query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disputePriceTransaction]);
 
   if (disputePriceParams === undefined) return undefined;
 
@@ -364,7 +366,8 @@ export function useDisputeAssertionAction({
           ]?.updateFromTransactionReceipt(receipt);
       })
       .catch(console.error);
-  }, [disputeAssertionTransaction, chainId, query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disputeAssertionTransaction]);
 
   if (disputeAssertionParams === undefined) return undefined;
 
@@ -424,7 +427,8 @@ export function useSettlePriceAction({
           ]?.updateFromTransactionReceipt(receipt);
       })
       .catch(console.error);
-  }, [settlePriceTransaction, chainId, query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settlePriceTransaction]);
 
   if (settlePriceParams === undefined) return undefined;
 
@@ -440,10 +444,11 @@ export function useSettlePriceAction({
       disabled: true,
     };
   }
-  // unique to settle, if we have an error preparing the transaction, this usually means the request has been settled
+  // unique to settle, if we have an error preparing the transaction,
+  // this means this is probably disputed, but no answer available from dvm yet
   if (prepareSettlePriceError) {
     return {
-      title: settled,
+      title: disputed,
       disabled: true,
     };
   }
@@ -487,7 +492,8 @@ export function useSettleAssertionAction({
           ]?.updateFromTransactionReceipt(receipt);
       })
       .catch(console.error);
-  }, [settleAssertionTransaction, chainId, query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settleAssertionTransaction]);
 
   if (settleAssertionParams === undefined) return undefined;
 
@@ -503,10 +509,11 @@ export function useSettleAssertionAction({
       disabled: true,
     };
   }
-  // unique to settle, if we have an error preparing the transaction, this usually means the request has been settled
+  // unique to settle, if we have an error preparing the transaction,
+  // this means this is probably disputed, but no answer available from dvm yet
   if (prepareSettleAssertionError) {
     return {
-      title: settled,
+      title: disputed,
       disabled: true,
     };
   }

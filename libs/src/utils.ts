@@ -1,6 +1,6 @@
 import assert from "assert";
 import type { Contract } from "ethers";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import type Multicall2 from "./multicall2";
 import zip from "lodash/zip";
 import sortedLastIndexBy from "lodash/sortedLastIndexBy";
@@ -190,4 +190,11 @@ export function isUnique<T>(
     return id(next) === elementId;
   });
   return found === undefined;
+}
+
+export function parseIdentifier(identifier: string | null | undefined): string {
+  // replace non ascii chars
+  return ethers.utils
+    .toUtf8String(identifier || [])
+    .replace(/[^\x20-\x7E]+/g, "");
 }
