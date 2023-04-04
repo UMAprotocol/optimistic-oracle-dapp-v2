@@ -60,22 +60,23 @@ export type OracleQueryUI = {
   project: Project;
   title: ReactNode;
   description: ReactNode;
-  identifier: string;
   expiryType: ExpiryType | null;
   oracleAddress: Address;
+  // not always available with assertions
+  identifier?: string;
   // price requests query text is the ancillary data
   // for assertions it is the `claim` field
-  queryTextHex: string;
-  queryText: string;
+  queryTextHex?: string;
+  queryText?: string;
   // for price requests the value text is null until a price is proposed. Then it is the proposed price. After a price is settled it is the settled price.
   // for assertions the value text is null until settlement, after which it is the `settlementResolution` field
   valueText: string | null;
-  timeUTC: string;
-  timeUNIX: number;
-  timeMilliseconds: number;
-  timeFormatted: string;
-  livenessEndsMilliseconds: number;
-  formattedLivenessEndsIn: string;
+  timeUTC?: string;
+  timeUNIX?: number;
+  timeMilliseconds?: number;
+  timeFormatted?: string;
+  livenessEndsMilliseconds?: number;
+  formattedLivenessEndsIn?: string;
   actionType: ActionType | null;
   moreInformation: MoreInformationItem[];
   // for oo-v1 bond is the final fee

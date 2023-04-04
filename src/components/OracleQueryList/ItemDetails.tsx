@@ -34,7 +34,8 @@ export function ItemDetails({
         <ItemDetailsText>Proposal/Assertion</ItemDetailsText>
         <ItemDetailsText>{valueText}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
-      {livenessEndsMilliseconds !== null && (
+      {livenessEndsMilliseconds !== undefined &&
+      timeMilliseconds !== undefined ? (
         <ItemDetailsInnerWrapper>
           <ItemDetailsText>Challenge Period Left</ItemDetailsText>
           <LivenessProgressBar
@@ -44,7 +45,7 @@ export function ItemDetails({
             marginBottom={0}
           />
         </ItemDetailsInnerWrapper>
-      )}
+      ) : undefined}
     </ItemDetailsWrapper>
   );
 

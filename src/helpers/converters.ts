@@ -526,11 +526,13 @@ function makeMoreInformationList(
   }
 
   if (isAssertion(query)) {
-    moreInformation.push({
-      title: "Asserter",
-      text: query.asserter,
-      href: makeBlockExplorerLink(query.asserter, query.chainId, "address"),
-    });
+    if (query.asserter) {
+      moreInformation.push({
+        title: "Asserter",
+        text: query.asserter,
+        href: makeBlockExplorerLink(query.asserter, query.chainId, "address"),
+      });
+    }
     if (query.escalationManager) {
       moreInformation.push({
         title: "Escalation Manager",
@@ -813,18 +815,23 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   } = assertion;
   const oracleType = "Optimistic Oracle V3";
   const id = assertionId;
-  const livenessEndsMilliseconds = getLivenessEnds(expirationTime);
-  const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
+  let livenessEndsMilliseconds = undefined;
+  let formattedLivenessEndsIn = undefined;
+  if (expirationTime) {
+    livenessEndsMilliseconds = getLivenessEnds(expirationTime);
+    formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
+  }
   const chainName = getChainName(chainId);
-  const timeUTC = toTimeUTC(assertionTimestamp);
-  const timeUNIX = toTimeUnix(assertionTimestamp);
-  const timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
-  const timeFormatted = toTimeFormatted(assertionTimestamp);
   const valueText = settlementResolution
     ? settlementResolution.toString()
     : null;
-  const queryTextHex = claim;
-  const queryText = safeDecodeHexString(claim);
+  let queryTextHex = undefined;
+  let queryText = undefined;
+  if (claim) {
+    queryTextHex = claim;
+    queryText = safeDecodeHexString(claim);
+  }
+
   const title = queryText;
   const description = queryText;
   const project = "UMA";
@@ -861,6 +868,14 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   const proposePriceParams = undefined;
   const disputePriceParams = undefined;
   const settlePriceParams = undefined;
+
+  let timeUTC, timeUNIX, timeMilliseconds, timeFormatted;
+  if (assertionTimestamp) {
+    timeUTC = toTimeUTC(assertionTimestamp);
+    timeUNIX = toTimeUnix(assertionTimestamp);
+    timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
+    timeFormatted = toTimeFormatted(assertionTimestamp);
+  }
 
   return {
     id,

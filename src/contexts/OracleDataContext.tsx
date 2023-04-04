@@ -6,7 +6,11 @@ import {
 } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { Client } from "@libs/oracle-sdk-v2";
-import { oracles, oracle1Ethers } from "@libs/oracle-sdk-v2/services";
+import {
+  oracles,
+  oracle1Ethers,
+  oracle3Ethers,
+} from "@libs/oracle-sdk-v2/services";
 import type { Api } from "@libs/oracle-sdk-v2/services/oraclev1/ethers";
 import type { ServiceFactories, ServiceFactory } from "@libs/oracle-sdk-v2";
 import type { ProviderConfig } from "@/constants";
@@ -32,10 +36,15 @@ type EthersServicesList = [
 const ethersServicesListInit: EthersServicesList = [[], {}];
 const [oracleEthersServices, oracleEthersApis] = config.providers
   // TODO: this needs to be updated with oracle v2, v3, skinny based on config
-  .map((config): [ProviderConfig, ServiceFactory, Api] => [
-    config,
-    ...oracle1Ethers.Factory(config),
-  ])
+  .map((config): [ProviderConfig, ServiceFactory, Api] => {
+    if (config.type === "Optimistic Oracle V1")
+      return [config, ...oracle1Ethers.Factory(config)];
+    if (config.type === "Optimistic Oracle V3")
+      return [config, ...oracle3Ethers.Factory(config)];
+    throw new Error(
+      `App configured with unsupported oracle type: ${config.type}`
+    );
+  })
   .reduce(
     (
       result: EthersServicesList,
