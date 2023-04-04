@@ -10,9 +10,9 @@ export function Tooltip({ children, content }: Props) {
   return (
     <RadixTooltip.Provider delayDuration={100}>
       <RadixTooltip.Root>
-        <Trigger asChild>
-          <span>{children}</span>
-        </Trigger>
+        <TriggerWrapper asChild>
+          <Trigger>{children}</Trigger>
+        </TriggerWrapper>
         <RadixTooltip.Portal>
           <Content sideOffset={4} alignOffset={4}>
             {content}
@@ -69,6 +69,7 @@ const slideLeftAndFade = keyframes`
 `;
 
 const Content = styled(RadixTooltip.Content)`
+  max-width: 400px;
   padding: 20px;
   font: var(--body-sm);
   color: var(--dark-text);
@@ -94,6 +95,12 @@ const Content = styled(RadixTooltip.Content)`
   }
 `;
 
-const Trigger = styled(RadixTooltip.Trigger)``;
+const TriggerWrapper = styled(RadixTooltip.Trigger)``;
+
+const Trigger = styled.span`
+  button :is(:disabled) {
+    pointer-events: none;
+  }
+`;
 
 const Arrow = styled(RadixTooltip.Arrow)``;
