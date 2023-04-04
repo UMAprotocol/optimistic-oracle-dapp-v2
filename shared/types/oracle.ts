@@ -28,13 +28,14 @@ export type Assertion = {
   chainId: ChainId;
   oracleAddress: Address;
   oracleType: OracleType;
-  id: string;
+  id:string;
+  assertionId: string;
+} & Partial<{
   identifier: string;
   asserter: string;
   claim: string;
   assertionTimestamp: string;
-  assertionId: string;
-} & Partial<ParsedOOV3GraphEntity>;
+}> & Partial<ParsedOOV3GraphEntity>;
 
 export type Requests = Request[];
 

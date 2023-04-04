@@ -356,8 +356,15 @@ export function useDisputeAssertionAction({
       pending: <>Disputing assertion</>,
       success: <>Disputed assertion</>,
       error: <>Failed to dispute assertion</>,
-    }).catch(console.error);
-  }, [disputeAssertionTransaction, chainId]);
+    })
+      .then((receipt) => {
+        if (receipt && query)
+          oracleEthersApis?.[query.oracleType]?.[
+            chainId
+          ]?.updateFromTransactionReceipt(receipt);
+      })
+      .catch(console.error);
+  }, [disputeAssertionTransaction, chainId, query]);
 
   if (disputeAssertionParams === undefined) return undefined;
 
@@ -409,8 +416,15 @@ export function useSettlePriceAction({
       pending: <>Settling price</>,
       success: <>Settled price</>,
       error: <>Failed to settle price</>,
-    }).catch(console.error);
-  }, [settlePriceTransaction, chainId]);
+    })
+      .then((receipt) => {
+        if (receipt && query)
+          oracleEthersApis?.[query.oracleType]?.[
+            chainId
+          ]?.updateFromTransactionReceipt(receipt);
+      })
+      .catch(console.error);
+  }, [settlePriceTransaction, chainId, query]);
 
   if (settlePriceParams === undefined) return undefined;
 
@@ -465,8 +479,15 @@ export function useSettleAssertionAction({
       pending: <>Settling assertion</>,
       success: <>Settled assertion</>,
       error: <>Failed to settle assertion</>,
-    }).catch(console.error);
-  }, [settleAssertionTransaction, chainId]);
+    })
+      .then((receipt) => {
+        if (receipt && query)
+          oracleEthersApis?.[query.oracleType]?.[
+            chainId
+          ]?.updateFromTransactionReceipt(receipt);
+      })
+      .catch(console.error);
+  }, [settleAssertionTransaction, chainId, query]);
 
   if (settleAssertionParams === undefined) return undefined;
 
