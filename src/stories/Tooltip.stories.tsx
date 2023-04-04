@@ -1,6 +1,7 @@
 import { Button, Tooltip } from "@/components";
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, waitFor, within } from "@storybook/testing-library";
+import Uma from "public/assets/logo.svg";
 
 const meta: Meta<typeof Tooltip> = {
   component: Tooltip,
@@ -8,7 +9,10 @@ const meta: Meta<typeof Tooltip> = {
     (Story) => (
       <div
         style={{
-          padding: 100,
+          width: "100vh",
+          height: "200vh",
+          display: "grid",
+          padding: "100px",
         }}
       >
         <Story />
@@ -71,6 +75,7 @@ export const ComplexContent: Story = {
           suscipit dolor amet alias tenetur architecto libero? Natus nam esse
           eum pariatur delectus inventore ab?
         </p>
+        <Uma />
       </div>
     ),
   },
