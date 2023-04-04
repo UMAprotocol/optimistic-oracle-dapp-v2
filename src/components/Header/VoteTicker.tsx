@@ -9,8 +9,10 @@ import { useInterval } from "usehooks-ts";
 
 export function VoteTicker() {
   const { data } = useVotingInfo();
-  const [timeRemaining, setTimeRemaining] = useState("--:--:--");
-  const isActive = !!data && data.activeRequests > 0;
+  const [timeRemaining, setTimeRemaining] = useState(
+    formatMillisecondsUntilMidnight()
+  );
+  const isActive = !!data && data.activeRequests > 0 && timeRemaining !== "";
 
   function getMillisecondsUntilMidnight() {
     const now = new Date();
@@ -33,6 +35,8 @@ export function VoteTicker() {
   useInterval(() => {
     setTimeRemaining(formatMillisecondsUntilMidnight());
   }, 1000);
+
+  if (!data) return null;
 
   return (
     <Wrapper>

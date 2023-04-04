@@ -1,6 +1,7 @@
 import { config } from "@/constants";
 import {
   assertionToOracleQuery,
+  getPageForQuery,
   requestToOracleQuery,
   sortQueriesByDate,
 } from "@/helpers";
@@ -127,16 +128,8 @@ function DataReducerFactory<Input extends Request | Assertion>(
       settled: [],
     };
     const queries = Object.values(all).reduce((result, query) => {
-      if (query.actionType === "propose") {
-        result.propose.push(query);
-      } else if (
-        query.actionType === "dispute" ||
-        query.actionType === "settle"
-      ) {
-        result.verify.push(query);
-      } else {
-        result.settled.push(query);
-      }
+      const pageForQuery = getPageForQuery(query);
+      result[pageForQuery].push(query);
       return result;
     }, init);
 

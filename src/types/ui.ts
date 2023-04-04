@@ -1,3 +1,4 @@
+import type { actionTitles } from "@/constants";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type {
   disputeAssertionAbi,
@@ -19,6 +20,10 @@ import type {
 import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
 import type { Address, erc20ABI } from "wagmi";
+
+export type ActionTitles = typeof actionTitles;
+
+export type ActionTitle = ActionTitles[number];
 
 export type ActionType = "dispute" | "propose" | "settle" | null;
 

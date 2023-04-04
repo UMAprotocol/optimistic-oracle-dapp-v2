@@ -7,7 +7,11 @@ import type {
   requestStates,
 } from "@shared/constants";
 import type { Address } from "wagmi";
-import {ParsedOOV1GraphEntity,ParsedOOV2GraphEntity,ParsedOOV3GraphEntity} from "./graphql";
+import type {
+  ParsedOOV1GraphEntity,
+  ParsedOOV2GraphEntity,
+  ParsedOOV3GraphEntity,
+} from "./graphql";
 
 export type Request = {
   chainId: ChainId;
@@ -24,7 +28,7 @@ export type Assertion = {
   chainId: ChainId;
   oracleAddress: Address;
   oracleType: OracleType;
-  id:string,
+  id:string;
   assertionId: string;
 } & Partial<{
   identifier: string;

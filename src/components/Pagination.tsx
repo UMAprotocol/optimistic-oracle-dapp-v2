@@ -14,13 +14,18 @@ import styled from "styled-components";
 interface Props<Entry> {
   entries: Entry[];
   setEntriesToShow: (entries: Entry[]) => void;
+  findIndex?: number;
 }
 /**
  * Handles pagination for a list of entries
  * @param entries - the entries to paginate (not the entries to show)
  * @param setEntriesToShow - the function to call when the entries to show change
  */
-export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
+export function Pagination<Entry>({
+  entries,
+  setEntriesToShow,
+  findIndex,
+}: Props<Entry>) {
   const [pageNumber, setPageNumber] = useState(1);
   const [resultsPerPage, setResultsPerPage] = useState(defaultResultsPerPage);
   const numberOfEntries = entries.length;
@@ -43,6 +48,17 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
     updateEntries();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entries]);
+
+  useEffect(() => {
+    if (!findIndex || findIndex === -1) return;
+
+    const newPageNumber = getPageNumberOfItem(findIndex);
+
+    if (!newPageNumber) return;
+
+    setPageNumber(newPageNumber);
+    updateEntries({ newPageNumber });
+  }, [findIndex, resultsPerPage, entries]);
 
   function getNumberOfButtons() {
     if (numberOfPages === defaultNumberOfButtons + 1) {
@@ -152,6 +168,13 @@ export function Pagination<Entry>({ entries, setEntriesToShow }: Props<Entry>) {
       resultsPerPageOptions.find((option) => option.value === resultsPerPage) ??
       resultsPerPageOptions[0]
     );
+  }
+
+  function getPageNumberOfItem(itemIndex: number | undefined) {
+    if (!itemIndex) return;
+    const pageNumber = Math.ceil((itemIndex + 1) / resultsPerPage);
+
+    return pageNumber;
   }
 
   return (

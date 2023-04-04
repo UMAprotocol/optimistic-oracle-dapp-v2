@@ -100,6 +100,7 @@ const Button = styled.button`
   justify-content: var(--justify-content, center);
   height: 45px;
   min-width: 190px;
+  width: 100%;
   padding-inline: 20px;
   border-radius: 4px;
   font: var(--body-sm);
