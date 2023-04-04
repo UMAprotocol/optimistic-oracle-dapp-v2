@@ -1,3 +1,4 @@
+import * as RadixTooltip from "@radix-ui/react-tooltip";
 import type { ReactNode } from "react";
 
 interface Props {
@@ -6,9 +7,18 @@ interface Props {
 }
 export function Tooltip({ children, content }: Props) {
   return (
-    <div>
-      {children}
-      {content}
-    </div>
+    <RadixTooltip.Provider>
+      <RadixTooltip.Root>
+        <RadixTooltip.Trigger asChild>
+          <span>{children}</span>
+        </RadixTooltip.Trigger>
+        <RadixTooltip.Portal>
+          <RadixTooltip.Content>
+            {content}
+            <RadixTooltip.Arrow />
+          </RadixTooltip.Content>
+        </RadixTooltip.Portal>
+      </RadixTooltip.Root>
+    </RadixTooltip.Provider>
   );
 }
