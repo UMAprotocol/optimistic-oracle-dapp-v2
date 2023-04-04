@@ -1,4 +1,5 @@
 import { hideOnTabletAndUnder, showOnTabletAndUnder } from "@/helpers";
+import NextLink from "next/link";
 import Hamburger from "public/assets/icons/hamburger.svg";
 import Logo from "public/assets/logo.svg";
 import { useState } from "react";
@@ -20,7 +21,7 @@ export function NavBar() {
 
   return (
     <Wrapper>
-      <HomeButton>
+      <HomeButton href="/">
         <LogoIcon />
         <HomeButtonText>ORACLE</HomeButtonText>
       </HomeButton>
@@ -64,12 +65,14 @@ const MobileMenuWrapper = styled.div`
 
 const LogoIcon = styled(Logo)``;
 
-const HomeButton = styled.button`
+const HomeButton = styled(NextLink)`
   display: flex;
   align-items: center;
   gap: 18px;
   background: none;
   border: none;
+  text-decoration: none;
+  color: var(--white);
   transition: opacity var(--animation-duration);
 
   &:hover {
