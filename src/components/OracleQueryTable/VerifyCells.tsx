@@ -12,7 +12,8 @@ export function VerifyCells({
       <TD>
         <Text>{valueText}</Text>
       </TD>
-      {livenessEndsMilliseconds !== undefined ? (
+      {livenessEndsMilliseconds !== undefined &&
+      timeMilliseconds !== undefined ? (
         <TD>
           <LivenessProgressBar
             startTime={timeMilliseconds}

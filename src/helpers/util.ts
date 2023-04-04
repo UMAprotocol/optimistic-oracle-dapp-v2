@@ -106,8 +106,14 @@ export function sortQueriesByDate({
   settled: OracleQueryList;
 }) {
   return {
-    verify: verify.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
-    propose: propose.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
-    settled: settled.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
+    verify: verify.sort(
+      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
+    ),
+    propose: propose.sort(
+      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
+    ),
+    settled: settled.sort(
+      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
+    ),
   };
 }

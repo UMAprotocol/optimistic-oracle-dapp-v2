@@ -25,12 +25,13 @@ export type Assertion = {
   oracleAddress: Address;
   oracleType: OracleType;
   id:string,
+  assertionId: string;
+} & Partial<{
   identifier: string;
   asserter: string;
   claim: string;
   assertionTimestamp: string;
-  assertionId: string;
-} & Partial<ParsedOOV3GraphEntity>;
+}> & Partial<ParsedOOV3GraphEntity>;
 
 export type Requests = Request[];
 
