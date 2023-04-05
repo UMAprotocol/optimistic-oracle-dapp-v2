@@ -31,7 +31,7 @@ export function OracleQueries({ page }: Props) {
     if (queries !== undefined) {
       setIsLoading(false);
     }
-  }, 1);
+  }, 3000);
 
   const listProps = {
     page,
