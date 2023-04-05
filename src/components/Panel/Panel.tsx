@@ -134,7 +134,7 @@ export function Panel() {
 
     setMessage(message);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, primaryAction, content]);
+  }, [page, primaryAction]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
