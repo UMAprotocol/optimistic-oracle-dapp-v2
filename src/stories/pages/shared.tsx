@@ -1,4 +1,4 @@
-import { Layout } from "@/components";
+import { Layout, Notifications } from "@/components";
 import {
   ErrorProvider,
   FilterAndSearchProvider,
@@ -61,6 +61,7 @@ export const NotificationsDecorator: Decorator<PageStoryProps> = (
       }}
     >
       <Story {...args} />
+      <Notifications />
     </NotificationsContext.Provider>
   );
 };

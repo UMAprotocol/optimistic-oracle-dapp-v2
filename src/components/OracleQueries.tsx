@@ -1,4 +1,4 @@
-import { OracleQueryList, OracleQueryTable } from "@/components";
+import { NoQueries, OracleQueryList, OracleQueryTable } from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import { useFilterAndSearchContext } from "@/hooks";
 import type { PageName } from "@shared/types";
@@ -41,14 +41,22 @@ export function OracleQueries({ page }: Props) {
     findQueryIndex,
   };
 
+  const hasNoQueries = !isLoading && queries.length === 0;
+
   return (
     <>
-      <DesktopWrapper>
-        <OracleQueryTable {...listProps} />
-      </DesktopWrapper>
-      <MobileWrapper>
-        <OracleQueryList {...listProps} />
-      </MobileWrapper>
+      {hasNoQueries ? (
+        <NoQueries page={page} />
+      ) : (
+        <>
+          <DesktopWrapper>
+            <OracleQueryTable {...listProps} />
+          </DesktopWrapper>
+          <MobileWrapper>
+            <OracleQueryList {...listProps} />
+          </MobileWrapper>
+        </>
+      )}
     </>
   );
 }

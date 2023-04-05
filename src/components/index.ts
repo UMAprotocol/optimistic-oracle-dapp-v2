@@ -14,6 +14,7 @@ export { Header } from "./Header/Header";
 export { IconWrapper } from "./IconWrapper";
 export { Layout } from "./Layout";
 export { LoadingSpinner } from "./LoadingSpinner";
+export { NoQueries } from "./NoQueries";
 export { Notification } from "./Notification";
 export { Notifications } from "./Notifications";
 export { OracleQueries } from "./OracleQueries";

@@ -422,6 +422,8 @@ export function makeGraphqlHandlers(args: {
   return handlers;
 }
 
+export const handlersWithNoData = makeGraphqlHandlers({});
+
 export const handlersForAllPages = makeGraphqlHandlers({
   v1: {
     Ethereum: makeMockRequestGraphEntities({

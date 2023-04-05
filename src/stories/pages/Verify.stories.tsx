@@ -3,6 +3,7 @@ import type { Meta } from "@storybook/react";
 import {
   defaultMockNotifications,
   handlersForAllPages,
+  handlersWithNoData,
   makeMockRouterPathname,
 } from "../mocks";
 import { NotificationsDecorator, Template } from "./shared";
@@ -29,27 +30,35 @@ export default meta;
  */
 const VerifyTemplate: PageStory = {
   ...Template,
-  parameters: {
-    nextjs: makeMockRouterPathname(),
-  },
-};
-
-export const Verify: PageStory = {
-  ...VerifyTemplate,
   args: {
     Component: VerifyPage,
   },
   parameters: {
+    nextjs: makeMockRouterPathname(),
     msw: {
       handlers: handlersForAllPages,
     },
   },
 };
 
+export const Default: PageStory = {
+  ...VerifyTemplate,
+};
+
+export const WithNoData: PageStory = {
+  ...VerifyTemplate,
+  parameters: {
+    ...VerifyTemplate.parameters,
+    msw: {
+      handlers: handlersWithNoData,
+    },
+  },
+};
+
 export const WithNotifications: PageStory = {
-  ...Verify,
+  ...VerifyTemplate,
   args: {
-    ...Verify.args,
+    ...VerifyTemplate.args,
     notifications: defaultMockNotifications,
   },
   decorators: [NotificationsDecorator],
