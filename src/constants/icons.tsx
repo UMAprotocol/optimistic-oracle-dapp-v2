@@ -1,13 +1,13 @@
 import ETH from "public/assets/icons/currencies/eth.svg";
 import USDC from "public/assets/icons/currencies/usdc.svg";
+import Across from "public/assets/icons/projects/across.svg";
 import Cozy from "public/assets/icons/projects/cozy.svg";
 import Polymarket from "public/assets/icons/projects/polymarket.svg";
-import UMA from "public/assets/icons/projects/uma.svg";
-import Across from "public/assets/icons/projects/across.svg";
 import Sherlock from "public/assets/icons/projects/sherlock.svg";
+import Unknown from "public/assets/icons/projects/unknown.svg";
 
 export const projectIcons: Record<string, JSX.Element> = {
-  UMA: <UMA />,
+  Unknown: <Unknown />,
   "Cozy Finance": <Cozy />,
   Polymarket: <Polymarket />,
   Across: <Across />,
@@ -20,7 +20,7 @@ export const currencyIcons: Record<string, JSX.Element> = {
 };
 
 export function getProjectIcon(project: string | null | undefined) {
-  if (!project || !(project in projectIcons)) return <UMA />;
+  if (!project || !(project in projectIcons)) return <Unknown />;
   return projectIcons[project];
 }
 
