@@ -10,10 +10,10 @@ interface Props {
 export function NoQueries({ page }: Props) {
   const titleText =
     page === "settled"
-      ? "There are no settled queries yet"
+      ? "No settled queries yet"
       : page === "verify"
-      ? "There are no queries to verify right now"
-      : "There are no queries to propose answers to right now";
+      ? "No queries to verify right now"
+      : "No queries to propose answers to right now";
 
   const verifyLink = <Link href="/verify">verify</Link>;
   const proposeLink = <Link href="/propose">propose</Link>;
@@ -47,7 +47,7 @@ export function NoQueries({ page }: Props) {
   return (
     <Wrapper>
       <Title>{titleText}</Title>
-      <Text>Come back soon or check out the {otherPageLinks} page.</Text>
+      <Text>Come back soon, or check out the {otherPageLinks} page.</Text>
       <ImageWrapper>
         <NoQueriesImage />
       </ImageWrapper>
@@ -56,16 +56,32 @@ export function NoQueries({ page }: Props) {
 }
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background: transparent;
+  padding-top: 40px;
+  padding-inline: var(--page-padding);
   color: var(--blue-grey-500);
 `;
 
 const Title = styled.h1`
   font: var(--header-xs);
+  text-align: center;
+  margin-bottom: 16px;
 `;
 
-const Text = styled.p``;
+const Text = styled.p`
+  text-align: center;
+  margin-bottom: 32px;
+`;
 
-const Link = styled(NextLink)``;
+const Link = styled(NextLink)`
+  color: var(--red-500);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 const ImageWrapper = styled.div``;
