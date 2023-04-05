@@ -7,13 +7,23 @@ import {
   PanelBase,
 } from "@/components";
 import {
+  blueGrey500,
   blueGrey700,
+  connectWallet,
   getProjectIcon,
   red500,
   smallMobileAndUnder,
 } from "@/constants";
-import { addOpacityToHsla, capitalizeFirstLetter } from "@/helpers";
-import { usePanelContext, usePrimaryPanelAction } from "@/hooks";
+import {
+  addOpacityToHsla,
+  capitalizeFirstLetter,
+  makeUrlParamsForQuery,
+} from "@/helpers";
+import {
+  usePageContext,
+  usePanelContext,
+  usePrimaryPanelAction,
+} from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Info from "public/assets/icons/info.svg";
@@ -21,14 +31,15 @@ import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import Warning from "public/assets/icons/warning.svg";
-import type { CSSProperties } from "react";
-import { Fragment, useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
 
+const messageBackgroundColor = addOpacityToHsla(blueGrey500, 0.05);
 const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 
 /**
@@ -37,7 +48,8 @@ const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
  * @see `PanelContext`
  */
 export function Panel() {
-  const { content, page, panelOpen, closePanel } = usePanelContext();
+  const { content, panelOpen, closePanel } = usePanelContext();
+  const [message, setMessage] = useState<ReactNode>("");
   const [proposePriceInput, setProposePriceInput] = useState("");
   const [inputError, setInputError] = useState("");
   const {
@@ -57,6 +69,7 @@ export function Panel() {
     formattedLivenessEndsIn,
     expiryType,
     moreInformation,
+    actionType,
   } = content ?? {};
 
   const primaryAction = usePrimaryPanelAction({
@@ -66,12 +79,20 @@ export function Panel() {
 
   const { address } = useAccount();
   const { chain: connectedChain } = useNetwork();
+  const { page } = usePageContext();
 
   const projectIcon = getProjectIcon(project);
   const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
   const showActionsDetails = page !== "settled";
-  const hideInput = page !== "propose";
-  const disableInput = !address || connectedChain?.id !== chainId;
+  const showInput = page === "propose";
+  const alreadyProposed =
+    page === "propose" && (actionType === "dispute" || actionType === "settle");
+  const alreadySettled = page !== "settled" && actionType === undefined;
+  const disableInput =
+    !address ||
+    connectedChain?.id !== chainId ||
+    alreadyProposed ||
+    alreadySettled;
   const hasReward = reward !== null;
   const actionsTitle = getActionsTitle();
   const errors: string[] = [
@@ -79,6 +100,40 @@ export function Panel() {
     ...(primaryAction?.errors || []),
   ].filter(Boolean);
   const isError = errors.length > 0;
+  const hasMessage = message !== "";
+  const showPrimaryActionButton =
+    primaryAction &&
+    !primaryAction.hidden &&
+    !alreadyProposed &&
+    !alreadySettled;
+  const showConnectButton =
+    primaryAction?.title === connectWallet &&
+    !alreadyProposed &&
+    !alreadySettled;
+
+  useEffect(() => {
+    setMessage("");
+    if (!content || page === "settled") return;
+
+    if (!alreadyProposed && !alreadySettled) return;
+
+    const message = (
+      <>
+        This query has already been {alreadyProposed ? "proposed" : "settled"}.
+        View it{" "}
+        <Link
+          href={{
+            pathname: alreadyProposed ? "/" : "/settled",
+            query: makeUrlParamsForQuery(content),
+          }}
+        >
+          here.
+        </Link>
+      </>
+    );
+
+    setMessage(message);
+  }, [page, primaryAction, content]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
@@ -95,14 +150,18 @@ export function Panel() {
     );
   }
 
+  function close() {
+    void closePanel();
+  }
+
   return (
-    <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
+    <PanelBase panelOpen={panelOpen} closePanel={close}>
       <TitleWrapper>
         <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
         <Title id="panel-title">{title}</Title>
         <CloseButtonWrapper>
           <CloseButton
-            onClick={closePanel}
+            onClick={close}
             size="clamp(1.00rem, calc(0.92rem + 0.41vw), 1.25rem)"
           />
         </CloseButtonWrapper>
@@ -112,7 +171,7 @@ export function Panel() {
           {actionsIcon}
           <SectionTitle>{actionsTitle}</SectionTitle>
         </SectionTitleWrapper>
-        {!hideInput ? (
+        {showInput ? (
           <InputWrapper>
             <DecimalInput
               value={proposePriceInput}
@@ -172,7 +231,7 @@ export function Panel() {
             </ActionWrapper>
           </ActionsDetailsWrapper>
         )}
-        {primaryAction && !primaryAction.hidden && (
+        {showPrimaryActionButton && (
           <ActionButtonWrapper>
             <Button
               variant="primary"
@@ -184,9 +243,13 @@ export function Panel() {
             </Button>
           </ActionButtonWrapper>
         )}
-        {primaryAction && primaryAction.title === "Connect wallet" ? (
-          <ConnectButton />
-        ) : undefined}
+        {showConnectButton && <ConnectButton />}
+        {hasMessage && (
+          <MessageWrapper>
+            <WarningIcon />
+            <MessageText>{message}</MessageText>
+          </MessageWrapper>
+        )}
         {isError && (
           <>
             {errors.map((message) => (
@@ -353,6 +416,11 @@ const ErrorWrapper = styled.div`
   border-radius: 2px;
 `;
 
+const MessageWrapper = styled(ErrorWrapper)`
+  background: ${messageBackgroundColor};
+  border: 1px solid var(--blue-grey-500);
+`;
+
 // titles
 
 const Title = styled.h1`
@@ -412,6 +480,10 @@ const TimeFormat = styled.span`
 
 const ErrorText = styled(Text)`
   color: var(--red-500);
+`;
+
+const MessageText = styled(Text)`
+  color: var(--blue-grey-500);
 `;
 
 // interactive elements

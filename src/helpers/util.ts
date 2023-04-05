@@ -1,5 +1,6 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import type { OracleQueryList } from "@/contexts";
+import type { OracleQueryUI } from "@/types";
 import { capitalize, words } from "lodash";
 import { css } from "styled-components";
 
@@ -106,8 +107,49 @@ export function sortQueriesByDate({
   settled: OracleQueryList;
 }) {
   return {
-    verify: verify.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
-    propose: propose.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
-    settled: settled.sort((a, b) => b.timeMilliseconds - a.timeMilliseconds),
+    verify: verify.sort(
+      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
+    ),
+    propose: propose.sort(
+      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
+    ),
+    settled: settled.sort(
+      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
+    ),
   };
+}
+
+export function makeUrlParamsForQuery({
+  requestHash,
+  requestLogIndex,
+  assertionHash,
+  assertionLogIndex,
+}: OracleQueryUI) {
+  const isRequest = !!requestHash && !!requestLogIndex;
+  const isAssertion = !!assertionHash && !!assertionLogIndex;
+  const queryParams = isRequest
+    ? {
+        requestHash,
+        requestLogIndex,
+      }
+    : isAssertion
+    ? {
+        assertionHash,
+        assertionLogIndex,
+      }
+    : {};
+
+  return queryParams;
+}
+
+export function getPageForQuery({ actionType }: OracleQueryUI) {
+  switch (actionType) {
+    case "propose":
+      return "propose";
+    case "dispute":
+    case "settle":
+      return "verify";
+    default:
+      return "settled";
+  }
 }

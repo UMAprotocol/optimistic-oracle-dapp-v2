@@ -2,6 +2,8 @@ import { OracleQueryList, OracleQueryTable } from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import { useFilterAndSearchContext } from "@/hooks";
 import type { PageName } from "@shared/types";
+import { findIndex } from "lodash";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTimeout } from "usehooks-ts";
@@ -13,6 +15,11 @@ interface Props {
 export function OracleQueries({ page }: Props) {
   const { results: queries } = useFilterAndSearchContext();
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const hasQueryUrl = Object.keys(router.query).length > 0;
+  const findQueryIndex = hasQueryUrl
+    ? findIndex(queries, router.query)
+    : undefined;
 
   useEffect(() => {
     if (queries.length > 0) {
@@ -26,13 +33,21 @@ export function OracleQueries({ page }: Props) {
     }
   }, 3000);
 
+  const listProps = {
+    page,
+    items: queries,
+    rows: queries,
+    isLoading,
+    findQueryIndex,
+  };
+
   return (
     <>
       <DesktopWrapper>
-        <OracleQueryTable page={page} rows={queries} isLoading={isLoading} />
+        <OracleQueryTable {...listProps} />
       </DesktopWrapper>
       <MobileWrapper>
-        <OracleQueryList page={page} items={queries} isLoading={isLoading} />
+        <OracleQueryList {...listProps} />
       </MobileWrapper>
     </>
   );

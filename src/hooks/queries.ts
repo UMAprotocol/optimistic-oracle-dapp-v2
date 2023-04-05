@@ -1,18 +1,15 @@
-import { config } from "@/constants";
-import type { VotingInfo } from "@/types";
-import useSWR from "swr";
+import { useOracleDataContext, usePageContext } from "./contexts";
 
-async function getVotingInfo() {
-  const response = await fetch("/api/get-voting-info");
-  return (await response.json()) as VotingInfo;
-}
+export function useQueries() {
+  const { page } = usePageContext();
+  const { verify = [], propose = [], settled = [] } = useOracleDataContext();
+  const forPages = { verify, propose, settled };
+  const all = [...verify, ...propose, ...settled];
 
-export function useVotingInfo() {
-  const fallbackData = {
-    apy: config.defaultApy,
-    activeRequests: 0,
-    phase: "commit" as const,
+  const forCurrentPage = forPages[page];
+
+  return {
+    all,
+    forCurrentPage,
   };
-
-  return useSWR("/api/get-voting-info", getVotingInfo, { fallbackData });
 }

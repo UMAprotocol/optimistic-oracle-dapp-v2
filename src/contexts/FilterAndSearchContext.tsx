@@ -1,5 +1,5 @@
 import { emptyCheckedFilters, emptyFilters } from "@/constants";
-import { useFilterAndSearch, useQueriesCurrentForPage } from "@/hooks";
+import { useFilterAndSearch, useQueries } from "@/hooks";
 import type {
   CheckboxItemsByFilterName,
   CheckedChangePayload,
@@ -38,7 +38,7 @@ export const FilterAndSearchContext = createContext(
 );
 
 export function FilterAndSearchProvider({ children }: { children: ReactNode }) {
-  const queries = useQueriesCurrentForPage();
+  const { forCurrentPage: queries } = useQueries();
   const filterAndSearchState = useFilterAndSearch(queries);
 
   return (
