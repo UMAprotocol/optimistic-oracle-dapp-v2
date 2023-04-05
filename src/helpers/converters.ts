@@ -1,11 +1,11 @@
 import { config } from "@/constants";
-import { exists } from "@libs/utils";
 import type {
   ActionType,
   MoreInformationItem,
   OracleQueryUI,
   SolidityRequest,
 } from "@/types";
+import { exists } from "@libs/utils";
 import { chainsById } from "@shared/constants";
 import {
   disputeAssertionAbi,
@@ -667,9 +667,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   if (exists(reward)) {
     result.reward = reward;
   }
-  if (exists(proposedPrice) && exists(settlementPrice)) {
-    result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
-  }
+  result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
 
   if (exists(ancillaryData)) {
     result.queryTextHex = ancillaryData;
