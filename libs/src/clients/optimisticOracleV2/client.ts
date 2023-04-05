@@ -4,6 +4,7 @@ import {
   getOptimisticOracleV2InterfaceAbi,
 } from "@uma/contracts-frontend";
 import type { SignerOrProvider, GetEventType } from "@libs/types";
+import { parseIdentifier } from "@libs/utils";
 import type { Event, BigNumberish, BigNumber } from "ethers";
 import { utils } from "ethers";
 
@@ -74,6 +75,10 @@ export type Request = RequestKey &
     proposeBlockNumber: number;
     disputeBlockNumber: number;
     settleBlockNumber: number;
+    requestLogIndex: number;
+    proposeLogIndex: number;
+    disputeLogIndex: number;
+    settleLogIndex: number;
     requestSettings: RequestSettings;
   }>;
 
@@ -86,11 +91,10 @@ export function requestId(
 ): string {
   // if enabling sorting, put timestamp first
   return [
+    parseIdentifier(request.identifier),
     request.timestamp.toString(),
-    request.identifier,
-    request.requester,
     request.ancillaryData,
-  ].join("!");
+  ].join("-");
 }
 
 export function reduceEvents(state: EventState, event: Event): EventState {
@@ -122,6 +126,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
         state: RequestState.Requested,
         requestTx: event.transactionHash,
         requestBlockNumber: event.blockNumber,
+        requestLogIndex: event.logIndex,
       };
       break;
     }
@@ -154,6 +159,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
         state: RequestState.Proposed,
         proposeTx: event.transactionHash,
         proposeBlockNumber: event.blockNumber,
+        proposeLogIndex: event.logIndex,
       };
       break;
     }
@@ -184,6 +190,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
         state: RequestState.Disputed,
         disputeTx: event.transactionHash,
         disputeBlockNumber: event.blockNumber,
+        disputeLogIndex: event.logIndex,
       };
       break;
     }
@@ -217,6 +224,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
         state: RequestState.Settled,
         settleTx: event.transactionHash,
         settleBlockNumber: event.blockNumber,
+        settleLogIndex: event.logIndex,
       };
       break;
     }

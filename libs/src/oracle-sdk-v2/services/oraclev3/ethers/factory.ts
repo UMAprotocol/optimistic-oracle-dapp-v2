@@ -110,7 +110,6 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   );
   const provider = new ethers.providers.JsonRpcProvider(config.url);
   const contract = connect(config.address, provider);
-  // const oo = new OptimisticOracle(provider, config.address, config.chainId);
   const events = new Events();
 
   function parseLog(log: Log) {
