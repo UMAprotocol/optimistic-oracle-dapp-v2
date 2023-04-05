@@ -1,6 +1,7 @@
 import Events from "events";
 import { ethers } from "ethers";
 import { assertAddress } from "@shared/utils";
+import { parseIdentifier } from "@libs/utils";
 import type {
   Request as SharedRequest,
   OracleType,
@@ -72,7 +73,7 @@ const ConvertToSharedRequest =
       oracleAddress,
       oracleType,
       requester: assertAddress(requester),
-      identifier,
+      identifier: parseIdentifier(identifier),
       time: timestamp.toString(),
       ancillaryData,
     };
@@ -132,12 +133,16 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const oo = new OptimisticOracle(provider, config.address, config.chainId);
   const events = new Events();
   function updateFromTransactionReceipt(receipt: TransactionReceipt) {
-    oo.updateFromTransactionReceipt(receipt);
-    const requests: Request[] = oo.listRequests();
-    const sharedRequests = requests.map((request) =>
-      convertToSharedRequest(request)
-    );
-    events.emit("requests", sharedRequests);
+    try {
+      oo.updateFromTransactionReceipt(receipt);
+      const requests: Request[] = oo.listRequests();
+      const sharedRequests = requests.map((request) =>
+        convertToSharedRequest(request)
+      );
+      events.emit("requests", sharedRequests);
+    } catch (err) {
+      console.warn("Error updating oov1 from receipt:", err);
+    }
   }
   const service = (handlers: Handlers): Service => {
     if (handlers.requests) events.on("requests", handlers.requests);

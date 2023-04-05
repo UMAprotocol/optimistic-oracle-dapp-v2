@@ -1,3 +1,4 @@
+import unionWith from "lodash/unionWith";
 import { config } from "@/constants";
 import {
   assertionToOracleQuery,
@@ -103,6 +104,22 @@ type ProcessAssertionsAction = DispatchAction<"assertions", Assertions>;
 
 type DispatchActions = ProcessRequestsAction | ProcessAssertionsAction;
 
+function mergeData(
+  prev: OracleQueryUI | undefined,
+  next: OracleQueryUI
+): OracleQueryUI {
+  // we must merge data in more information, since the next data may be mission previously queried data
+  const moreInformation = unionWith(
+    prev?.moreInformation ?? [],
+    next?.moreInformation ?? [],
+    (a, b) => a.title === b.title
+  );
+  return {
+    ...(prev || {}),
+    ...next,
+    moreInformation,
+  };
+}
 function DataReducerFactory<Input extends Request | Assertion>(
   converter: (input: Input) => OracleQueryUI
 ) {
@@ -113,10 +130,7 @@ function DataReducerFactory<Input extends Request | Assertion>(
     const { all = {} } = state;
     updates.forEach((update) => {
       const queryUpdate = converter(update);
-      all[update.id] = {
-        ...(all[update.id] || {}),
-        ...queryUpdate,
-      };
+      all[update.id] = mergeData(all[update.id], queryUpdate);
     });
     const init: {
       verify: OracleQueryList;

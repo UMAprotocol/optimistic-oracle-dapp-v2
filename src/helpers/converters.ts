@@ -1,4 +1,5 @@
 import { config } from "@/constants";
+import { exists } from "@libs/utils";
 import type {
   ActionType,
   MoreInformationItem,
@@ -220,14 +221,16 @@ function makeProposePriceParams({
   chainId,
 }: {
   requester: Address;
-  bytes32Identifier: string;
+  bytes32Identifier?: string;
   time: string;
-  ancillaryData: string;
+  ancillaryData?: string;
   oracleAddress: Address;
   chainId: ChainId;
 }) {
   return (proposedPrice?: string) => {
     if (!proposedPrice) return;
+    if (!bytes32Identifier) return;
+    if (!ancillaryData) return;
     return {
       address: oracleAddress,
       abi: proposePriceAbi,
@@ -254,15 +257,17 @@ function makeProposePriceSkinnyParams({
   request,
 }: {
   requester: Address;
-  bytes32Identifier: string;
+  bytes32Identifier?: string;
   time: string;
-  ancillaryData: string;
+  ancillaryData?: string;
   oracleAddress: Address;
   chainId: ChainId;
   request: SolidityRequest;
 }) {
   return (proposedPrice?: string) => {
     if (!proposedPrice) return;
+    if (!bytes32Identifier) return;
+    if (!ancillaryData) return;
     return {
       address: oracleAddress,
       abi: skinnyProposePriceAbi,
@@ -290,13 +295,15 @@ function makeDisputePriceSkinnyParams({
   request,
 }: {
   requester: Address;
-  bytes32Identifier: string;
+  bytes32Identifier?: string;
   time: string;
-  ancillaryData: string;
+  ancillaryData?: string;
   oracleAddress: Address;
   chainId: ChainId;
   request: SolidityRequest;
 }) {
+  if (!bytes32Identifier) return;
+  if (!ancillaryData) return;
   return {
     address: oracleAddress,
     abi: skinnyDisputePriceAbi,
@@ -315,12 +322,14 @@ function makeDisputePriceParams({
   chainId,
 }: {
   requester: Address;
-  bytes32Identifier: string;
+  bytes32Identifier?: string;
   time: string;
-  ancillaryData: string;
+  ancillaryData?: string;
   oracleAddress: Address;
   chainId: ChainId;
 }) {
+  if (!bytes32Identifier) return;
+  if (!ancillaryData) return;
   return {
     address: oracleAddress,
     abi: disputePriceAbi,
@@ -339,12 +348,14 @@ function makeSettlePriceParams({
   chainId,
 }: {
   requester: Address;
-  bytes32Identifier: string;
+  bytes32Identifier?: string;
   time: string;
-  ancillaryData: string;
+  ancillaryData?: string;
   oracleAddress: Address;
   chainId: ChainId;
 }) {
+  if (!bytes32Identifier) return;
+  if (!ancillaryData) return;
   return {
     address: oracleAddress,
     abi: settlePriceAbi,
@@ -364,13 +375,15 @@ function makeSettlePriceSkinnyParams({
   request,
 }: {
   requester: Address;
-  bytes32Identifier: string;
+  bytes32Identifier?: string;
   time: string;
-  ancillaryData: string;
+  ancillaryData?: string;
   oracleAddress: Address;
   chainId: ChainId;
   request: SolidityRequest;
 }) {
+  if (!bytes32Identifier) return;
+  if (!ancillaryData) return;
   return {
     address: oracleAddress,
     abi: skinnySettlePriceAbi,
@@ -636,39 +649,103 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     proposalLogIndex,
     proposalExpirationTimestamp,
   } = request;
-  const valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
-  const queryTextHex = ancillaryData;
-  const queryText = safeDecodeHexString(ancillaryData);
-  const { title, description, umipUrl, umipNumber, project } = getQueryMetaData(
-    identifier,
-    queryText
-  );
+
+  const result: OracleQueryUI = {
+    id,
+    chainId,
+    oracleType,
+    oracleAddress,
+    chainName: getChainName(chainId),
+    actionType: getRequestActionType(state),
+    moreInformation: [],
+    project: "Unknown",
+  };
+
+  if (exists(state)) {
+    result.state = state;
+  }
+  if (exists(reward)) {
+    result.reward = reward;
+  }
+  if (exists(proposedPrice) && exists(settlementPrice)) {
+    result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
+  }
+
+  if (exists(ancillaryData)) {
+    result.queryTextHex = ancillaryData;
+    result.queryText = safeDecodeHexString(ancillaryData);
+  }
+
+  let bytes32Identifier = undefined;
+  if (exists(identifier)) {
+    result.identifier = identifier;
+    bytes32Identifier = formatBytes32String(identifier);
+  }
+
+  if (exists(identifier) && exists(result.queryText)) {
+    const { title, description, umipUrl, umipNumber, project } =
+      getQueryMetaData(identifier, result.queryText);
+    result.title = title;
+    result.description = description;
+    result.project = project;
+    result.moreInformation = makeMoreInformationList(
+      request,
+      umipNumber,
+      umipUrl
+    );
+  }
   const { bond, eventBased } = getOOV2SpecificValues(request);
-  const bytes32Identifier = formatBytes32String(identifier);
-  const livenessEndsMilliseconds = getLivenessEnds(proposalExpirationTimestamp);
-  const formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
-  const chainName = getChainName(chainId);
-  const timeUTC = toTimeUTC(time);
-  const timeUNIX = toTimeUnix(time);
-  const timeMilliseconds = toTimeMilliseconds(time);
-  const timeFormatted = toTimeFormatted(time);
-  const expiryType = eventBased ? "Event-based" : "Time-based";
-  const tokenAddress = currency;
-  const moreInformation = makeMoreInformationList(request, umipNumber, umipUrl);
-  const actionType = getRequestActionType(state);
-  const approveBondSpendParams = makeApproveBondSpendParams({
+  if (exists(bond)) {
+    result.bond = bond;
+  }
+  if (exists(eventBased)) {
+    result.expiryType = eventBased ? "Event-based" : "Time-based";
+  }
+
+  if (exists(proposalExpirationTimestamp)) {
+    result.livenessEndsMilliseconds = getLivenessEnds(
+      proposalExpirationTimestamp
+    );
+    result.formattedLivenessEndsIn = toTimeFormatted(
+      result.livenessEndsMilliseconds
+    );
+  }
+
+  if (exists(time)) {
+    result.timeUTC = toTimeUTC(time);
+    result.timeUNIX = toTimeUnix(time);
+    result.timeMilliseconds = toTimeMilliseconds(time);
+    result.timeFormatted = toTimeFormatted(time);
+  }
+  if (currency) {
+    result.tokenAddress = currency;
+  }
+  if (exists(proposalTimestamp)) result.proposalTimestamp = proposalTimestamp;
+  if (exists(proposalHash)) result.proposalHash = proposalHash;
+  if (exists(proposalLogIndex)) result.proposalLogIndex = proposalLogIndex;
+  if (exists(requestTimestamp)) result.requestTimestamp = requestTimestamp;
+  if (exists(requestHash)) result.requestHash = requestHash;
+  if (exists(requestLogIndex)) result.requestLogIndex = requestLogIndex;
+  if (exists(disputeTimestamp)) result.disputeTimestamp = disputeTimestamp;
+  if (exists(disputeHash)) result.disputeHash = disputeHash;
+  if (exists(disputeLogIndex)) result.disputeLogIndex = disputeLogIndex;
+  if (exists(settlementTimestamp))
+    result.settlementTimestamp = settlementTimestamp;
+  if (exists(settlementHash)) result.settlementHash = settlementHash;
+  if (exists(settlementLogIndex))
+    result.settlementLogIndex = settlementLogIndex;
+  result.approveBondSpendParams = makeApproveBondSpendParams({
     bond,
-    tokenAddress,
+    tokenAddress: currency,
     oracleAddress,
     chainId,
   });
-  let proposePriceParams: OracleQueryUI["proposePriceParams"] = undefined;
-  if (actionType === "propose") {
+  if (result.actionType === "propose") {
     if (
-      oracleType === "Skinny Optimistic Oracle" &&
+      result.oracleType === "Skinny Optimistic Oracle" &&
       canConvertToSolidityRequest(request)
     ) {
-      proposePriceParams = makeProposePriceSkinnyParams({
+      result.proposePriceParams = makeProposePriceSkinnyParams({
         requester,
         bytes32Identifier,
         time,
@@ -678,7 +755,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
         request: convertToSolidityRequest(request),
       });
     } else {
-      proposePriceParams = makeProposePriceParams({
+      result.proposePriceParams = makeProposePriceParams({
         requester,
         bytes32Identifier,
         time,
@@ -688,13 +765,12 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
       });
     }
   }
-  let disputePriceParams: OracleQueryUI["disputePriceParams"] = undefined;
-  if (actionType === "dispute") {
+  if (result.actionType === "dispute") {
     if (
-      oracleType === "Skinny Optimistic Oracle" &&
+      result.oracleType === "Skinny Optimistic Oracle" &&
       canConvertToSolidityRequest(request)
     ) {
-      disputePriceParams = makeDisputePriceSkinnyParams({
+      result.disputePriceParams = makeDisputePriceSkinnyParams({
         requester,
         bytes32Identifier,
         time,
@@ -704,34 +780,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
         request: convertToSolidityRequest(request),
       });
     } else {
-      disputePriceParams = makeDisputePriceParams({
-        requester,
-        bytes32Identifier,
-        time,
-        ancillaryData,
-        oracleAddress,
-        chainId,
-      });
-    }
-  }
-
-  let settlePriceParams: OracleQueryUI["settlePriceParams"] = undefined;
-  if (actionType === "settle") {
-    if (
-      oracleType === "Skinny Optimistic Oracle" &&
-      canConvertToSolidityRequest(request)
-    ) {
-      settlePriceParams = makeSettlePriceSkinnyParams({
-        requester,
-        bytes32Identifier,
-        time,
-        ancillaryData,
-        oracleAddress,
-        chainId,
-        request: convertToSolidityRequest(request),
-      });
-    } else {
-      settlePriceParams = makeSettlePriceParams({
+      result.disputePriceParams = makeDisputePriceParams({
         requester,
         bytes32Identifier,
         time,
@@ -742,54 +791,33 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     }
   }
 
-  const disputeAssertionParams = undefined;
-  const settleAssertionParams = undefined;
+  if (result.actionType === "settle") {
+    if (
+      oracleType === "Skinny Optimistic Oracle" &&
+      canConvertToSolidityRequest(request)
+    ) {
+      result.settlePriceParams = makeSettlePriceSkinnyParams({
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        oracleAddress,
+        chainId,
+        request: convertToSolidityRequest(request),
+      });
+    } else {
+      result.settlePriceParams = makeSettlePriceParams({
+        requester,
+        bytes32Identifier,
+        time,
+        ancillaryData,
+        oracleAddress,
+        chainId,
+      });
+    }
+  }
 
-  return {
-    project,
-    title,
-    description,
-    id,
-    chainId,
-    chainName,
-    oracleType,
-    oracleAddress,
-    identifier,
-    queryText,
-    queryTextHex,
-    timeUTC,
-    timeUNIX,
-    timeMilliseconds,
-    timeFormatted,
-    livenessEndsMilliseconds,
-    formattedLivenessEndsIn,
-    valueText,
-    expiryType,
-    tokenAddress,
-    reward,
-    bond,
-    moreInformation,
-    actionType,
-    approveBondSpendParams,
-    proposePriceParams,
-    disputePriceParams,
-    settlePriceParams,
-    disputeAssertionParams,
-    settleAssertionParams,
-    requestTimestamp,
-    requestHash,
-    requestLogIndex,
-    disputeTimestamp,
-    disputeHash,
-    disputeLogIndex,
-    settlementTimestamp,
-    settlementHash,
-    settlementLogIndex,
-    proposalTimestamp,
-    proposalHash,
-    proposalLogIndex,
-    state,
-  };
+  return result;
 }
 
 export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
@@ -813,42 +841,51 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     settlementHash,
     settlementLogIndex,
   } = assertion;
-  const oracleType = "Optimistic Oracle V3";
-  const id = assertionId;
-  let livenessEndsMilliseconds = undefined;
-  let formattedLivenessEndsIn = undefined;
-  if (expirationTime) {
-    livenessEndsMilliseconds = getLivenessEnds(expirationTime);
-    formattedLivenessEndsIn = toTimeFormatted(livenessEndsMilliseconds);
+  const result: OracleQueryUI = {
+    oracleType: "Optimistic Oracle V3",
+    oracleAddress,
+    chainId,
+    id: assertionId,
+    chainName: getChainName(chainId),
+    project: "Unknown",
+    expiryType: null,
+    reward: null,
+    moreInformation: makeMoreInformationList(assertion),
+    actionType: getAssertionActionType(assertion),
+  };
+  if (exists(identifier)) {
+    result.identifier = identifier;
   }
-  const chainName = getChainName(chainId);
-  const valueText = settlementResolution
-    ? settlementResolution.toString()
-    : null;
-  let queryTextHex = undefined;
-  let queryText = undefined;
-  if (claim) {
-    queryTextHex = claim;
-    queryText = safeDecodeHexString(claim);
+  if (exists(bond)) {
+    result.bond = bond;
+  }
+  if (exists(expirationTime)) {
+    result.livenessEndsMilliseconds = getLivenessEnds(expirationTime);
+    result.formattedLivenessEndsIn = toTimeFormatted(
+      result.livenessEndsMilliseconds
+    );
+  }
+  if (exists(settlementResolution)) {
+    result.valueText = settlementResolution.toString();
+  }
+  if (exists(claim)) {
+    result.queryTextHex = claim;
+    result.queryText = safeDecodeHexString(claim);
+    result.title = result.queryText;
+    result.description = result.queryText;
+  }
+  if (exists(currency)) {
+    result.tokenAddress = currency;
   }
 
-  const title = queryText;
-  const description = queryText;
-  const project = "Unknown";
-  const expiryType = null;
-  const tokenAddress = currency;
-  // no reward is present on assertions
-  const reward = null;
-  const moreInformation = makeMoreInformationList(assertion);
-  const actionType = getAssertionActionType(assertion);
-  const approveBondSpendParams = makeApproveBondSpendParams({
+  result.approveBondSpendParams = makeApproveBondSpendParams({
     bond,
-    tokenAddress,
+    tokenAddress: currency,
     oracleAddress,
     chainId,
   });
-  const disputeAssertionParams =
-    actionType === "dispute"
+  result.disputeAssertionParams =
+    result.actionType === "dispute"
       ? makeDisputeAssertionParams({
           assertionId,
           oracleAddress,
@@ -856,8 +893,8 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
         })
       : undefined;
 
-  const settleAssertionParams =
-    actionType === "settle"
+  result.settleAssertionParams =
+    result.actionType === "settle"
       ? makeSettleAssertionParams({
           assertionId,
           oracleAddress,
@@ -865,58 +902,24 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
         })
       : undefined;
 
-  const proposePriceParams = undefined;
-  const disputePriceParams = undefined;
-  const settlePriceParams = undefined;
-
-  let timeUTC, timeUNIX, timeMilliseconds, timeFormatted;
-  if (assertionTimestamp) {
-    timeUTC = toTimeUTC(assertionTimestamp);
-    timeUNIX = toTimeUnix(assertionTimestamp);
-    timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
-    timeFormatted = toTimeFormatted(assertionTimestamp);
+  if (exists(assertionTimestamp)) {
+    result.timeUTC = toTimeUTC(assertionTimestamp);
+    result.timeUNIX = toTimeUnix(assertionTimestamp);
+    result.timeMilliseconds = toTimeMilliseconds(assertionTimestamp);
+    result.timeFormatted = toTimeFormatted(assertionTimestamp);
+    result.assertionTimestamp = assertionTimestamp;
   }
 
-  return {
-    id,
-    chainId,
-    chainName,
-    identifier,
-    oracleType,
-    oracleAddress,
-    tokenAddress,
-    valueText,
-    queryText,
-    queryTextHex,
-    livenessEndsMilliseconds,
-    formattedLivenessEndsIn,
-    timeUTC,
-    timeUNIX,
-    timeMilliseconds,
-    timeFormatted,
-    expiryType,
-    actionType,
-    project,
-    title,
-    description,
-    moreInformation,
-    reward,
-    bond,
-    approveBondSpendParams,
-    disputeAssertionParams,
-    proposePriceParams,
-    disputePriceParams,
-    settlePriceParams,
-    settleAssertionParams,
-    // searchable properties
-    assertionTimestamp,
-    assertionHash,
-    assertionLogIndex,
-    disputeTimestamp,
-    disputeHash,
-    disputeLogIndex,
-    settlementTimestamp,
-    settlementHash,
-    settlementLogIndex,
-  };
+  if (exists(assertionHash)) result.assertionHash = assertionHash;
+  if (exists(assertionLogIndex)) result.assertionLogIndex = assertionLogIndex;
+  if (exists(disputeTimestamp)) result.disputeTimestamp = disputeTimestamp;
+  if (exists(disputeHash)) result.disputeHash = disputeHash;
+  if (exists(disputeLogIndex)) result.disputeLogIndex = disputeLogIndex;
+  if (exists(settlementTimestamp))
+    result.settlementTimestamp = settlementTimestamp;
+  if (exists(settlementHash)) result.settlementHash = settlementHash;
+  if (exists(settlementLogIndex))
+    result.settlementLogIndex = settlementLogIndex;
+
+  return result;
 }
