@@ -177,7 +177,7 @@ const defaultMockOracleQueryUI: OracleQueryUI = {
   chainId: 1,
   chainName: "Ethereum",
   oracleType: "Optimistic Oracle V2",
-  project: "UMA",
+  project: "Unknown",
   title:
     "More than 2.5 million people traveled through a TSA checkpoint on any day by December 31, 2022",
   description: "some description",
@@ -285,7 +285,7 @@ export const verifyMockOracleQueryUIs = (count = 3) =>
       {
         title: "With expiry type and weird random currency and liveness ends",
         expiryType: "Time-based",
-        project: "UMA",
+        project: "Unknown",
         chainName: "Ethereum",
         oracleType: "Skinny Optimistic Oracle",
         livenessEndsMilliseconds: mockDate.getTime() + 10_000,

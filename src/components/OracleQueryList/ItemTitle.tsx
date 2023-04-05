@@ -16,6 +16,7 @@ export function ItemTitle({
   expiryType,
 }: OracleQueryUI) {
   const projectIcon = getProjectIcon(project);
+  const isKnownProject = project !== "Unknown";
 
   return (
     <TitleWrapper>
@@ -24,8 +25,8 @@ export function ItemTitle({
         <TitleHeader>{title}</TitleHeader>
       </HeaderWrapper>
       <TitleText>
-        {project} | {timeFormatted} | {chainName}{" "}
-        {expiryType && `| ${expiryType}`}
+        {isKnownProject && `${project} | `}
+        {timeFormatted} | {chainName} {expiryType && `| ${expiryType}`}
       </TitleText>
     </TitleWrapper>
   );

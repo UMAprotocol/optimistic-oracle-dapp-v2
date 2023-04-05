@@ -10,7 +10,7 @@ export const oracleTypes = [
 export const expiryTypes = ["Event-based", "Time-based"] as const;
 
 export const projects = [
-  "UMA",
+  "Unknown",
   "Polymarket",
   "Cozy Finance",
   "Across",

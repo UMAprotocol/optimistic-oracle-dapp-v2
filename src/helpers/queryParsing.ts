@@ -94,7 +94,7 @@ export function getQueryMetaData(
     const description = identifierDetails.summary;
     const umipUrl = identifierDetails.umipLink.url;
     const umipNumber = identifierDetails.umipLink.number;
-    const project = isSherlock ? "Sherlock" : "UMA";
+    const project = isSherlock ? "Sherlock" : "Unknown";
     return {
       title,
       description,
@@ -110,7 +110,7 @@ export function getQueryMetaData(
     description: "No description found for this request.",
     umipUrl: undefined,
     umipNumber: undefined,
-    project: "UMA",
+    project: "Unknown",
   };
 }
 

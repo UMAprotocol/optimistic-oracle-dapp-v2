@@ -834,7 +834,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
 
   const title = queryText;
   const description = queryText;
-  const project = "UMA";
+  const project = "Unknown";
   const expiryType = null;
   const tokenAddress = currency;
   // no reward is present on assertions
