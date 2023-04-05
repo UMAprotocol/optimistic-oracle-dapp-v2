@@ -28,8 +28,9 @@ export function useHandleQueryInUrl() {
       void openPanel(query, false);
 
       async function redirectToCorrectPage() {
+        const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;
         await router.push({
-          pathname: `/${pageForQuery}`,
+          pathname,
           query: router.query,
         });
       }
