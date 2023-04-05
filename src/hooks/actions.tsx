@@ -11,7 +11,10 @@ import {
   disputed,
   insufficientBalance,
   propose,
+  proposing,
+  proposed,
   settle,
+  settled,
   settling,
 } from "@/constants";
 import { handleNotifications } from "@/helpers";
@@ -137,17 +140,31 @@ export function useApproveBondAction({
     config: approveBondSpendConfig,
     error: prepareApproveBondSpendError,
     isLoading: isPrepareApproveBondSpendLoading,
-  } = usePrepareContractWrite(approveBondSpendParams);
+    refetch: refetchConfig,
+  } = usePrepareContractWrite({
+    ...approveBondSpendParams,
+    scopeKey: query?.id,
+    enabled: !!query?.id,
+  });
   const {
     write: approveBondSpend,
     data: approveBondSpendTransaction,
     error: approveBondSpendError,
     isLoading: isApproveBondSpendLoading,
+    reset: resetContractWrite,
   } = useContractWrite(approveBondSpendConfig);
-  const { isLoading: isApprovingBondSpend } = useWaitForTransaction({
+  const { isLoading: isApprovingBondSpend, isSuccess } = useWaitForTransaction({
     hash: approveBondSpendTransaction?.hash,
   });
 
+  useEffect(() => {
+    if (!query?.id) return;
+    refetchConfig &&
+      refetchConfig().catch((err) =>
+        console.warn("error refetching config", err)
+      );
+    resetContractWrite();
+  }, [query?.id, refetchConfig, resetContractWrite]);
   // notify based on approval
   useEffect(() => {
     if (!approveBondSpendTransaction || !chainId) return;
@@ -191,6 +208,11 @@ export function useApproveBondAction({
     };
   }
 
+  // if tx succeeds, we let other button states take over by returning undefined
+  if (isSuccess) {
+    return undefined;
+  }
+
   return {
     title: approveSpend,
     action: approveBondSpend,
@@ -208,21 +230,34 @@ export function useProposeAction({
   query?: OracleQueryUI;
   proposePriceInput?: string;
 }): ActionState | undefined {
-  const { proposePriceParams, chainId } = query ?? {};
+  const { proposePriceParams, chainId, actionType } = query ?? {};
   const {
     config: proposePriceConfig,
     error: prepareProposePriceError,
     isLoading: isPrepareProposePriceLoading,
-  } = usePrepareContractWrite(proposePriceParams?.(proposePriceInput));
+    refetch: refetchConfig,
+  } = usePrepareContractWrite({
+    ...proposePriceParams?.(proposePriceInput),
+    scopeKey: query?.id,
+    enabled: !!query?.id,
+  });
   const {
     write: proposePrice,
     data: proposePriceTransaction,
     error: proposePriceError,
     isLoading: isProposePriceLoading,
+    reset: resetContractWrite,
   } = useContractWrite(proposePriceConfig);
-  const { isLoading: isProposingPrice } = useWaitForTransaction({
+  const { isLoading: isProposingPrice, isSuccess } = useWaitForTransaction({
     hash: proposePriceTransaction?.hash,
   });
+  useEffect(() => {
+    if (!query?.id) return;
+    refetchConfig().catch((err) =>
+      console.warn("error refetching config", err)
+    );
+    resetContractWrite();
+  }, [query?.id, refetchConfig, resetContractWrite]);
   // notify based on proposal tx
   useEffect(() => {
     if (!proposePriceTransaction || !chainId) return;
@@ -259,15 +294,26 @@ export function useProposeAction({
   }
   if (isProposePriceLoading || isProposingPrice) {
     return {
-      title: "Proposing...",
+      title: proposing,
       disabled: true,
     };
   }
-  return {
-    title: propose,
-    action: proposePrice,
-    errors: [prepareProposePriceError?.message, proposePriceError?.message],
-  };
+
+  // if proposal succeeds, disable button
+  if (actionType === "propose") {
+    if (isSuccess) {
+      return {
+        title: proposed,
+        disabled: true,
+      };
+    }
+
+    return {
+      title: propose,
+      action: proposePrice,
+      errors: [prepareProposePriceError?.message, proposePriceError?.message],
+    };
+  }
 }
 
 export function useDisputeAction({
@@ -280,17 +326,30 @@ export function useDisputeAction({
     config: disputePriceConfig,
     error: prepareDisputePriceError,
     isLoading: isPrepareDisputePriceLoading,
-  } = usePrepareContractWrite(disputePriceParams);
+    refetch: refetchConfig,
+  } = usePrepareContractWrite({
+    ...disputePriceParams,
+    scopeKey: query?.id,
+    enabled: !!query?.id,
+  });
   const {
     write: disputePrice,
     data: disputePriceTransaction,
     error: disputePriceError,
     isLoading: isDisputePriceLoading,
+    reset: resetContractWrite,
   } = useContractWrite(disputePriceConfig);
 
-  const { isLoading: isDisputingPrice } = useWaitForTransaction({
+  const { isLoading: isDisputingPrice, isSuccess } = useWaitForTransaction({
     hash: disputePriceTransaction?.hash,
   });
+  useEffect(() => {
+    if (!query?.id) return;
+    refetchConfig().catch((err) =>
+      console.warn("error refetching config", err)
+    );
+    resetContractWrite();
+  }, [query?.id, refetchConfig, resetContractWrite]);
   // notify based on dispute tx
   useEffect(() => {
     if (!disputePriceTransaction || !chainId) return;
@@ -323,6 +382,12 @@ export function useDisputeAction({
       disabled: true,
     };
   }
+  if (isSuccess) {
+    return {
+      title: disputed,
+      disabled: true,
+    };
+  }
   return {
     title: dispute,
     action: disputePrice,
@@ -340,17 +405,30 @@ export function useDisputeAssertionAction({
     config: disputeAssertionConfig,
     error: prepareDisputeAssertionError,
     isLoading: isPrepareDisputeAssertionLoading,
-  } = usePrepareContractWrite(disputeAssertionParams?.(address));
+    refetch: refetchConfig,
+  } = usePrepareContractWrite({
+    ...disputeAssertionParams?.(address),
+    scopeKey: query?.id,
+    enabled: !!query?.id,
+  });
   const {
     write: disputeAssertion,
     data: disputeAssertionTransaction,
     error: disputeAssertionError,
     isLoading: isDisputeAssertionLoading,
+    reset: resetContractWrite,
   } = useContractWrite(disputeAssertionConfig);
-  const { isLoading: isDisputingAssertion } = useWaitForTransaction({
+  const { isLoading: isDisputingAssertion, isSuccess } = useWaitForTransaction({
     hash: disputeAssertionTransaction?.hash,
   });
 
+  useEffect(() => {
+    if (!query?.id) return;
+    refetchConfig().catch((err) =>
+      console.warn("error refetching config", err)
+    );
+    resetContractWrite();
+  }, [query?.id, refetchConfig, resetContractWrite]);
   // notify based on dispute tx
   useEffect(() => {
     if (!disputeAssertionTransaction || !chainId) return;
@@ -383,6 +461,12 @@ export function useDisputeAssertionAction({
       disabled: true,
     };
   }
+  if (isSuccess) {
+    return {
+      title: disputed,
+      disabled: true,
+    };
+  }
   return {
     title: dispute,
     action: disputeAssertion,
@@ -403,16 +487,29 @@ export function useSettlePriceAction({
     config: settlePriceConfig,
     error: prepareSettlePriceError,
     isLoading: isPrepareSettlePriceLoading,
-  } = usePrepareContractWrite(settlePriceParams);
+    refetch: refetchConfig,
+  } = usePrepareContractWrite({
+    ...settlePriceParams,
+    scopeKey: query?.id,
+    enabled: !!query?.id,
+  });
   const {
     write: settlePrice,
     data: settlePriceTransaction,
     error: settlePriceError,
     isLoading: isSettlePriceLoading,
+    reset: resetContractWrite,
   } = useContractWrite(settlePriceConfig);
-  const { isLoading: isSettlingPrice } = useWaitForTransaction({
+  const { isLoading: isSettlingPrice, isSuccess } = useWaitForTransaction({
     hash: settlePriceTransaction?.hash,
   });
+  useEffect(() => {
+    if (!query?.id) return;
+    refetchConfig().catch((err) =>
+      console.warn("error refetching config", err)
+    );
+    resetContractWrite();
+  }, [query?.id, refetchConfig, resetContractWrite]);
   useEffect(() => {
     if (!settlePriceTransaction || !chainId) return;
     handleNotifications(settlePriceTransaction, chainId, {
@@ -452,6 +549,12 @@ export function useSettlePriceAction({
       disabled: true,
     };
   }
+  if (isSuccess) {
+    return {
+      title: settled,
+      disabled: true,
+    };
+  }
   return {
     title: settle,
     action: settlePrice,
@@ -468,16 +571,29 @@ export function useSettleAssertionAction({
     config: settleAssertionConfig,
     error: prepareSettleAssertionError,
     isLoading: isPrepareSettleAssertionLoading,
-  } = usePrepareContractWrite(settleAssertionParams);
+    refetch: refetchConfig,
+  } = usePrepareContractWrite({
+    ...settleAssertionParams,
+    scopeKey: query?.id,
+    enabled: !!query?.id,
+  });
   const {
     write: settleAssertion,
     data: settleAssertionTransaction,
     error: settleAssertionError,
     isLoading: isSettleAssertionLoading,
+    reset: resetContractWrite,
   } = useContractWrite(settleAssertionConfig);
-  const { isLoading: isSettlingAssertion } = useWaitForTransaction({
+  const { isLoading: isSettlingAssertion, isSuccess } = useWaitForTransaction({
     hash: settleAssertionTransaction?.hash,
   });
+  useEffect(() => {
+    if (!query?.id) return;
+    refetchConfig().catch((err) =>
+      console.warn("error refetching config", err)
+    );
+    resetContractWrite();
+  }, [query?.id, refetchConfig, resetContractWrite]);
   useEffect(() => {
     if (!settleAssertionTransaction || !chainId) return;
     handleNotifications(settleAssertionTransaction, chainId, {
@@ -514,6 +630,12 @@ export function useSettleAssertionAction({
   if (prepareSettleAssertionError) {
     return {
       title: disputed,
+      disabled: true,
+    };
+  }
+  if (isSuccess) {
+    return {
+      title: settled,
       disabled: true,
     };
   }
