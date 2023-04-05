@@ -12,7 +12,8 @@ export function useHandleQueryInUrl() {
   const { page } = usePageContext();
 
   useEffect(() => {
-    const hasQueryUrl = Object.keys(router.query).length > 0;
+    const hasQueryUrl = window.location.search !== "";
+
     if (!hasQueryUrl) return;
 
     const query = find<OracleQueryUI>(queries, router.query);

@@ -2,7 +2,7 @@ import { makeUrlParamsForQuery } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export interface PanelContextState {
   panelOpen: boolean;
@@ -29,6 +29,21 @@ export function PanelProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<OracleQueryUI | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    function onPopState() {
+      if (!window.location.search) {
+        setPanelOpen(false);
+      }
+    }
+
+    window.addEventListener("popstate", onPopState);
+
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function openPanel(
     content: OracleQueryUI,
