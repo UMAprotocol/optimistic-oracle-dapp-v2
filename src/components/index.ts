@@ -24,3 +24,4 @@ export { Pagination } from "./Pagination";
 export { Panel } from "./Panel/Panel";
 export { PanelBase } from "./Panel/PanelBase";
 export { RadioDropdown } from "./RadioDropdown";
+export { Tooltip } from "./Tooltip";

@@ -56,7 +56,7 @@ export const ContractInfoList: ContractInfoList = [
     // goerli
     type: "Optimistic Oracle V2",
     chainId: 5,
-    address: getAddress("0xc48F2d8491AffFc8eB21c85dEa1B4c0259c749a0"),
+    address: getAddress("0xA5B9d8a0B0Fa04Ba71BDD68069661ED5C0848884"),
   },
   {
     // optimism

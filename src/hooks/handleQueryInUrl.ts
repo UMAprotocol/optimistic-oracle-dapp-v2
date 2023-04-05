@@ -12,7 +12,8 @@ export function useHandleQueryInUrl() {
   const { page } = usePageContext();
 
   useEffect(() => {
-    const hasQueryUrl = Object.keys(router.query).length > 0;
+    const hasQueryUrl = window.location.search !== "";
+
     if (!hasQueryUrl) return;
 
     const query = find<OracleQueryUI>(queries, router.query);
@@ -27,8 +28,9 @@ export function useHandleQueryInUrl() {
       void openPanel(query, false);
 
       async function redirectToCorrectPage() {
+        const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;
         await router.push({
-          pathname: `/${pageForQuery}`,
+          pathname,
           query: router.query,
         });
       }

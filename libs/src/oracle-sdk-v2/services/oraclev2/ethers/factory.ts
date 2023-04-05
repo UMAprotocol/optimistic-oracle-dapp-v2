@@ -15,9 +15,9 @@ import type {
   ServiceFactory,
 } from "@libs/oracle-sdk-v2/types";
 import type { TransactionReceipt } from "@libs/types";
-import type { Request } from "@libs/clients/optimisticOracle";
-import { RequestState, requestId } from "@libs/clients/optimisticOracle";
-import { OptimisticOracle } from "@libs/oracle-sdk-v1/services/optimisticOracle";
+import type { Request } from "@libs/clients/optimisticOracleV2";
+import { RequestState, requestId } from "@libs/clients/optimisticOracleV2";
+import { OptimisticOracleV2 } from "@libs/oracle-sdk-v1/services/optimisticOracleV2";
 
 export type Config = {
   chainId: ChainId;
@@ -127,10 +127,10 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedRequest = ConvertToSharedRequest(
     config.chainId,
     assertAddress(config.address),
-    "Optimistic Oracle V1"
+    "Optimistic Oracle V2"
   );
   const provider = new ethers.providers.JsonRpcProvider(config.url);
-  const oo = new OptimisticOracle(provider, config.address, config.chainId);
+  const oo = new OptimisticOracleV2(provider, config.address, config.chainId);
   const events = new Events();
   function updateFromTransactionReceipt(receipt: TransactionReceipt) {
     try {
@@ -141,7 +141,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       );
       events.emit("requests", sharedRequests);
     } catch (err) {
-      console.warn("Error updating oov1 from receipt:", err);
+      console.warn("Error updating oov2 from receipt:", err);
     }
   }
   const service = (handlers: Handlers): Service => {

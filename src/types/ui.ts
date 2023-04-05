@@ -62,11 +62,11 @@ export type OracleQueryUI = {
   chainId: ChainId;
   chainName: ChainName;
   oracleType: OracleType;
-  project: Project;
-  title: ReactNode;
-  description: ReactNode;
-  expiryType: ExpiryType | null;
   oracleAddress: Address;
+  project: Project;
+  title?: ReactNode;
+  description?: ReactNode;
+  expiryType?: ExpiryType | null;
   // not always available with assertions
   identifier?: string;
   // price requests query text is the ancillary data
@@ -75,7 +75,7 @@ export type OracleQueryUI = {
   queryText?: string;
   // for price requests the value text is null until a price is proposed. Then it is the proposed price. After a price is settled it is the settled price.
   // for assertions the value text is null until settlement, after which it is the `settlementResolution` field
-  valueText: string | null;
+  valueText?: string | null;
   timeUTC?: string;
   timeUNIX?: number;
   timeMilliseconds?: number;

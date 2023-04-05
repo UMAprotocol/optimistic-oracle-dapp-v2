@@ -133,7 +133,7 @@ export function Panel() {
     );
 
     setMessage(message);
-  }, [page, primaryAction, content]);
+  }, [page, content, alreadyProposed, alreadySettled]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
