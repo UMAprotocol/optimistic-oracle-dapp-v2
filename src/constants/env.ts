@@ -47,6 +47,14 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V1_5: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V1_10: ss.optional(ss.string()),
 
+  // enabling services for realtime updates oo v2
+  NEXT_PUBLIC_PROVIDER_V2_1: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_137: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_288: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_42161: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_5: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_10: ss.optional(ss.string()),
+
   // enabling services for realtime updates oo v3
   NEXT_PUBLIC_PROVIDER_V3_1: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_137: ss.optional(ss.string()),
@@ -104,6 +112,12 @@ const env = ss.create(
     NEXT_PUBLIC_PROVIDER_V1_42161: process.env.NEXT_PUBLIC_PROVIDER_V1_42161,
     NEXT_PUBLIC_PROVIDER_V1_5: process.env.NEXT_PUBLIC_PROVIDER_V1_5,
     NEXT_PUBLIC_PROVIDER_V1_10: process.env.NEXT_PUBLIC_PROVIDER_V1_10,
+    NEXT_PUBLIC_PROVIDER_V2_1: process.env.NEXT_PUBLIC_PROVIDER_V2_1,
+    NEXT_PUBLIC_PROVIDER_V2_137: process.env.NEXT_PUBLIC_PROVIDER_V2_137,
+    NEXT_PUBLIC_PROVIDER_V2_288: process.env.NEXT_PUBLIC_PROVIDER_V2_288,
+    NEXT_PUBLIC_PROVIDER_V2_42161: process.env.NEXT_PUBLIC_PROVIDER_V2_42161,
+    NEXT_PUBLIC_PROVIDER_V2_5: process.env.NEXT_PUBLIC_PROVIDER_V2_5,
+    NEXT_PUBLIC_PROVIDER_V2_10: process.env.NEXT_PUBLIC_PROVIDER_V2_10,
     NEXT_PUBLIC_PROVIDER_V3_1: process.env.NEXT_PUBLIC_PROVIDER_V3_1,
     NEXT_PUBLIC_PROVIDER_V3_137: process.env.NEXT_PUBLIC_PROVIDER_V3_137,
     NEXT_PUBLIC_PROVIDER_V3_288: process.env.NEXT_PUBLIC_PROVIDER_V3_288,
@@ -575,6 +589,72 @@ function parseEnv(env: Env): Config {
       address: getContractAddress({
         chainId: 10,
         type: "Optimistic Oracle V1",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_V2_1) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V2",
+      url: env.NEXT_PUBLIC_PROVIDER_V2_1,
+      chainId: 1,
+      address: getContractAddress({ chainId: 1, type: "Optimistic Oracle V2" }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_V2_137) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V2",
+      url: env.NEXT_PUBLIC_PROVIDER_V2_137,
+      chainId: 137,
+      address: getContractAddress({
+        chainId: 137,
+        type: "Optimistic Oracle V2",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_V2_288) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V2",
+      url: env.NEXT_PUBLIC_PROVIDER_V2_288,
+      chainId: 288,
+      address: getContractAddress({
+        chainId: 288,
+        type: "Optimistic Oracle V2",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_V2_42161) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V2",
+      url: env.NEXT_PUBLIC_PROVIDER_V2_42161,
+      chainId: 42161,
+      address: getContractAddress({
+        chainId: 42161,
+        type: "Optimistic Oracle V2",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_V2_5) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V2",
+      url: env.NEXT_PUBLIC_PROVIDER_V2_5,
+      chainId: 5,
+      address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V2" }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_V2_10) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V2",
+      url: env.NEXT_PUBLIC_PROVIDER_V2_10,
+      chainId: 10,
+      address: getContractAddress({
+        chainId: 10,
+        type: "Optimistic Oracle V2",
       }),
     });
   }

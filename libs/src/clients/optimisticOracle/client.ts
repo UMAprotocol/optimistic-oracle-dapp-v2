@@ -3,6 +3,7 @@ import {
   OptimisticOracleInterfaceEthers__factory,
   getOptimisticOracleInterfaceAbi,
 } from "@uma/contracts-frontend";
+import { parseIdentifier } from "@libs/utils";
 import type { SignerOrProvider, GetEventType } from "@libs/types";
 import type { Event, BigNumberish, BigNumber } from "ethers";
 import { utils } from "ethers";
@@ -82,7 +83,7 @@ export function requestId(
 ): string {
   // this matches how we generate ids in the subgraph
   return [
-    request.identifier,
+    parseIdentifier(request.identifier),
     request.timestamp.toString(),
     request.ancillaryData,
   ].join("-");

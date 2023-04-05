@@ -11,6 +11,7 @@ import { Client } from "@libs/oracle-sdk-v2";
 import {
   oracles,
   oracle1Ethers,
+  oracle2Ethers,
   oracle3Ethers,
 } from "@libs/oracle-sdk-v2/services";
 import type { Api } from "@libs/oracle-sdk-v2/services/oraclev1/ethers";
@@ -41,6 +42,8 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
   .map((config): [ProviderConfig, ServiceFactory, Api] => {
     if (config.type === "Optimistic Oracle V1")
       return [config, ...oracle1Ethers.Factory(config)];
+    if (config.type === "Optimistic Oracle V2")
+      return [config, ...oracle2Ethers.Factory(config)];
     if (config.type === "Optimistic Oracle V3")
       return [config, ...oracle3Ethers.Factory(config)];
     throw new Error(
