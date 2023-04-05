@@ -3,6 +3,7 @@ import type { Meta } from "@storybook/react";
 import {
   defaultMockNotifications,
   handlersForAllPages,
+  handlersWithNoData,
   makeMockRouterPathname,
 } from "../mocks";
 import { NotificationsDecorator, Template } from "./shared";
@@ -21,6 +22,9 @@ export default meta;
  */
 const ProposeTemplate: PageStory = {
   ...Template,
+  args: {
+    Component: ProposePage,
+  },
   parameters: {
     nextjs: makeMockRouterPathname("/propose"),
     msw: {
@@ -29,17 +33,24 @@ const ProposeTemplate: PageStory = {
   },
 };
 
-export const Propose: PageStory = {
+export const Default: PageStory = {
   ...ProposeTemplate,
-  args: {
-    Component: ProposePage,
+};
+
+export const WithNoData: PageStory = {
+  ...ProposeTemplate,
+  parameters: {
+    ...ProposeTemplate.parameters,
+    msw: {
+      handlers: handlersWithNoData,
+    },
   },
 };
 
 export const WithNotifications: PageStory = {
-  ...Propose,
+  ...ProposeTemplate,
   args: {
-    ...Propose.args,
+    ...ProposeTemplate.args,
     notifications: defaultMockNotifications,
   },
   decorators: [NotificationsDecorator],
