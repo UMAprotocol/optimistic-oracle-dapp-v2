@@ -6,13 +6,16 @@ export function VerifyCells({
   valueText,
   timeMilliseconds,
   livenessEndsMilliseconds,
+  disputeHash,
 }: OracleQueryUI) {
   return (
     <>
       <TD>
         <Text>{valueText}</Text>
       </TD>
-      {livenessEndsMilliseconds !== undefined &&
+      {disputeHash && <TD>Disputed</TD>}
+      {!disputeHash &&
+      livenessEndsMilliseconds !== undefined &&
       timeMilliseconds !== undefined ? (
         <TD>
           <LivenessProgressBar
