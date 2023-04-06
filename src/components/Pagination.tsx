@@ -58,7 +58,26 @@ export function Pagination<Entry>({
 
     setPageNumber(newPageNumber);
     updateEntries({ newPageNumber });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [findIndex, resultsPerPage, entries]);
+
+  useEffect(() => {
+    if (entries.length === 0) {
+      setPageNumber(1);
+      updateEntries();
+      return;
+    }
+
+    const newNumberOfPages = Math.ceil(entries.length / resultsPerPage);
+    if (pageNumber > newNumberOfPages) {
+      const newPageNumber = newNumberOfPages;
+      setPageNumber(newPageNumber);
+      updateEntries({ newPageNumber });
+    } else {
+      updateEntries();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entries, resultsPerPage]);
 
   function getNumberOfButtons() {
     if (numberOfPages === defaultNumberOfButtons + 1) {

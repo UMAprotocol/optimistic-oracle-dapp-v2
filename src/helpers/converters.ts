@@ -76,6 +76,13 @@ function convertToSolidityRequest(request: RequiredRequest): SolidityRequest {
   };
 }
 
+export function isOptimisticGovernor(decodedAncillaryData: string) {
+  return (
+    decodedAncillaryData.includes("rules:") &&
+    decodedAncillaryData.includes("explanation:")
+  );
+}
+
 export function utf8ToHex(utf8String: string) {
   return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
 }
@@ -672,6 +679,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   if (exists(ancillaryData)) {
     result.queryTextHex = ancillaryData;
     result.queryText = safeDecodeHexString(ancillaryData);
+    result.isOptimisticGovernor = isOptimisticGovernor(result.queryText);
   }
 
   let bytes32Identifier = undefined;
@@ -872,6 +880,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     result.queryText = safeDecodeHexString(claim);
     result.title = result.queryText;
     result.description = result.queryText;
+    result.isOptimisticGovernor = isOptimisticGovernor(result.queryText);
   }
   if (exists(currency)) {
     result.tokenAddress = currency;

@@ -4,6 +4,7 @@ import {
   ConnectButton,
   Currency,
   DecimalInput,
+  InformationIcon,
   PanelBase,
 } from "@/components";
 import {
@@ -12,6 +13,7 @@ import {
   connectWallet,
   getProjectIcon,
   red500,
+  settled,
   smallMobileAndUnder,
 } from "@/constants";
 import {
@@ -26,7 +28,6 @@ import {
 } from "@/hooks";
 import NextLink from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
-import Info from "public/assets/icons/info.svg";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
@@ -87,7 +88,9 @@ export function Panel() {
   const showInput = page === "propose";
   const alreadyProposed =
     page === "propose" && (actionType === "dispute" || actionType === "settle");
-  const alreadySettled = page !== "settled" && actionType === undefined;
+  const alreadySettled =
+    page !== "settled" &&
+    (primaryAction?.title === undefined || primaryAction?.title === settled);
   const disableInput =
     !address ||
     connectedChain?.id !== chainId ||
@@ -102,11 +105,13 @@ export function Panel() {
   const isError = errors.length > 0;
   const hasMessage = message !== "";
   const showPrimaryActionButton =
+    page !== "settled" &&
     primaryAction &&
     !primaryAction.hidden &&
     !alreadyProposed &&
     !alreadySettled;
   const showConnectButton =
+    page !== "settled" &&
     primaryAction?.title === connectWallet &&
     !alreadyProposed &&
     !alreadySettled;
@@ -121,14 +126,14 @@ export function Panel() {
       <>
         This query has already been {alreadyProposed ? "proposed" : "settled"}.
         View it{" "}
-        <Link
+        <MessageLink
           href={{
             pathname: alreadyProposed ? "/" : "/settled",
             query: makeUrlParamsForQuery(content),
           }}
         >
           here.
-        </Link>
+        </MessageLink>
       </>
     );
 
@@ -153,6 +158,68 @@ export function Panel() {
   function close() {
     void closePanel();
   }
+
+  // todo: @sean update copy
+  const bondInformation = (
+    <>
+      <p>
+        Every request to UMA&apos;s Optimistic Oracle includes bond settings
+        that specify the size of the bond that proposers (and disputers) are
+        required to post.
+      </p>
+      <br />
+      <p>The minimum bond is the final fee for a given bond token.</p>
+      <br />
+      <MessageLink
+        href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
+        target="_blank"
+      >
+        Learn more
+      </MessageLink>
+    </>
+  );
+
+  // todo: @sean update copy
+  const rewardInformation = (
+    <>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum, beatae.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
+      </p>
+      <br />
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis,
+        mollitia!
+      </p>
+      <br />
+      <MessageLink
+        href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
+        target="_blank"
+      >
+        Learn more
+      </MessageLink>
+    </>
+  );
+
+  // todo: @sean update copy
+  const livenessInformation = (
+    <>
+      <p>
+        Every request to UMA&apos;s Optimistic Oracle includes liveness settings
+        that specify the liveness window, which is the challenge period during
+        which a proposal can be challenged.
+      </p>
+      <br />
+      <p>A typical liveness window is two hours.</p>
+      <br />
+      <MessageLink
+        href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
+        target="_blank"
+      >
+        Learn more
+      </MessageLink>
+    </>
+  );
 
   return (
     <PanelBase panelOpen={panelOpen} closePanel={close}>
@@ -197,7 +264,7 @@ export function Panel() {
             <ActionWrapper>
               <ActionText>
                 Bond
-                <InfoIcon />
+                <InformationIcon content={bondInformation} />
               </ActionText>
               <ActionText>
                 <Currency
@@ -211,7 +278,7 @@ export function Panel() {
               <ActionWrapper>
                 <ActionText>
                   Reward
-                  <InfoIcon />
+                  <InformationIcon content={rewardInformation} />
                 </ActionText>
                 <ActionText>
                   <Currency
@@ -225,7 +292,7 @@ export function Panel() {
             <ActionWrapper>
               <ActionText>
                 Challenge period ends in
-                <InfoIcon />
+                <InformationIcon content={livenessInformation} />
               </ActionText>
               <ActionText>{formattedLivenessEndsIn}</ActionText>
             </ActionWrapper>
@@ -490,6 +557,7 @@ const MessageText = styled(Text)`
 
 const Link = styled(NextLink)`
   font: var(--body-sm);
+  font-size: inherit;
   text-decoration: none;
   color: var(--red-500);
   transition: opacity var(--animation-duration);
@@ -500,14 +568,14 @@ const Link = styled(NextLink)`
   }
 `;
 
+// we don't want to word-break the link in the message text
+const MessageLink = styled(Link)`
+  word-break: normal;
+`;
+
 // icons
 
 const PencilIcon = styled(Pencil)``;
-
-const InfoIcon = styled(Info)`
-  display: inline-block;
-  margin-left: 8px;
-`;
 
 const TimestampIcon = styled(Timestamp)``;
 
