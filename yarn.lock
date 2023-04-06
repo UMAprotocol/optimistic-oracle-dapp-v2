@@ -1405,6 +1405,19 @@
     bufio "^1.0.7"
     chai "^4.3.4"
 
+"@eth-optimism/core-utils@^0.7.7":
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/@eth-optimism/core-utils/-/core-utils-0.7.7.tgz#c993d45d2be7a1956284621ad18129a88880c658"
+  integrity sha512-JO3UvrlnOpeCKzDd/9mCd47n1FFjTOJtfG1JxUx24OfC/0yjZv6sKXDoMlZoDJArTQtCyyZ9QB7vulSFjOC6rA==
+  dependencies:
+    "@ethersproject/abstract-provider" "^5.5.1"
+    "@ethersproject/bytes" "^5.5.0"
+    "@ethersproject/providers" "^5.5.3"
+    "@ethersproject/web" "^5.5.1"
+    chai "^4.3.4"
+    ethers "^5.5.4"
+    lodash "^4.17.21"
+
 "@ethereumjs/common@2.5.0":
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@ethereumjs/common/-/common-2.5.0.tgz#ec61551b31bef7a69d1dc634d8932468866a4268"
@@ -1452,7 +1465,7 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@ethersproject/abstract-provider@5.7.0", "@ethersproject/abstract-provider@^5.7.0":
+"@ethersproject/abstract-provider@5.7.0", "@ethersproject/abstract-provider@^5.5.1", "@ethersproject/abstract-provider@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/abstract-provider/-/abstract-provider-5.7.0.tgz#b0a8550f88b6bf9d51f90e4795d48294630cb9ef"
   integrity sha512-R41c9UkchKCpAqStMYUpdunjo3pkEvZC3FAwZn5S5MGbXoMQOHIdHItezTETxAO5bevtMApSyEhn9+CHcDsWBw==
@@ -1511,7 +1524,7 @@
     "@ethersproject/logger" "^5.7.0"
     bn.js "^5.2.1"
 
-"@ethersproject/bytes@5.7.0", "@ethersproject/bytes@^5.4.0", "@ethersproject/bytes@^5.7.0":
+"@ethersproject/bytes@5.7.0", "@ethersproject/bytes@^5.4.0", "@ethersproject/bytes@^5.5.0", "@ethersproject/bytes@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/bytes/-/bytes-5.7.0.tgz#a00f6ea8d7e7534d6d87f47188af1148d71f155d"
   integrity sha512-nsbxwgFXWh9NyYWo+U8atvmMsSdKJprTcICAkvbBffT75qDocbuggBU0SJiVK2MuTrp0q+xvLkTnGMPK1+uA9A==
@@ -1628,7 +1641,7 @@
   dependencies:
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/providers@5.7.2", "@ethersproject/providers@^5.4.2", "@ethersproject/providers@^5.4.4", "@ethersproject/providers@^5.7.0":
+"@ethersproject/providers@5.7.2", "@ethersproject/providers@^5.4.2", "@ethersproject/providers@^5.4.4", "@ethersproject/providers@^5.5.3", "@ethersproject/providers@^5.7.0":
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.7.2.tgz#f8b1a4f275d7ce58cf0a2eec222269a08beb18cb"
   integrity sha512-g34EWZ1WWAVgr4aptGlVBF8mhl3VWjv+8hoAnzStu8Ah22VHBsuGzP17eb6xDVRzw895G4W7vvx60lFFur/1Rg==
@@ -1757,7 +1770,7 @@
     "@ethersproject/transactions" "^5.7.0"
     "@ethersproject/wordlists" "^5.7.0"
 
-"@ethersproject/web@5.7.1", "@ethersproject/web@^5.7.0":
+"@ethersproject/web@5.7.1", "@ethersproject/web@^5.5.1", "@ethersproject/web@^5.7.0":
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/@ethersproject/web/-/web-5.7.1.tgz#de1f285b373149bee5928f4eb7bcb87ee5fbb4ae"
   integrity sha512-Gueu8lSvyjBWL4cYsWsjh6MtMwM0+H4HvqFPZfB6dV8ctbP9zFAO73VG1cMWae0FLPCtz0peKPpZY8/ugJJX2w==
@@ -5262,7 +5275,7 @@
     "@typescript-eslint/types" "5.57.1"
     eslint-visitor-keys "^3.3.0"
 
-"@uma/common@^2.28.0", "@uma/common@^2.29.1", "@uma/common@^2.32.0":
+"@uma/common@^2.28.0", "@uma/common@^2.32.0":
   version "2.32.0"
   resolved "https://registry.yarnpkg.com/@uma/common/-/common-2.32.0.tgz#7a07e8062eb83164af712b4f1cdd7c77091cbcaa"
   integrity sha512-+njikZPhAIy7KR2III1UwlAOIL3tGcsicrIM2TG5txVlVxfhjHBk9Y4IaSQAjBU11hh08iSk3fIJnDA8uGSgkg==
@@ -5297,12 +5310,12 @@
     web3 "^1.6.0"
     winston "^3.2.1"
 
-"@uma/contracts-frontend@^0.4.12", "@uma/contracts-frontend@^0.4.13":
+"@uma/contracts-frontend@^0.4.15":
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/@uma/contracts-frontend/-/contracts-frontend-0.4.15.tgz#0fd6647e9d41c4d705bd1a4409a340e3c0f5a098"
   integrity sha512-2lrIrriX8eaLgj7ugP1q9PjjmN92572KNl8ZCq2YYKt5vB23LhPAtt5wzn3loWgEl0YrfBbDfe4w/VQGPHF79A==
 
-"@uma/contracts-node@^0.4.0", "@uma/contracts-node@^0.4.13", "@uma/contracts-node@^0.4.14":
+"@uma/contracts-node@^0.4.0", "@uma/contracts-node@^0.4.15":
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/@uma/contracts-node/-/contracts-node-0.4.15.tgz#75d94e4c40fc2f24d7d017d0993d7dae2cd8692e"
   integrity sha512-5A8UPMfYM6xwZg3gqdSHdBUfZhgCya8tEuQVgIVUSccfZsm5ToykEBgLcgR3qy+cX8LH6UohK33wEjS3lWyn9A==
@@ -5338,17 +5351,18 @@
     mocha "^8.3.0"
     node-fetch "^2.6.1"
 
-"@uma/sdk@^0.32.4":
-  version "0.32.8"
-  resolved "https://registry.yarnpkg.com/@uma/sdk/-/sdk-0.32.8.tgz#239f9990ea44e24cb5e7a0c51542fb65ba61747e"
-  integrity sha512-L6T4qlZeS3Af8lNVsq2o1YadtYN75X0NFk7sERvQaenk61jnFW8bHCAqfZwdkEjeQztlA4Jt3AYfY5hyGihOeg==
+"@uma/sdk@^0.34.0":
+  version "0.34.0"
+  resolved "https://registry.yarnpkg.com/@uma/sdk/-/sdk-0.34.0.tgz#38c818164d15bed5328527412cd37a609c40151c"
+  integrity sha512-QlihRFh5VY/bzF42kdFsWrE6v2VdDuT3o0deWngEdaf0nXbQr7h1icWas1YyW3KqFWWqXSEQ06PRspY5s4YmOw==
   dependencies:
+    "@eth-optimism/core-utils" "^0.7.7"
     "@ethersproject/abstract-signer" "^5.4.0"
     "@ethersproject/providers" "^5.4.2"
     "@google-cloud/datastore" "^7.0.0"
     "@types/lodash-es" "^4.17.5"
-    "@uma/contracts-frontend" "^0.4.13"
-    "@uma/contracts-node" "^0.4.13"
+    "@uma/contracts-frontend" "^0.4.15"
+    "@uma/contracts-node" "^0.4.15"
     axios "^0.24.0"
     bluebird "^3.7.2"
     bn.js "^4.11.9"
@@ -9835,7 +9849,7 @@ ethereumjs-wallet@^1.0.1:
     utf8 "^3.0.0"
     uuid "^8.3.2"
 
-ethers@5.7.2, ethers@^5.0.13, ethers@^5.4.2, ethers@^5.7.1, ethers@^5.7.2:
+ethers@5.7.2, ethers@^5.0.13, ethers@^5.4.2, ethers@^5.5.4, ethers@^5.7.1, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
