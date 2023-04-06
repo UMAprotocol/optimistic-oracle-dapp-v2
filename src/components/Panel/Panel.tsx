@@ -105,11 +105,13 @@ export function Panel() {
   const isError = errors.length > 0;
   const hasMessage = message !== "";
   const showPrimaryActionButton =
+    page !== "settled" &&
     primaryAction &&
     !primaryAction.hidden &&
     !alreadyProposed &&
     !alreadySettled;
   const showConnectButton =
+    page !== "settled" &&
     primaryAction?.title === connectWallet &&
     !alreadyProposed &&
     !alreadySettled;
