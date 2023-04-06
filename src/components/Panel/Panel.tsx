@@ -13,6 +13,7 @@ import {
   connectWallet,
   getProjectIcon,
   red500,
+  settled,
   smallMobileAndUnder,
 } from "@/constants";
 import {
@@ -87,7 +88,9 @@ export function Panel() {
   const showInput = page === "propose";
   const alreadyProposed =
     page === "propose" && (actionType === "dispute" || actionType === "settle");
-  const alreadySettled = page !== "settled" && actionType === undefined;
+  const alreadySettled =
+    page !== "settled" &&
+    (primaryAction?.title === undefined || primaryAction?.title === settled);
   const disableInput =
     !address ||
     connectedChain?.id !== chainId ||
@@ -102,11 +105,13 @@ export function Panel() {
   const isError = errors.length > 0;
   const hasMessage = message !== "";
   const showPrimaryActionButton =
+    page !== "settled" &&
     primaryAction &&
     !primaryAction.hidden &&
     !alreadyProposed &&
     !alreadySettled;
   const showConnectButton =
+    page !== "settled" &&
     primaryAction?.title === connectWallet &&
     !alreadyProposed &&
     !alreadySettled;
