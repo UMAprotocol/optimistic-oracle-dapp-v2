@@ -71,6 +71,7 @@ const slideLeftAndFade = keyframes`
 `;
 
 const Content = styled(RadixTooltip.Content)`
+  z-index: 2;
   max-width: 400px;
   padding: 20px;
   font: var(--body-sm);
