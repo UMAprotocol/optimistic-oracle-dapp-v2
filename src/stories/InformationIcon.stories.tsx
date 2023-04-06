@@ -14,6 +14,7 @@ const meta: Meta = {
           alignItems: "center",
         }}
       >
+        <p>This is some text that warrants further explanation</p>
         <Story />
       </div>
     ),
@@ -25,5 +26,7 @@ export default meta;
 type Story = StoryObj<typeof InformationIcon>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    content: "This is some information",
+  },
 };

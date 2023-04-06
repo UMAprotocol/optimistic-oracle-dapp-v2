@@ -5,11 +5,13 @@ import styled, { keyframes } from "styled-components";
 interface Props {
   children: ReactNode;
   content: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
-export function Tooltip({ children, content }: Props) {
+export function Tooltip({ children, content, open, onOpenChange }: Props) {
   return (
     <RadixTooltip.Provider delayDuration={100}>
-      <RadixTooltip.Root>
+      <RadixTooltip.Root open={open} onOpenChange={onOpenChange}>
         <TriggerWrapper asChild>
           <Trigger>{children}</Trigger>
         </TriggerWrapper>
