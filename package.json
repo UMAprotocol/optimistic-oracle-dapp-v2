@@ -24,7 +24,7 @@
     "@radix-ui/react-portal": "^1.0.2",
     "@radix-ui/react-progress": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.5",
-    "@rainbow-me/rainbowkit": "^0.8.1",
+    "@rainbow-me/rainbowkit": "^0.12.7",
     "@react-spring/web": "^9.7.1",
     "@uma/common": "^2.32.0",
     "@uma/contracts-frontend": "^0.4.15",
@@ -45,7 +45,7 @@
     "superstruct": "^1.0.3",
     "swr": "^2.1.2",
     "usehooks-ts": "^2.9.1",
-    "wagmi": "^0.10.14"
+    "wagmi": "^0.12.9"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.2",
