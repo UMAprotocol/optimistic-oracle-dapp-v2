@@ -126,18 +126,11 @@ export function makeUrlParamsForQuery({
   assertionLogIndex,
 }: OracleQueryUI) {
   const isRequest = !!requestHash && !!requestLogIndex;
-  const isAssertion = !!assertionHash && !!assertionLogIndex;
-  const queryParams = isRequest
-    ? {
-        requestHash,
-        requestLogIndex,
-      }
-    : isAssertion
-    ? {
-        assertionHash,
-        assertionLogIndex,
-      }
-    : {};
+
+  const queryParams = {
+    transactionHash: isRequest ? requestHash : assertionHash,
+    eventIndex: isRequest ? requestLogIndex : assertionLogIndex,
+  };
 
   return queryParams;
 }

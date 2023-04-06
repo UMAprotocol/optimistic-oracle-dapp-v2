@@ -1,9 +1,14 @@
 import { getPageForQuery } from "@/helpers";
 import { usePageContext, usePanelContext, useQueries } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
-import { find } from "lodash";
+import { filter, find } from "lodash";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+
+type SearchParams = {
+  transactionHash?: string;
+  eventIndex?: string;
+};
 
 export function useHandleQueryInUrl() {
   const router = useRouter();
@@ -16,7 +21,27 @@ export function useHandleQueryInUrl() {
 
     if (!hasQueryUrl) return;
 
-    const query = find<OracleQueryUI>(queries, router.query);
+    const searchParams = Object.fromEntries(
+      new URLSearchParams(window.location.search)
+    ) as SearchParams;
+
+    const forTx = filter<OracleQueryUI>(queries, (query) => {
+      return (
+        query.requestHash === searchParams.transactionHash ||
+        query.assertionHash === searchParams.transactionHash
+      );
+    });
+
+    const hasMultipleForTx = forTx.length > 1;
+
+    const query = hasMultipleForTx
+      ? find<OracleQueryUI>(queries, (query) => {
+          return (
+            query.requestLogIndex === searchParams.eventIndex ||
+            query.assertionLogIndex === searchParams.eventIndex
+          );
+        })
+      : forTx[0];
 
     if (query && !panelOpen) {
       const pageForQuery = getPageForQuery(query);
