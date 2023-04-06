@@ -20,6 +20,15 @@ const nextConfig = {
       ],
     },
   },
+  async redirects() {
+    return [
+      {
+        source: "/request",
+        destination: "/",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = withSvgr(nextConfig);
