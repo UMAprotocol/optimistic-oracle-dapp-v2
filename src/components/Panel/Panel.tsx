@@ -121,14 +121,14 @@ export function Panel() {
       <>
         This query has already been {alreadyProposed ? "proposed" : "settled"}.
         View it{" "}
-        <Link
+        <MessageLink
           href={{
             pathname: alreadyProposed ? "/" : "/settled",
             query: makeUrlParamsForQuery(content),
           }}
         >
           here.
-        </Link>
+        </MessageLink>
       </>
     );
 
@@ -165,12 +165,12 @@ export function Panel() {
       <br />
       <p>The minimum bond is the final fee for a given bond token.</p>
       <br />
-      <Link
+      <MessageLink
         href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
         target="_blank"
       >
         Learn more
-      </Link>
+      </MessageLink>
     </>
   );
 
@@ -187,12 +187,12 @@ export function Panel() {
         mollitia!
       </p>
       <br />
-      <Link
+      <MessageLink
         href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
         target="_blank"
       >
         Learn more
-      </Link>
+      </MessageLink>
     </>
   );
 
@@ -207,12 +207,12 @@ export function Panel() {
       <br />
       <p>A typical liveness window is two hours.</p>
       <br />
-      <Link
+      <MessageLink
         href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
         target="_blank"
       >
         Learn more
-      </Link>
+      </MessageLink>
     </>
   );
 
@@ -552,6 +552,7 @@ const MessageText = styled(Text)`
 
 const Link = styled(NextLink)`
   font: var(--body-sm);
+  font-size: inherit;
   text-decoration: none;
   color: var(--red-500);
   transition: opacity var(--animation-duration);
@@ -560,6 +561,11 @@ const Link = styled(NextLink)`
   &:hover {
     opacity: 0.75;
   }
+`;
+
+// we don't want to word-break the link in the message text
+const MessageLink = styled(Link)`
+  word-break: normal;
 `;
 
 // icons
