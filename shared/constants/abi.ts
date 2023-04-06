@@ -179,3 +179,19 @@ export const settleAssertionAbi = [
     type: "function",
   },
 ];
+
+export const ogAbi = [
+  {
+    inputs: [],
+    name: "rules",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
