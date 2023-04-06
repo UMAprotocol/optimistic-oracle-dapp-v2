@@ -12,6 +12,7 @@ import {
   connectWallet,
   getProjectIcon,
   red500,
+  settled,
   smallMobileAndUnder,
 } from "@/constants";
 import {
@@ -87,7 +88,9 @@ export function Panel() {
   const showInput = page === "propose";
   const alreadyProposed =
     page === "propose" && (actionType === "dispute" || actionType === "settle");
-  const alreadySettled = page !== "settled" && actionType === undefined;
+  const alreadySettled =
+    page !== "settled" &&
+    (primaryAction?.title === undefined || primaryAction?.title === settled);
   const disableInput =
     !address ||
     connectedChain?.id !== chainId ||
