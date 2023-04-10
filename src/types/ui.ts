@@ -105,6 +105,7 @@ export type OracleQueryUI = {
   settleAssertionParams?: SettleAssertionParams | undefined;
   state?: string | undefined;
   // additional searchable properties, note these get parsed to strings even if bigint so we can compare with ==
+  requester?: string | null;
   requestTimestamp?: string | null;
   requestHash?: string | null;
   requestLogIndex?: string | null;

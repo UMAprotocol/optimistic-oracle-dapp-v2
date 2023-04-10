@@ -729,6 +729,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   if (exists(proposalTimestamp)) result.proposalTimestamp = proposalTimestamp;
   if (exists(proposalHash)) result.proposalHash = proposalHash;
   if (exists(proposalLogIndex)) result.proposalLogIndex = proposalLogIndex;
+  if (exists(requester)) result.requester = requester;
   if (exists(requestTimestamp)) result.requestTimestamp = requestTimestamp;
   if (exists(requestHash)) result.requestHash = requestHash;
   if (exists(requestLogIndex)) result.requestLogIndex = requestLogIndex;

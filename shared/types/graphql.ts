@@ -11,7 +11,6 @@ export type PriceRequestGraphEntity = OOV1GraphEntity | OOV2GraphEntity;
 
 export type AssertionGraphEntity = OOV3GraphEntity;
 
-
 export type OOV1GraphQuery = {
   optimisticPriceRequests: OOV1GraphEntity[];
 };
