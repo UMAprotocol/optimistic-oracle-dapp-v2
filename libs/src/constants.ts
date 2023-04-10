@@ -125,6 +125,16 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 1,
     address: getAddress("0xeE3Afe347D5C74317041E2618C49534dAf887c24"),
   },
+  {
+    type: "Skinny Optimistic Oracle",
+    chainId: 5,
+    address: getAddress("0xeDc52A961B5Ca2AC7B2e0bc36714dB60E5a115Ab"),
+  },
+  {
+    type: "Skinny Optimistic Oracle V2",
+    chainId: 5,
+    address: getAddress("0x5a9Ed5DaC741e20cA6587d0c5C39C0992Db305C1"),
+  },
 ];
 export function getContractInfo(params: {
   chainId: number;
