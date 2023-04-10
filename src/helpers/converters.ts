@@ -713,7 +713,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
       proposalExpirationTimestamp
     );
     result.formattedLivenessEndsIn = toTimeFormatted(
-      result.livenessEndsMilliseconds
+      proposalExpirationTimestamp
     );
   }
 
@@ -868,9 +868,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   }
   if (exists(expirationTime)) {
     result.livenessEndsMilliseconds = getLivenessEnds(expirationTime);
-    result.formattedLivenessEndsIn = toTimeFormatted(
-      result.livenessEndsMilliseconds
-    );
+    result.formattedLivenessEndsIn = toTimeFormatted(expirationTime);
   }
   if (exists(settlementResolution)) {
     result.valueText = settlementResolution.toString();
