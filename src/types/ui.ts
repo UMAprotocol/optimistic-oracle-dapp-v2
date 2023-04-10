@@ -121,7 +121,6 @@ export type OracleQueryUI = {
   settlementTimestamp?: string | null;
   settlementHash?: string | null;
   settlementLogIndex?: string | null;
-  isOptimisticGovernor?: boolean;
 };
 
 export type ApproveBondSpendParams = {

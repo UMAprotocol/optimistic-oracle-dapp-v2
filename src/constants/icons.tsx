@@ -4,6 +4,7 @@ import Across from "public/assets/icons/projects/across.svg";
 import Cozy from "public/assets/icons/projects/cozy.svg";
 import Polymarket from "public/assets/icons/projects/polymarket.svg";
 import Sherlock from "public/assets/icons/projects/sherlock.svg";
+import OSnap from "public/assets/icons/projects/osnap.svg";
 import Unknown from "public/assets/icons/projects/unknown.svg";
 
 export const projectIcons: Record<string, JSX.Element> = {
@@ -12,6 +13,7 @@ export const projectIcons: Record<string, JSX.Element> = {
   Polymarket: <Polymarket />,
   Across: <Across />,
   Sherlock: <Sherlock />,
+  OSnap: <OSnap />,
 };
 
 export const currencyIcons: Record<string, JSX.Element> = {
