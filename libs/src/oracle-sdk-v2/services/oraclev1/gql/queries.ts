@@ -13,7 +13,7 @@ export async function getPriceRequests<Query extends PriceRequestsQuery>(
   const isV2 = oracleType === "Optimistic Oracle V2";
   const query = gql`
     query ${queryName} {
-      optimisticPriceRequests {
+      optimisticPriceRequests(orderBy: time, orderDirection: desc, first:500) {
         id
         identifier
         ancillaryData
