@@ -123,10 +123,14 @@ export function useHandleQueryInUrl() {
 
       async function redirectToCorrectPage() {
         const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;
-        await router.push({
-          pathname,
-          query: router.query,
-        });
+        await router.push(
+          {
+            pathname,
+            query: router.query,
+          },
+          undefined,
+          { scroll: false }
+        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

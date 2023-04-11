@@ -1,9 +1,9 @@
 import assert from "assert";
 import type { Contract } from "ethers";
 import { BigNumber, ethers } from "ethers";
-import type Multicall2 from "./multicall2";
-import zip from "lodash/zip";
 import sortedLastIndexBy from "lodash/sortedLastIndexBy";
+import zip from "lodash/zip";
+import type Multicall2 from "./multicall2";
 
 export type BigNumberish = number | string | BigNumber;
 // check if a value is not null or undefined, useful for numbers which could be 0.
@@ -193,8 +193,12 @@ export function isUnique<T>(
 }
 
 export function parseIdentifier(identifier: string | null | undefined): string {
+  if (!identifier) return "";
+
+  const utf8 = ethers.utils.isBytesLike(identifier)
+    ? ethers.utils.toUtf8String(identifier)
+    : identifier;
+
   // replace non ascii chars
-  return ethers.utils
-    .toUtf8String(identifier || [])
-    .replace(/[^\x20-\x7E]+/g, "");
+  return utf8.replace(/[^\x20-\x7E]+/g, "");
 }

@@ -20,12 +20,7 @@ export function Content({ children, panelOpen, closePanel }: Props) {
   }, [panelOpen]);
 
   return (
-    <FocusOn
-      enabled={panelOpen}
-      onEscapeKey={closePanel}
-      preventScrollOnFocus
-      focusLock={false}
-    >
+    <FocusOn enabled={panelOpen} onEscapeKey={closePanel} focusLock={false}>
       <Wrapper
         ref={contentRef}
         role="dialog"

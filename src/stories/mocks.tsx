@@ -36,7 +36,7 @@ const defaultMockRequestGraphEntity = (
     state: "Requested",
     proposer: null,
     proposedPrice: null,
-    proposalExpirationTimestamp: null,
+    proposalExpirationTimestamp: makeUnixTimestamp("future", { hours: 1 }),
     disputer: null,
     settlementPrice: null,
     settlementPayout: null,
