@@ -58,7 +58,7 @@ export function Panel() {
     chainId,
     oracleType,
     title,
-    description,
+    htmlDescription,
     project,
     valueText,
     queryText,
@@ -354,8 +354,14 @@ export function Panel() {
             <AncillaryDataIcon />
             <SectionTitle>Additional Text Data</SectionTitle>
           </SectionTitleWrapper>
-          <SectionSubTitle>Description</SectionSubTitle>
-          <DetailText>{description}</DetailText>
+          {htmlDescription ? (
+            <>
+              <SectionSubTitle>Description</SectionSubTitle>
+              <DetailText
+                dangerouslySetInnerHTML={{ __html: htmlDescription }}
+              />
+            </>
+          ) : null}
           {queryText !== "" && (
             <>
               <SectionSubTitle>String</SectionSubTitle>

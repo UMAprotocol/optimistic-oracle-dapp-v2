@@ -76,6 +76,19 @@ function convertToSolidityRequest(request: RequiredRequest): SolidityRequest {
       : BigNumber.from(0),
   };
 }
+export function toHtml(text: string) {
+  const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/gm;
+  const matches = text.match(urlRegex);
+  if (!matches) return text;
+  let html = "";
+  matches.forEach((match) => {
+    html += text.replace(
+      match,
+      `<a target="_blank" href=${match}>${match}</a>`
+    );
+  });
+  return html;
+}
 
 export function utf8ToHex(utf8String: string) {
   return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
@@ -693,6 +706,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
       getQueryMetaData(identifier, result.queryText);
     result.title = title;
     result.description = description;
+    result.htmlDescription = toHtml(description);
     result.project = project;
     result.moreInformation = makeMoreInformationList(
       request,
@@ -879,6 +893,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     result.queryText = safeDecodeHexString(claim);
     result.title = result.queryText;
     result.description = result.queryText;
+    result.htmlDescription = toHtml(result.queryText);
     if (isOptimisticGovernor(result.queryText)) {
       result.project = "OSnap";
       const match = result.queryText.match(/explanation:"(.*?)",rules:/);

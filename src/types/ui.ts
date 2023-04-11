@@ -66,6 +66,7 @@ export type OracleQueryUI = {
   project: Project;
   title?: string;
   description?: ReactNode;
+  htmlDescription?: string;
   expiryType?: ExpiryType | null;
   // not always available with assertions
   identifier?: string;
