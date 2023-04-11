@@ -9,6 +9,7 @@ export function Headers({ page }: { page: PageName }) {
   const verify = [
     "Query/Statement",
     "Proposal/Assertion",
+    "Bond",
     "Challenge period left",
   ];
 
