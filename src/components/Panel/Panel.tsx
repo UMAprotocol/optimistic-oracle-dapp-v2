@@ -6,6 +6,7 @@ import {
   DecimalInput,
   InformationIcon,
   PanelBase,
+  TruncatedTitle,
 } from "@/components";
 import {
   blueGrey500,
@@ -225,7 +226,9 @@ export function Panel() {
     <PanelBase panelOpen={panelOpen} closePanel={close}>
       <TitleWrapper>
         <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
-        <Title id="panel-title">{title}</Title>
+        <Title id="panel-title">
+          <TruncatedTitle title={title} />
+        </Title>
         <CloseButtonWrapper>
           <CloseButton
             onClick={close}
