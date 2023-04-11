@@ -1,5 +1,6 @@
 import { getProjectIcon } from "@/constants";
 import type { OracleQueryUI } from "@/types";
+import { TruncatedTitle } from "../TruncatedTitle";
 import {
   IconWrapper,
   TextWrapper,
@@ -34,7 +35,9 @@ export function TitleCell({
       <TitleWrapper>
         <IconWrapper>{projectIcon}</IconWrapper>
         <TextWrapper>
-          <TitleHeader>{title}</TitleHeader>
+          <TitleHeader>
+            <TruncatedTitle title={title} />
+          </TitleHeader>
           <TitleText>
             {isKnownProject && `${project} | `}
             {timeFormatted} | {chainName} {expiryType && `| ${expiryType}`}
