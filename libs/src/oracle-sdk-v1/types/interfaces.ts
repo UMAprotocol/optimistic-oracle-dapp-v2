@@ -43,6 +43,10 @@ export type Request = RequestKey & {
     proposeBlockNumber: number;
     disputeBlockNumber: number;
     settleBlockNumber: number;
+    requestLogIndex: number;
+    proposeLogIndex: number;
+    disputeLogIndex: number;
+    settleLogIndex: number;
     // oo v2 fields moved here from settings object
     bond: BigNumber;
     customLiveness: BigNumber;
