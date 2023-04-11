@@ -4,6 +4,8 @@ import {
   defaultMockNotifications,
   handlersForAllPages,
   handlersWithNoData,
+  makeGraphqlHandlers,
+  makeMockRequestGraphEntities,
   makeMockRouterPathname,
 } from "../mocks";
 import { NotificationsDecorator, Template } from "./shared";
@@ -54,4 +56,50 @@ export const WithNotifications: PageStory = {
     notifications: defaultMockNotifications,
   },
   decorators: [NotificationsDecorator],
+};
+
+export const WithDifferentCurrencies: PageStory = {
+  ...ProposeTemplate,
+  parameters: {
+    ...ProposeTemplate.parameters,
+    msw: {
+      handlers: makeGraphqlHandlers({
+        v2: {
+          Ethereum: makeMockRequestGraphEntities({
+            inputs: [
+              {
+                state: "Requested",
+                identifier: "USDC_CURRENCY",
+                bond: "123000000",
+              },
+              {
+                state: "Requested",
+                identifier: "UMA_CURRENCY",
+                currency: "0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828",
+                bond: "123000000000000000000",
+              },
+              {
+                state: "Requested",
+                identifier: "WETH_CURRENCY",
+                currency: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                bond: "123000000000000000000",
+              },
+              {
+                state: "Requested",
+                identifier: "DAI_CURRENCY",
+                currency: "0x6b175474e89094c44da98b954eedeac495271d0f",
+                bond: "123000000000000000000",
+              },
+              {
+                state: "Requested",
+                identifier: "UNKNOWN_CURRENCY",
+                currency: "0x2a98f128092aBBadef25d17910EbE15B8495D0c1",
+                bond: "12300000000",
+              },
+            ],
+          }),
+        },
+      }),
+    },
+  },
 };
