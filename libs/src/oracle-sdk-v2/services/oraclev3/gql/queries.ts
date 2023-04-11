@@ -11,6 +11,7 @@ export async function getAssertions(url: string, chainId: ChainId) {
       assertions {
         id
         assertionId
+        identifier
         domainId
         claim
         asserter

@@ -43,6 +43,7 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
           {navLinks.map(({ label, href }) => (
             <NavItem key={href}>
               <Link
+                onClick={closePanel}
                 href={href}
                 target={isExternalLink(href) ? "_blank" : undefined}
                 style={

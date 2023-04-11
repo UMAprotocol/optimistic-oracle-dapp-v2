@@ -62,6 +62,13 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V3_42161: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_5: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_10: ss.optional(ss.string()),
+
+  NEXT_PUBLIC_PROVIDER_SKINNY_1: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_SKINNY_10: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_SKINNY_137: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_SKINNY_288: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_SKINNY_42161: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_SKINNY_5: ss.optional(ss.string()),
   // not supported yet
   // NEXT_PUBLIC_PROVIDER_V1_416: ss.optional(ss.string()),
   // NEXT_PUBLIC_PROVIDER_V1_43114: ss.optional(ss.string()),
@@ -124,6 +131,15 @@ const env = ss.create(
     NEXT_PUBLIC_PROVIDER_V3_42161: process.env.NEXT_PUBLIC_PROVIDER_V3_42161,
     NEXT_PUBLIC_PROVIDER_V3_5: process.env.NEXT_PUBLIC_PROVIDER_V3_5,
     NEXT_PUBLIC_PROVIDER_V3_10: process.env.NEXT_PUBLIC_PROVIDER_V3_10,
+    NEXT_PUBLIC_PROVIDER_SKINNY_1: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_1,
+    NEXT_PUBLIC_PROVIDER_SKINNY_137:
+      process.env.NEXT_PUBLIC_PROVIDER_SKINNY_137,
+    NEXT_PUBLIC_PROVIDER_SKINNY_288:
+      process.env.NEXT_PUBLIC_PROVIDER_SKINNY_288,
+    NEXT_PUBLIC_PROVIDER_SKINNY_42161:
+      process.env.NEXT_PUBLIC_PROVIDER_SKINNY_42161,
+    NEXT_PUBLIC_PROVIDER_SKINNY_5: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_5,
+    NEXT_PUBLIC_PROVIDER_SKINNY_10: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_10,
     // not supported yet
     // NEXT_PUBLIC_PROVIDER_V1_416:   process.env.NEXT_PUBLIC_PROVIDER_V1_416,
     // NEXT_PUBLIC_PROVIDER_V1_43114: process.env.NEXT_PUBLIC_PROVIDER_V1_43114,
@@ -454,78 +470,6 @@ function parseEnv(env: Env): Config {
       }),
     });
   }
-  if (env.NEXT_PUBLIC_SUBGRAPH_SKINNY_1) {
-    subgraphs.push({
-      source: "gql",
-      url: env.NEXT_PUBLIC_SUBGRAPH_SKINNY_1,
-      type: "Skinny Optimistic Oracle",
-      chainId: 1,
-      address: getContractAddress({
-        chainId: 1,
-        type: "Skinny Optimistic Oracle",
-      }),
-    });
-  }
-  if (env.NEXT_PUBLIC_SUBGRAPH_SKINNY_10) {
-    subgraphs.push({
-      source: "gql",
-      url: env.NEXT_PUBLIC_SUBGRAPH_SKINNY_10,
-      type: "Skinny Optimistic Oracle",
-      chainId: 10,
-      address: getContractAddress({
-        chainId: 10,
-        type: "Skinny Optimistic Oracle",
-      }),
-    });
-  }
-  if (env.NEXT_PUBLIC_SUBGRAPH_SKINNY_137) {
-    subgraphs.push({
-      source: "gql",
-      url: env.NEXT_PUBLIC_SUBGRAPH_SKINNY_137,
-      type: "Skinny Optimistic Oracle",
-      chainId: 137,
-      address: getContractAddress({
-        chainId: 137,
-        type: "Skinny Optimistic Oracle",
-      }),
-    });
-  }
-  if (env.NEXT_PUBLIC_SUBGRAPH_SKINNY_288) {
-    subgraphs.push({
-      source: "gql",
-      url: env.NEXT_PUBLIC_SUBGRAPH_SKINNY_288,
-      type: "Skinny Optimistic Oracle",
-      chainId: 288,
-      address: getContractAddress({
-        chainId: 288,
-        type: "Skinny Optimistic Oracle",
-      }),
-    });
-  }
-  if (env.NEXT_PUBLIC_SUBGRAPH_SKINNY_42161) {
-    subgraphs.push({
-      source: "gql",
-      url: env.NEXT_PUBLIC_SUBGRAPH_SKINNY_42161,
-      type: "Skinny Optimistic Oracle",
-      chainId: 42161,
-      address: getContractAddress({
-        chainId: 42161,
-        type: "Skinny Optimistic Oracle",
-      }),
-    });
-  }
-  if (env.NEXT_PUBLIC_SUBGRAPH_SKINNY_5) {
-    subgraphs.push({
-      source: "gql",
-      url: env.NEXT_PUBLIC_SUBGRAPH_SKINNY_5,
-      type: "Skinny Optimistic Oracle",
-      chainId: 5,
-      address: getContractAddress({
-        chainId: 5,
-        type: "Skinny Optimistic Oracle",
-      }),
-    });
-  }
   if (env.NEXT_PUBLIC_PROVIDER_V1_1) {
     providers.push({
       source: "provider",
@@ -721,6 +665,78 @@ function parseEnv(env: Env): Config {
       address: getContractAddress({
         chainId: 10,
         type: "Optimistic Oracle V3",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_SKINNY_1) {
+    providers.push({
+      source: "provider",
+      type: "Skinny Optimistic Oracle",
+      url: env.NEXT_PUBLIC_PROVIDER_SKINNY_1,
+      chainId: 1,
+      address: getContractAddress({
+        chainId: 1,
+        type: "Skinny Optimistic Oracle",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_SKINNY_137) {
+    providers.push({
+      source: "provider",
+      type: "Skinny Optimistic Oracle",
+      url: env.NEXT_PUBLIC_PROVIDER_SKINNY_137,
+      chainId: 137,
+      address: getContractAddress({
+        chainId: 137,
+        type: "Skinny Optimistic Oracle",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_SKINNY_288) {
+    providers.push({
+      source: "provider",
+      type: "Skinny Optimistic Oracle",
+      url: env.NEXT_PUBLIC_PROVIDER_SKINNY_288,
+      chainId: 288,
+      address: getContractAddress({
+        chainId: 288,
+        type: "Skinny Optimistic Oracle",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_SKINNY_42161) {
+    providers.push({
+      source: "provider",
+      type: "Skinny Optimistic Oracle",
+      url: env.NEXT_PUBLIC_PROVIDER_SKINNY_42161,
+      chainId: 42161,
+      address: getContractAddress({
+        chainId: 42161,
+        type: "Skinny Optimistic Oracle",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_SKINNY_5) {
+    providers.push({
+      source: "provider",
+      type: "Skinny Optimistic Oracle",
+      url: env.NEXT_PUBLIC_PROVIDER_SKINNY_5,
+      chainId: 5,
+      address: getContractAddress({
+        chainId: 5,
+        type: "Skinny Optimistic Oracle",
+      }),
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_SKINNY_10) {
+    providers.push({
+      source: "provider",
+      type: "Skinny Optimistic Oracle",
+      url: env.NEXT_PUBLIC_PROVIDER_SKINNY_10,
+      chainId: 10,
+      address: getContractAddress({
+        chainId: 10,
+        type: "Skinny Optimistic Oracle",
       }),
     });
   }

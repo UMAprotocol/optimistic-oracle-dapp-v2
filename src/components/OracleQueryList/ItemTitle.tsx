@@ -1,3 +1,4 @@
+import { TruncatedTitle } from "@/components";
 import { getProjectIcon } from "@/constants";
 import type { OracleQueryUI } from "@/types";
 import {
@@ -22,7 +23,9 @@ export function ItemTitle({
     <TitleWrapper>
       <HeaderWrapper>
         <TitleIconWrapper>{projectIcon}</TitleIconWrapper>
-        <TitleHeader>{title}</TitleHeader>
+        <TitleHeader>
+          <TruncatedTitle title={title} />
+        </TitleHeader>
       </HeaderWrapper>
       <TitleText>
         {isKnownProject && `${project} | `}

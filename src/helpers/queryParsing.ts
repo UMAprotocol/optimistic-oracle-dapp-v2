@@ -1,6 +1,13 @@
 import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type { MetaData } from "@/types";
 
+export function isOptimisticGovernor(decodedAncillaryData: string) {
+  return (
+    decodedAncillaryData.includes("rules:") &&
+    decodedAncillaryData.includes("explanation:")
+  );
+}
+
 export function checkIfIsCozy(decodedAncillaryData: string) {
   const cozyToken = "This will revert if a non-YES answer is proposed.";
   if (decodedAncillaryData.includes(cozyToken)) {

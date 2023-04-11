@@ -223,7 +223,16 @@ export class SkinnyOptimisticOracle implements OracleInterface {
     };
   }
   updateFromTransactionReceipt(receipt: TransactionReceipt): void {
-    const events = receipt.logs.map((log) => this.parseLog(log));
+    const events = receipt.logs
+      .map((log) => {
+        try {
+          return this.parseLog(log);
+        } catch (err) {
+          console.warn("Failed parsing log for skinny oo:", err);
+          return undefined;
+        }
+      })
+      .filter(Boolean);
     this.updateFromEvents(events as unknown[] as OptimisticOracleEvent[]);
   }
   listRequests(): Request[] {

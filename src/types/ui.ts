@@ -64,7 +64,7 @@ export type OracleQueryUI = {
   oracleType: OracleType;
   oracleAddress: Address;
   project: Project;
-  title?: ReactNode;
+  title?: string;
   description?: ReactNode;
   expiryType?: ExpiryType | null;
   // not always available with assertions
@@ -121,7 +121,6 @@ export type OracleQueryUI = {
   settlementTimestamp?: string | null;
   settlementHash?: string | null;
   settlementLogIndex?: string | null;
-  isOptimisticGovernor?: boolean;
 };
 
 export type ApproveBondSpendParams = {
