@@ -1,7 +1,9 @@
+import { Tooltip } from "@/components";
 import { getCurrencyIcon } from "@/constants";
 import type { ChainId } from "@shared/types";
 import type { Address } from "@wagmi/core";
 import type { BigNumber } from "ethers";
+import { Fragment } from "react";
 import styled from "styled-components";
 import { useToken } from "wagmi";
 import { FormattedTokenValue } from "./FormattedTokenValue";
@@ -36,23 +38,27 @@ export function Currency(props: Props) {
     address === undefined ||
     chainId === undefined;
 
+  const OuterWrapper = hasIcon ? Tooltip : Fragment;
+
   return (
-    <Wrapper>
-      {isLoading ? (
-        <LoadingSkeleton width={80} height={16} />
-      ) : (
-        <>
-          {hasIcon && icon}{" "}
-          <FormattedTokenValue value={value} decimals={decimals} />{" "}
-          {!hasIcon && symbol}
-        </>
-      )}
-    </Wrapper>
+    <OuterWrapper content={symbol}>
+      <InnerWrapper>
+        {isLoading ? (
+          <LoadingSkeleton width={80} height={16} />
+        ) : (
+          <>
+            {hasIcon && icon}{" "}
+            <FormattedTokenValue value={value} decimals={decimals} />{" "}
+            {!hasIcon && symbol}
+          </>
+        )}
+      </InnerWrapper>
+    </OuterWrapper>
   );
 }
 
-const Wrapper = styled.span`
+const InnerWrapper = styled.span`
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
 `;
