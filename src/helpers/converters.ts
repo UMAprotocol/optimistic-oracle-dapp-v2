@@ -1,4 +1,5 @@
 import { config } from "@/constants";
+import { parseIdentifier } from "@libs/utils";
 import type {
   ActionType,
   MoreInformationItem,
@@ -76,15 +77,15 @@ function convertToSolidityRequest(request: RequiredRequest): SolidityRequest {
   };
 }
 
+export function utf8ToHex(utf8String: string) {
+  return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
+}
+
 export function isOptimisticGovernor(decodedAncillaryData: string) {
   return (
     decodedAncillaryData.includes("rules:") &&
     decodedAncillaryData.includes("explanation:")
   );
-}
-
-export function utf8ToHex(utf8String: string) {
-  return ethers.utils.hexlify(ethers.utils.toUtf8Bytes(utf8String));
 }
 
 export function decodeHexString(hexString: string) {
@@ -679,7 +680,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   if (exists(ancillaryData)) {
     result.queryTextHex = ancillaryData;
     result.queryText = safeDecodeHexString(ancillaryData);
-    result.isOptimisticGovernor = isOptimisticGovernor(result.queryText);
   }
 
   let bytes32Identifier = undefined;
@@ -857,12 +857,13 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     project: "Unknown",
     expiryType: null,
     reward: null,
-    moreInformation: makeMoreInformationList(assertion),
     actionType: getAssertionActionType(assertion),
+    moreInformation: makeMoreInformationList(assertion),
   };
   if (exists(identifier)) {
-    result.identifier = identifier;
+    result.identifier = parseIdentifier(identifier);
   }
+
   if (exists(bond)) {
     result.bond = bond;
   }
@@ -878,7 +879,15 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     result.queryText = safeDecodeHexString(claim);
     result.title = result.queryText;
     result.description = result.queryText;
-    result.isOptimisticGovernor = isOptimisticGovernor(result.queryText);
+    if (isOptimisticGovernor(result.queryText)) {
+      result.project = "OSnap";
+      const match = result.queryText.match(/explanation:"(.*?)",rules:/);
+      if (match && match[1]) {
+        result.title = `OSnap Request ${match[1]}`;
+      } else {
+        result.title = "OSnap Request";
+      }
+    }
   }
   if (exists(currency)) {
     result.tokenAddress = currency;
