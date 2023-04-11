@@ -42,7 +42,11 @@ export function Currency(props: Props) {
 
   return (
     <OuterWrapper content={symbol}>
-      <InnerWrapper>
+      <InnerWrapper
+        style={{
+          cursor: hasIcon ? "pointer" : "default",
+        }}
+      >
         {isLoading ? (
           <LoadingSkeleton width={80} height={16} />
         ) : (
