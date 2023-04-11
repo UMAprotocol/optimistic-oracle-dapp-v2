@@ -1,5 +1,7 @@
 import ETH from "public/assets/icons/currencies/eth.svg";
 import USDC from "public/assets/icons/currencies/usdc.svg";
+import DAI from "public/assets/icons/currencies/dai.svg";
+import UMA from "public/assets/icons/currencies/uma.svg";
 import Across from "public/assets/icons/projects/across.svg";
 import Cozy from "public/assets/icons/projects/cozy.svg";
 import Polymarket from "public/assets/icons/projects/polymarket.svg";
@@ -16,7 +18,9 @@ export const projectIcons: Record<string, JSX.Element> = {
 
 export const currencyIcons: Record<string, JSX.Element> = {
   USDC: <USDC />,
-  ETH: <ETH />,
+  UMA: <UMA />,
+  DAI: <DAI />,
+  WETH: <ETH />,
 };
 
 export function getProjectIcon(project: string | null | undefined) {
