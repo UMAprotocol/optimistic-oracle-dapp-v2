@@ -1,9 +1,9 @@
 import { makeUrlParamsForQuery } from "@/helpers";
+import { useOracleDataContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useState } from "react";
-import { useOracleDataContext } from "@/hooks";
 
 export interface PanelContextState {
   panelOpen: boolean;
@@ -54,7 +54,7 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     if (isFromUserInteraction) {
       const query = makeUrlParamsForQuery(content);
 
-      await router.push({ query });
+      await router.push({ query }, undefined, { scroll: false });
     }
 
     setId(content.id);
@@ -64,7 +64,7 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     all !== undefined && id !== undefined ? all[id] : undefined;
 
   async function closePanel() {
-    await router.push({ query: {} });
+    await router.push({ query: {} }, undefined, { scroll: false });
     setPanelOpen(false);
   }
 
