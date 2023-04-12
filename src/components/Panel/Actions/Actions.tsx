@@ -1,4 +1,4 @@
-import { Button, DecimalInput } from "@/components";
+import { DecimalInput } from "@/components";
 import {
   blueGrey500,
   connectWallet,
@@ -6,11 +6,7 @@ import {
   settled,
   smallMobileAndUnder,
 } from "@/constants";
-import {
-  addOpacityToHsla,
-  capitalizeFirstLetter,
-  makeUrlParamsForQuery,
-} from "@/helpers";
+import { addOpacityToHsla, makeUrlParamsForQuery } from "@/helpers";
 import { usePageContext, usePrimaryPanelAction } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -23,6 +19,7 @@ import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
 import { MessageLink, SectionTitle, SectionTitleWrapper, Text } from "../style";
 import { ActionDetails } from "./ActionDetails";
+import { PrimaryActionButton } from "./PrimaryActionButton";
 
 const messageBackgroundColor = addOpacityToHsla(blueGrey500, 0.05);
 const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
@@ -143,18 +140,7 @@ export function Actions({ query }: Props) {
         </ValueWrapper>
       )}
       {showActionsDetails && <ActionDetails {...query} />}
-      {showPrimaryActionButton && (
-        <ActionButtonWrapper>
-          <Button
-            variant="primary"
-            onClick={primaryAction.action}
-            disabled={primaryAction.disabled}
-            width="min(100%, 512px)"
-          >
-            {capitalizeFirstLetter(primaryAction.title)}
-          </Button>
-        </ActionButtonWrapper>
-      )}
+      {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
       {showConnectButton && <ConnectButton />}
       {hasMessage && (
         <MessageWrapper>
@@ -182,8 +168,6 @@ const ActionsWrapper = styled.div`
   padding-top: 20px;
   padding-bottom: 24px;
 `;
-
-const ActionButtonWrapper = styled.div``;
 
 const ValueWrapper = styled.div`
   width: min(100%, 512px);
