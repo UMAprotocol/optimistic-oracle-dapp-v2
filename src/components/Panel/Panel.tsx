@@ -17,14 +17,22 @@ export function Panel() {
     void closePanel();
   }
 
+  const props = !!content
+    ? {
+        query: content,
+        ...content,
+        close,
+      }
+    : undefined;
+
   return (
     <PanelBase panelOpen={panelOpen} closePanel={close}>
-      {!!content && (
+      {!!props && (
         <>
-          <Title {...content} close={close} />
-          <Actions query={content} />
-          <InfoIcons {...content} />
-          <Details {...content} />
+          <Title {...props} />
+          <Actions {...props} />
+          <InfoIcons {...props} />
+          <Details {...props} />
         </>
       )}
     </PanelBase>
