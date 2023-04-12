@@ -30,6 +30,14 @@ export function ItemDetails({
 
   const verifyDetails = (
     <ItemDetailsWrapper>
+      {hasBond && (
+        <ItemDetailsInnerWrapper>
+          <ItemDetailsText>Bond</ItemDetailsText>
+          <ItemDetailsText>
+            <Currency address={tokenAddress} chainId={chainId} value={bond} />
+          </ItemDetailsText>
+        </ItemDetailsInnerWrapper>
+      )}
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Proposal/Assertion</ItemDetailsText>
         <ItemDetailsText>{valueText}</ItemDetailsText>

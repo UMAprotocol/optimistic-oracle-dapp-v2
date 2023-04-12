@@ -23,7 +23,9 @@ export function LoadingRow({ page }: { page: PageName }) {
   return (
     <TR>
       {loadingTitleCell}
-      {page === "propose" ? loadingProposeCells : loadingVerifyOrSettledCells}
+      {page === "verify" && loadingVerifyCells}
+      {page === "propose" && loadingProposeCells}
+      {page === "settled" && loadingSettledCells}
       <TD>
         <LoadingSkeleton
           width={24}
@@ -59,7 +61,25 @@ const loadingTitleCell = (
   </TitleTD>
 );
 
-const loadingVerifyOrSettledCells = (
+const loadingVerifyCells = (
+  <>
+    <TD>
+      <Text>
+        <LoadingSkeleton />
+      </Text>
+    </TD>
+    <TD>
+      <Text>
+        <LoadingSkeleton />
+      </Text>
+    </TD>
+    <TD>
+      <LoadingSkeleton />
+    </TD>
+  </>
+);
+
+const loadingSettledCells = (
   <>
     <TD>
       <Text>
