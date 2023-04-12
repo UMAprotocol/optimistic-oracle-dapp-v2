@@ -37,6 +37,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
+import { AdditionalTextData } from "./AdditionalTextData";
 import { ChainIcon } from "./ChainIcon";
 import { ExpiryTypeIcon } from "./ExpiryTypeIcon";
 import { OoTypeIcon } from "./OoTypeIcon";
@@ -58,11 +59,8 @@ export function Panel() {
     chainId,
     oracleType,
     title,
-    description,
     project,
     valueText,
-    queryText,
-    queryTextHex,
     timeUNIX,
     timeUTC,
     tokenAddress,
@@ -354,16 +352,7 @@ export function Panel() {
             <AncillaryDataIcon />
             <SectionTitle>Additional Text Data</SectionTitle>
           </SectionTitleWrapper>
-          <SectionSubTitle>Description</SectionSubTitle>
-          <DetailText>{description}</DetailText>
-          {queryText !== "" && (
-            <>
-              <SectionSubTitle>String</SectionSubTitle>
-              <DetailText>{queryText}</DetailText>
-            </>
-          )}
-          <SectionSubTitle>Bytes</SectionSubTitle>
-          <DetailText>{queryTextHex}</DetailText>
+          {content && <AdditionalTextData {...content} />}
         </DetailWrapper>
         <DetailWrapper>
           <SectionTitleWrapper>
@@ -538,8 +527,6 @@ const ActionText = styled(Text)`
   display: flex;
   align-items: center;
 `;
-
-const DetailText = styled(Text)``;
 
 const Time = styled(Text)``;
 
