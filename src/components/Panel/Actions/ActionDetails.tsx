@@ -1,7 +1,7 @@
 import { Currency, InformationIcon } from "@/components";
 import type { OracleQueryUI } from "@/types";
 import styled from "styled-components";
-import { MessageLink, Text } from "./style";
+import { MessageLink, Text } from "../style";
 
 export function ActionDetails({
   bond,
