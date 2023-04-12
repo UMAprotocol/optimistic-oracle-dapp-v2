@@ -41,6 +41,7 @@ export const TitleHeader = styled.h3`
 `;
 
 export const IconWrapper = styled.div`
+  min-width: 24px;
   width: clamp(24px, 3vw, 40px);
   aspect-ratio: 1;
 `;
