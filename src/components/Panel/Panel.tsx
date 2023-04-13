@@ -143,12 +143,7 @@ export function Panel() {
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
-    if (oracleType === "Optimistic Oracle V3")
-      return (
-        <>
-          Assertion <span>(proposal)</span>
-        </>
-      );
+    if (oracleType === "Optimistic Oracle V3") return <>Assertion</>;
     return <>Request</>;
   }
 
