@@ -6,7 +6,7 @@ import { Step } from "./Step";
 export function Steps({ page }: { page: Exclude<PageName, "settled"> }) {
   const stepsForPages = {
     verify: [
-      "Check if the queries and statements are correct and some more text maybe.",
+      "Check if the queries and statements are correct",
       "During the challenge period you can dispute and some more text.",
       "Get rewarded if dispute gets voted in your favor maybe more text.",
     ],
