@@ -10,7 +10,7 @@ import Optimism from "public/assets/icons/chains/optimism.svg";
 import Polygon from "public/assets/icons/chains/polygon.svg";
 import SX from "public/assets/icons/chains/sx.svg";
 import styled from "styled-components";
-import { IconWrapper } from "../IconWrapper";
+import { IconWrapper } from "../../IconWrapper";
 
 /**
  * Displays an icon for the given chain ID.
