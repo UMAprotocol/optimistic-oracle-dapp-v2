@@ -32,38 +32,39 @@ export function Actions({ query }: Props) {
   const { chain: connectedChain } = useNetwork();
   const { page } = usePageContext();
 
-  const actionsIcon = page === "settled" ? <SettledIcon /> : <PencilIcon />;
-  const showActionsDetails = page !== "settled";
-  const showInput = page === "propose";
-  const alreadyProposed =
-    page === "propose" && (actionType === "dispute" || actionType === "settle");
-  const alreadySettled =
-    page !== "settled" &&
-    (primaryAction?.title === undefined || primaryAction?.title === settled);
-  const disableInput =
-    !address ||
-    connectedChain?.id !== chainId ||
-    alreadyProposed ||
-    alreadySettled;
-  const actionsTitle = getActionsTitle();
-  const errors: string[] = [
-    inputError,
-    ...(primaryAction?.errors || []),
-  ].filter(Boolean);
+  const pageIsPropose = page === "propose";
+  const pageIsSettled = page === "settled";
+  const hasAction = primaryAction !== undefined;
+  const noAction = !hasAction;
+  const actionIsDispute = actionType === "dispute";
+  const actionIsSettle = actionType === "settle";
+  const actionIsSettled = primaryAction?.title === settled;
+  const alreadyProposed = pageIsPropose && (actionIsDispute || actionIsSettle);
+  const alreadySettled = !pageIsSettled && (noAction || actionIsSettled);
+  const isWrongChain = connectedChain?.id !== chainId;
+  const isConnectWallet = primaryAction?.title === connectWallet;
+
+  const showActionsDetails = !pageIsSettled;
   const showPrimaryActionButton =
-    page !== "settled" &&
-    primaryAction &&
+    !pageIsSettled &&
+    hasAction &&
     !primaryAction.hidden &&
     !alreadyProposed &&
     !alreadySettled;
   const showConnectButton =
-    page !== "settled" &&
-    primaryAction?.title === connectWallet &&
-    !alreadyProposed &&
-    !alreadySettled;
+    isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
+  const disableInput =
+    !address || isWrongChain || alreadyProposed || alreadySettled;
+
+  const errors: string[] = [
+    inputError,
+    ...(primaryAction?.errors || []),
+  ].filter(Boolean);
+  const actionsTitle = getActionsTitle();
+  const actionsIcon = pageIsSettled ? <SettledIcon /> : <PencilIcon />;
 
   function getActionsTitle() {
-    if (page === "settled") return "Settled as";
+    if (pageIsSettled) return "Settled as";
     if (oracleType === "Optimistic Oracle V3")
       return (
         <>
@@ -76,13 +77,14 @@ export function Actions({ query }: Props) {
       </>
     );
   }
+
   return (
     <ActionsWrapper>
       <SectionTitleWrapper>
         {actionsIcon}
         <SectionTitle>{actionsTitle}</SectionTitle>
       </SectionTitleWrapper>
-      {showInput ? (
+      {pageIsPropose ? (
         <InputWrapper>
           <DecimalInput
             value={proposePriceInput}
@@ -141,10 +143,6 @@ const InputWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-// titles
-
-// text
-
 const ValueText = styled(Text)`
   font: var(--body-md);
   font-weight: 600;
@@ -152,10 +150,6 @@ const ValueText = styled(Text)`
     font: var(--body-sm);
   }
 `;
-
-// interactive elements
-
-// icons
 
 const PencilIcon = styled(Pencil)``;
 
