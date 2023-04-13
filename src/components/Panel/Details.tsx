@@ -24,12 +24,12 @@ export function Details({
           <TimestampIcon />
           <SectionTitle>Timestamp</SectionTitle>
         </SectionTitleWrapper>
-        <Time>
+        <Text>
           <TimeFormat>UTC</TimeFormat> {timeUTC}
-        </Time>
-        <Time>
+        </Text>
+        <Text>
           <TimeFormat>UNIX</TimeFormat> {timeUNIX}
-        </Time>
+        </Text>
       </DetailWrapper>
       <DetailWrapper>
         <SectionTitleWrapper>
@@ -83,8 +83,6 @@ const SectionSubTitle = styled.h3`
     margin-top: 16px;
   }
 `;
-
-const Time = styled(Text)``;
 
 const TimeFormat = styled.span`
   display: inline-block;

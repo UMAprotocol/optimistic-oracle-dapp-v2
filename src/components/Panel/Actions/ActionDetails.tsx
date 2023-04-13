@@ -110,6 +110,7 @@ const livenessInformation = (
 const ActionText = styled(Text)`
   display: flex;
   align-items: center;
+  font: var(--body-sm);
 `;
 
 const ActionsDetailsWrapper = styled.div`
@@ -119,7 +120,6 @@ const ActionsDetailsWrapper = styled.div`
 const ActionWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  font: var(--body-sm);
   &:not(:last-child) {
     margin-bottom: 4px;
   }

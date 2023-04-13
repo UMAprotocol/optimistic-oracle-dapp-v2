@@ -10,6 +10,11 @@ interface Props extends OracleQueryUI {
 export function Title({ project, title, close }: Props) {
   const projectIcon = getProjectIcon(project);
 
+  const buttonMinWidth = "1rem";
+  const buttonMaxWidth = "1.25rem";
+  const buttonPreferredWidth = "calc(0.9rem + 0.4vw)";
+  const buttonClampedWidth = `clamp(${buttonMinWidth}, ${buttonPreferredWidth}, ${buttonMaxWidth})`;
+
   return (
     <Wrapper>
       <IconWrapper>{projectIcon}</IconWrapper>
@@ -17,24 +22,13 @@ export function Title({ project, title, close }: Props) {
         <TruncatedTitle title={title} />
       </TitleText>
       <IconWrapper>
-        <CloseButton
-          onClick={close}
-          size="clamp(1rem, calc(0.92rem + 0.41vw), 1.25rem)"
-        />
+        <CloseButton onClick={close} size={buttonClampedWidth} />
       </IconWrapper>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  --icon-min-width: 1.25rem;
-  --icon-max-width: 2.5rem;
-  --icon-preferred-width: calc(0.84rem + 2vw);
-  --icon-clamped-width: clamp(
-    var(--icon-min-width),
-    var(--icon-preferred-width),
-    var(--icon-max-width)
-  );
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: var(--page-padding);
@@ -51,5 +45,13 @@ const TitleText = styled.h1`
 `;
 
 const IconWrapper = styled.div`
+  --icon-min-width: 1.25rem;
+  --icon-max-width: 2.5rem;
+  --icon-preferred-width: calc(0.8rem + 2vw);
+  --icon-clamped-width: clamp(
+    var(--icon-min-width),
+    var(--icon-preferred-width),
+    var(--icon-max-width)
+  );
   width: var(--icon-clamped-width);
 `;

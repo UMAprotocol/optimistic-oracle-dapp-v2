@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 export function PrimaryActionButton({ action, disabled, title }: ActionState) {
   return (
-    <ActionButtonWrapper>
+    <Wrapper>
       <Button
         variant="primary"
         onClick={action}
@@ -14,8 +14,8 @@ export function PrimaryActionButton({ action, disabled, title }: ActionState) {
       >
         {capitalizeFirstLetter(title)}
       </Button>
-    </ActionButtonWrapper>
+    </Wrapper>
   );
 }
 
-const ActionButtonWrapper = styled.div``;
+const Wrapper = styled.div``;
