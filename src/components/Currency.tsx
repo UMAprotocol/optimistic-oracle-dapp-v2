@@ -51,7 +51,7 @@ export function Currency(props: Props) {
           <LoadingSkeleton width={80} height={16} />
         ) : (
           <>
-            {hasIcon && icon}{" "}
+            {hasIcon && <IconWrapper>{icon}</IconWrapper>}{" "}
             <FormattedTokenValue value={value} decimals={decimals} />{" "}
             {!hasIcon && symbol}
           </>
@@ -60,6 +60,11 @@ export function Currency(props: Props) {
     </OuterWrapper>
   );
 }
+
+const IconWrapper = styled.span`
+  width: 16px;
+  display: inline-block;
+`;
 
 const InnerWrapper = styled.span`
   display: inline-flex;

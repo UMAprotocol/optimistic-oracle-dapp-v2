@@ -31,8 +31,8 @@ const defaultMockRequestGraphEntity = (
     id,
     time,
     currency: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    reward: makeEtherValueString(100),
-    finalFee: makeEtherValueString(100),
+    reward: makeEtherValueString(1000, 6),
+    finalFee: makeEtherValueString(1000, 6),
     state: "Requested",
     proposer: null,
     proposedPrice: null,
@@ -66,7 +66,7 @@ export const defaultMockAssertionGraphEntity = (
   const identifier = "ASSERT_TRUTH";
   const assertionTimestamp = makeUnixTimestamp("past", { hours: 1 });
   const expirationTime = assertionTimestamp;
-  const bond = BigNumber.from(1000000000000000).toString();
+  const bond = makeEtherValueString(1000, 6);
   const claim = utf8ToHex(`
     q: title: Paradoxical test assertion #${number}
     description: One of these statements is true.
@@ -632,8 +632,8 @@ export function makeUnixTimestamp(
   return Math.floor(addOrSub(mockDate, duration).getTime() / 1000).toString();
 }
 
-export function makeEtherValueString(value: number) {
-  return BigNumber.from(parseEtherSafe(value.toString())).toString();
+export function makeEtherValueString(value: number, decimals = 18) {
+  return BigNumber.from(parseEtherSafe(value.toString(), decimals)).toString();
 }
 
 export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
