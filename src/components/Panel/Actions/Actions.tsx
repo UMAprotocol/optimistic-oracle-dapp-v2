@@ -1,8 +1,7 @@
-import { DecimalInput } from "@/components";
+import { ConnectButton, DecimalInput } from "@/components";
 import { connectWallet, settled, smallMobileAndUnder } from "@/constants";
 import { usePageContext, usePrimaryPanelAction } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
 import type { CSSProperties } from "react";
