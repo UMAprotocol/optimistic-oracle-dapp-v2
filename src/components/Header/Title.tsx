@@ -47,10 +47,7 @@ export function Title({ page }: { page: PageName }) {
       <TextWrapper>
         <TitleText>{pageTitle}</TitleText>
         {page === "settled" && (
-          <SubTitle>
-            A short explanation what this page is about and what the user can
-            expect lorem ipsum text
-          </SubTitle>
+          <SubTitle>Historical UMA oracle requests.</SubTitle>
         )}
       </TextWrapper>
     </Wrapper>
