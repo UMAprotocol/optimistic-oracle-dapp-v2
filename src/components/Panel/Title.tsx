@@ -11,28 +11,30 @@ export function Title({ project, title, close }: Props) {
   const projectIcon = getProjectIcon(project);
 
   return (
-    <TitleWrapper>
-      <ProjectIconWrapper>{projectIcon}</ProjectIconWrapper>
+    <Wrapper>
+      <IconWrapper>{projectIcon}</IconWrapper>
       <TitleText id="panel-title">
         <TruncatedTitle title={title} />
       </TitleText>
-      <CloseButtonWrapper>
+      <IconWrapper>
         <CloseButton
           onClick={close}
           size="clamp(1rem, calc(0.92rem + 0.41vw), 1.25rem)"
         />
-      </CloseButtonWrapper>
-    </TitleWrapper>
+      </IconWrapper>
+    </Wrapper>
   );
 }
 
-const TitleText = styled.h1`
-  max-width: 400px;
-  font: var(--body-md);
-  color: var(--light-text);
-`;
-
-const TitleWrapper = styled.div`
+const Wrapper = styled.div`
+  --icon-min-width: 1.25rem;
+  --icon-max-width: 2.5rem;
+  --icon-preferred-width: calc(0.84rem + 2vw);
+  --icon-clamped-width: clamp(
+    var(--icon-min-width),
+    var(--icon-preferred-width),
+    var(--icon-max-width)
+  );
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: var(--page-padding);
@@ -42,10 +44,12 @@ const TitleWrapper = styled.div`
   background: var(--blue-grey-700);
 `;
 
-const ProjectIconWrapper = styled.div`
-  width: clamp(1.25rem, calc(0.84rem + 2.04vw), 2.5rem);
+const TitleText = styled.h1`
+  max-width: 400px;
+  font: var(--body-md);
+  color: var(--light-text);
 `;
 
-const CloseButtonWrapper = styled.div`
-  width: clamp(1.25rem, calc(0.84rem + 2.04vw), 2.5rem);
+const IconWrapper = styled.div`
+  width: var(--icon-clamped-width);
 `;
