@@ -76,7 +76,7 @@ export function Actions({ query }: Props) {
   }
 
   return (
-    <ActionsWrapper>
+    <Wrapper>
       <SectionTitleWrapper>
         {actionsIcon}
         <SectionTitle>{actionsTitle}</SectionTitle>
@@ -112,11 +112,11 @@ export function Actions({ query }: Props) {
         alreadySettled={alreadySettled}
       />
       <Errors errors={errors} />
-    </ActionsWrapper>
+    </Wrapper>
   );
 }
 
-const ActionsWrapper = styled.div`
+const Wrapper = styled.div`
   background: var(--grey-400);
   padding-inline: var(--padding-inline);
   padding-top: 20px;

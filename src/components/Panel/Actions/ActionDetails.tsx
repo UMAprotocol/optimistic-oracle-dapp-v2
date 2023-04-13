@@ -13,7 +13,7 @@ export function ActionDetails({
   const hasReward = reward !== null;
 
   return (
-    <ActionsDetailsWrapper>
+    <Wrapper>
       <ActionWrapper>
         <ActionText>
           Bond
@@ -41,7 +41,7 @@ export function ActionDetails({
         </ActionText>
         <ActionText>{formattedLivenessEndsIn}</ActionText>
       </ActionWrapper>
-    </ActionsDetailsWrapper>
+    </Wrapper>
   );
 }
 
@@ -113,7 +113,7 @@ const ActionText = styled(Text)`
   font: var(--body-sm);
 `;
 
-const ActionsDetailsWrapper = styled.div`
+const Wrapper = styled.div`
   margin-bottom: 16px;
 `;
 

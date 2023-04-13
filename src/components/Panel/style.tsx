@@ -42,8 +42,6 @@ export const SectionTitle = styled.h2`
   }
 `;
 
-const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
-
 export const ErrorWrapper = styled.div`
   width: min(100%, var(--panel-content-width));
   min-height: 48px;
@@ -52,7 +50,7 @@ export const ErrorWrapper = styled.div`
   gap: 16px;
   margin-top: 20px;
   padding-inline: 16px;
-  background: ${errorBackgroundColor};
+  background: ${addOpacityToHsla(red500, 0.05)};
   border: 1px solid var(--red-500);
   border-radius: 2px;
 `;

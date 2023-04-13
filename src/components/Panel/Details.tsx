@@ -22,7 +22,7 @@ export function Details({
   moreInformation,
 }: OracleQueryUI) {
   return (
-    <DetailsWrapper>
+    <Wrapper>
       <DetailWrapper>
         <SectionTitleWrapper>
           <TimestampIcon />
@@ -60,11 +60,11 @@ export function Details({
           </Fragment>
         ))}
       </DetailWrapper>
-    </DetailsWrapper>
+    </Wrapper>
   );
 }
 
-const DetailsWrapper = styled.div`
+const Wrapper = styled.div`
   padding-inline: var(--padding-inline);
   padding-bottom: 64px;
 `;

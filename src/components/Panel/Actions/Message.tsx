@@ -51,17 +51,15 @@ export function Message({
   if (!hasMessage) return null;
 
   return (
-    <MessageWrapper>
+    <Wrapper>
       <WarningIcon />
       <MessageText>{message}</MessageText>
-    </MessageWrapper>
+    </Wrapper>
   );
 }
 
-const messageBackgroundColor = addOpacityToHsla(blueGrey500, 0.05);
-
-const MessageWrapper = styled(ErrorWrapper)`
-  background: ${messageBackgroundColor};
+const Wrapper = styled(ErrorWrapper)`
+  background: ${addOpacityToHsla(blueGrey500, 0.05)};
   border: 1px solid var(--blue-grey-500);
 `;
 
