@@ -5,18 +5,13 @@ import type { OracleQueryUI } from "@/types";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
-import Warning from "public/assets/icons/warning.svg";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
-import {
-  ErrorWrapper,
-  SectionTitle,
-  SectionTitleWrapper,
-  Text,
-} from "../style";
+import { SectionTitle, SectionTitleWrapper, Text } from "../style";
 import { ActionDetails } from "./ActionDetails";
+import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
 
@@ -55,7 +50,6 @@ export function Actions({ query }: Props) {
     inputError,
     ...(primaryAction?.errors || []),
   ].filter(Boolean);
-  const isError = errors.length > 0;
   const showPrimaryActionButton =
     page !== "settled" &&
     primaryAction &&
@@ -118,16 +112,7 @@ export function Actions({ query }: Props) {
         alreadyProposed={alreadyProposed}
         alreadySettled={alreadySettled}
       />
-      {isError && (
-        <>
-          {errors.map((message) => (
-            <ErrorWrapper key={message}>
-              <WarningIcon />
-              <ErrorText>{message}</ErrorText>
-            </ErrorWrapper>
-          ))}
-        </>
-      )}
+      <Errors errors={errors} />
     </ActionsWrapper>
   );
 }
@@ -168,10 +153,6 @@ const ValueText = styled(Text)`
   }
 `;
 
-const ErrorText = styled(Text)`
-  color: var(--red-500);
-`;
-
 // interactive elements
 
 // icons
@@ -179,5 +160,3 @@ const ErrorText = styled(Text)`
 const PencilIcon = styled(Pencil)``;
 
 const SettledIcon = styled(Settled)``;
-
-const WarningIcon = styled(Warning)``;
