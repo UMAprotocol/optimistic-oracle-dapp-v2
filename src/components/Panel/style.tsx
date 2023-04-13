@@ -42,6 +42,13 @@ export const SectionTitle = styled.h2`
   }
 `;
 
+export const SectionSubTitle = styled.h3`
+  font: var(--body-sm);
+  font-weight: 600;
+
+  margin-top: 16px;
+`;
+
 export const ErrorWrapper = styled.div`
   width: min(100%, var(--panel-content-width));
   min-height: 48px;

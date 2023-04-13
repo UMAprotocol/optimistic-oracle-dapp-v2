@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import styled from "styled-components";
 import { AdditionalTextData } from "./AdditionalTextData";
 import {
+  SectionSubTitle,
   SectionTitle,
   SectionTitleWrapper,
   Text,
@@ -76,15 +77,6 @@ const DetailWrapper = styled.div`
   }
   &:not(:last-child) {
     border-bottom: 1px solid ${addOpacityToHsla(blueGrey700, 0.25)};
-  }
-`;
-
-const SectionSubTitle = styled.h3`
-  font: var(--body-sm);
-  font-weight: 600;
-
-  &:not(:first-child) {
-    margin-top: 16px;
   }
 `;
 

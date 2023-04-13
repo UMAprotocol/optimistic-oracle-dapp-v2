@@ -1,9 +1,9 @@
-import { smallMobileAndUnder } from "@/constants";
 import Chevron from "public/assets/icons/chevron.svg";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import type { CSSProperties } from "styled-components";
 import styled from "styled-components";
+import { SectionSubTitle, Text } from "./style";
 
 interface Props {
   description: ReactNode;
@@ -59,20 +59,6 @@ export function AdditionalTextData({
     </>
   );
 }
-
-const SectionSubTitle = styled.h3`
-  font: var(--body-sm);
-  font-weight: 600;
-
-  margin-top: 16px;
-`;
-
-const Text = styled.p`
-  font: var(--body-sm);
-  @media ${smallMobileAndUnder} {
-    font: var(--body-xs);
-  }
-`;
 
 const ChevronIcon = styled(Chevron)`
   width: 12px;
