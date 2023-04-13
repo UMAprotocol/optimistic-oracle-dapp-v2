@@ -1,34 +1,29 @@
 import { DecimalInput } from "@/components";
-import {
-  blueGrey500,
-  connectWallet,
-  red500,
-  settled,
-  smallMobileAndUnder,
-} from "@/constants";
-import { addOpacityToHsla, makeUrlParamsForQuery } from "@/helpers";
+import { connectWallet, settled, smallMobileAndUnder } from "@/constants";
 import { usePageContext, usePrimaryPanelAction } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
 import Warning from "public/assets/icons/warning.svg";
-import type { CSSProperties, ReactNode } from "react";
-import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
-import { MessageLink, SectionTitle, SectionTitleWrapper, Text } from "../style";
+import {
+  ErrorWrapper,
+  SectionTitle,
+  SectionTitleWrapper,
+  Text,
+} from "../style";
 import { ActionDetails } from "./ActionDetails";
+import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
-
-const messageBackgroundColor = addOpacityToHsla(blueGrey500, 0.05);
-const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 
 interface Props {
   query: OracleQueryUI;
 }
 export function Actions({ query }: Props) {
-  const [message, setMessage] = useState<ReactNode>("");
   const [proposePriceInput, setProposePriceInput] = useState("");
   const [inputError, setInputError] = useState("");
   const { chainId, oracleType, valueText, actionType } = query;
@@ -61,7 +56,6 @@ export function Actions({ query }: Props) {
     ...(primaryAction?.errors || []),
   ].filter(Boolean);
   const isError = errors.length > 0;
-  const hasMessage = message !== "";
   const showPrimaryActionButton =
     page !== "settled" &&
     primaryAction &&
@@ -73,30 +67,6 @@ export function Actions({ query }: Props) {
     primaryAction?.title === connectWallet &&
     !alreadyProposed &&
     !alreadySettled;
-
-  useEffect(() => {
-    setMessage("");
-    if (page === "settled") return;
-
-    if (!alreadyProposed && !alreadySettled) return;
-
-    const message = (
-      <>
-        This query has already been {alreadyProposed ? "proposed" : "settled"}.
-        View it{" "}
-        <MessageLink
-          href={{
-            pathname: alreadyProposed ? "/" : "/settled",
-            query: makeUrlParamsForQuery(query),
-          }}
-        >
-          here.
-        </MessageLink>
-      </>
-    );
-
-    setMessage(message);
-  }, [page, query, alreadyProposed, alreadySettled]);
 
   function getActionsTitle() {
     if (page === "settled") return "Settled as";
@@ -142,12 +112,12 @@ export function Actions({ query }: Props) {
       {showActionsDetails && <ActionDetails {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
       {showConnectButton && <ConnectButton />}
-      {hasMessage && (
-        <MessageWrapper>
-          <WarningIcon />
-          <MessageText>{message}</MessageText>
-        </MessageWrapper>
-      )}
+      <Message
+        query={query}
+        page={page}
+        alreadyProposed={alreadyProposed}
+        alreadySettled={alreadySettled}
+      />
       {isError && (
         <>
           {errors.map((message) => (
@@ -186,24 +156,6 @@ const InputWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-const ErrorWrapper = styled.div`
-  width: min(100%, 512px);
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: 20px;
-  padding-inline: 16px;
-  background: ${errorBackgroundColor};
-  border: 1px solid var(--red-500);
-  border-radius: 2px;
-`;
-
-const MessageWrapper = styled(ErrorWrapper)`
-  background: ${messageBackgroundColor};
-  border: 1px solid var(--blue-grey-500);
-`;
-
 // titles
 
 // text
@@ -220,16 +172,12 @@ const ErrorText = styled(Text)`
   color: var(--red-500);
 `;
 
-const MessageText = styled(Text)`
-  color: var(--blue-grey-500);
-`;
-
 // interactive elements
 
 // icons
 
 const PencilIcon = styled(Pencil)``;
 
-const WarningIcon = styled(Warning)``;
-
 const SettledIcon = styled(Settled)``;
+
+const WarningIcon = styled(Warning)``;
