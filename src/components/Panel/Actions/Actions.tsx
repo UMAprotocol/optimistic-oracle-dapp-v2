@@ -43,7 +43,6 @@ export function Actions({ query }: Props) {
   const isWrongChain = connectedChain?.id !== chainId;
   const isConnectWallet = primaryAction?.title === connectWallet;
 
-  const showActionsDetails = !pageIsSettled;
   const showPrimaryActionButton =
     !pageIsSettled &&
     hasAction &&
@@ -94,14 +93,14 @@ export function Actions({ query }: Props) {
         <ValueWrapper
           style={
             {
-              "--margin-bottom": showActionsDetails ? "20px" : "0px",
+              "--margin-bottom": !pageIsSettled ? "20px" : "0px",
             } as CSSProperties
           }
         >
           <ValueText>{valueText}</ValueText>
         </ValueWrapper>
       )}
-      {showActionsDetails && <ActionDetails {...query} />}
+      {!pageIsSettled && <ActionDetails {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
       {showConnectButton && <ConnectButton />}
       <Message
