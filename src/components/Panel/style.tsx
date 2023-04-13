@@ -46,7 +46,7 @@ export const SectionTitle = styled.h2`
 const errorBackgroundColor = addOpacityToHsla(red500, 0.05);
 
 export const ErrorWrapper = styled.div`
-  width: min(100%, 512px);
+  width: min(100%, var(--panel-content-width));
   min-height: 48px;
   display: flex;
   align-items: center;

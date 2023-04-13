@@ -10,7 +10,7 @@ export function PrimaryActionButton({ action, disabled, title }: ActionState) {
         variant="primary"
         onClick={action}
         disabled={disabled}
-        width="min(100%, 512px)"
+        width="min(100%, var(--panel-content-width))"
       >
         {capitalizeFirstLetter(title)}
       </Button>

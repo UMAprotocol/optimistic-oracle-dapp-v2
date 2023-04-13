@@ -65,7 +65,7 @@ export function DecimalInput({
 
 const Wrapper = styled.div`
   font: var(--body-md);
-  max-width: 512px;
+  max-width: var(--panel-content-width);
   &[aria-disabled="true"] {
     opacity: 0.25;
   }

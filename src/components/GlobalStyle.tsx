@@ -13,7 +13,6 @@ import {
   desktopHeaderHeight,
   desktopNavBarHeight,
   desktopPageWidth,
-  desktopPanelWidth,
   family,
   grey100,
   grey400,
@@ -27,6 +26,8 @@ import {
   lightText,
   pagePadding,
   pagePaddingSmall,
+  panelContentWidth,
+  panelWidth,
   red100,
   red500,
   red500Opacity15,
@@ -252,7 +253,8 @@ a:not([class]) {
     --header-height: ${desktopHeaderHeight}px;
     --nav-bar-height: ${desktopNavBarHeight}px;
     --vote-ticker-height: ${voteTickerHeight}px;
-    --panel-width: min(100%, ${desktopPanelWidth}px);
+    --panel-width: min(100%, ${panelWidth}px);
+    --panel-content-width: ${panelContentWidth}px;
     --page-padding: ${pagePadding}px;
     @media ${smallMobileAndUnder} {
       --page-padding: ${pagePaddingSmall}px;

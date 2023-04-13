@@ -56,10 +56,7 @@ export function Actions({ query }: Props) {
   const disableInput =
     !address || isWrongChain || alreadyProposed || alreadySettled;
 
-  const errors: string[] = [
-    inputError,
-    ...(primaryAction?.errors || []),
-  ].filter(Boolean);
+  const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <SettledIcon /> : <PencilIcon />;
 
@@ -127,7 +124,7 @@ const ActionsWrapper = styled.div`
 `;
 
 const ValueWrapper = styled.div`
-  width: min(100%, 512px);
+  width: min(100%, var(--panel-content-width));
   display: grid;
   align-items: center;
   min-height: 44px;
