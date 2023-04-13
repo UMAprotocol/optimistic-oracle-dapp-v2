@@ -6,14 +6,14 @@ import { Step } from "./Step";
 export function Steps({ page }: { page: Exclude<PageName, "settled"> }) {
   const stepsForPages = {
     verify: [
-      "Check if the queries and statements are correct and some more text maybe.",
-      "During the challenge period you can dispute and some more text.",
-      "Get rewarded if dispute gets voted in your favor maybe more text.",
+      "Proposers post a bond to assert that a piece of data is correct.",
+      "During the challenge period, data proposals are verified and can be disputed.",
+      "If correctly disputed, the data is not used and the challenger receives a reward.",
     ],
     propose: [
-      "Check if the queries and statements are correct and some more text maybe.",
-      "During the challenge period you can dispute and some more text.",
-      "Get rewarded if dispute gets voted in your favor maybe more text.",
+      "Data consumers post reward bounties in return for data.",
+      "Proposers can post a bond to answer a data request.",
+      "If a proposal goes unchallenged, the proposer receives the reward after liveness.",
     ],
   };
 
