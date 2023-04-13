@@ -16,7 +16,6 @@ export const Link = styled(NextLink)`
   text-decoration: none;
   color: var(--red-500);
   transition: opacity var(--animation-duration);
-  word-break: break-all;
 
   &:hover {
     opacity: 0.75;
@@ -24,8 +23,8 @@ export const Link = styled(NextLink)`
 `;
 
 // we don't want to word-break the link in the message text
-export const MessageLink = styled(Link)`
-  word-break: normal;
+export const WordBreakLink = styled(Link)`
+  word-break: break-all;
 `;
 
 export const SectionTitleWrapper = styled.div`

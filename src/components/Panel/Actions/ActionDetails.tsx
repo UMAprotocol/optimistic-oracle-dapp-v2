@@ -1,7 +1,7 @@
 import { Currency, InformationIcon } from "@/components";
 import type { OracleQueryUI } from "@/types";
 import styled from "styled-components";
-import { MessageLink, Text } from "../style";
+import { Link, Text } from "../style";
 
 export function ActionDetails({
   bond,
@@ -56,12 +56,12 @@ const bondInformation = (
     <br />
     <p>The minimum bond is the final fee for a given bond token.</p>
     <br />
-    <MessageLink
+    <Link
       href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
       target="_blank"
     >
       Learn more
-    </MessageLink>
+    </Link>
   </>
 );
 
@@ -78,12 +78,12 @@ const rewardInformation = (
       mollitia!
     </p>
     <br />
-    <MessageLink
+    <Link
       href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
       target="_blank"
     >
       Learn more
-    </MessageLink>
+    </Link>
   </>
 );
 
@@ -98,12 +98,12 @@ const livenessInformation = (
     <br />
     <p>A typical liveness window is two hours.</p>
     <br />
-    <MessageLink
+    <Link
       href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
       target="_blank"
     >
       Learn more
-    </MessageLink>
+    </Link>
   </>
 );
 

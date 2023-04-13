@@ -6,7 +6,7 @@ import Warning from "public/assets/icons/warning.svg";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ErrorWrapper, MessageLink, Text } from "../style";
+import { ErrorWrapper, Link, Text } from "../style";
 
 interface Props {
   query: OracleQueryUI;
@@ -34,14 +34,14 @@ export function Message({
       <>
         This query has already been {alreadyProposed ? "proposed" : "settled"}.
         View it{" "}
-        <MessageLink
+        <Link
           href={{
             pathname: alreadyProposed ? "/" : "/settled",
             query: makeUrlParamsForQuery(query),
           }}
         >
           here.
-        </MessageLink>
+        </Link>
       </>
     );
 

@@ -1,13 +1,17 @@
 import { blueGrey700 } from "@/constants";
 import { addOpacityToHsla } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
-import Link from "next/link";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import { Fragment } from "react";
 import styled from "styled-components";
 import { AdditionalTextData } from "./AdditionalTextData";
-import { SectionTitle, SectionTitleWrapper, Text } from "./style";
+import {
+  SectionTitle,
+  SectionTitleWrapper,
+  Text,
+  WordBreakLink,
+} from "./style";
 
 export function Details({
   timeUTC,
@@ -50,9 +54,9 @@ export function Details({
         {moreInformation?.map(({ title, href, text }) => (
           <Fragment key={title}>
             <SectionSubTitle>{title}</SectionSubTitle>
-            <Link href={href} target="_blank">
+            <WordBreakLink href={href} target="_blank">
               {text}
-            </Link>
+            </WordBreakLink>
           </Fragment>
         ))}
       </DetailWrapper>
