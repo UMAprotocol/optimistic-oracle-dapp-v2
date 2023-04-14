@@ -3,7 +3,7 @@ import type { OracleQueryUI } from "@/types";
 import styled from "styled-components";
 import { Link, Text } from "../style";
 
-export function ActionDetails({
+export function Details({
   bond,
   reward,
   formattedLivenessEndsIn,

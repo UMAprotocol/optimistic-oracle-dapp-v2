@@ -9,7 +9,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
 import { SectionTitle, SectionTitleWrapper, Text } from "../style";
-import { ActionDetails } from "./ActionDetails";
+import { Details } from "./Details";
 import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
@@ -100,7 +100,7 @@ export function Actions({ query }: Props) {
           <ValueText>{valueText}</ValueText>
         </ValueWrapper>
       )}
-      {!pageIsSettled && <ActionDetails {...query} />}
+      {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
       {showConnectButton && <ConnectButton />}
       <Message
