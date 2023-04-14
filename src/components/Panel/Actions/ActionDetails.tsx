@@ -36,7 +36,7 @@ export function ActionDetails({
       )}
       <ActionWrapper>
         <ActionText>
-          Challenge period ends in
+          Challenge period ends
           <InformationIcon content={livenessInformation} />
         </ActionText>
         <ActionText>{formattedLivenessEndsIn}</ActionText>
@@ -45,16 +45,14 @@ export function ActionDetails({
   );
 }
 
-// todo: @sean update copy
 const bondInformation = (
   <>
     <p>
-      Every request to UMA&apos;s Optimistic Oracle includes bond settings that
-      specify the size of the bond that proposers (and disputers) are required
-      to post.
+      Every request to UMA&apos;s Optimistic Oracle specifies a bond size that
+      both proposers and disputers are required to post. In the event of a
+      dispute, the correct party will receive some portion of the losers bond.
     </p>
     <br />
-    <p>The minimum bond is the final fee for a given bond token.</p>
     <br />
     <Link
       href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
@@ -65,18 +63,13 @@ const bondInformation = (
   </>
 );
 
-// todo: @sean update copy
 const rewardInformation = (
   <>
     <p>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum, beatae.
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
+      Rewards are posted by data requesters and are distributed to correct
+      proposers once liveness is complete and the proposal is settled.
     </p>
     <br />
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis,
-      mollitia!
-    </p>
     <br />
     <Link
       href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
@@ -87,13 +80,12 @@ const rewardInformation = (
   </>
 );
 
-// todo: @sean update copy
 const livenessInformation = (
   <>
     <p>
-      Every request to UMA&apos;s Optimistic Oracle includes liveness settings
-      that specify the liveness window, which is the challenge period during
-      which a proposal can be challenged.
+      Every request to UMA&apos;s Optimistic Oracle specifies liveness settings
+      that define the length of challenge period during which a proposal can be
+      challenged.
     </p>
     <br />
     <p>A typical liveness window is two hours.</p>
