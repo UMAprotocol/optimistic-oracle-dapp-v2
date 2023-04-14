@@ -39,7 +39,7 @@ export function ItemDetails({
         </ItemDetailsInnerWrapper>
       )}
       <ItemDetailsInnerWrapper>
-        <ItemDetailsText>Proposal/Assertion</ItemDetailsText>
+        <ItemDetailsText>Proposal</ItemDetailsText>
         <ItemDetailsText>{valueText}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
       {livenessEndsMilliseconds !== undefined &&
