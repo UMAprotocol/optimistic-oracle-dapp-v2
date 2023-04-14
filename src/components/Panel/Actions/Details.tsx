@@ -14,33 +14,33 @@ export function Details({
 
   return (
     <Wrapper>
-      <ActionWrapper>
-        <ActionText>
+      <TextWrapper>
+        <_Text>
           Bond
           <InformationIcon content={bondInformation} />
-        </ActionText>
-        <ActionText>
+        </_Text>
+        <_Text>
           <Currency address={tokenAddress} chainId={chainId} value={bond} />
-        </ActionText>
-      </ActionWrapper>
+        </_Text>
+      </TextWrapper>
       {hasReward && (
-        <ActionWrapper>
-          <ActionText>
+        <TextWrapper>
+          <_Text>
             Reward
             <InformationIcon content={rewardInformation} />
-          </ActionText>
-          <ActionText>
+          </_Text>
+          <_Text>
             <Currency address={tokenAddress} chainId={chainId} value={reward} />
-          </ActionText>
-        </ActionWrapper>
+          </_Text>
+        </TextWrapper>
       )}
-      <ActionWrapper>
-        <ActionText>
+      <TextWrapper>
+        <_Text>
           Challenge period ends
           <InformationIcon content={livenessInformation} />
-        </ActionText>
-        <ActionText>{formattedLivenessEndsIn}</ActionText>
-      </ActionWrapper>
+        </_Text>
+        <_Text>{formattedLivenessEndsIn}</_Text>
+      </TextWrapper>
     </Wrapper>
   );
 }
@@ -99,7 +99,7 @@ const livenessInformation = (
   </>
 );
 
-const ActionText = styled(Text)`
+const _Text = styled(Text)`
   display: flex;
   align-items: center;
   font: var(--body-sm);
@@ -109,7 +109,7 @@ const Wrapper = styled.div`
   margin-bottom: 16px;
 `;
 
-const ActionWrapper = styled.div`
+const TextWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   &:not(:last-child) {
