@@ -3,7 +3,7 @@ import { getCurrencyIcon } from "@/constants";
 import type { ChainId } from "@shared/types";
 import type { Address } from "@wagmi/core";
 import type { BigNumber } from "ethers";
-import { Fragment } from "react";
+import type { ReactNode } from "react";
 import styled from "styled-components";
 import { useToken } from "wagmi";
 import { FormattedTokenValue } from "./FormattedTokenValue";
@@ -38,10 +38,8 @@ export function Currency(props: Props) {
     address === undefined ||
     chainId === undefined;
 
-  const OuterWrapper = hasIcon ? Tooltip : Fragment;
-
   return (
-    <OuterWrapper content={symbol}>
+    <OuterWrapper hasIcon={hasIcon} symbol={symbol}>
       <InnerWrapper
         style={{
           cursor: hasIcon ? "pointer" : "default",
@@ -59,6 +57,19 @@ export function Currency(props: Props) {
       </InnerWrapper>
     </OuterWrapper>
   );
+}
+
+function OuterWrapper({
+  hasIcon,
+  symbol,
+  children,
+}: {
+  hasIcon: boolean;
+  symbol: string | undefined;
+  children: ReactNode;
+}) {
+  if (!hasIcon) return <>{children}</>;
+  return <Tooltip content={symbol}>{children}</Tooltip>;
 }
 
 const IconWrapper = styled.span`
