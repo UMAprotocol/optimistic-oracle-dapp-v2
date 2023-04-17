@@ -5,6 +5,7 @@ import type { ChainId, OracleType } from "@shared/types";
 import { filter, find, lowerCase } from "lodash";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { exists } from "@libs/utils";
 
 type HashAndIndexParams = {
   transactionHash?: string;
@@ -44,7 +45,7 @@ export function useHandleQueryInUrl() {
       new URLSearchParams(window.location.search)
     ) as SearchParams;
 
-    const isHashAndIndex = transactionHash && eventIndex;
+    const hasHash = transactionHash;
     const isRequestDetails =
       chainId &&
       oracleType &&
@@ -53,11 +54,11 @@ export function useHandleQueryInUrl() {
       identifier &&
       ancillaryData;
 
-    if (!isHashAndIndex && !isRequestDetails) return;
+    if (!hasHash && !isRequestDetails) return;
 
     let query: OracleQueryUI | undefined;
 
-    if (isHashAndIndex) {
+    if (hasHash) {
       const forTx = filter<OracleQueryUI>(
         queries,
         ({
@@ -79,26 +80,27 @@ export function useHandleQueryInUrl() {
 
       const hasMultipleForTx = forTx.length > 1;
 
-      query = hasMultipleForTx
-        ? find<OracleQueryUI>(
-            forTx,
-            ({
-              requestLogIndex,
-              proposalLogIndex,
-              disputeLogIndex,
-              settlementLogIndex,
-              assertionLogIndex,
-            }) => {
-              return (
-                requestLogIndex === eventIndex ||
-                proposalLogIndex === eventIndex ||
-                disputeLogIndex === eventIndex ||
-                settlementLogIndex === eventIndex ||
-                assertionLogIndex === eventIndex
-              );
-            }
-          )
-        : forTx[0];
+      query =
+        hasMultipleForTx && exists(eventIndex)
+          ? find<OracleQueryUI>(
+              forTx,
+              ({
+                requestLogIndex,
+                proposalLogIndex,
+                disputeLogIndex,
+                settlementLogIndex,
+                assertionLogIndex,
+              }) => {
+                return (
+                  requestLogIndex === eventIndex ||
+                  proposalLogIndex === eventIndex ||
+                  disputeLogIndex === eventIndex ||
+                  settlementLogIndex === eventIndex ||
+                  assertionLogIndex === eventIndex
+                );
+              }
+            )
+          : forTx[0];
     }
 
     if (isRequestDetails) {
