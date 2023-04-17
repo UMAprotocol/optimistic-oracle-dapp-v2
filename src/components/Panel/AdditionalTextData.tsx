@@ -1,19 +1,24 @@
-import { smallMobileAndUnder } from "@/constants";
-import type { OracleQueryUI } from "@/types";
 import Chevron from "public/assets/icons/chevron.svg";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import type { CSSProperties } from "styled-components";
 import styled from "styled-components";
+import { SectionSubTitle, Text } from "./style";
 
+interface Props {
+  description: ReactNode;
+  queryText: string | undefined;
+  queryTextHex: string | undefined;
+}
 export function AdditionalTextData({
   description,
   queryText,
   queryTextHex,
-}: OracleQueryUI) {
+}: Props) {
   const [showBytes, setShowBytes] = useState(false);
-  const hasDescription = description !== "" && description !== "0x";
-  const hasQueryText = queryText !== "" && queryText !== "0x";
-  const hasQueryTextHex = queryTextHex !== "" && queryTextHex !== "0x";
+  const hasDescription = !!description && description !== "0x";
+  const hasQueryText = !!queryText && queryText !== "0x";
+  const hasQueryTextHex = !!queryTextHex && queryTextHex !== "0x";
   const chevronRotation = showBytes ? 0 : 180;
 
   function toggleShowBytes() {
@@ -54,20 +59,6 @@ export function AdditionalTextData({
     </>
   );
 }
-
-const SectionSubTitle = styled.h3`
-  font: var(--body-sm);
-  font-weight: 600;
-
-  margin-top: 16px;
-`;
-
-const Text = styled.p`
-  font: var(--body-sm);
-  @media ${smallMobileAndUnder} {
-    font: var(--body-xs);
-  }
-`;
 
 const ChevronIcon = styled(Chevron)`
   width: 12px;
