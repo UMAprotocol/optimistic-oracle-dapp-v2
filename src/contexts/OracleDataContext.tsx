@@ -190,6 +190,10 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  errors.forEach((error, i) => {
+    if (error) console.warn("Oracle data error", i, errors);
+  });
+
   return (
     <OracleDataContext.Provider value={{ ...queries, errors }}>
       {children}
