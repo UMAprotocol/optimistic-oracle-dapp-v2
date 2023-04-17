@@ -11,6 +11,7 @@ import { useHandleQueryInUrl, usePageContext } from "@/hooks";
 import Head from "next/head";
 import type { ReactNode } from "react";
 import styled from "styled-components";
+import { LegacyDappLinkBanner } from "./LegacyDappLinkBanner";
 
 export function Layout({ children }: { children: ReactNode }) {
   const { page } = usePageContext();
@@ -25,6 +26,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Main>
+        <LegacyDappLinkBanner />
         <ErrorBanner />
         <Header page={page} />
         <Filters />
