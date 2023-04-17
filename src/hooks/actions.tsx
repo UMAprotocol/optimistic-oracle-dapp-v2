@@ -247,7 +247,16 @@ export function useProposeAction({
     error: proposePriceError,
     isLoading: isProposePriceLoading,
     reset: resetContractWrite,
-  } = useContractWrite(proposePriceConfig);
+  } = useContractWrite({
+    ...proposePriceConfig,
+    request: {
+      ...proposePriceConfig.request,
+      // increase gas limit, this is due to user potentially editing approval amount in wallet, and running out of gas
+      // we cannot unset this because typescript expects a bignumber
+      gasLimit: proposePriceConfig?.request?.gasLimit?.mul(2),
+    },
+  });
+
   const { isLoading: isProposingPrice, isSuccess } = useWaitForTransaction({
     hash: proposePriceTransaction?.hash,
   });
