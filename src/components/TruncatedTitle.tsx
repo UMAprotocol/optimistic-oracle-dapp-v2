@@ -22,7 +22,7 @@ export function TruncatedTitle({ title }: Props) {
 }
 
 const TitleWrapper = styled.span`
-  word-break: break-all;
+  overflow-wrap: anywhere;
 `;
 
 const TruncatedTitleWrapper = styled(TitleWrapper)`
