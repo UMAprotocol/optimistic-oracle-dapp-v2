@@ -18,9 +18,13 @@ export function TruncatedTitle({ title }: Props) {
       </Tooltip>
     );
 
-  return <span>{title}</span>;
+  return <TitleWrapper>{title}</TitleWrapper>;
 }
 
-const TruncatedTitleWrapper = styled.span`
+const TitleWrapper = styled.span`
+  word-break: break-all;
+`;
+
+const TruncatedTitleWrapper = styled(TitleWrapper)`
   cursor: pointer;
 `;
