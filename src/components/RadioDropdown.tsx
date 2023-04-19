@@ -38,6 +38,9 @@ export function RadioDropdown({ items, selected, onSelect, disabled }: Props) {
               onSelect={() => onSelect(item)}
             >
               {item.label}
+              {item.secondaryLabel && (
+                <SecondaryLabel>({item.secondaryLabel})</SecondaryLabel>
+              )}
             </_RadioItem>
           ))}
         </_Content>
@@ -60,7 +63,12 @@ const _Content = styled(DropdownContent)`
 const _RadioItem = styled(RadioItem)`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   min-height: 40px;
   padding-left: 18px;
   padding-right: 18px;
+`;
+
+const SecondaryLabel = styled.span`
+  color: var(--blue-grey-300);
 `;

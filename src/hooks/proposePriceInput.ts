@@ -7,7 +7,7 @@ export function useProposePriceInput(query: OracleQueryUI) {
   const [inputError, setInputError] = useState("");
 
   const items = [
-    { label: "Yes", value: "1" },
+    { label: "Yes", value: "1", secondaryLabel: "poes" },
     { label: "No", value: "0" },
   ];
 

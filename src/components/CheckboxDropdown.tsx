@@ -36,9 +36,9 @@ interface Props {
 export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
   return (
     <DropdownRoot modal={false}>
-      <DropdownTrigger>
+      <_Trigger>
         {title} <DropdownChevronIcon />
-      </DropdownTrigger>
+      </_Trigger>
       <DropdownPortal>
         <DropdownContent align="start" side="bottom" sideOffset={4}>
           {Object.entries(items).map(([itemName, { count, checked }]) => (
@@ -70,4 +70,8 @@ export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
 
 const _CheckboxItem = styled(CheckboxItem)`
   ${checkboxItem}
+`;
+
+const _Trigger = styled(DropdownTrigger)`
+  border-radius: 24px;
 `;

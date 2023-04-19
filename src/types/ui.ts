@@ -421,4 +421,5 @@ export type MetaData = {
 export type DropdownItem = {
   label: string;
   value: string | number;
+  secondaryLabel?: string;
 };
