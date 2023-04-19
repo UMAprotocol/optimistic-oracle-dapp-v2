@@ -22,7 +22,7 @@ export const DropdownTrigger = styled(RadixDropdown.Trigger)`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 45px;
+  min-height: 44px;
   background: var(--white);
   font: var(--body-sm);
   color: var(--blue-grey-500);

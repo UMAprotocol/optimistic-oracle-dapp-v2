@@ -55,12 +55,7 @@ export function Actions({ query }: Props) {
   const showConnectButton =
     isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
   const disableInput =
-    !address ||
-    isWrongChain ||
-    alreadyProposed ||
-    alreadySettled ||
-    primaryAction?.disabled === true;
-
+    !address || isWrongChain || alreadyProposed || alreadySettled;
   const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <SettledIcon /> : <PencilIcon />;

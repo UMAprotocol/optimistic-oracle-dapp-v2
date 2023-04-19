@@ -1,23 +1,24 @@
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { useState } from "react";
 
-export function useProposePriceInput(query: OracleQueryUI) {
+export function useProposePriceInput({ proposeOptions }: OracleQueryUI) {
   const [proposePriceInput, setProposePriceInput] = useState("");
   const [isCustomInput, setIsCustomInput] = useState(false);
   const [inputError, setInputError] = useState("");
 
-  const items = [
-    { label: "Yes", value: "1", secondaryLabel: "poes" },
-    { label: "No", value: "0" },
-  ];
-
-  const selected = items.find(({ value }) => value === proposePriceInput);
+  const selected = proposeOptions?.find(
+    ({ value }) => value === proposePriceInput
+  );
 
   function onSelect(item: DropdownItem) {
-    setProposePriceInput(item.value.toString());
+    if (item.value === "custom") {
+      setIsCustomInput(true);
+    } else {
+      setProposePriceInput(item.value.toString());
+    }
   }
 
-  function onClear() {
+  function exitCustomInput() {
     setProposePriceInput("");
     setIsCustomInput(false);
   }
@@ -25,11 +26,11 @@ export function useProposePriceInput(query: OracleQueryUI) {
   return {
     proposePriceInput,
     inputError,
-    items,
+    items: proposeOptions,
     selected,
     isCustomInput,
     onSelect,
-    onClear,
+    exitCustomInput,
     onInput: setProposePriceInput,
     addErrorMessage: setInputError,
     removeErrorMessage: () => setInputError(""),

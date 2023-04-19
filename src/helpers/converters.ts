@@ -689,11 +689,12 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   }
 
   if (exists(identifier) && exists(result.queryText)) {
-    const { title, description, umipUrl, umipNumber, project } =
+    const { title, description, umipUrl, umipNumber, project, proposeOptions } =
       getQueryMetaData(identifier, result.queryText);
     result.title = title;
     result.description = description;
     result.project = project;
+    result.proposeOptions = proposeOptions;
     result.moreInformation = makeMoreInformationList(
       request,
       umipNumber,
