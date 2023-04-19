@@ -112,11 +112,6 @@ body {
   max-inline-size: 100%;
 }
 
-/* Set a size for SVG's without a width attribute */
-:where(svg):where(:not([width])) {
-  inline-size: 5rem;
-}
-
 /* Remove built-in form typography styles */
 :where(input, button, textarea, select),
 :where(input[type="file"])::-webkit-file-upload-button {

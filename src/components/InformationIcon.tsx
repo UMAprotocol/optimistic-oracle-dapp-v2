@@ -20,6 +20,7 @@ export function InformationIcon({ content }: Props) {
 }
 
 const Button = styled.button`
+  background: none;
   display: inline-block;
   margin-left: 8px;
 `;
