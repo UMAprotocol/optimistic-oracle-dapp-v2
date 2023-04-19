@@ -14,7 +14,7 @@ interface Props {
 
 export function OracleQueries({ page }: Props) {
   const { results: queries } = useFilterAndSearchContext();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(() => queries.length === 0);
   const router = useRouter();
   const hasQueryUrl = Object.keys(router.query).length > 0;
   const findQueryIndex = hasQueryUrl
@@ -22,9 +22,7 @@ export function OracleQueries({ page }: Props) {
     : undefined;
 
   useEffect(() => {
-    if (queries.length === 0) {
-      setIsLoading(true);
-    } else {
+    if (queries.length > 0) {
       setIsLoading(false);
     }
   }, [queries]);
