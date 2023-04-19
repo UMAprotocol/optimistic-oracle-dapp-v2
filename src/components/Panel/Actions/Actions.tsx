@@ -1,11 +1,14 @@
-import { ConnectButton, DecimalInput } from "@/components";
+import { ConnectButton } from "@/components";
 import { connectWallet, settled, smallMobileAndUnder } from "@/constants";
-import { usePageContext, usePrimaryPanelAction } from "@/hooks";
+import {
+  usePageContext,
+  usePrimaryPanelAction,
+  useProposePriceInput,
+} from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
 import type { CSSProperties } from "react";
-import { useState } from "react";
 import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
 import { SectionTitle, SectionTitleWrapper, Text } from "../style";
@@ -13,15 +16,15 @@ import { Details } from "./Details";
 import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
+import { ProposeInput } from "./ProposeInput";
 
 interface Props {
   query: OracleQueryUI;
 }
 export function Actions({ query }: Props) {
-  const [proposePriceInput, setProposePriceInput] = useState("");
-  const [inputError, setInputError] = useState("");
   const { chainId, oracleType, valueText, actionType } = query;
-
+  const { proposePriceInput, setProposePriceInput, inputError, setInputError } =
+    useProposePriceInput();
   const primaryAction = usePrimaryPanelAction({
     query,
     proposePriceInput,
@@ -80,15 +83,13 @@ export function Actions({ query }: Props) {
         <SectionTitle>{actionsTitle}</SectionTitle>
       </SectionTitleWrapper>
       {pageIsPropose ? (
-        <InputWrapper>
-          <DecimalInput
-            value={proposePriceInput}
-            onInput={setProposePriceInput}
-            addErrorMessage={setInputError}
-            disabled={disableInput}
-            removeErrorMessage={() => setInputError("")}
-          />
-        </InputWrapper>
+        <ProposeInput
+          value={proposePriceInput}
+          onInput={setProposePriceInput}
+          addErrorMessage={setInputError}
+          removeErrorMessage={() => setInputError("")}
+          disabled={disableInput}
+        />
       ) : (
         <ValueWrapper
           style={
@@ -131,11 +132,6 @@ const ValueWrapper = styled.div`
   padding-inline: 16px;
   border-radius: 4px;
   background: var(--white);
-`;
-
-const InputWrapper = styled.div`
-  margin-top: 16px;
-  margin-bottom: 20px;
 `;
 
 const ValueText = styled(Text)`
