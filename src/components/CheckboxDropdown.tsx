@@ -40,7 +40,7 @@ export function CheckboxDropdown({ title, items, onCheckedChange }: Props) {
         {title} <DropdownChevronIcon />
       </DropdownTrigger>
       <DropdownPortal>
-        <DropdownContent>
+        <DropdownContent align="start" side="bottom" sideOffset={4}>
           {Object.entries(items).map(([itemName, { count, checked }]) => (
             <_CheckboxItem
               key={itemName}

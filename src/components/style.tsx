@@ -28,7 +28,7 @@ export const DropdownTrigger = styled(RadixDropdown.Trigger)`
   color: var(--blue-grey-500);
   text-align: left;
   border: 1px solid var(--blue-grey-400);
-  border-radius: 24px;
+  border-radius: 4px;
   padding-left: 18px;
   padding-right: 22px;
   &[data-state="open"] {
@@ -39,8 +39,7 @@ export const DropdownTrigger = styled(RadixDropdown.Trigger)`
 `;
 
 export const DropdownContent = styled(RadixDropdown.Content)`
-  width: fit-content;
-  min-width: 220px;
+  width: var(--radix-dropdown-menu-trigger-width);
   margin-top: 4px;
   font: var(--body-sm);
   color: var(--blue-grey-500);
