@@ -1,9 +1,11 @@
 import { useHandleDecimalInput } from "@/hooks";
+import Close from "public/assets/icons/close.svg";
 import styled from "styled-components";
 
 interface Props {
   value: string;
   onInput: (value: string) => void;
+  onClear?: () => void;
   addErrorMessage: (message: string) => void;
   removeErrorMessage: () => void;
   disabled?: boolean;
@@ -15,6 +17,7 @@ interface Props {
  * A component for entering decimal values.
  * @param value The current value of the input.
  * @param onInput A callback to be called when the input value changes.
+ * @param onClear A callback to be called when the input value is cleared.
  * @param addErrorMessage A callback to be called when an error message should be displayed.
  * @param removeErrorMessage A callback to be called when an error message should be removed.
  * @param disabled Whether the input should be disabled.
@@ -25,6 +28,7 @@ interface Props {
 export function DecimalInput({
   value,
   onInput,
+  onClear,
   addErrorMessage,
   removeErrorMessage,
   disabled,
@@ -59,11 +63,21 @@ export function DecimalInput({
         maxLength={79}
         spellCheck="false"
       />
+      {!!onClear && (
+        <ClearInputButton
+          aria-label="exit custom input"
+          onClick={onClear}
+          disabled={disabled}
+        >
+          <CloseIcon />
+        </ClearInputButton>
+      )}
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
+  position: relative;
   font: var(--body-md);
   max-width: var(--panel-content-width);
   &[aria-disabled="true"] {
@@ -91,5 +105,29 @@ const Input = styled.input`
   ::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+  }
+`;
+
+const ClearInputButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--grey-100);
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.75;
+  }
+`;
+
+const CloseIcon = styled(Close)`
+  width: 10px;
+  path {
+    fill: var(--dark-text);
   }
 `;
