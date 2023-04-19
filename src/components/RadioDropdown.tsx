@@ -13,6 +13,7 @@ interface Props {
   items: DropdownItem[] | undefined;
   selected: DropdownItem | undefined;
   onSelect: ((item: DropdownItem) => void) | undefined;
+  disabled?: boolean;
 }
 /**
  * Dropdown menu with radio items
@@ -20,12 +21,12 @@ interface Props {
  * @param selected - the selected item
  * @param onSelect - the callback to call when an item is selected
  */
-export function RadioDropdown({ items, selected, onSelect }: Props) {
+export function RadioDropdown({ items, selected, onSelect, disabled }: Props) {
   if (!items || !onSelect) return null;
 
   return (
     <DropdownRoot modal={false}>
-      <_Trigger>
+      <_Trigger disabled={disabled}>
         {selected?.label ?? "Select option"} <DropdownChevronIcon />
       </_Trigger>
       <DropdownPortal>

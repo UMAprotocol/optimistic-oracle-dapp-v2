@@ -36,6 +36,9 @@ export const DropdownTrigger = styled(RadixDropdown.Trigger)`
       transform: rotate(180deg);
     }
   }
+  &[data-disabled] {
+    opacity: 0.25;
+  }
 `;
 
 export const DropdownContent = styled(RadixDropdown.Content)`
