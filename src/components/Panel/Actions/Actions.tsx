@@ -1,5 +1,6 @@
 import { ConnectButton } from "@/components";
 import { connectWallet, settled, smallMobileAndUnder } from "@/constants";
+import { maybeGetValueTextFromOptions } from "@/helpers";
 import {
   usePageContext,
   usePrimaryPanelAction,
@@ -22,7 +23,7 @@ interface Props {
   query: OracleQueryUI;
 }
 export function Actions({ query }: Props) {
-  const { chainId, oracleType, valueText, actionType } = query;
+  const { chainId, oracleType, valueText, actionType, proposeOptions } = query;
   const { proposePriceInput, inputError, ...inputProps } =
     useProposePriceInput(query);
   const primaryAction = usePrimaryPanelAction({
@@ -59,6 +60,7 @@ export function Actions({ query }: Props) {
   const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <SettledIcon /> : <PencilIcon />;
+  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
 
   function getActionsTitle() {
     if (pageIsSettled) return "Settled as";
@@ -95,7 +97,7 @@ export function Actions({ query }: Props) {
             } as CSSProperties
           }
         >
-          <ValueText>{valueText}</ValueText>
+          <ValueText>{valueToShow}</ValueText>
         </ValueWrapper>
       )}
       {!pageIsSettled && <Details {...query} />}
