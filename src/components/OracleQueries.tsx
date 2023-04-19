@@ -14,7 +14,7 @@ interface Props {
 
 export function OracleQueries({ page }: Props) {
   const { results: queries } = useFilterAndSearchContext();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => queries.length === 0);
   const router = useRouter();
   const hasQueryUrl = Object.keys(router.query).length > 0;
   const findQueryIndex = hasQueryUrl
