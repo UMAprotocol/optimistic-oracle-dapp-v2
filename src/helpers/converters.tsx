@@ -441,8 +441,9 @@ function makeSettleAssertionParams({
 
 function getOOV2SpecificValues(request: Request) {
   const isV2 = isOOV2PriceRequest(request);
-
-  const bond = isV2 && request.bond ? request.bond : request.finalFee;
+  const finalFee = request.finalFee ?? BigNumber.from(0);
+  // bond is final fee and bond together
+  const bond = isV2 && request.bond ? request.bond.add(finalFee) : finalFee;
   const customLiveness = isV2 ? request.customLiveness : null;
   const eventBased = isV2 ? request.eventBased : null;
 

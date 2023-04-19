@@ -2,12 +2,12 @@ import type { OracleQueryUI } from "@/types";
 import styled from "styled-components";
 import { Currency } from "../Currency";
 import { TD, Text } from "./style";
+import { exists } from "@libs/utils";
 
 export function ProposeCells({ query }: { query: OracleQueryUI }) {
   const { oracleType, tokenAddress, chainId, bond, reward } = query;
 
-  const hasReward = reward !== null;
-
+  const hasReward = exists(reward);
   return (
     <>
       <TD>
