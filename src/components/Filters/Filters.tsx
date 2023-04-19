@@ -56,6 +56,7 @@ export function Filters() {
             onCheckedChange={onCheckedChange}
             reset={reset}
           />
+          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </MobileWrapper>
       </InnerWrapper>
     </OuterWrapper>
@@ -75,7 +76,7 @@ const DesktopWrapper = styled.div`
 
 const MobileWrapper = styled.div`
   --display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr;
   gap: 24px;
   ${showOnMobileAndUnder}
 `;
