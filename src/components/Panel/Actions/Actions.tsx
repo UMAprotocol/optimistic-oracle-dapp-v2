@@ -23,8 +23,8 @@ interface Props {
 }
 export function Actions({ query }: Props) {
   const { chainId, oracleType, valueText, actionType } = query;
-  const { proposePriceInput, setProposePriceInput, inputError, setInputError } =
-    useProposePriceInput();
+  const { proposePriceInput, inputError, ...inputProps } =
+    useProposePriceInput(query);
   const primaryAction = usePrimaryPanelAction({
     query,
     proposePriceInput,
@@ -55,7 +55,11 @@ export function Actions({ query }: Props) {
   const showConnectButton =
     isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
   const disableInput =
-    !address || isWrongChain || alreadyProposed || alreadySettled;
+    !address ||
+    isWrongChain ||
+    alreadyProposed ||
+    alreadySettled ||
+    primaryAction?.disabled === true;
 
   const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
   const actionsTitle = getActionsTitle();
@@ -85,10 +89,8 @@ export function Actions({ query }: Props) {
       {pageIsPropose ? (
         <ProposeInput
           value={proposePriceInput}
-          onInput={setProposePriceInput}
-          addErrorMessage={setInputError}
-          removeErrorMessage={() => setInputError("")}
           disabled={disableInput}
+          {...inputProps}
         />
       ) : (
         <ValueWrapper

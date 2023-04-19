@@ -417,3 +417,8 @@ export type MetaData = {
   umipNumber: string | undefined;
   project: Project;
 };
+
+export type DropdownItem = {
+  label: string;
+  value: string | number;
+};

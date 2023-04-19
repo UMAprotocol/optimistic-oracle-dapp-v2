@@ -1,17 +1,24 @@
-import { DecimalInput } from "@/components/DecimalInput";
+import { DecimalInput, RadioDropdown } from "@/components";
+import type { DropdownItem } from "@/types";
 import styled from "styled-components";
 
 interface Props {
   value: string;
+  disabled: boolean;
+  items: DropdownItem[] | undefined;
+  selected: DropdownItem | undefined;
+  isCustomInput: boolean;
   onInput: (value: string) => void;
+  onSelect: (item: DropdownItem) => void;
   addErrorMessage: (value: string) => void;
   removeErrorMessage: () => void;
-  disabled: boolean;
 }
-export function ProposeInput(delegatedProps: Props) {
+export function ProposeInput({ isCustomInput, ...props }: Props) {
+  const isDropdown = !isCustomInput && !!props.items && props.items.length > 0;
+
   return (
     <Wrapper>
-      <DecimalInput {...delegatedProps} />
+      {isDropdown ? <RadioDropdown {...props} /> : <DecimalInput {...props} />}
     </Wrapper>
   );
 }
