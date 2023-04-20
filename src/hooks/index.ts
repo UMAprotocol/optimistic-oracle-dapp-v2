@@ -5,5 +5,6 @@ export * from "./filters";
 export * from "./handleQueryInUrl";
 export * from "./helpers";
 export * from "./page";
-export * from "./votingInfo";
+export * from "./proposePriceInput";
 export * from "./queries";
+export * from "./votingInfo";

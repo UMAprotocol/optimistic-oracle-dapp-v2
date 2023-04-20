@@ -7,16 +7,17 @@ import {
   connectWallet,
   connectingWallet,
   dispute,
-  disputing,
   disputed,
+  disputing,
   insufficientBalance,
   propose,
-  proposing,
   proposed,
+  proposing,
   settle,
   settled,
   settling,
 } from "@/constants";
+import { oracleEthersApis } from "@/contexts";
 import { handleNotifications } from "@/helpers";
 import { useBalanceAndAllowance } from "@/hooks";
 import type { ActionTitle, OracleQueryUI } from "@/types";
@@ -30,12 +31,12 @@ import {
   useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
-import { oracleEthersApis } from "@/contexts";
 
 // This represents an action button, and the state we need to render it
 export type ActionState = Partial<{
   action: () => void;
   disabled: boolean;
+  disabledReason: string;
   hidden: boolean;
   title: ActionTitle;
   errors: (string | null | undefined)[];
@@ -90,6 +91,7 @@ export function useAccountAction({
     return {
       title: connectingWallet,
       disabled: true,
+      disabledReason: "Wallet is connecting...",
     };
   }
 
@@ -98,6 +100,7 @@ export function useAccountAction({
     return {
       title: changingChains,
       disabled: true,
+      disabledReason: "Changing chains...",
     };
   }
   // user is not connected.  we have to use a special button, so we are just gonna signal with title
@@ -188,6 +191,7 @@ export function useApproveBondAction({
     return {
       title: insufficientBalance,
       disabled: true,
+      disabledReason: "You don't have enough funds to pay the bond.",
     };
   }
   if (!approveBondSpendParams) return undefined;
@@ -199,12 +203,14 @@ export function useApproveBondAction({
     return {
       title: approveSpend,
       disabled: true,
+      disabledReason: "Preparing approval transaction...",
     };
   }
   if (isApproveBondSpendLoading || isApprovingBondSpend) {
     return {
       title: approvingSpend,
       disabled: true,
+      disabledReason: "Approving spend...",
     };
   }
 
@@ -292,6 +298,7 @@ export function useProposeAction({
     return {
       title: propose,
       disabled: true,
+      disabledReason: "Please enter a value to propose.",
     };
   }
 
@@ -299,12 +306,14 @@ export function useProposeAction({
     return {
       title: propose,
       disabled: true,
+      disabledReason: "Preparing proposal transaction...",
     };
   }
   if (isProposePriceLoading || isProposingPrice) {
     return {
       title: proposing,
       disabled: true,
+      disabledReason: "Proposing...",
     };
   }
 
@@ -314,6 +323,7 @@ export function useProposeAction({
       return {
         title: proposed,
         disabled: true,
+        disabledReason: "Already proposed.",
       };
     }
 
@@ -383,18 +393,21 @@ export function useDisputeAction({
     return {
       title: dispute,
       disabled: true,
+      disabledReason: "Preparing dispute transaction...",
     };
   }
   if (isDisputePriceLoading || isDisputingPrice) {
     return {
       title: disputing,
       disabled: true,
+      disabledReason: "Disputing...",
     };
   }
   if (isSuccess) {
     return {
       title: disputed,
       disabled: true,
+      disabledReason: "Already disputed.",
     };
   }
   return {
@@ -462,18 +475,21 @@ export function useDisputeAssertionAction({
     return {
       title: dispute,
       disabled: true,
+      disabledReason: "Preparing dispute transaction...",
     };
   }
   if (isDisputeAssertionLoading || isDisputingAssertion) {
     return {
       title: disputing,
       disabled: true,
+      disabledReason: "Disputing...",
     };
   }
   if (isSuccess) {
     return {
       title: disputed,
       disabled: true,
+      disabledReason: "Already disputed.",
     };
   }
   return {
@@ -542,12 +558,14 @@ export function useSettlePriceAction({
     return {
       title: settle,
       disabled: true,
+      disabledReason: "Preparing settle transaction...",
     };
   }
   if (isSettlePriceLoading || isSettlingPrice) {
     return {
       title: settling,
       disabled: true,
+      disabledReason: "Settling...",
     };
   }
   // unique to settle, if we have an error preparing the transaction,
@@ -556,12 +574,14 @@ export function useSettlePriceAction({
     return {
       title: disputed,
       disabled: true,
+      disabledReason: "This query is disputed.",
     };
   }
   if (isSuccess) {
     return {
       title: settled,
       disabled: true,
+      disabledReason: "Already settled.",
     };
   }
   return {
@@ -626,12 +646,14 @@ export function useSettleAssertionAction({
     return {
       title: settle,
       disabled: true,
+      disabledReason: "Preparing settle transaction...",
     };
   }
   if (isSettleAssertionLoading || isSettlingAssertion) {
     return {
       title: settling,
       disabled: true,
+      disabledReason: "Settling...",
     };
   }
   // unique to settle, if we have an error preparing the transaction,
@@ -640,12 +662,14 @@ export function useSettleAssertionAction({
     return {
       title: disputed,
       disabled: true,
+      disabledReason: "This query is disputed.",
     };
   }
   if (isSuccess) {
     return {
       title: settled,
       disabled: true,
+      disabledReason: "Already settled.",
     };
   }
   return {
