@@ -889,15 +889,11 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
       if (explanationRegex && explanationRegex[1]) {
         result.title = `OSnap Request ${explanationRegex[1]}`;
         if (rulesRegex && rulesRegex[1]) {
-          result.description = (
-            <>
-              OSnap Request {explanationRegex[1]}
-              <br />
-              Rules:
-              <br />
-              {rulesRegex[1]}
-            </>
-          );
+          result.description = `
+*Explanation*  
+${explanationRegex[1]}     
+*Rules*  
+${rulesRegex[1]}`;
         }
       } else {
         result.title = "OSnap Request";

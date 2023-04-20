@@ -66,7 +66,7 @@ export type OracleQueryUI = {
   project: Project;
   proposeOptions?: DropdownItem[] | undefined;
   title?: string;
-  description?: ReactNode;
+  description?: string;
   expiryType?: ExpiryType | null;
   // not always available with assertions
   identifier?: string;
