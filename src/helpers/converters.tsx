@@ -1,12 +1,11 @@
 import { config } from "@/constants";
-import { parseIdentifier } from "@libs/utils";
 import type {
   ActionType,
   MoreInformationItem,
   OracleQueryUI,
   SolidityRequest,
 } from "@/types";
-import { exists } from "@libs/utils";
+import { exists, parseIdentifier } from "@libs/utils";
 import { chainsById } from "@shared/constants";
 import {
   disputeAssertionAbi,
@@ -882,9 +881,23 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     result.description = result.queryText;
     if (isOptimisticGovernor(result.queryText)) {
       result.project = "OSnap";
-      const match = result.queryText.match(/explanation:"(.*?)",rules:/);
-      if (match && match[1]) {
-        result.title = `OSnap Request ${match[1]}`;
+      const explanationRegex = result.queryText.match(
+        /explanation:"(.*?)",rules:/
+      );
+      const rulesRegex = result.queryText.match(/rules:"(.*?)"/);
+      if (explanationRegex && explanationRegex[1]) {
+        result.title = `OSnap Request ${explanationRegex[1]}`;
+        if (rulesRegex && rulesRegex[1]) {
+          result.description = (
+            <>
+              OSnap Request {explanationRegex[1]}
+              <br />
+              Rules:
+              <br />
+              {rulesRegex[1]}
+            </>
+          );
+        }
       } else {
         result.title = "OSnap Request";
       }
