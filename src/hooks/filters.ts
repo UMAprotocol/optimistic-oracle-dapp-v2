@@ -39,6 +39,7 @@ export function useSearch(queries: OracleQueryUI[]) {
     return new Fuse(queries, {
       keys,
       ignoreLocation: true,
+      threshold: 0.3,
     });
   }, [queries]);
 
