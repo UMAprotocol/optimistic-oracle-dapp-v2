@@ -36,7 +36,10 @@ export function useSearch(queries: OracleQueryUI[]) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const fuse = useMemo(() => {
-    return new Fuse(queries, { keys });
+    return new Fuse(queries, {
+      keys,
+      ignoreLocation: true,
+    });
   }, [queries]);
 
   const results = useMemo(() => {
