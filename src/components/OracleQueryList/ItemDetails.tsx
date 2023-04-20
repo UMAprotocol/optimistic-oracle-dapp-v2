@@ -1,3 +1,4 @@
+import { maybeGetValueTextFromOptions } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import { Currency } from "../Currency";
@@ -23,8 +24,10 @@ export function ItemDetails({
     bond,
     reward,
     valueText,
+    proposeOptions,
   } = item;
 
+  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
   const hasBond = bond !== null;
   const hasReward = reward !== null;
 
@@ -40,7 +43,7 @@ export function ItemDetails({
       )}
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Proposal</ItemDetailsText>
-        <ItemDetailsText>{valueText}</ItemDetailsText>
+        <ItemDetailsText>{valueToShow}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
       {livenessEndsMilliseconds !== undefined &&
       timeMilliseconds !== undefined ? (
@@ -87,7 +90,7 @@ export function ItemDetails({
     <ItemDetailsWrapper>
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Settled As</ItemDetailsText>
-        <ItemDetailsText>{valueText}</ItemDetailsText>
+        <ItemDetailsText>{valueToShow}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
     </ItemDetailsWrapper>
   );

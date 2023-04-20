@@ -64,6 +64,7 @@ export type OracleQueryUI = {
   oracleType: OracleType;
   oracleAddress: Address;
   project: Project;
+  proposeOptions?: DropdownItem[] | undefined;
   title?: string;
   description?: ReactNode;
   expiryType?: ExpiryType | null;
@@ -416,4 +417,11 @@ export type MetaData = {
   umipUrl: string | undefined;
   umipNumber: string | undefined;
   project: Project;
+  proposeOptions: DropdownItem[] | undefined;
+};
+
+export type DropdownItem = {
+  label: string;
+  value: string | number;
+  secondaryLabel?: string;
 };
