@@ -1,12 +1,11 @@
 import { config } from "@/constants";
-import { parseIdentifier } from "@libs/utils";
 import type {
   ActionType,
   MoreInformationItem,
   OracleQueryUI,
   SolidityRequest,
 } from "@/types";
-import { exists } from "@libs/utils";
+import { exists, parseIdentifier } from "@libs/utils";
 import { chainsById } from "@shared/constants";
 import {
   disputeAssertionAbi,
@@ -442,8 +441,9 @@ function makeSettleAssertionParams({
 
 function getOOV2SpecificValues(request: Request) {
   const isV2 = isOOV2PriceRequest(request);
-
-  const bond = isV2 && request.bond ? request.bond : request.finalFee;
+  const finalFee = request.finalFee ?? BigNumber.from(0);
+  // bond is final fee and bond together
+  const bond = isV2 && request.bond ? request.bond.add(finalFee) : finalFee;
   const customLiveness = isV2 ? request.customLiveness : null;
   const eventBased = isV2 ? request.eventBased : null;
 
@@ -689,11 +689,12 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   }
 
   if (exists(identifier) && exists(result.queryText)) {
-    const { title, description, umipUrl, umipNumber, project } =
+    const { title, description, umipUrl, umipNumber, project, proposeOptions } =
       getQueryMetaData(identifier, result.queryText);
     result.title = title;
     result.description = description;
     result.project = project;
+    result.proposeOptions = proposeOptions;
     result.moreInformation = makeMoreInformationList(
       request,
       umipNumber,
@@ -881,9 +882,19 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     result.description = result.queryText;
     if (isOptimisticGovernor(result.queryText)) {
       result.project = "OSnap";
-      const match = result.queryText.match(/explanation:"(.*?)",rules:/);
-      if (match && match[1]) {
-        result.title = `OSnap Request ${match[1]}`;
+      const explanationRegex = result.queryText.match(
+        /explanation:"(.*?)",rules:/
+      );
+      const rulesRegex = result.queryText.match(/rules:"(.*?)"/);
+      if (explanationRegex && explanationRegex[1]) {
+        result.title = `OSnap Request ${explanationRegex[1]}`;
+        if (rulesRegex && rulesRegex[1]) {
+          result.description = `
+*Explanation*  
+${explanationRegex[1]}     
+*Rules*  
+${rulesRegex[1]}`;
+        }
       } else {
         result.title = "OSnap Request";
       }

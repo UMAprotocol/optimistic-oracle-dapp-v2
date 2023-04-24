@@ -1,12 +1,12 @@
 import Chevron from "public/assets/icons/chevron.svg";
-import type { ReactNode } from "react";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import type { CSSProperties } from "styled-components";
 import styled from "styled-components";
 import { SectionSubTitle, Text } from "./style";
 
 interface Props {
-  description: ReactNode;
+  description: string | undefined;
   queryText: string | undefined;
   queryTextHex: string | undefined;
 }
@@ -30,7 +30,15 @@ export function AdditionalTextData({
       {hasDescription && (
         <>
           <SectionSubTitle>Description</SectionSubTitle>
-          <Text>{description}</Text>
+          <Text as="div">
+            <ReactMarkdown
+              components={{
+                a: (props) => <A {...props} target="_blank" />,
+              }}
+            >
+              {description}
+            </ReactMarkdown>
+          </Text>
         </>
       )}
       {hasQueryText && (
@@ -74,4 +82,12 @@ const ToggleShowBytesButton = styled.button`
   display: flex;
   align-items: center;
   background: none;
+`;
+
+const A = styled.a`
+  color: var(--red-500);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 `;

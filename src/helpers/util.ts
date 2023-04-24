@@ -1,6 +1,6 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import type { OracleQueryList } from "@/contexts";
-import type { OracleQueryUI } from "@/types";
+import type { DropdownItem, OracleQueryUI } from "@/types";
 import { capitalize, words } from "lodash";
 import { css } from "styled-components";
 
@@ -148,4 +148,11 @@ export function getPageForQuery({ actionType }: OracleQueryUI) {
     default:
       return "settled";
   }
+}
+
+export function maybeGetValueTextFromOptions(
+  valueText: string | null | undefined,
+  options: DropdownItem[] | undefined
+) {
+  return options?.find(({ value }) => value === valueText)?.label ?? valueText;
 }

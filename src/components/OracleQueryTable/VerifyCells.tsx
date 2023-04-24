@@ -1,3 +1,4 @@
+import { maybeGetValueTextFromOptions } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
@@ -5,6 +6,7 @@ import { TD, Text } from "./style";
 
 export function VerifyCells({
   valueText,
+  proposeOptions,
   timeMilliseconds,
   livenessEndsMilliseconds,
   disputeHash,
@@ -12,10 +14,11 @@ export function VerifyCells({
   chainId,
   tokenAddress,
 }: OracleQueryUI) {
+  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
   return (
     <>
       <TD>
-        <Text>{valueText}</Text>
+        <Text>{valueToShow}</Text>
       </TD>
       <TD>
         <Text>

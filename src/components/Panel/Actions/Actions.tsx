@@ -1,11 +1,15 @@
-import { ConnectButton, DecimalInput } from "@/components";
+import { ConnectButton } from "@/components";
 import { connectWallet, settled, smallMobileAndUnder } from "@/constants";
-import { usePageContext, usePrimaryPanelAction } from "@/hooks";
+import { maybeGetValueTextFromOptions } from "@/helpers";
+import {
+  usePageContext,
+  usePrimaryPanelAction,
+  useProposePriceInput,
+} from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
 import type { CSSProperties } from "react";
-import { useState } from "react";
 import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
 import { SectionTitle, SectionTitleWrapper, Text } from "../style";
@@ -13,15 +17,15 @@ import { Details } from "./Details";
 import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
+import { ProposeInput } from "./ProposeInput";
 
 interface Props {
   query: OracleQueryUI;
 }
 export function Actions({ query }: Props) {
-  const [proposePriceInput, setProposePriceInput] = useState("");
-  const [inputError, setInputError] = useState("");
-  const { chainId, oracleType, valueText, actionType } = query;
-
+  const { chainId, oracleType, valueText, actionType, proposeOptions } = query;
+  const { proposePriceInput, inputError, ...inputProps } =
+    useProposePriceInput(query);
   const primaryAction = usePrimaryPanelAction({
     query,
     proposePriceInput,
@@ -53,10 +57,10 @@ export function Actions({ query }: Props) {
     isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
   const disableInput =
     !address || isWrongChain || alreadyProposed || alreadySettled;
-
   const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <SettledIcon /> : <PencilIcon />;
+  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
 
   function getActionsTitle() {
     if (pageIsSettled) return "Settled as";
@@ -80,15 +84,11 @@ export function Actions({ query }: Props) {
         <SectionTitle>{actionsTitle}</SectionTitle>
       </SectionTitleWrapper>
       {pageIsPropose ? (
-        <InputWrapper>
-          <DecimalInput
-            value={proposePriceInput}
-            onInput={setProposePriceInput}
-            addErrorMessage={setInputError}
-            disabled={disableInput}
-            removeErrorMessage={() => setInputError("")}
-          />
-        </InputWrapper>
+        <ProposeInput
+          value={proposePriceInput}
+          disabled={disableInput}
+          {...inputProps}
+        />
       ) : (
         <ValueWrapper
           style={
@@ -97,7 +97,7 @@ export function Actions({ query }: Props) {
             } as CSSProperties
           }
         >
-          <ValueText>{valueText}</ValueText>
+          <ValueText>{valueToShow}</ValueText>
         </ValueWrapper>
       )}
       {!pageIsSettled && <Details {...query} />}
@@ -131,11 +131,6 @@ const ValueWrapper = styled.div`
   padding-inline: 16px;
   border-radius: 4px;
   background: var(--white);
-`;
-
-const InputWrapper = styled.div`
-  margin-top: 16px;
-  margin-bottom: 20px;
 `;
 
 const ValueText = styled(Text)`

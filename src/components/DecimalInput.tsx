@@ -4,6 +4,7 @@ import styled from "styled-components";
 interface Props {
   value: string;
   onInput: (value: string) => void;
+  onClear?: () => void;
   addErrorMessage: (message: string) => void;
   removeErrorMessage: () => void;
   disabled?: boolean;

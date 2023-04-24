@@ -22,13 +22,13 @@ export const DropdownTrigger = styled(RadixDropdown.Trigger)`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 45px;
+  min-height: 44px;
   background: var(--white);
   font: var(--body-sm);
   color: var(--blue-grey-500);
   text-align: left;
   border: 1px solid var(--blue-grey-400);
-  border-radius: 24px;
+  border-radius: 4px;
   padding-left: 18px;
   padding-right: 22px;
   &[data-state="open"] {
@@ -36,11 +36,13 @@ export const DropdownTrigger = styled(RadixDropdown.Trigger)`
       transform: rotate(180deg);
     }
   }
+  &[data-disabled] {
+    opacity: 0.25;
+  }
 `;
 
 export const DropdownContent = styled(RadixDropdown.Content)`
-  width: fit-content;
-  min-width: 220px;
+  width: var(--radix-dropdown-menu-trigger-width);
   margin-top: 4px;
   font: var(--body-sm);
   color: var(--blue-grey-500);
