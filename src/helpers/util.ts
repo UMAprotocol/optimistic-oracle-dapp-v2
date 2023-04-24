@@ -111,7 +111,7 @@ export function sortQueries({
   return {
     verify: verify.sort(
       (a, b) =>
-        (b.livenessEndsMilliseconds || 0) - (a.livenessEndsMilliseconds || 0)
+        (a.livenessEndsMilliseconds || 0) - (b.livenessEndsMilliseconds || 0)
     ),
     propose: propose.sort(
       (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
