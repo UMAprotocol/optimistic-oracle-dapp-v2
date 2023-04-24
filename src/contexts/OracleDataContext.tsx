@@ -1,31 +1,31 @@
-import unionWith from "lodash/unionWith";
+import type { ProviderConfig } from "@/constants";
 import { config } from "@/constants";
 import {
   assertionToOracleQuery,
   getPageForQuery,
   requestToOracleQuery,
-  sortQueriesByDate,
+  sortQueries,
 } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
+import type { ServiceFactories, ServiceFactory } from "@libs/oracle-sdk-v2";
 import { Client } from "@libs/oracle-sdk-v2";
 import {
-  oracles,
   oracle1Ethers,
   oracle2Ethers,
   oracle3Ethers,
+  oracles,
   skinny1Ethers,
 } from "@libs/oracle-sdk-v2/services";
 import type { Api } from "@libs/oracle-sdk-v2/services/oraclev1/ethers";
-import type { ServiceFactories, ServiceFactory } from "@libs/oracle-sdk-v2";
-import type { ProviderConfig } from "@/constants";
 import type {
   Assertion,
   Assertions,
-  Request,
-  Requests,
   ChainId,
   OracleType,
+  Request,
+  Requests,
 } from "@shared/types";
+import unionWith from "lodash/unionWith";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useReducer, useState } from "react";
 
@@ -152,7 +152,7 @@ function DataReducerFactory<Input extends Request | Assertion>(
     return {
       ...state,
       all: { ...all },
-      ...sortQueriesByDate(queries),
+      ...sortQueries(queries),
     };
   };
 }

@@ -97,7 +97,7 @@ export function makeFilterTitle(filterName: string) {
   return capitalize(words(filterName)[0]);
 }
 
-export function sortQueriesByDate({
+export function sortQueries({
   verify,
   propose,
   settled,
@@ -106,9 +106,12 @@ export function sortQueriesByDate({
   propose: OracleQueryList;
   settled: OracleQueryList;
 }) {
+  // propose and settled are sorted by the time the query was created
+  // verify is sorted by when the liveness ends, so that the ones that end soonest are easy to find
   return {
     verify: verify.sort(
-      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
+      (a, b) =>
+        (a.livenessEndsMilliseconds || 0) - (b.livenessEndsMilliseconds || 0)
     ),
     propose: propose.sort(
       (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)

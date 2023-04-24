@@ -7,8 +7,10 @@ import {
   handlersWithNoData,
   makeEtherValueString,
   makeGraphqlHandlers,
+  makeMockAssertions,
   makeMockRequestGraphEntities,
   makeMockRouterPathname,
+  makeUnixTimestamp,
 } from "../mocks";
 import { NotificationsDecorator, Template } from "./shared";
 import type { PageStory } from "./types";
@@ -89,6 +91,80 @@ export const WithLongTitles: PageStory = {
                 state: "Proposed",
                 proposedPrice: makeEtherValueString(123),
               },
+            ],
+          }),
+        },
+      }),
+    },
+  },
+};
+
+export const WithDifferentExpirations: PageStory = {
+  ...VerifyTemplate,
+  parameters: {
+    ...VerifyTemplate.parameters,
+    msw: {
+      handlers: makeGraphqlHandlers({
+        v2: {
+          Ethereum: makeMockRequestGraphEntities({
+            inputs: [
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                proposalExpirationTimestamp: makeUnixTimestamp("future", {
+                  hours: 1,
+                }),
+              },
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                proposalExpirationTimestamp: makeUnixTimestamp("future", {
+                  hours: 2,
+                }),
+              },
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                proposalExpirationTimestamp: makeUnixTimestamp("future", {
+                  hours: 3,
+                }),
+              },
+            ],
+          }),
+        },
+        skinny: {
+          Ethereum: makeMockRequestGraphEntities({
+            inputs: [
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                proposalExpirationTimestamp: makeUnixTimestamp("future", {
+                  hours: 4,
+                }),
+              },
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                proposalExpirationTimestamp: makeUnixTimestamp("future", {
+                  hours: 5,
+                }),
+              },
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                proposalExpirationTimestamp: makeUnixTimestamp("future", {
+                  hours: 6,
+                }),
+              },
+            ],
+          }),
+        },
+        v3: {
+          Ethereum: makeMockAssertions({
+            inputs: [
+              { expirationTime: makeUnixTimestamp("future", { hours: 7 }) },
+              { expirationTime: makeUnixTimestamp("future", { hours: 8 }) },
+              { expirationTime: makeUnixTimestamp("future", { hours: 9 }) },
             ],
           }),
         },
