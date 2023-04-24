@@ -6,7 +6,9 @@ import { chainNames } from "@shared/constants";
 import type {
   Assertion,
   AssertionGraphEntity,
+  OOV3GraphQuery,
   PriceRequestGraphEntity,
+  PriceRequestsQuery,
 } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import { add, addMinutes, format, sub } from "date-fns";
@@ -68,7 +70,7 @@ export const defaultMockAssertionGraphEntity = (
   const expirationTime = assertionTimestamp;
   const bond = makeEtherValueString(1000, 6);
   const claim = utf8ToHex(`
-    q: title: Paradoxical test assertion #${number}
+    Paradoxical test assertion #${number}
     description: One of these statements is true.
 
     This sentence is false.
@@ -78,10 +80,10 @@ export const defaultMockAssertionGraphEntity = (
   const callbackRecipient = "0x0000000000000000000000000000000000000000";
   const escalationManager = "0x0000000000000000000000000000000000000000";
   const asserter = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
-  const id = `${identifier}-${assertionTimestamp}-${claim}`;
   const domainId =
     "0x0000000000000000000000000000000000000000000000000000000000000000";
   const assertionId = uniqueId();
+  const id = assertionId;
   return {
     identifier,
     id,
@@ -382,10 +384,14 @@ export function makeGraphqlHandlers(args: {
 
   chainNames.forEach((chainName) => {
     handlers.push(
-      graphql.query(
+      graphql.query<PriceRequestsQuery, { skip: number }>(
         makeQueryName("Optimistic Oracle V1", chainName),
-        (_req, res, ctx) => {
-          const data = { optimisticPriceRequests: args?.v1?.[chainName] };
+        async (req, res, ctx) => {
+          const data = { optimisticPriceRequests: args?.v1?.[chainName] ?? [] };
+          const text = await req.text();
+          if (text.includes("skip: 1000")) {
+            data.optimisticPriceRequests = [];
+          }
           return res(ctx.data(data));
         }
       )
@@ -393,26 +399,40 @@ export function makeGraphqlHandlers(args: {
     handlers.push(
       graphql.query(
         makeQueryName("Optimistic Oracle V2", chainName),
-        (_req, res, ctx) => {
-          const data = { optimisticPriceRequests: args?.v2?.[chainName] };
+        async (req, res, ctx) => {
+          const data = { optimisticPriceRequests: args?.v2?.[chainName] ?? [] };
+          const text = await req.text();
+          if (text.includes("skip: 1000")) {
+            data.optimisticPriceRequests = [];
+          }
           return res(ctx.data(data));
         }
       )
     );
     handlers.push(
-      graphql.query(
+      graphql.query<OOV3GraphQuery, { skip: number }>(
         makeQueryName("Optimistic Oracle V3", chainName),
-        (_req, res, ctx) => {
-          const data = { assertions: args?.v3?.[chainName] };
+        async (req, res, ctx) => {
+          const data = { assertions: args?.v3?.[chainName] ?? [] };
+          const text = await req.text();
+          if (text.includes("skip: 1000")) {
+            data.assertions = [];
+          }
           return res(ctx.data(data));
         }
       )
     );
     handlers.push(
-      graphql.query(
+      graphql.query<PriceRequestsQuery, { skip: number }>(
         makeQueryName("Skinny Optimistic Oracle", chainName),
-        (_req, res, ctx) => {
-          const data = { optimisticPriceRequests: args?.skinny?.[chainName] };
+        async (req, res, ctx) => {
+          const data = {
+            optimisticPriceRequests: args?.skinny?.[chainName] ?? [],
+          };
+          const text = await req.text();
+          if (text.includes("skip: 1000")) {
+            data.optimisticPriceRequests = [];
+          }
           return res(ctx.data(data));
         }
       )
@@ -593,22 +613,21 @@ export const handlersForAllPages = makeGraphqlHandlers({
   v3: {
     Ethereum: makeMockAssertions({
       inputs: [
-        {},
         {
           settlementHash: null,
           expirationTime: makeUnixTimestamp("future", { days: 1 }),
-          identifier: "TEST_VERIFY",
+          identifier: "ASSERT_TRUTH",
         },
         {
           settlementHash: null,
           expirationTime: makeUnixTimestamp("past", { days: 1 }),
-          identifier: "TEST_VERIFY_EXPIRED",
+          identifier: "ASSERT_TRUTH",
         },
         {
           settlementHash: "0x123",
           expirationTime: makeUnixTimestamp("past", { days: 1 }),
           settlementResolution: false,
-          identifier: "TEST_SETTLED",
+          identifier: "ASSERT_TRUTH",
         },
       ],
     }),
