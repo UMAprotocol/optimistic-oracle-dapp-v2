@@ -1,4 +1,3 @@
-import assert from 'assert'
 import type {
   AssertionGraphEntity,
   ChainId,
@@ -13,12 +12,13 @@ import type {
 import { BigNumber } from "ethers";
 import type { Address } from "wagmi";
 
-export function isAddress(maybeAddress:string): maybeAddress is Address {
-  return '0x' == maybeAddress.slice(0,2)
+export function isAddress(maybeAddress: string): maybeAddress is Address {
+  return "0x" == maybeAddress.slice(0, 2);
 }
-export function assertAddress(maybeAddress:string): Address{
-  if(!isAddress(maybeAddress)) throw new Error(`${maybeAddress} is not a valid address.`)
-  return maybeAddress
+export function assertAddress(maybeAddress: string): Address {
+  if (!isAddress(maybeAddress))
+    throw new Error(`${maybeAddress} is not a valid address.`);
+  return maybeAddress;
 }
 export function handleGraphqlNullableStringOrBytes<
   EntityKey extends { [key: string]: string | null }
