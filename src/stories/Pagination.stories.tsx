@@ -1,9 +1,8 @@
-import { Pagination } from "@/components";
+import { Pagination, usePagination } from "@/components";
 import { white } from "@/constants";
 import { expect } from "@storybook/jest";
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, waitFor, within } from "@storybook/testing-library";
-import { useState } from "react";
 
 const meta: Meta<typeof Pagination> = {
   component: Pagination,
@@ -24,14 +23,8 @@ function makeMockEntries(length: number) {
   }));
 }
 
-function Wrapper({
-  Component,
-  entries,
-}: {
-  Component: typeof Pagination;
-  entries: ReturnType<typeof makeMockEntries>;
-}) {
-  const [entriesToShow, setEntriesToShow] = useState(entries);
+function Wrapper({ entries }: { entries: ReturnType<typeof makeMockEntries> }) {
+  const { entriesToShow, ...paginationProps } = usePagination(entries);
 
   return (
     <div>
@@ -41,17 +34,14 @@ function Wrapper({
         </p>
       ))}
       <br />
-      <Component entries={entries} setEntriesToShow={setEntriesToShow} />
+      <Pagination {...paginationProps} />
     </div>
   );
 }
 
 const Template: Story = {
   render: ({ numberOfEntries }) => (
-    <Wrapper
-      Component={Pagination}
-      entries={makeMockEntries(numberOfEntries)}
-    />
+    <Wrapper entries={makeMockEntries(numberOfEntries)} />
   ),
 };
 

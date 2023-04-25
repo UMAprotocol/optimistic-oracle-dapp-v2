@@ -21,7 +21,7 @@ export { Notifications } from "./Notifications";
 export { OracleQueries } from "./OracleQueries";
 export { OracleQueryList } from "./OracleQueryList/OracleQueryList";
 export { OracleQueryTable } from "./OracleQueryTable/OracleQueryTable";
-export { Pagination } from "./Pagination";
+export { Pagination, usePagination } from "./Pagination";
 export { Panel } from "./Panel/Panel";
 export { PanelBase } from "./Panel/PanelBase";
 export { RadioDropdown } from "./RadioDropdown";
