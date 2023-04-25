@@ -27,7 +27,7 @@ export function OracleQueryTable({
   isLoading,
   findQueryIndex,
 }: Props) {
-  const [rowsToShow, setRowsToShow] = useState(rows);
+  const [rowsToShow, setRowsToShow] = useState<typeof rows>([]);
 
   useEffect(() => {
     if (rows.length <= defaultResultsPerPage) {

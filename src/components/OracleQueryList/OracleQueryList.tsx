@@ -26,7 +26,7 @@ export function OracleQueryList({
   isLoading,
   findQueryIndex,
 }: Props) {
-  const [itemsToShow, setItemsToShow] = useState(items);
+  const [itemsToShow, setItemsToShow] = useState<typeof items>([]);
 
   useEffect(() => {
     if (items.length <= defaultResultsPerPage) {
