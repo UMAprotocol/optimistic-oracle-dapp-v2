@@ -1,9 +1,8 @@
 import { defaultResultsPerPage } from "@/constants";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Pagination } from "../Pagination";
+import { Pagination, usePagination } from "@/components";
 import { Item } from "./Item";
 import { LoadingItem } from "./LoadingItem";
 
@@ -19,6 +18,7 @@ interface Props {
  * @param page The page the queries are being rendered on.
  * @param items The queries to render.
  * @param isLoading Whether the queries are still loading.
+ * @param findQueryIndex - the index of the query from the url, if any
  */
 export function OracleQueryList({
   page,
@@ -26,13 +26,11 @@ export function OracleQueryList({
   isLoading,
   findQueryIndex,
 }: Props) {
-  const [itemsToShow, setItemsToShow] = useState<typeof items>([]);
+  const { entriesToShow, ...paginationProps } = usePagination(
+    items,
+    findQueryIndex
+  );
 
-  useEffect(() => {
-    if (items.length <= defaultResultsPerPage) {
-      setItemsToShow(items);
-    }
-  }, [items]);
   return (
     <Wrapper>
       <Title>Query</Title>
@@ -44,18 +42,14 @@ export function OracleQueryList({
         </>
       ) : (
         <>
-          {itemsToShow.map((item) => (
+          {entriesToShow.map((item) => (
             <Item key={item.id} page={page} item={item} />
           ))}
         </>
       )}
       {items.length > defaultResultsPerPage && !isLoading && (
         <PaginationWrapper>
-          <Pagination
-            entries={items}
-            setEntriesToShow={setItemsToShow}
-            findIndex={findQueryIndex}
-          />
+          <Pagination {...paginationProps} />
         </PaginationWrapper>
       )}
     </Wrapper>

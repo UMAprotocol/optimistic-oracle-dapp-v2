@@ -1,9 +1,8 @@
 import { defaultResultsPerPage } from "@/constants";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Pagination } from "../Pagination";
+import { Pagination, usePagination } from "@/components";
 import { Headers } from "./Headers";
 import { LoadingRow } from "./LoadingRow";
 import { Row } from "./Row";
@@ -20,6 +19,7 @@ interface Props {
  * @param page - the page of the app, used to determine which columns to show
  * @param rows - the rows to show in the table
  * @param isLoading - whether the table is loading
+ * @param findQueryIndex - the index of the query from the url, if any
  */
 export function OracleQueryTable({
   page,
@@ -27,13 +27,10 @@ export function OracleQueryTable({
   isLoading,
   findQueryIndex,
 }: Props) {
-  const [rowsToShow, setRowsToShow] = useState<typeof rows>([]);
-
-  useEffect(() => {
-    if (rows.length <= defaultResultsPerPage) {
-      setRowsToShow(rows);
-    }
-  }, [rows]);
+  const { entriesToShow, ...paginationProps } = usePagination(
+    rows,
+    findQueryIndex
+  );
 
   return (
     <Wrapper>
@@ -49,7 +46,7 @@ export function OracleQueryTable({
             </>
           ) : (
             <>
-              {rowsToShow.map((row) => (
+              {entriesToShow.map((row) => (
                 <Row key={row.id} page={page} row={row} />
               ))}
             </>
@@ -58,11 +55,7 @@ export function OracleQueryTable({
       </_Table>
       {rows.length > defaultResultsPerPage && !isLoading && (
         <PaginationWrapper>
-          <Pagination
-            entries={rows}
-            setEntriesToShow={setRowsToShow}
-            findIndex={findQueryIndex}
-          />
+          <Pagination {...paginationProps} />
         </PaginationWrapper>
       )}
     </Wrapper>

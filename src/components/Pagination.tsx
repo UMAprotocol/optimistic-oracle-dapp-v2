@@ -11,21 +11,24 @@ import NextPage from "public/assets/icons/right-chevron.svg";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
-interface Props<Entry> {
-  entries: Entry[];
-  setEntriesToShow: (entries: Entry[]) => void;
-  findIndex?: number;
-}
 /**
- * Handles pagination for a list of entries
- * @param entries - the entries to paginate (not the entries to show)
- * @param setEntriesToShow - the function to call when the entries to show change
+ * @description
+ * This component is used to navigate between pages of a list of entries.
+ * @param entries - The list of entries to paginate.
+ * @param findIndex - The index of the entry to find, if any.
+ * @returns
+ * An array of entries to show for the current page.
+ * All of the props needed to render the pagination component.
  */
-export function Pagination<Entry>({
-  entries,
-  setEntriesToShow,
-  findIndex,
-}: Props<Entry>) {
+export function usePagination<Entry>(entries: Entry[], findIndex?: number) {
+  const [entriesToShow, setEntriesToShow] = useState<typeof entries>([]);
+
+  useEffect(() => {
+    if (entries.length <= defaultResultsPerPage) {
+      setEntriesToShow(entries);
+    }
+  }, [entries]);
+
   const [pageNumber, setPageNumber] = useState(1);
   const [resultsPerPage, setResultsPerPage] = useState(defaultResultsPerPage);
   const numberOfEntries = entries.length;
@@ -155,7 +158,7 @@ export function Pagination<Entry>({
     updateEntries({ newPageNumber, newResultsPerPage });
   }
 
-  function isActive(buttonNumber: number) {
+  function isPageActive(buttonNumber: number) {
     return buttonNumber === pageNumber;
   }
 
@@ -164,47 +167,100 @@ export function Pagination<Entry>({
     updateEntriesForPageNumber(number);
   }
 
-  function nextPage() {
+  function goToNextPage() {
     const newPageNumber = pageNumber + 1;
     setPageNumber(newPageNumber);
     updateEntriesForPageNumber(newPageNumber);
   }
 
-  function prevPage() {
+  function goToPreviousPage() {
     const newPageNumber = pageNumber - 1;
     setPageNumber(newPageNumber);
     updateEntriesForPageNumber(newPageNumber);
   }
 
-  function firstPage() {
+  function goToFirstPage() {
     setPageNumber(1);
     updateEntriesForPageNumber(1);
   }
 
-  function lastPage() {
+  function goToLastPage() {
     setPageNumber(lastPageNumber);
     updateEntriesForPageNumber(lastPageNumber);
   }
 
+  return {
+    entriesToShow,
+    pageNumber,
+    goToPage,
+    resultsPerPage,
+    updateResultsPerPage,
+    buttonNumbers,
+    showFirstButton,
+    goToFirstPage,
+    showLastButton,
+    goToLastPage,
+    isFirstNumbers,
+    isPageActive,
+    lastPageNumber,
+    goToNextPage,
+    goToPreviousPage,
+  };
+}
+
+type Props = Omit<ReturnType<typeof usePagination>, "entriesToShow">;
+/**
+ * @description Pagination component.
+ * Intended to be used with the `usePagination` hook.
+ * All of the props come from there.
+ * The only omission is the `entriesToShow`, which is the array of entries to be shown on the current page.
+ * This is returned from the hook, but is not needed as a prop.
+ * @param pageNumber The current page number.
+ * @param goToPage A function to go to a specific page.
+ * @param resultsPerPage The number of results to show per page.
+ * @param updateResultsPerPage A function to update the number of results to show per page.
+ * @param buttonNumbers An array of page numbers to show as buttons.
+ * @param showFirstButton Whether to show the button to go to the first page.
+ * @param goToFirstPage A function to go to the first page.
+ * @param showLastButton Whether to show the button to go to the last page.
+ * @param goToLastPage A function to go to the last page.
+ * @param isFirstNumbers Whether the current page is the first page of the button numbers.
+ * @param isPageActive A function to check if a page number is the current page.
+ * @param lastPageNumber The last page number.
+ * @param goToNextPage A function to go to the next page.
+ * @param goToPreviousPage A function to go to the previous page.
+ */
+export function Pagination({
+  pageNumber,
+  goToPage,
+  resultsPerPage,
+  updateResultsPerPage,
+  buttonNumbers,
+  showFirstButton,
+  goToFirstPage,
+  showLastButton,
+  goToLastPage,
+  isFirstNumbers,
+  isPageActive,
+  lastPageNumber,
+  goToNextPage,
+  goToPreviousPage,
+}: Props) {
   const resultsPerPageOptions = [
     { value: 10, label: "10 results" },
     { value: 20, label: "20 results" },
     { value: 50, label: "50 results" },
   ];
 
-  function getSelectedResultsPerPage() {
-    return (
-      resultsPerPageOptions.find((option) => option.value === resultsPerPage) ??
-      resultsPerPageOptions[0]
-    );
-  }
-
+  const selectedResultsPerPage =
+    resultsPerPageOptions.find((option) => option.value === resultsPerPage) ??
+    resultsPerPageOptions[0];
   return (
     <Wrapper>
       <ResultsPerPageWrapper data-testid="results-per-page">
         <RadioDropdown
           items={resultsPerPageOptions}
-          selected={getSelectedResultsPerPage()}
+          selected={selectedResultsPerPage}
           onSelect={(option) => updateResultsPerPage(Number(option.value))}
         />
       </ResultsPerPageWrapper>
@@ -212,9 +268,9 @@ export function Pagination<Entry>({
         {showFirstButton && (
           <>
             <PageButton
-              onClick={firstPage}
+              onClick={goToFirstPage}
               disabled={pageNumber === 1}
-              $isActive={isActive(1)}
+              $isActive={isPageActive(1)}
             >
               1
             </PageButton>
@@ -225,7 +281,7 @@ export function Pagination<Entry>({
           <PageButton
             key={buttonNumber}
             onClick={() => goToPage(buttonNumber)}
-            $isActive={isActive(buttonNumber)}
+            $isActive={isPageActive(buttonNumber)}
           >
             {buttonNumber}
           </PageButton>
@@ -233,16 +289,22 @@ export function Pagination<Entry>({
         {showLastButton && (
           <>
             <Ellipsis>...</Ellipsis>
-            <PageButton onClick={lastPage} $isActive={isActive(lastPageNumber)}>
+            <PageButton
+              onClick={goToLastPage}
+              $isActive={isPageActive(lastPageNumber)}
+            >
               {lastPageNumber}
             </PageButton>
           </>
         )}
-        <PreviousPageButton onClick={prevPage} disabled={pageNumber === 1}>
+        <PreviousPageButton
+          onClick={goToPreviousPage}
+          disabled={pageNumber === 1}
+        >
           <PreviousPage />
         </PreviousPageButton>
         <NextPageButton
-          onClick={nextPage}
+          onClick={goToNextPage}
           disabled={pageNumber === lastPageNumber}
         >
           <NextPage />
