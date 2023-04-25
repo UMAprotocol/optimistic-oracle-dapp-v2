@@ -8,7 +8,7 @@ import {
 import { addOpacityToHsla } from "@/helpers";
 import PreviousPage from "public/assets/icons/left-chevron.svg";
 import NextPage from "public/assets/icons/right-chevron.svg";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface Props<Entry> {
@@ -44,10 +44,44 @@ export function Pagination<Entry>({
     lastPageNumber - 1 !== numberOfButtons;
   const buttonNumbers = makeButtonNumbers();
 
+  const getPageNumberOfItem = useCallback(
+    function (itemIndex: number | undefined) {
+      if (!itemIndex) return;
+      const pageNumber = Math.ceil((itemIndex + 1) / resultsPerPage);
+
+      return pageNumber;
+    },
+    [resultsPerPage]
+  );
+
+  const getEntriesForPage = useCallback(
+    function ({
+      newPageNumber = pageNumber,
+      newResultsPerPage = resultsPerPage,
+    }: {
+      newPageNumber?: number;
+      newResultsPerPage?: number;
+    }) {
+      const startIndex = (newPageNumber - 1) * newResultsPerPage;
+      const endIndex = startIndex + newResultsPerPage;
+      return entries.slice(startIndex, endIndex);
+    },
+    [entries, pageNumber, resultsPerPage]
+  );
+
+  const updateEntries = useCallback(
+    function (params?: { newPageNumber?: number; newResultsPerPage?: number }) {
+      const newPageNumber = params?.newPageNumber ?? pageNumber;
+      const newResultsPerPage = params?.newResultsPerPage ?? resultsPerPage;
+
+      setEntriesToShow(getEntriesForPage({ newPageNumber, newResultsPerPage }));
+    },
+    [getEntriesForPage, pageNumber, resultsPerPage, setEntriesToShow]
+  );
+
   useEffect(() => {
     updateEntries();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entries]);
+  }, [entries, updateEntries]);
 
   useEffect(() => {
     if (!findIndex || findIndex === -1) return;
@@ -58,8 +92,7 @@ export function Pagination<Entry>({
 
     setPageNumber(newPageNumber);
     updateEntries({ newPageNumber });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [findIndex, resultsPerPage, entries]);
+  }, [findIndex, resultsPerPage, entries, getPageNumberOfItem, updateEntries]);
 
   useEffect(() => {
     if (entries.length === 0) {
@@ -76,8 +109,7 @@ export function Pagination<Entry>({
     } else {
       updateEntries();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entries, resultsPerPage]);
+  }, [entries, pageNumber, resultsPerPage, updateEntries]);
 
   function getNumberOfButtons() {
     if (numberOfPages === defaultNumberOfButtons + 1) {
@@ -123,28 +155,6 @@ export function Pagination<Entry>({
     updateEntries({ newPageNumber, newResultsPerPage });
   }
 
-  function updateEntries(params?: {
-    newPageNumber?: number;
-    newResultsPerPage?: number;
-  }) {
-    const newPageNumber = params?.newPageNumber ?? pageNumber;
-    const newResultsPerPage = params?.newResultsPerPage ?? resultsPerPage;
-
-    setEntriesToShow(getEntriesForPage({ newPageNumber, newResultsPerPage }));
-  }
-
-  function getEntriesForPage({
-    newPageNumber = pageNumber,
-    newResultsPerPage = resultsPerPage,
-  }: {
-    newPageNumber?: number;
-    newResultsPerPage?: number;
-  }) {
-    const startIndex = (newPageNumber - 1) * newResultsPerPage;
-    const endIndex = startIndex + newResultsPerPage;
-    return entries.slice(startIndex, endIndex);
-  }
-
   function isActive(buttonNumber: number) {
     return buttonNumber === pageNumber;
   }
@@ -187,13 +197,6 @@ export function Pagination<Entry>({
       resultsPerPageOptions.find((option) => option.value === resultsPerPage) ??
       resultsPerPageOptions[0]
     );
-  }
-
-  function getPageNumberOfItem(itemIndex: number | undefined) {
-    if (!itemIndex) return;
-    const pageNumber = Math.ceil((itemIndex + 1) / resultsPerPage);
-
-    return pageNumber;
   }
 
   return (
