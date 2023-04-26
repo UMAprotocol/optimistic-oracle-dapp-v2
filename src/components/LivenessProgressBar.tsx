@@ -41,13 +41,13 @@ export function LivenessProgressBar({
     end: endTimeAsDate,
   });
   const timeRemainingString = formatDuration(timeRemaining)
-    .replace("years", "y")
-    .replace("months", "mo")
-    .replace("weeks", "w")
-    .replace("days", "d")
-    .replace("hours", "h")
-    .replace("minutes", "m")
-    .replace("seconds", "s");
+    .replace(/y(ear)?s?/, "y")
+    .replace(/m(onth)?s?/, "mo")
+    .replace(/w(eek)?s?/, "w")
+    .replace(/d(ay)?s?/, "d")
+    .replace(/h(our)?s?/, "h")
+    .replace(/m(inute)?s?/, "m")
+    .replace(/s(econd)?s?/, "s");
 
   const isEnded = endTimeAsDate < now;
 
