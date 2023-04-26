@@ -1,6 +1,6 @@
 import { darkText, red500 } from "@/constants";
 import { Indicator, Root } from "@radix-ui/react-progress";
-import { intervalToDuration } from "date-fns";
+import { formatDuration, intervalToDuration } from "date-fns";
 import { useState } from "react";
 import type { CSSProperties } from "styled-components";
 import styled, { css } from "styled-components";
@@ -40,14 +40,19 @@ export function LivenessProgressBar({
     start: now,
     end: endTimeAsDate,
   });
-  const { hours, minutes, seconds } = timeRemaining;
-  const timeRemainingString = `${hours && hours > 0 ? `${hours} h ` : ""}${
-    minutes && minutes > 0 ? `${minutes} m ` : ""
-  }${seconds ?? 0} s`;
+  const timeRemainingString = formatDuration(timeRemaining)
+    .replace(/y(ear)?s?/, "y")
+    .replace(/m(onth)?s?/, "mo")
+    .replace(/w(eek)?s?/, "w")
+    .replace(/d(ay)?s?/, "d")
+    .replace(/h(our)?s?/, "h")
+    .replace(/m(inute)?s?/, "m")
+    .replace(/s(econd)?s?/, "s");
 
   const isEnded = endTimeAsDate < now;
 
-  const isTextRed = !hours || hours === 0 || isEnded;
+  const isTextRed =
+    !timeRemaining.hours || timeRemaining.hours === 0 || isEnded;
 
   return (
     <Wrapper>
