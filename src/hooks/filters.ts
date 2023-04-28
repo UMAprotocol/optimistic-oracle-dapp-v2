@@ -11,6 +11,7 @@ import type {
 import Fuse from "fuse.js";
 import { cloneDeep } from "lodash";
 import { useEffect, useMemo, useReducer, useState } from "react";
+import { useDebounce } from "usehooks-ts";
 
 /**
  * Combines the filter and search hooks
@@ -34,6 +35,7 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
  */
 export function useSearch(queries: OracleQueryUI[]) {
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const fuse = useMemo(() => {
     return new Fuse(queries, {
@@ -44,12 +46,10 @@ export function useSearch(queries: OracleQueryUI[]) {
   }, [queries]);
 
   const results = useMemo(() => {
-    if (!searchTerm) return queries;
-
-    const results = fuse.search(searchTerm);
-
+    if (!debouncedSearchTerm) return queries;
+    const results = fuse.search(debouncedSearchTerm);
     return results.map((result) => result.item);
-  }, [queries, fuse, searchTerm]);
+  }, [queries, fuse, debouncedSearchTerm]);
 
   return {
     results,
