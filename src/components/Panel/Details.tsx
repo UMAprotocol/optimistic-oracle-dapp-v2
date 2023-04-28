@@ -17,6 +17,12 @@ import {
 export function Details({
   timeUTC,
   timeUNIX,
+  proposalTimeUTC,
+  proposalTimeUNIX,
+  settlementTimeUTC,
+  settlementTimeUNIX,
+  disputeTimeUTC,
+  disputeTimeUNIX,
   description,
   queryText,
   queryTextHex,
@@ -29,12 +35,46 @@ export function Details({
           <TimestampIcon />
           <SectionTitle>Timestamp</SectionTitle>
         </SectionTitleWrapper>
+        <SectionSubTitle>Requested Time</SectionSubTitle>
         <Text>
           <TimeFormat>UTC</TimeFormat> {timeUTC}
         </Text>
         <Text>
           <TimeFormat>UNIX</TimeFormat> {timeUNIX}
         </Text>
+        {proposalTimeUTC && proposalTimeUNIX ? (
+          <>
+            <SectionSubTitle>Proposed Time</SectionSubTitle>
+            <Text>
+              <TimeFormat>UTC</TimeFormat> {proposalTimeUTC}
+            </Text>
+            <Text>
+              <TimeFormat>UNIX</TimeFormat> {proposalTimeUNIX}
+            </Text>
+          </>
+        ) : null}
+        {disputeTimeUTC && disputeTimeUNIX ? (
+          <>
+            <SectionSubTitle>Disputed Time</SectionSubTitle>
+            <Text>
+              <TimeFormat>UTC</TimeFormat> {disputeTimeUTC}
+            </Text>
+            <Text>
+              <TimeFormat>UNIX</TimeFormat> {disputeTimeUNIX}
+            </Text>
+          </>
+        ) : null}
+        {settlementTimeUTC && settlementTimeUNIX ? (
+          <>
+            <SectionSubTitle>Settled Time</SectionSubTitle>
+            <Text>
+              <TimeFormat>UTC</TimeFormat> {settlementTimeUTC}
+            </Text>
+            <Text>
+              <TimeFormat>UNIX</TimeFormat> {settlementTimeUNIX}
+            </Text>
+          </>
+        ) : null}
       </DetailWrapper>
       <DetailWrapper>
         <SectionTitleWrapper>

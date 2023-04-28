@@ -727,18 +727,29 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   if (currency) {
     result.tokenAddress = currency;
   }
-  if (exists(proposalTimestamp)) result.proposalTimestamp = proposalTimestamp;
+  if (exists(proposalTimestamp)) {
+    result.proposalTimeUTC = toTimeUTC(proposalTimestamp);
+    result.proposalTimeUNIX = toTimeUnix(proposalTimestamp);
+    result.proposalTimestamp = proposalTimestamp;
+  }
   if (exists(proposalHash)) result.proposalHash = proposalHash;
   if (exists(proposalLogIndex)) result.proposalLogIndex = proposalLogIndex;
   if (exists(requester)) result.requester = requester;
   if (exists(requestTimestamp)) result.requestTimestamp = requestTimestamp;
   if (exists(requestHash)) result.requestHash = requestHash;
   if (exists(requestLogIndex)) result.requestLogIndex = requestLogIndex;
-  if (exists(disputeTimestamp)) result.disputeTimestamp = disputeTimestamp;
+  if (exists(disputeTimestamp)) {
+    result.disputeTimeUTC = toTimeUTC(disputeTimestamp);
+    result.disputeTimeUNIX = toTimeUnix(disputeTimestamp);
+    result.disputeTimestamp = disputeTimestamp;
+  }
   if (exists(disputeHash)) result.disputeHash = disputeHash;
   if (exists(disputeLogIndex)) result.disputeLogIndex = disputeLogIndex;
-  if (exists(settlementTimestamp))
+  if (exists(settlementTimestamp)) {
+    result.settlementTimeUTC = toTimeUTC(settlementTimestamp);
+    result.settlementTimeUNIX = toTimeUnix(settlementTimestamp);
     result.settlementTimestamp = settlementTimestamp;
+  }
   if (exists(settlementHash)) result.settlementHash = settlementHash;
   if (exists(settlementLogIndex))
     result.settlementLogIndex = settlementLogIndex;
@@ -935,14 +946,20 @@ ${rulesRegex[1]}`;
     result.timeFormatted = toTimeFormatted(assertionTimestamp);
     result.assertionTimestamp = assertionTimestamp;
   }
-
   if (exists(assertionHash)) result.assertionHash = assertionHash;
   if (exists(assertionLogIndex)) result.assertionLogIndex = assertionLogIndex;
-  if (exists(disputeTimestamp)) result.disputeTimestamp = disputeTimestamp;
+  if (exists(disputeTimestamp)) {
+    result.disputeTimeUTC = toTimeUTC(disputeTimestamp);
+    result.disputeTimeUNIX = toTimeUnix(disputeTimestamp);
+    result.disputeTimestamp = disputeTimestamp;
+  }
   if (exists(disputeHash)) result.disputeHash = disputeHash;
   if (exists(disputeLogIndex)) result.disputeLogIndex = disputeLogIndex;
-  if (exists(settlementTimestamp))
+  if (exists(settlementTimestamp)) {
+    result.settlementTimeUTC = toTimeUTC(settlementTimestamp);
+    result.settlementTimeUNIX = toTimeUnix(settlementTimestamp);
     result.settlementTimestamp = settlementTimestamp;
+  }
   if (exists(settlementHash)) result.settlementHash = settlementHash;
   if (exists(settlementLogIndex))
     result.settlementLogIndex = settlementLogIndex;
