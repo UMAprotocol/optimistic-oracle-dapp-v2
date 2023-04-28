@@ -9,8 +9,6 @@ export const keys: (keyof OracleQueryUI)[] = [
   "description",
   "expiryType",
   "identifier",
-  "queryTextHex",
-  "queryText",
   "valueText",
   "timeUTC",
   "timeFormatted",
