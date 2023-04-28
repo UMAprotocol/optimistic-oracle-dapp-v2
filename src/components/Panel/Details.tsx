@@ -42,7 +42,7 @@ export function Details({
         <Text>
           <TimeFormat>UNIX</TimeFormat> {timeUNIX}
         </Text>
-        {proposalTimeUTC && proposalTimeUNIX ? (
+        {!!proposalTimeUTC && !!proposalTimeUNIX && (
           <>
             <SectionSubTitle>Proposed Time</SectionSubTitle>
             <Text>
@@ -52,8 +52,8 @@ export function Details({
               <TimeFormat>UNIX</TimeFormat> {proposalTimeUNIX}
             </Text>
           </>
-        ) : null}
-        {disputeTimeUTC && disputeTimeUNIX ? (
+        )}
+        {!!disputeTimeUTC && !!disputeTimeUNIX && (
           <>
             <SectionSubTitle>Disputed Time</SectionSubTitle>
             <Text>
@@ -63,8 +63,8 @@ export function Details({
               <TimeFormat>UNIX</TimeFormat> {disputeTimeUNIX}
             </Text>
           </>
-        ) : null}
-        {settlementTimeUTC && settlementTimeUNIX ? (
+        )}
+        {!!settlementTimeUTC && !!settlementTimeUNIX && (
           <>
             <SectionSubTitle>Settled Time</SectionSubTitle>
             <Text>
@@ -74,7 +74,7 @@ export function Details({
               <TimeFormat>UNIX</TimeFormat> {settlementTimeUNIX}
             </Text>
           </>
-        ) : null}
+        )}
       </DetailWrapper>
       <DetailWrapper>
         <SectionTitleWrapper>
