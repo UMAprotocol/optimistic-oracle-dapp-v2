@@ -1,4 +1,5 @@
-export const keys = [
+import type { OracleQueryUI } from "@/types";
+export const keys: (keyof OracleQueryUI)[] = [
   "id",
   "chainId",
   "chainName",
@@ -13,12 +14,8 @@ export const keys = [
   "valueText",
   "timeUTC",
   "timeFormatted",
-  "price",
   "expiryType",
   "tokenAddress",
-  "formattedBond",
-  "formattedReward",
-  "assertion",
   "assertionTimestamp",
   "assertionHash",
   "assertionLogIndex",
