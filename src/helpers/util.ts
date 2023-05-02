@@ -1,7 +1,7 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import type { OracleQueryList } from "@/contexts";
 import type { DropdownItem, OracleQueryUI } from "@/types";
-import { capitalize, words } from "lodash";
+import { capitalize, orderBy, partition, words } from "lodash";
 import { css } from "styled-components";
 
 /**
@@ -109,17 +109,32 @@ export function sortQueries({
   // propose and settled are sorted by the time the query was created
   // verify is sorted by when the liveness ends, so that the ones that end soonest are easy to find
   return {
-    verify: verify.sort(
-      (a, b) =>
-        (a.livenessEndsMilliseconds || 0) - (b.livenessEndsMilliseconds || 0)
-    ),
-    propose: propose.sort(
-      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
-    ),
-    settled: settled.sort(
-      (a, b) => (b.timeMilliseconds || 0) - (a.timeMilliseconds || 0)
-    ),
+    verify: sortVerifyQueries(verify),
+    propose: sortByTimeCreated(propose),
+    settled: sortByTimeCreated(settled),
   };
+}
+
+function sortByLivenessEnds(queries: OracleQueryUI[]) {
+  return orderBy(queries, (query) => query.livenessEndsMilliseconds);
+}
+
+function sortByTimeCreated(queries: OracleQueryUI[]) {
+  return orderBy(queries, (query) => query.timeMilliseconds, ["desc"]);
+}
+function sortVerifyQueries(verify: OracleQueryUI[]) {
+  const [inLiveness, notInLiveness] = partition(
+    verify,
+    ({ livenessEndsMilliseconds, disputeHash }) => {
+      if (disputeHash !== undefined) return false;
+      return (livenessEndsMilliseconds ?? 0) > Date.now();
+    }
+  );
+
+  return [
+    ...sortByLivenessEnds(inLiveness),
+    ...sortByTimeCreated(notInLiveness),
+  ];
 }
 
 export function makeUrlParamsForQuery({
