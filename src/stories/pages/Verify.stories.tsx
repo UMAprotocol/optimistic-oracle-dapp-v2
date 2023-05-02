@@ -129,6 +129,27 @@ export const WithDifferentExpirations: PageStory = {
                   hours: 3,
                 }),
               },
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                time: makeUnixTimestamp("past", {
+                  hours: 6,
+                }),
+                proposalExpirationTimestamp: makeUnixTimestamp("past", {
+                  hours: 1,
+                }),
+              },
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                disputeHash: "0x1234567890123456",
+                time: makeUnixTimestamp("past", {
+                  hours: 5,
+                }),
+                proposalExpirationTimestamp: makeUnixTimestamp("future", {
+                  hours: 1,
+                }),
+              },
             ],
           }),
         },
@@ -156,6 +177,27 @@ export const WithDifferentExpirations: PageStory = {
                   hours: 6,
                 }),
               },
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                time: makeUnixTimestamp("past", {
+                  hours: 4,
+                }),
+                proposalExpirationTimestamp: makeUnixTimestamp("past", {
+                  hours: 6,
+                }),
+              },
+              {
+                state: "Proposed",
+                proposedPrice: makeEtherValueString(123),
+                disputeHash: "0x1234567890123456",
+                time: makeUnixTimestamp("past", {
+                  hours: 3,
+                }),
+                proposalExpirationTimestamp: makeUnixTimestamp("future", {
+                  hours: 6,
+                }),
+              },
             ],
           }),
         },
@@ -165,6 +207,19 @@ export const WithDifferentExpirations: PageStory = {
               { expirationTime: makeUnixTimestamp("future", { hours: 7 }) },
               { expirationTime: makeUnixTimestamp("future", { hours: 8 }) },
               { expirationTime: makeUnixTimestamp("future", { hours: 9 }) },
+              {
+                disputeHash: "0x1234567890123456",
+                assertionTimestamp: makeUnixTimestamp("past", {
+                  hours: 2,
+                }),
+                expirationTime: makeUnixTimestamp("future", { hours: 9 }),
+              },
+              {
+                assertionTimestamp: makeUnixTimestamp("past", {
+                  hours: 2,
+                }),
+                expirationTime: makeUnixTimestamp("past", { hours: 9 }),
+              },
             ],
           }),
         },
