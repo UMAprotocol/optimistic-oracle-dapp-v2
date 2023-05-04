@@ -18,12 +18,14 @@ export function ChainNameAndIcon({ chainName, chainId }: Props) {
 
 const Wrapper = styled.span`
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   margin-right: 2px;
   margin-left: 3px;
 `;
 
 const IconWrapper = styled.span`
+  display: inline-block;
+  align-self: center;
   width: 14px;
   margin-right: 3px;
 `;
