@@ -1,4 +1,4 @@
-import { TruncatedTitle } from "@/components";
+import { ChainNameAndIcon, TruncatedTitle } from "@/components";
 import { getProjectIcon } from "@/constants";
 import type { OracleQueryUI } from "@/types";
 import {
@@ -13,6 +13,7 @@ export function ItemTitle({
   title,
   project,
   chainName,
+  chainId,
   timeFormatted,
   expiryType,
 }: OracleQueryUI) {
@@ -29,7 +30,9 @@ export function ItemTitle({
       </HeaderWrapper>
       <TitleText>
         {isKnownProject && `${project} | `}
-        {timeFormatted} | {chainName} {expiryType && `| ${expiryType}`}
+        {timeFormatted} |{" "}
+        <ChainNameAndIcon chainId={chainId} chainName={chainName} />{" "}
+        {expiryType && `| ${expiryType}`}
       </TitleText>
     </TitleWrapper>
   );

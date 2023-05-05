@@ -1,4 +1,5 @@
 export { Button } from "./Button";
+export { ChainNameAndIcon } from "./ChainNameAndIcon";
 export { Checkbox } from "./Checkbox";
 export { CheckboxDropdown } from "./CheckboxDropdown";
 export { CheckboxList } from "./CheckboxList";

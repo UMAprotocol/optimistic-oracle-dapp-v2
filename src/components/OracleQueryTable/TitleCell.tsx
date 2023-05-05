@@ -1,5 +1,6 @@
 import { getProjectIcon } from "@/constants";
 import type { OracleQueryUI } from "@/types";
+import { ChainNameAndIcon } from "../ChainNameAndIcon";
 import { TruncatedTitle } from "../TruncatedTitle";
 import {
   IconWrapper,
@@ -24,6 +25,7 @@ export function TitleCell({
   title,
   project,
   chainName,
+  chainId,
   timeFormatted,
   expiryType,
 }: OracleQueryUI) {
@@ -40,7 +42,9 @@ export function TitleCell({
           </TitleHeader>
           <TitleText>
             {isKnownProject && `${project} | `}
-            {timeFormatted} | {chainName} {expiryType && `| ${expiryType}`}
+            {timeFormatted} |{" "}
+            <ChainNameAndIcon chainId={chainId} chainName={chainName} />{" "}
+            {expiryType && `| ${expiryType}`}
           </TitleText>
         </TextWrapper>
       </TitleWrapper>
