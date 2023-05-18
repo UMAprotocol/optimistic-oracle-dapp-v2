@@ -1,13 +1,33 @@
 import { chainsById } from "@shared/constants";
-import type { ChainId, OOV3GraphEntity, OOV3GraphQuery } from "@shared/types";
+import type {
+  ChainId,
+  ErrorMessage,
+  OOV3GraphEntity,
+  OOV3GraphQuery,
+} from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import request, { gql } from "graphql-request";
 
-export async function getAssertions(url: string, chainId: ChainId) {
-  const chainName = chainsById[chainId];
-  const queryName = makeQueryName("Optimistic Oracle V3", chainName);
-  const result = await fetchAllAssertions(url, queryName);
-  return result;
+export async function getAssertions(
+  url: string,
+  chainId: ChainId,
+  addErrorMessage: (message: ErrorMessage) => void
+) {
+  try {
+    const chainName = chainsById[chainId];
+    const queryName = makeQueryName("Optimistic Oracle V3", chainName);
+    const result = await fetchAllAssertions(url, queryName);
+    return result;
+  } catch (e) {
+    addErrorMessage({
+      text: "TheGraph is experiencing downtime. Please use the legacy dapp while they rectify the issue",
+      link: {
+        text: "Legacy Dapp",
+        href: "https://legacy.oracle.uma.xyz",
+      },
+    });
+    return [];
+  }
 }
 
 async function fetchAllAssertions(url: string, queryName: string) {
