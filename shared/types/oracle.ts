@@ -74,3 +74,11 @@ export type Transaction = {
   error?: Error;
 };
 export type Transactions = Transaction[];
+
+export type ErrorMessage = {
+  text: string;
+  link?: {
+    text: string;
+    href: string;
+  };
+};

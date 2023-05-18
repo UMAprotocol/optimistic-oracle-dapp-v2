@@ -1,4 +1,4 @@
-import type { ChainId, OracleType } from "@shared/types";
+import type { ChainId, ErrorMessage, OracleType } from "@shared/types";
 import type { Handlers, Service, ServiceFactory } from "../../types";
 
 // gql1 covers skinny, v1, v2
@@ -11,6 +11,7 @@ export type GqlConfig = {
   chainId: ChainId;
   type: OracleType;
   address: string;
+  addErrorMessage: (message: ErrorMessage) => void;
 };
 export type Config = GqlConfig[];
 
