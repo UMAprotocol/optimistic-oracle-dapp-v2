@@ -6,6 +6,7 @@ import {
   requestToOracleQuery,
   sortQueries,
 } from "@/helpers";
+import { useErrorContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import type { ServiceFactories, ServiceFactory } from "@libs/oracle-sdk-v2";
 import { Client } from "@libs/oracle-sdk-v2";
@@ -28,8 +29,6 @@ import type {
 import unionWith from "lodash/unionWith";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useReducer, useState } from "react";
-
-const oraclesService = oracles.Factory(config.subgraphs);
 
 //TODO: hate this approach, will need to refactor in future, current services interface does not make it easy to define custom functions
 // this will be moved somewhere else in future pr.
@@ -67,7 +66,7 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
   );
 
 // This exposes any api calls to services to other parts of app
-export { oraclesService, oracleEthersApis };
+export { oracleEthersApis };
 
 export type OracleQueryList = OracleQueryUI[];
 export type OracleQueryTable = Record<string, OracleQueryUI>;
@@ -172,6 +171,11 @@ export function oracleDataReducer(
   return state;
 }
 export function OracleDataProvider({ children }: { children: ReactNode }) {
+  const { addErrorMessage } = useErrorContext();
+  const oraclesService = oracles.Factory(
+    config.subgraphs.map((c) => ({ ...c, addErrorMessage }))
+  );
+
   const [queries, dispatch] = useReducer(
     oracleDataReducer,
     defaultOracleDataContextState

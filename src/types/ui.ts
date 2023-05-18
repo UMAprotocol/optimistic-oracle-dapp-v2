@@ -13,6 +13,7 @@ import type {
 import type {
   ChainId,
   ChainName,
+  ErrorMessage,
   ExpiryType,
   OracleType,
   Project,
@@ -351,14 +352,6 @@ export type MoreInformationItem = {
   title: string;
   text: string;
   href: string;
-};
-
-export type ErrorMessage = {
-  text: string;
-  link?: {
-    text: string;
-    href: string;
-  };
 };
 
 export type CheckboxState = DropdownMenuCheckboxItemProps["checked"];
