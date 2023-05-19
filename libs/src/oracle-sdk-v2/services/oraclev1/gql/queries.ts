@@ -1,6 +1,7 @@
 import { chainsById } from "@shared/constants";
 import type {
   ChainId,
+  ErrorMessage,
   OOV1GraphEntity,
   OOV2GraphEntity,
   OracleType,
@@ -12,13 +13,25 @@ import request, { gql } from "graphql-request";
 export async function getPriceRequests(
   url: string,
   chainId: ChainId,
-  oracleType: OracleType
+  oracleType: OracleType,
+  addErrorMessage: (message: ErrorMessage) => void
 ) {
-  const chainName = chainsById[chainId];
-  const queryName = makeQueryName(oracleType, chainName);
-  const isV2 = oracleType === "Optimistic Oracle V2";
-  const result = await fetchAllRequests(url, queryName, isV2);
-  return result;
+  try {
+    const chainName = chainsById[chainId];
+    const queryName = makeQueryName(oracleType, chainName);
+    const isV2 = oracleType === "Optimistic Oracle V2";
+    const result = await fetchAllRequests(url, queryName, isV2);
+    return result;
+  } catch (e) {
+    addErrorMessage({
+      text: "The Graph is experiencing downtime",
+      link: {
+        text: "Please use the Legacy Dapp",
+        href: "https://legacy.oracle.uma.xyz",
+      },
+    });
+    return [];
+  }
 }
 
 async function fetchAllRequests(url: string, queryName: string, isV2: boolean) {
@@ -41,7 +54,12 @@ async function fetchAllRequests(url: string, queryName: string, isV2: boolean) {
 }
 
 async function fetchPriceRequests(url: string, query: string) {
-  const result = await request<PriceRequestsQuery>(url, query);
+  const result = await request<
+    PriceRequestsQuery | { errors: { message: string }[] }
+  >(url, query);
+  if ("errors" in result) {
+    throw new Error(result.errors[0].message);
+  }
   return result.optimisticPriceRequests;
 }
 

@@ -2,7 +2,7 @@ import { Button, ErrorBanner } from "@/components";
 import type { ErrorContextState } from "@/contexts";
 import { ErrorContext } from "@/contexts";
 import { parseEthersError } from "@/helpers";
-import type { ErrorMessage } from "@/types";
+import type { ErrorMessage } from "@shared/types";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import styled from "styled-components";

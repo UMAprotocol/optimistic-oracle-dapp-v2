@@ -1,8 +1,8 @@
 import { GlobalStyle, Layout } from "@/components";
 import {
-  chains as supportedChains,
   config,
   red500,
+  chains as supportedChains,
   walletsAndConnectors,
   white,
 } from "@/constants";
@@ -15,10 +15,10 @@ import {
   PanelProvider,
 } from "@/contexts";
 import "@/styles/fonts.css";
-import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { WagmiConfig, configureChains, createClient } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -48,8 +48,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
         <PageProvider>
           <NotificationsProvider>
-            <OracleDataProvider>
-              <ErrorProvider>
+            <ErrorProvider>
+              <OracleDataProvider>
                 <PanelProvider>
                   <FilterAndSearchProvider>
                     <Layout>
@@ -58,8 +58,8 @@ export default function App({ Component, pageProps }: AppProps) {
                     </Layout>
                   </FilterAndSearchProvider>
                 </PanelProvider>
-              </ErrorProvider>
-            </OracleDataProvider>
+              </OracleDataProvider>
+            </ErrorProvider>
           </NotificationsProvider>
         </PageProvider>
       </RainbowKitProvider>

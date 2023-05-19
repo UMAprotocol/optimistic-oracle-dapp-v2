@@ -1,5 +1,5 @@
 import { mobileAndUnder } from "@/constants";
-import type { ErrorMessage as ErrorMessageType } from "@/types";
+import type { ErrorMessage as ErrorMessageType } from "@shared/types";
 import NextLink from "next/link";
 import styled from "styled-components";
 
