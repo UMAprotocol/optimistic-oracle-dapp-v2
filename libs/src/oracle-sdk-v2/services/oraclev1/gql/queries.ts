@@ -24,9 +24,9 @@ export async function getPriceRequests(
     return result;
   } catch (e) {
     addErrorMessage({
-      text: "TheGraph is experiencing downtime. Please use the legacy dapp while they rectify the issue",
+      text: "The Graph is experiencing downtime",
       link: {
-        text: "Legacy Dapp",
+        text: "Please use the Legacy Dapp",
         href: "https://legacy.oracle.uma.xyz",
       },
     });
