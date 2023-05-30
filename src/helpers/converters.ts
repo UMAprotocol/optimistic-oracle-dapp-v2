@@ -177,7 +177,7 @@ function getPriceRequestValueText(
   proposedPrice: BigNumber | null | undefined,
   settlementPrice: BigNumber | null | undefined
 ) {
-  const price = proposedPrice ?? settlementPrice;
+  const price = settlementPrice ?? proposedPrice;
   if (price === null || price === undefined) return null;
   return formatNumberForDisplay(price, { isFormatEther: true });
 }
