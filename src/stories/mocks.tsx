@@ -69,13 +69,11 @@ export const defaultMockAssertionGraphEntity = (
   const assertionTimestamp = makeUnixTimestamp("past", { hours: 1 });
   const expirationTime = assertionTimestamp;
   const bond = makeEtherValueString(1000, 6);
-  const claim = utf8ToHex(`
-    Paradoxical test assertion #${number}
-    description: One of these statements is true.
-
-    This sentence is false.
-    The previous sentence is true.
-  `);
+  const claim = utf8ToHex(`# This assertion ${number} contains markdown
+  ## It uses markdown syntax
+  - stuff
+  - things
+  - more things`);
   const currency = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
   const callbackRecipient = "0x0000000000000000000000000000000000000000";
   const escalationManager = "0x0000000000000000000000000000000000000000";
@@ -613,6 +611,11 @@ export const handlersForAllPages = makeGraphqlHandlers({
   v3: {
     Ethereum: makeMockAssertions({
       inputs: [
+        {
+          settlementHash: null,
+          expirationTime: makeUnixTimestamp("future", { days: 1 }),
+          identifier: "ASSERT_TRUTH",
+        },
         {
           settlementHash: null,
           expirationTime: makeUnixTimestamp("future", { days: 1 }),
