@@ -211,6 +211,10 @@ a:not([class]) {
       background: var(--grey-400);
     }
 
+    ul, ol {
+      list-style-position: inside;
+    }
+
   html {
     /* Colors */
     --white: ${white};
