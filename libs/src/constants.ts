@@ -46,7 +46,7 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 42161,
     address: getAddress("0x031A7882cE3e8b4462b057EBb0c3F23Cd731D234"),
   },
-    {
+  {
     // mumbai
     type: "Optimistic Oracle V1",
     chainId: 80001,

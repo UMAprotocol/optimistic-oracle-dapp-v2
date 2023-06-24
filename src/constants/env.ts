@@ -753,7 +753,10 @@ function parseEnv(env: Env): Config {
       type: "Optimistic Oracle V3",
       url: env.NEXT_PUBLIC_PROVIDER_V3_80001,
       chainId: 80001,
-      address: getContractAddress({ chainId: 80001, type: "Optimistic Oracle V3" }),
+      address: getContractAddress({
+        chainId: 80001,
+        type: "Optimistic Oracle V3",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_10) {
