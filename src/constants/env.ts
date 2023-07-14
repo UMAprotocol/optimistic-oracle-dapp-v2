@@ -181,6 +181,7 @@ const ProviderConfig = ss.object({
   ]),
   url: ss.string(),
   address: ss.string(),
+  blockHistoryLimit: ss.number(),
 });
 export type ProviderConfig = ss.Infer<typeof ProviderConfig>;
 const ProviderConfigs = ss.array(ProviderConfig);
@@ -470,6 +471,7 @@ function parseEnv(env: Env): Config {
       }),
     });
   }
+  // Providers
   if (env.NEXT_PUBLIC_PROVIDER_V1_1) {
     providers.push({
       source: "provider",
@@ -477,6 +479,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V1_1,
       chainId: 1,
       address: getContractAddress({ chainId: 1, type: "Optimistic Oracle V1" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_137) {
@@ -489,6 +492,7 @@ function parseEnv(env: Env): Config {
         chainId: 137,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_288) {
@@ -501,6 +505,7 @@ function parseEnv(env: Env): Config {
         chainId: 288,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_42161) {
@@ -513,6 +518,7 @@ function parseEnv(env: Env): Config {
         chainId: 42161,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_5) {
@@ -522,6 +528,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V1_5,
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V1" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_10) {
@@ -534,6 +541,7 @@ function parseEnv(env: Env): Config {
         chainId: 10,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_1) {
@@ -543,6 +551,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V2_1,
       chainId: 1,
       address: getContractAddress({ chainId: 1, type: "Optimistic Oracle V2" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_137) {
@@ -555,6 +564,7 @@ function parseEnv(env: Env): Config {
         chainId: 137,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_288) {
@@ -567,6 +577,7 @@ function parseEnv(env: Env): Config {
         chainId: 288,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_42161) {
@@ -579,6 +590,7 @@ function parseEnv(env: Env): Config {
         chainId: 42161,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_5) {
@@ -588,6 +600,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V2_5,
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V2" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_10) {
@@ -600,6 +613,7 @@ function parseEnv(env: Env): Config {
         chainId: 10,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_1) {
@@ -609,6 +623,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V3_1,
       chainId: 1,
       address: getContractAddress({ chainId: 1, type: "Optimistic Oracle V3" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_137) {
@@ -621,6 +636,7 @@ function parseEnv(env: Env): Config {
         chainId: 137,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_288) {
@@ -633,6 +649,7 @@ function parseEnv(env: Env): Config {
         chainId: 288,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_42161) {
@@ -645,6 +662,7 @@ function parseEnv(env: Env): Config {
         chainId: 42161,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_5) {
@@ -654,6 +672,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V3_5,
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V3" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_10) {
@@ -666,6 +685,7 @@ function parseEnv(env: Env): Config {
         chainId: 10,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_1) {
@@ -678,6 +698,7 @@ function parseEnv(env: Env): Config {
         chainId: 1,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_137) {
@@ -690,6 +711,7 @@ function parseEnv(env: Env): Config {
         chainId: 137,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_288) {
@@ -702,6 +724,7 @@ function parseEnv(env: Env): Config {
         chainId: 288,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_42161) {
@@ -714,6 +737,7 @@ function parseEnv(env: Env): Config {
         chainId: 42161,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_5) {
@@ -726,6 +750,7 @@ function parseEnv(env: Env): Config {
         chainId: 5,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_10) {
@@ -738,6 +763,7 @@ function parseEnv(env: Env): Config {
         chainId: 10,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   return {

@@ -2,7 +2,15 @@ import Events from "events";
 import { ethers } from "ethers";
 import type { Interface } from "@ethersproject/abi";
 import { assertAddress } from "@shared/utils";
-import { parseIdentifier } from "@libs/utils";
+import {
+  parseIdentifier,
+  insertOrderedAscending,
+  eventKey,
+  isUnique,
+  rangeStart,
+  rangeSuccessDescending,
+  rangeFailureDescending,
+} from "@libs/utils";
 import type { Assertion as SharedAssertion, ChainId } from "@shared/types";
 import type { Address } from "wagmi";
 import type {
@@ -11,8 +19,20 @@ import type {
   ServiceFactory,
 } from "@libs/oracle-sdk-v2/types";
 import type { TransactionReceipt, SerializableEvent } from "@libs/types";
-import type { Assertion } from "@libs/clients/optimisticOracleV3";
+import type {
+  Assertion,
+  AssertionMade,
+  AssertionDisputed,
+  AssertionSettled,
+  AdminPropertiesSet,
+} from "@libs/clients/optimisticOracleV3";
 import { connect, getEventState } from "@libs/clients/optimisticOracleV3";
+
+export type OptimisticOracleEvent =
+  | AssertionMade
+  | AssertionDisputed
+  | AssertionSettled
+  | AdminPropertiesSet;
 
 type Log = Parameters<Interface["parseLog"]>[0];
 export type Config = {
@@ -20,6 +40,31 @@ export type Config = {
   url: string;
   address: string;
 };
+// querying data from events does not provide timestamps for when events happen, at least not syncronously
+// we have to do block lookups to get block timestamps to associate with events 🤮
+const AddTimestamps =
+  (provider: ethers.providers.JsonRpcProvider) =>
+  async (assertion: SharedAssertion): Promise<SharedAssertion> => {
+    if (assertion.assertionBlockNumber && !assertion.assertionTimestamp) {
+      const block = await provider.getBlock(
+        Number(assertion.assertionBlockNumber)
+      );
+      assertion.assertionTimestamp = block.timestamp.toString();
+    }
+    if (assertion.disputeBlockNumber && !assertion.disputeTimestamp) {
+      const block = await provider.getBlock(
+        Number(assertion.disputeBlockNumber)
+      );
+      assertion.disputeTimestamp = block.timestamp.toString();
+    }
+    if (assertion.settlementBlockNumber && !assertion.settlementTimestamp) {
+      const block = await provider.getBlock(
+        Number(assertion.settlementBlockNumber)
+      );
+      assertion.settlementTimestamp = block.timestamp.toString();
+    }
+    return assertion;
+  };
 
 const ConvertToSharedAssertion =
   (chainId: ChainId, oracleAddress: Address) =>
@@ -75,8 +120,12 @@ const ConvertToSharedAssertion =
     if (assertionCaller) result.caller = assertionCaller;
     if (expirationTime) result.expirationTime = expirationTime.toString();
     if (currency) result.currency = assertAddress(currency);
-    if (settlementResolution)
+    if (settlementResolution) {
       result.settlementResolution = settlementResolution;
+    } else {
+      // default this to true since its an assertion. if missing, UI will be missing data
+      result.settlementResolution = true;
+    }
     if (bond) result.bond = bond;
     if (assertionTime) result.assertionTimestamp = assertionTime.toString();
     if (assertionBlockNumber)
@@ -102,6 +151,7 @@ const ConvertToSharedAssertion =
   };
 export type Api = {
   updateFromTransactionReceipt: (receipt: TransactionReceipt) => void;
+  queryLatestRequests?: (blocksAgo: number) => void;
 };
 export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedAssertion = ConvertToSharedAssertion(
@@ -109,8 +159,10 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     assertAddress(config.address)
   );
   const provider = new ethers.providers.JsonRpcProvider(config.url);
+  const addTimestamps = AddTimestamps(provider);
   const contract = connect(config.address, provider);
   const events = new Events();
+  const logs: OptimisticOracleEvent[] = [];
 
   function parseLog(log: Log) {
     const description = contract.interface.parseLog(log);
@@ -141,7 +193,13 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       const sharedAssertions = Object.values(assertions).map((assertion) =>
         convertToSharedAssertion(assertion)
       );
-      events.emit("assertions", sharedAssertions);
+      Promise.all(sharedAssertions.map(addTimestamps))
+        .then((sharedAssertions) => {
+          events.emit("assertions", sharedAssertions);
+        })
+        .catch((err) => {
+          console.warn("Error updating v3 from tx receipt:", err);
+        });
     } catch (err) {
       console.warn("Error updating v3 from tx receipt:", err);
     }
@@ -150,10 +208,54 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     if (handlers.assertions) events.on("assertions", handlers.assertions);
   };
 
+  const updateFromEvents = (eventLogs: OptimisticOracleEvent[]) => {
+    eventLogs.forEach((event) => {
+      if (isUnique(logs, event, eventKey)) {
+        insertOrderedAscending(logs, event, eventKey);
+      }
+    });
+  };
+  async function queryRange(startBlock: number, endBlock: number) {
+    let rangeState = rangeStart({ startBlock, endBlock });
+    const { currentStart, currentEnd } = rangeState;
+    try {
+      const eventLogs = await contract.queryFilter(
+        {},
+        currentStart,
+        currentEnd
+      );
+      updateFromEvents(eventLogs as unknown[] as OptimisticOracleEvent[]);
+      rangeState = rangeSuccessDescending({ ...rangeState, multiplier: 1 });
+    } catch (err) {
+      rangeState = rangeFailureDescending(rangeState);
+    }
+  }
+  function queryLatestRequests(blocksAgo: number) {
+    provider
+      .getBlockNumber()
+      .then(async (endBlock) => {
+        const startBlock = endBlock - blocksAgo;
+        await queryRange(startBlock, endBlock);
+        const { assertions = {} } = getEventState(logs);
+        const convertedAssertions = Object.values(assertions).map(
+          convertToSharedAssertion
+        );
+        const assertionsWithTimestamps = await Promise.all(
+          convertedAssertions.map(addTimestamps)
+        );
+        events.emit("assertions", assertionsWithTimestamps);
+      })
+      .catch((err) => {
+        console.warn("error querying OOV3 assertions from web3 provider:", err);
+        events.emit("error", err);
+      });
+  }
+
   return [
     service,
     {
       updateFromTransactionReceipt,
+      queryLatestRequests,
     },
   ];
 };
