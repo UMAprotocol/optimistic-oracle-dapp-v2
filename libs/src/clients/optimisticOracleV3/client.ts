@@ -96,7 +96,7 @@ export function reduceEvents(
       if (!state.assertions) state.assertions = {};
       const assertion: Assertion = state.assertions[assertionId];
       const escalationManagerSettings: Partial<EscalationManagerSettings> =
-        assertion.escalationManagerSettings || {};
+        assertion?.escalationManagerSettings || {};
       state.assertions[assertionId] = {
         ...assertion,
         assertionId,

@@ -1,7 +1,12 @@
 import Events from "events";
 import { ethers } from "ethers";
 import { assertAddress } from "@shared/utils";
-import { parseIdentifier } from "@libs/utils";
+import {
+  parseIdentifier,
+  rangeStart,
+  rangeSuccessDescending,
+  rangeFailureDescending,
+} from "@libs/utils";
 import type {
   Request as SharedRequest,
   OracleType,
@@ -34,6 +39,28 @@ function convertToSharedState(state: RequestState): SharedRequestState {
   if (state === RequestState.Resolved) return "Resolved";
   return "Settled";
 }
+
+// querying data from events does not provide timestamps for when events happen, at least not syncronously
+// we have to do block lookups to get block timestamps to associate with events 🤮
+const AddTimestamps =
+  (provider: ethers.providers.JsonRpcProvider) =>
+  async (request: SharedRequest): Promise<SharedRequest> => {
+    if (request.requestBlockNumber && !request.requestTimestamp) {
+      const block = await provider.getBlock(Number(request.requestBlockNumber));
+      request.requestTimestamp = block.timestamp.toString();
+    }
+    if (request.disputeBlockNumber && !request.disputeTimestamp) {
+      const block = await provider.getBlock(Number(request.disputeBlockNumber));
+      request.disputeTimestamp = block.timestamp.toString();
+    }
+    if (request.settlementBlockNumber && !request.settlementTimestamp) {
+      const block = await provider.getBlock(
+        Number(request.settlementBlockNumber)
+      );
+      request.settlementTimestamp = block.timestamp.toString();
+    }
+    return request;
+  };
 
 const ConvertToSharedRequest =
   (chainId: ChainId, oracleAddress: Address, oracleType: OracleType) =>
@@ -122,6 +149,7 @@ const ConvertToSharedRequest =
   };
 export type Api = {
   updateFromTransactionReceipt: (receipt: TransactionReceipt) => void;
+  queryLatestRequests?: (blocksAgo: number) => void;
 };
 export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedRequest = ConvertToSharedRequest(
@@ -136,6 +164,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     config.chainId
   );
   const events = new Events();
+  const addTimestamps = AddTimestamps(provider);
   function updateFromTransactionReceipt(receipt: TransactionReceipt) {
     try {
       oo.updateFromTransactionReceipt(receipt);
@@ -151,11 +180,44 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const service = (handlers: Handlers): Service => {
     if (handlers.requests) events.on("requests", handlers.requests);
   };
-
+  async function queryRange(startBlock: number, endBlock: number) {
+    let rangeState = rangeStart({ startBlock, endBlock });
+    const { currentStart, currentEnd } = rangeState;
+    try {
+      await oo.update(currentStart, currentEnd);
+      rangeState = rangeSuccessDescending({ ...rangeState, multiplier: 1 });
+    } catch (err) {
+      rangeState = rangeFailureDescending(rangeState);
+    }
+  }
+  function queryLatestRequests(blocksAgo: number) {
+    provider
+      .getBlockNumber()
+      .then(async (endBlock) => {
+        const startBlock = endBlock - blocksAgo;
+        await queryRange(startBlock, endBlock);
+        const requests = oo.listRequests();
+        const convertedRequests: SharedRequest[] = Object.values(requests).map(
+          convertToSharedRequest
+        );
+        const requestsWithTimestamps = await Promise.all(
+          convertedRequests.map(addTimestamps)
+        );
+        events.emit("requests", requestsWithTimestamps);
+      })
+      .catch((err) => {
+        console.warn(
+          "error querying latest Skinny OO requests from web3 provider:",
+          err
+        );
+        events.emit("error", err);
+      });
+  }
   return [
     service,
     {
       updateFromTransactionReceipt,
+      queryLatestRequests,
     },
   ];
 };
