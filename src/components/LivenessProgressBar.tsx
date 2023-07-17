@@ -1,4 +1,3 @@
-import { darkText, red500 } from "@/constants";
 import { Indicator, Root } from "@radix-ui/react-progress";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { useState } from "react";
@@ -59,7 +58,7 @@ export function LivenessProgressBar({
       <Text
         style={
           {
-            "--color": isTextRed ? red500 : darkText,
+            "--color": isTextRed ? "var(--red-500)" : "var(--dark-text)",
             "--font-size": fontSize !== undefined ? `${fontSize}px` : "16px",
             "--margin-bottom":
               marginBottom !== undefined ? `${marginBottom}px` : "8px",

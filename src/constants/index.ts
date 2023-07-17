@@ -8,7 +8,6 @@ export * from "./oracleQueries";
 export * from "./pagination";
 export * from "./siteMetaData";
 export * from "./styles/breakpoints";
-export * from "./styles/colors";
 export * from "./styles/containers";
 export * from "./styles/fonts";
 export * from "./styles/shadows";

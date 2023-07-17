@@ -1,5 +1,5 @@
 import { CloseButton, PanelBase } from "@/components";
-import { navLinks, red500, socialLinks } from "@/constants";
+import { navLinks, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -52,7 +52,7 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
                       router.pathname,
                       href
                     )
-                      ? red500
+                      ? "var(--red-500)"
                       : "transparent",
                   } as CSSProperties
                 }

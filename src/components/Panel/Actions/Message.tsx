@@ -1,5 +1,4 @@
-import { blueGrey500 } from "@/constants";
-import { addOpacityToHsla, makeUrlParamsForQuery } from "@/helpers";
+import { addOpacityToColor, makeUrlParamsForQuery } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import Warning from "public/assets/icons/warning.svg";
@@ -59,7 +58,7 @@ export function Message({
 }
 
 const Wrapper = styled(ErrorWrapper)`
-  background: ${addOpacityToHsla(blueGrey500, 0.05)};
+  background: ${addOpacityToColor("var(--blue-grey-500)", 0.05)};
   border: 1px solid var(--blue-grey-500);
 `;
 

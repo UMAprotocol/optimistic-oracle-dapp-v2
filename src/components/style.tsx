@@ -1,4 +1,3 @@
-import { blueGrey700, white } from "@/constants";
 import type { CheckboxState } from "@/types";
 import * as RadixDropdown from "@radix-ui/react-dropdown-menu";
 import Chevron from "public/assets/icons/chevron.svg";
@@ -56,7 +55,8 @@ export const CheckboxBox = styled.div<{ $checked: CheckboxState }>`
   place-items: center;
   width: 16px;
   height: 16px;
-  background: ${({ $checked }) => ($checked ? blueGrey700 : white)};
+  background: ${({ $checked }) =>
+    $checked ? "var(--blue-grey-700)" : "var(--white)"};
   border: 1px solid var(--blue-grey-700);
   border-radius: 4px;
   transition: background var(--animation-duration);

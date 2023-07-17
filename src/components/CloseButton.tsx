@@ -1,4 +1,3 @@
-import { darkText, white } from "@/constants";
 import Close from "public/assets/icons/close.svg";
 import type { CSSProperties } from "styled-components";
 import styled from "styled-components";
@@ -23,7 +22,7 @@ export function CloseButton({
 }: Props) {
   const style = {
     "--size": typeof size === "number" ? `${size}px` : size,
-    "--fill": variant === "light" ? white : darkText,
+    "--fill": variant === "light" ? "var(--white)" : "var(--dark-text)",
   } as CSSProperties;
 
   return (

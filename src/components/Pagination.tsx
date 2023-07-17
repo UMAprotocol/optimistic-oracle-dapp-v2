@@ -1,11 +1,6 @@
 import { RadioDropdown } from "@/components";
-import {
-  blueGrey500,
-  defaultResultsPerPage,
-  mobileAndUnder,
-  white,
-} from "@/constants";
-import { addOpacityToHsla } from "@/helpers";
+import { defaultResultsPerPage, mobileAndUnder } from "@/constants";
+import { addOpacityToColor } from "@/helpers";
 import PreviousPage from "public/assets/icons/left-chevron.svg";
 import NextPage from "public/assets/icons/right-chevron.svg";
 import { useCallback, useEffect, useState } from "react";
@@ -349,17 +344,21 @@ const BaseButton = styled.button`
 
 const PageButton = styled(BaseButton)<{ $isActive: boolean }>`
   border: 1px solid var(--blue-grey-500);
-  color: ${({ $isActive }) => ($isActive ? white : blueGrey500)};
-  background: ${({ $isActive }) => ($isActive ? blueGrey500 : "transparent")};
+  color: ${({ $isActive }) =>
+    $isActive ? "var(--white)" : "var(--blue-grey-500)"};
+  background: ${({ $isActive }) =>
+    $isActive ? "var(--blue-grey-500)" : "transparent"};
   &:hover {
     ${({ $isActive }) =>
-      $isActive ? "" : `background: ${addOpacityToHsla(blueGrey500, 0.1)};`}
+      $isActive
+        ? ""
+        : `background: ${addOpacityToColor("var(--blue-grey-500)", 0.1)};`}
   }
 `;
 
 const NavigationButton = styled(BaseButton)`
   &:hover {
-    background: ${addOpacityToHsla(blueGrey500, 0.1)};
+    background: ${addOpacityToColor("var(--blue-grey-500)", 0.1)};
   }
   &:disabled {
     opacity: 0.5;

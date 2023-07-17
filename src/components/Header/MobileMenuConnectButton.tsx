@@ -1,4 +1,3 @@
-import { red500 } from "@/constants";
 import { scaleLightnessHsla } from "@/helpers";
 import { useWalletIcon } from "@/hooks";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
@@ -117,7 +116,7 @@ const ButtonSecondary = styled(Button)`
 
   &:hover {
     filter: unset;
-    background: ${scaleLightnessHsla(red500, 1.5)};
+    background: ${scaleLightnessHsla("var(--red-500)", 1.5)};
   }
 `;
 

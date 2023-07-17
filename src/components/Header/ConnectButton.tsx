@@ -1,4 +1,3 @@
-import { blueGrey600 } from "@/constants";
 import { useWalletIcon } from "@/hooks";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -52,7 +51,7 @@ export function ConnectButton() {
                   style={
                     {
                       "--justify-content": "space-between",
-                      "--background": blueGrey600,
+                      "--background": "var(--blue-grey-600)",
                     } as CSSProperties
                   }
                 >

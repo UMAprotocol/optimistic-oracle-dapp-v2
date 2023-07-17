@@ -1,4 +1,3 @@
-import { red100, red500, red600, white } from "@/constants";
 import { isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import type { ReactNode } from "react";
@@ -61,9 +60,9 @@ export function Button({
     primary: {
       "--display": "grid",
       "--place-items": "center",
-      "--color": white,
-      "--background-color": red500,
-      "--hover-background-color": red600,
+      "--color": "var(--white)",
+      "--background-color": "var(--red-500)",
+      "--hover-background-color": "var(--red-600)",
       "--width": width,
       "--height": height,
       "--border-radius": "4px",
@@ -72,17 +71,17 @@ export function Button({
     secondary: {
       "--display": "grid",
       "--place-items": "center",
-      "--color": red500,
-      "--background-color": white,
-      "--hover-background-color": red100,
+      "--color": "var(--red-500)",
+      "--background-color": "var(white)",
+      "--hover-background-color": "var(--red-100)",
       "--width": width,
       "--height": height,
       "--border-radius": "4px",
-      "--border": `1px solid ${red500}`,
+      "--border": `1px solid ${"var(--red-500)"}`,
       "--font-size": `${fontSize ? fontSize : 18}px`,
     } as CSSProperties,
     tertiary: {
-      "--color": red500,
+      "--color": "var(--red-500)",
       "--background-color": "transparent",
       "--font-size": `${fontSize ? fontSize : 16}px`,
     } as CSSProperties,
