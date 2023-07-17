@@ -2,10 +2,8 @@
 
 import {
   config,
-  red500,
   chains as supportedChains,
   walletsAndConnectors,
-  white,
 } from "@/constants";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import type { ReactNode } from "react";
@@ -27,8 +25,8 @@ export const wagmiClient = createClient({
 });
 
 export const rainbowKitTheme = darkTheme({
-  accentColor: red500,
-  accentColorForeground: white,
+  accentColor: "var(--red-500)",
+  accentColorForeground: "var(--white)",
   borderRadius: "small",
   overlayBlur: "small",
 });

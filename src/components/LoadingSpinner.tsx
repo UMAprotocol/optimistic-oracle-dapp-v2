@@ -1,4 +1,3 @@
-import { darkText, red500 } from "@/constants";
 import type { CSSProperties } from "react";
 import styled, { keyframes } from "styled-components";
 
@@ -14,7 +13,7 @@ export function LoadingSpinner({
 }: Props) {
   const maskSize = size / 2 - thickness;
   const blockSize = thickness + 1;
-  const color = variant === "red" ? red500 : darkText;
+  const color = variant === "red" ? "var(--red-500)" : "var(--dark-text)";
 
   return (
     <Ring

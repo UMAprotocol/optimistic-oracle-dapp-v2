@@ -1,4 +1,4 @@
-import { blueGrey400, navLinks, white } from "@/constants";
+import { navLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,8 +20,8 @@ export function Nav() {
               style={
                 {
                   "--color": isActiveRoute(pathname, href)
-                    ? white
-                    : blueGrey400,
+                    ? "var(--white)"
+                    : "var(--blue-grey-400)",
                 } as CSSProperties
               }
             >
