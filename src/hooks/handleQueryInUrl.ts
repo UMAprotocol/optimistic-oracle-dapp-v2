@@ -45,6 +45,7 @@ export function useHandleQueryInUrl() {
       }
 
       setId(foundQuery.id);
+      setFoundQuery(undefined);
 
       async function redirectToCorrectPage() {
         const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;
