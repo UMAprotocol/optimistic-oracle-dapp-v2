@@ -1,11 +1,11 @@
 import { getPageForQuery } from "@/helpers";
 import { usePageContext, usePanelContext, useQueries } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
+import { exists } from "@libs/utils";
 import type { ChainId, OracleType } from "@shared/types";
 import { filter, find, lowerCase } from "lodash";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { exists } from "@libs/utils";
+import { useEffect, useState } from "react";
 
 type HashAndIndexParams = {
   transactionHash?: string;
@@ -27,9 +27,38 @@ type SearchParams = HashAndIndexParams & RequestDetailsParams;
 
 export function useHandleQueryInUrl() {
   const router = useRouter();
-  const { openPanel, panelOpen } = usePanelContext();
+  const { setId, setPanelOpen } = usePanelContext();
   const { all: queries } = useQueries();
+  const [foundQuery, setFoundQuery] = useState<OracleQueryUI | undefined>();
   const { page } = usePageContext();
+
+  useEffect(() => {
+    setPanelOpen(true);
+  }, [setPanelOpen]);
+
+  useEffect(() => {
+    if (foundQuery) {
+      const pageForQuery = getPageForQuery(foundQuery);
+
+      if (pageForQuery !== page) {
+        void redirectToCorrectPage();
+      }
+
+      setId(foundQuery.id);
+
+      async function redirectToCorrectPage() {
+        const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;
+        await router.push(
+          {
+            pathname,
+            query: router.query,
+          },
+          undefined,
+          { scroll: false }
+        );
+      }
+    }
+  }, [foundQuery, page, router, setId]);
 
   useEffect(() => {
     const {
@@ -56,8 +85,6 @@ export function useHandleQueryInUrl() {
 
     if (!hasHash && !isRequestDetails) return;
 
-    let query: OracleQueryUI | undefined;
-
     if (hasHash) {
       const forTx = filter<OracleQueryUI>(
         queries,
@@ -80,7 +107,7 @@ export function useHandleQueryInUrl() {
 
       const hasMultipleForTx = forTx.length > 1;
 
-      query =
+      const query =
         hasMultipleForTx && exists(eventIndex)
           ? find<OracleQueryUI>(
               forTx,
@@ -101,10 +128,13 @@ export function useHandleQueryInUrl() {
               }
             )
           : forTx[0];
+
+      setFoundQuery(query);
+      return;
     }
 
     if (isRequestDetails) {
-      query = find<OracleQueryUI>(queries, {
+      const query = find<OracleQueryUI>(queries, {
         chainId,
         identifier,
         requester: lowerCase(requester),
@@ -112,31 +142,10 @@ export function useHandleQueryInUrl() {
         timeUNIX: Number(timestamp),
         queryTextHex: ancillaryData,
       });
+      setFoundQuery(query);
+      return;
     }
-
-    if (query && !panelOpen) {
-      const pageForQuery = getPageForQuery(query);
-
-      if (pageForQuery !== page) {
-        void redirectToCorrectPage();
-      }
-
-      void openPanel(query, false);
-
-      async function redirectToCorrectPage() {
-        const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;
-        await router.push(
-          {
-            pathname,
-            query: router.query,
-          },
-          undefined,
-          { scroll: false }
-        );
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query, queries]);
+  }, [queries]);
 }
 
 function getOracleTypeFromOldOracleName(

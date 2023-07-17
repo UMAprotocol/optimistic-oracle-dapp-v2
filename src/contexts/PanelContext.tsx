@@ -1,25 +1,28 @@
-import { makeUrlParamsForQuery } from "@/helpers";
-import { useOracleDataContext } from "@/hooks";
-import type { OracleQueryUI } from "@/types";
-import { useRouter } from "next/router";
 import type { ReactNode } from "react";
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export interface PanelContextState {
+  id: string | undefined;
   panelOpen: boolean;
-  content: OracleQueryUI | undefined;
-  openPanel: (
-    content: OracleQueryUI,
-    isFromUserInteraction?: boolean
-  ) => Promise<void>;
-  closePanel: () => Promise<void>;
+  openPanel: (id: string, isFromUserInteraction?: boolean) => void;
+  closePanel: () => void;
+  setPanelOpen: (panelOpen: boolean) => void;
+  setId: (id: string | undefined) => void;
 }
 
 export const defaultPanelContextState = {
   panelOpen: false,
-  content: undefined,
-  openPanel: () => Promise.resolve(),
-  closePanel: () => Promise.resolve(),
+  id: undefined,
+  openPanel: () => undefined,
+  closePanel: () => undefined,
+  setPanelOpen: () => undefined,
+  setId: () => undefined,
 };
 
 export const PanelContext = createContext<PanelContextState>(
@@ -27,10 +30,8 @@ export const PanelContext = createContext<PanelContextState>(
 );
 
 export function PanelProvider({ children }: { children: ReactNode }) {
-  const { all } = useOracleDataContext();
   const [id, setId] = useState<string | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     function onPopState() {
@@ -44,40 +45,30 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     return () => {
       window.removeEventListener("popstate", onPopState);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function openPanel(
-    content: OracleQueryUI,
-    isFromUserInteraction = true
-  ) {
-    if (isFromUserInteraction) {
-      const query = makeUrlParamsForQuery(content);
-
-      await router.push({ query }, undefined, { scroll: false });
-    }
-
-    setId(content.id);
+  const openPanel = useCallback((id: string) => {
+    setId(id);
     setPanelOpen(true);
-  }
-  const content: OracleQueryUI | undefined =
-    all !== undefined && id !== undefined ? all[id] : undefined;
+  }, []);
 
-  async function closePanel() {
-    await router.push({ query: {} }, undefined, { scroll: false });
+  const closePanel = useCallback(() => {
     setPanelOpen(false);
-  }
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      id,
+      setId,
+      panelOpen,
+      openPanel,
+      setPanelOpen,
+      closePanel,
+    }),
+    [closePanel, id, openPanel, panelOpen]
+  );
 
   return (
-    <PanelContext.Provider
-      value={{
-        content,
-        panelOpen,
-        openPanel,
-        closePanel,
-      }}
-    >
-      {children}
-    </PanelContext.Provider>
+    <PanelContext.Provider value={value}>{children}</PanelContext.Provider>
   );
 }

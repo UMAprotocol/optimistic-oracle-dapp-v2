@@ -1,5 +1,8 @@
 import { PanelBase } from "@/components";
-import { usePanelContext } from "@/hooks";
+import { makeUrlParamsForQuery } from "@/helpers";
+import { usePanelContext, useQueryWithId } from "@/hooks";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Actions } from "./Actions";
 import { Details } from "./Details";
 import { InfoIcons } from "./InfoIcons";
@@ -11,19 +14,30 @@ import { Title } from "./Title";
  * @see `PanelContext`
  */
 export function Panel() {
-  const { content, panelOpen, closePanel } = usePanelContext();
-
+  const { id, panelOpen, closePanel } = usePanelContext();
+  const query = useQueryWithId(id);
+  const router = useRouter();
   function close() {
+    void router.push({ query: {} }, undefined, { scroll: false });
     void closePanel();
   }
 
-  const props = !!content
-    ? {
-        query: content,
-        ...content,
-        close,
-      }
-    : undefined;
+  useEffect(() => {
+    if (!query || !panelOpen) return;
+
+    const routerQuery = makeUrlParamsForQuery(query);
+
+    void router.push({ query: routerQuery }, undefined, { scroll: false });
+  }, [query, router, panelOpen]);
+
+  const props =
+    query !== undefined
+      ? {
+          query,
+          ...query,
+          close,
+        }
+      : undefined;
 
   return (
     <PanelBase panelOpen={panelOpen} closePanel={close}>
