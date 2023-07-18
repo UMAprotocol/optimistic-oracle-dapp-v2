@@ -62,6 +62,15 @@
   }
 }
 
+html {
+  /* Making sure text size is only controlled by font-size */
+  -webkit-text-size-adjust: none;
+  /* Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+  /* https://marco.org/2012/11/15/text-rendering-optimize-legibility */
+  text-rendering: optimizeSpeed;
+}
+
 @media (min-width: 640px) {
   :root {
     --page-padding: var(--page-padding-lg);

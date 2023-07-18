@@ -29,13 +29,13 @@ export function TitleCell({
   timeFormatted,
   expiryType,
 }: OracleQueryUI) {
-  const projectIcon = getProjectIcon(project);
+  const ProjectIcon = getProjectIcon(project);
   const isKnownProject = project !== "Unknown";
 
   return (
     <TitleTD>
       <TitleWrapper>
-        <IconWrapper>{projectIcon}</IconWrapper>
+        <ProjectIcon className="min-w-[24px] w-[clamp(24px,3vw,40px)] h-[clamp(24px,3vw,40px)]" />
         <TextWrapper>
           <TitleHeader>
             <TruncatedTitle title={title} />

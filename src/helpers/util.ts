@@ -157,3 +157,7 @@ export function maybeGetValueTextFromOptions(
 ) {
   return options?.find(({ value }) => value === valueText)?.label ?? valueText;
 }
+
+export function isIn<T extends object>(key: PropertyKey, obj: T): key is keyof T {
+  return key in obj;
+}

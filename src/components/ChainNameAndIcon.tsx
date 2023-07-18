@@ -11,7 +11,7 @@ export function ChainNameAndIcon({ chainName, chainId }: Props) {
   return (
     <span className="inline-flex items-baseline mr-[2px] ml-[3px]">
       {!!ChainIcon && (
-        <ChainIcon className="inline-block self-center w-[14px] mr-[3px]" />
+        <ChainIcon className="inline-block self-center w-[14px] h-[14px] mr-[3px]" />
       )}{" "}
       {chainName}
     </span>

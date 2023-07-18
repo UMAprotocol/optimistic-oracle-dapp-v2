@@ -29,8 +29,8 @@ export function Currency(props: Props) {
   });
   const symbol = token?.symbol;
   const decimals = token?.decimals;
-  const icon = getCurrencyIcon(symbol);
-  const hasIcon = !!icon && showIcon;
+  const Icon = getCurrencyIcon(symbol);
+  const hasIcon = !!Icon && showIcon;
   const isLoading =
     tokenLoading ||
     value === undefined ||
@@ -49,7 +49,7 @@ export function Currency(props: Props) {
           <LoadingSkeleton width={80} height={16} />
         ) : (
           <>
-            {hasIcon && <IconWrapper>{icon}</IconWrapper>}{" "}
+            {hasIcon && <Icon className="inline-block w-4 h-4" />}{" "}
             <FormattedTokenValue value={value} decimals={decimals} />{" "}
             {!hasIcon && symbol}
           </>
@@ -71,11 +71,6 @@ function OuterWrapper({
   if (!hasIcon) return <>{children}</>;
   return <Tooltip content={symbol}>{children}</Tooltip>;
 }
-
-const IconWrapper = styled.span`
-  width: 16px;
-  display: inline-block;
-`;
 
 const InnerWrapper = styled.span`
   display: inline-flex;

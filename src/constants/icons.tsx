@@ -1,3 +1,4 @@
+import { isIn } from "@/helpers";
 import { chainsById } from "@shared/constants";
 import type { ChainId } from "@shared/types";
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
@@ -19,20 +20,20 @@ import Polymarket from "public/assets/icons/projects/polymarket.svg";
 import Sherlock from "public/assets/icons/projects/sherlock.svg";
 import Unknown from "public/assets/icons/projects/unknown.svg";
 
-export const projectIcons: Record<string, JSX.Element> = {
-  Unknown: <Unknown />,
-  "Cozy Finance": <Cozy />,
-  Polymarket: <Polymarket />,
-  Across: <Across />,
-  Sherlock: <Sherlock />,
-  OSnap: <OSnap />,
+export const projectIcons = {
+  Unknown,
+  "Cozy Finance": Cozy,
+  Polymarket,
+  Across,
+  Sherlock,
+  OSnap,
 };
 
-export const currencyIcons: Record<string, JSX.Element> = {
-  USDC: <USDC />,
-  UMA: <UMA />,
-  DAI: <DAI />,
-  WETH: <ETH />,
+export const currencyIcons = {
+  USDC,
+  UMA,
+  DAI,
+  WETH: ETH,
 };
 
 export const chainIcons = {
@@ -48,19 +49,23 @@ export const chainIcons = {
   Arbitrum,
 };
 
-export function getProjectIcon(project: string | null | undefined) {
-  if (!project || !(project in projectIcons)) return <Unknown />;
+export function getProjectIcon(
+  project: keyof typeof projectIcons | string | null | undefined
+) {
+  if (!project || !isIn(project, projectIcons)) return Unknown;
   return projectIcons[project];
 }
 
-export function getCurrencyIcon(currency: string | null | undefined) {
-  if (!currency || !(currency in currencyIcons)) return;
+export function getCurrencyIcon(
+  currency: keyof typeof currencyIcons | string | null | undefined
+) {
+  if (!currency || !isIn(currency, currencyIcons)) return;
   return currencyIcons[currency];
 }
 
 export function getChainIcon(chainId: ChainId | undefined) {
   if (!chainId) return;
   const chain = chainsById[chainId];
-  if (!chain || !(chain in chainIcons)) return;
+  if (!chain || !isIn(chain, chainIcons)) return;
   return chainIcons[chain];
 }

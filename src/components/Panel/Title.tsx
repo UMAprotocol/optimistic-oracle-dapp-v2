@@ -8,7 +8,7 @@ interface Props extends OracleQueryUI {
   close: () => void;
 }
 export function Title({ project, title, close }: Props) {
-  const projectIcon = getProjectIcon(project);
+  const ProjectIcon = getProjectIcon(project);
 
   const buttonMinWidth = "1rem";
   const buttonMaxWidth = "1.25rem";
@@ -17,13 +17,13 @@ export function Title({ project, title, close }: Props) {
 
   return (
     <Wrapper>
-      <IconWrapper>{projectIcon}</IconWrapper>
+      <ProjectIcon className="min-w-[1.25rem] w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)]" />
       <TitleText id="panel-title">
         <TruncatedTitle title={title} />
       </TitleText>
-      <IconWrapper>
+      <div className="min-w-[1.25rem] w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)]">
         <CloseButton onClick={close} size={buttonClampedWidth} />
-      </IconWrapper>
+      </div>
     </Wrapper>
   );
 }
@@ -42,16 +42,4 @@ const TitleText = styled.h1`
   max-width: 400px;
   font: var(--body-md);
   color: var(--light-text);
-`;
-
-const IconWrapper = styled.div`
-  --icon-min-width: 1.25rem;
-  --icon-max-width: 2.5rem;
-  --icon-preferred-width: calc(0.8rem + 2vw);
-  --icon-clamped-width: clamp(
-    var(--icon-min-width),
-    var(--icon-preferred-width),
-    var(--icon-max-width)
-  );
-  width: var(--icon-clamped-width);
 `;

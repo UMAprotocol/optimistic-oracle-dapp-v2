@@ -33,7 +33,9 @@ export function useHandleQueryInUrl() {
   const { page } = usePageContext();
 
   useEffect(() => {
-    setPanelOpen(true);
+    if (window.location.search) {
+      setPanelOpen(true);
+    }
   }, [setPanelOpen]);
 
   useEffect(() => {
