@@ -9,7 +9,6 @@ export { DecimalInput } from "./DecimalInput";
 export { ErrorBanner } from "./ErrorBanner";
 export { ErrorMessage } from "./ErrorMessage";
 export { Filters } from "./Filters/Filters";
-export { GlobalStyle } from "./GlobalStyle";
 export { ConnectButton } from "./Header/ConnectButton";
 export { Header } from "./Header/Header";
 export { IconWrapper } from "./IconWrapper";

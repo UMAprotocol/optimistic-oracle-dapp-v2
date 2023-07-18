@@ -1,4 +1,5 @@
 import { mobileAndUnder } from "@/constants";
+import { addOpacityToColor } from "@/helpers";
 import { useVotingInfo } from "@/hooks";
 import NextLink from "next/link";
 import Clock from "public/assets/icons/clock.svg";
@@ -102,7 +103,7 @@ const VoteDetails = styled.div`
 
 const ClockIcon = styled(Clock)`
   g {
-    fill: var(--red-500-opacity-15);
+    fill: ${addOpacityToColor("var(--red-500)", 0.15)};
   }
 `;
 
@@ -120,7 +121,7 @@ const ClockWrapper = styled.div`
   gap: 8px;
   width: 32px;
   height: 32px;
-  background: var(--red-500-opacity-15);
+  background: ${addOpacityToColor("var(--red-500)", 0.15)};
   border-radius: 50%;
 `;
 

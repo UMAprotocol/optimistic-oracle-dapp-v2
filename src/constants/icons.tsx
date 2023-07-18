@@ -35,17 +35,17 @@ export const currencyIcons: Record<string, JSX.Element> = {
   WETH: <ETH />,
 };
 
-export const chainIcons: Record<string, JSX.Element> = {
-  Ethereum: <Ethereum />,
-  Goerli: <Ethereum />,
-  Optimism: <Optimism />,
-  Gnosis: <Gnosis />,
-  Polygon: <Polygon />,
-  Mumbai: <Polygon />,
-  Boba: <Boba />,
-  SX: <SX />,
-  Avalanche: <Avalanche />,
-  Arbitrum: <Arbitrum />,
+export const chainIcons = {
+  Ethereum,
+  Goerli: Ethereum,
+  Optimism,
+  Gnosis,
+  Polygon,
+  Mumbai: Polygon,
+  Boba,
+  SX,
+  Avalanche,
+  Arbitrum,
 };
 
 export function getProjectIcon(project: string | null | undefined) {

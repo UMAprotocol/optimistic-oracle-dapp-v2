@@ -1,4 +1,4 @@
-import { GlobalStyle, Layout } from "@/components";
+import { Layout } from "@/components";
 import {
   config,
   chains as supportedChains,
@@ -13,6 +13,7 @@ import {
   PanelProvider,
 } from "@/contexts";
 import "@/styles/fonts.css";
+import "@/styles/globals.css";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
@@ -51,7 +52,6 @@ export default function App({ Component, pageProps }: AppProps) {
                 <PanelProvider>
                   <FilterAndSearchProvider>
                     <Layout>
-                      <GlobalStyle />
                       <Component {...pageProps} />
                     </Layout>
                   </FilterAndSearchProvider>

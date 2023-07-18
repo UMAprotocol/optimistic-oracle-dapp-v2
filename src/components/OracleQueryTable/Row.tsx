@@ -4,9 +4,9 @@ import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import { ProposeCells } from "./ProposeCells";
 import { SettledCells } from "./SettledCells";
-import { TD, TR } from "./style";
 import { TitleCell } from "./TitleCell";
 import { VerifyCells } from "./VerifyCells";
+import { TD, TR } from "./style";
 
 /**
  * Row for the table
