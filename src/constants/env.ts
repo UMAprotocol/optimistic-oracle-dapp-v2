@@ -5,6 +5,7 @@ const Env = ss.object({
   NEXT_PUBLIC_DEFAULT_APY: ss.optional(ss.string()),
   NEXT_PUBLIC_INFURA_ID: ss.string(),
   NEXT_PUBLIC_DEFAULT_LIVENESS: ss.string(),
+  NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ss.string(),
   // mainnet
   NEXT_PUBLIC_SUBGRAPH_V1_1: ss.optional(ss.string()),
   // optimism
@@ -81,6 +82,8 @@ const env = ss.create(
   {
     NEXT_PUBLIC_DEFAULT_APY: process.env.NEXT_PUBLIC_DEFAULT_APY,
     NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID:
+      process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     NEXT_PUBLIC_SUBGRAPH_V1_1: process.env.NEXT_PUBLIC_SUBGRAPH_V1_1,
     NEXT_PUBLIC_SUBGRAPH_V1_10: process.env.NEXT_PUBLIC_SUBGRAPH_V1_10,
     NEXT_PUBLIC_SUBGRAPH_V1_137: process.env.NEXT_PUBLIC_SUBGRAPH_V1_137,
@@ -190,6 +193,7 @@ export type ProviderConfigs = ss.Infer<typeof ProviderConfigs>;
 const Config = ss.object({
   defaultApy: ss.string(),
   infuraId: ss.string(),
+  walletconnectProjectId: ss.string(),
   defaultLiveness: ss.string(),
   subgraphs: SubgraphConfigs,
   providers: ProviderConfigs,
@@ -769,6 +773,7 @@ function parseEnv(env: Env): Config {
   return {
     defaultApy: env.NEXT_PUBLIC_DEFAULT_APY ?? "30.1",
     infuraId: env.NEXT_PUBLIC_INFURA_ID,
+    walletconnectProjectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     defaultLiveness: env.NEXT_PUBLIC_DEFAULT_LIVENESS ?? "7600",
     subgraphs,
     providers,
