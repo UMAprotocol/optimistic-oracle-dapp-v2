@@ -1,5 +1,5 @@
 import { getDefaultWallets } from "@rainbow-me/rainbowkit";
-import { config } from "@/constants"
+import { config } from "@/constants";
 
 import {
   arbitrum,
