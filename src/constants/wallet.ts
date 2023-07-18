@@ -1,4 +1,5 @@
 import { getDefaultWallets } from "@rainbow-me/rainbowkit";
+import { config } from "@/constants"
 
 import {
   arbitrum,
@@ -27,6 +28,7 @@ export const chains = [
 export const walletsAndConnectors = getDefaultWallets({
   appName: "Optimistic Oracle dApp V2",
   chains,
+  projectId: config.walletconnectProjectId,
 });
 
 export const ethersErrorCodes = [
