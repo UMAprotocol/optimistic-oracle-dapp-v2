@@ -3259,7 +3259,7 @@
     remark-slug "^6.0.0"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-essentials@^7.0.27":
+"@storybook/addon-essentials@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@storybook/addon-essentials/-/addon-essentials-7.1.0.tgz#a0ef35fd1a62dc2e75a6ee8119d043b88b2595d5"
   integrity sha512-KCNSQIPC5g1EJLqKQx0Ink91PytbL2YAv7DPXCkfmWyXKilK+u00cZeViqCt2EF9Q5LPzrTkw2wRvAv85UrHZQ==
@@ -3288,7 +3288,7 @@
     "@storybook/global" "^5.0.0"
     "@storybook/preview-api" "7.1.0"
 
-"@storybook/addon-interactions@^7.0.27":
+"@storybook/addon-interactions@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@storybook/addon-interactions/-/addon-interactions-7.1.0.tgz#5d756636a7554ff2aaa63f87f36c922ff2bfd070"
   integrity sha512-/szt1p22FIi96krgNGDe7YQQAjIo/Xfr6WJNiIBNEHz5Qh8uycFPn16k3YJBHIi0FLFVBdqBmrdp6IX+9TCxgQ==
@@ -3307,7 +3307,7 @@
     polished "^4.2.2"
     ts-dedent "^2.2.0"
 
-"@storybook/addon-links@^7.0.27":
+"@storybook/addon-links@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-7.1.0.tgz#18a44d578a9eba5ef34f03864dc76102fc8927a4"
   integrity sha512-1cEALwRfev7s/NDTJYwn6tg3JZv8zSwd12NMRWhc/PZdCMQf/X1TtOPqz/l3jqTkjANMQA+hxCNRNl4otPD1XQ==
@@ -3434,7 +3434,7 @@
     "@storybook/client-logger" "7.1.0"
     "@storybook/manager-api" "7.1.0"
 
-"@storybook/blocks@7.1.0", "@storybook/blocks@^7.0.27":
+"@storybook/blocks@7.1.0", "@storybook/blocks@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@storybook/blocks/-/blocks-7.1.0.tgz#6db20da04e8922f919810804d361ae445cd52348"
   integrity sha512-DWK3+l+OycPx4QNPobTxWzQUy3Q+D2DNbzTUX1ndew6cuzfi87O7k1hmn//dZQoFzV0BZzx02kVljNQY56w/Bw==
@@ -3901,7 +3901,7 @@
   resolved "https://registry.yarnpkg.com/@storybook/mdx2-csf/-/mdx2-csf-1.1.0.tgz#97f6df04d0bf616991cc1005a073ac004a7281e5"
   integrity sha512-TXJJd5RAKakWx4BtpwvSNdgTDkKM6RkXU8GK34S/LhidQ5Pjz3wcnqb0TxEkfhK/ztbP8nKHqXFwLfa2CYkvQw==
 
-"@storybook/nextjs@^7.0.27":
+"@storybook/nextjs@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@storybook/nextjs/-/nextjs-7.1.0.tgz#dfa250b899ef1f4c47d5812e9de959be8f43a13f"
   integrity sha512-y/FuB4poOBstP/c/tWRTcI4Na/gNODBS5VURE7lC+6m2o3Gu8+CVkG6jGUZxNODXzQKvzP6kuJLuoOd+zY403Q==
@@ -4020,7 +4020,7 @@
   resolved "https://registry.yarnpkg.com/@storybook/react-dom-shim/-/react-dom-shim-7.1.0.tgz#1c59c3c9279816fa8644439d97982b3f130023fe"
   integrity sha512-KPHbvwVu8iA0G8FkCbxuRwDGJPquiONgtYJn6ChHyL/ZjC/9+sUaUWEThbsFEnqdRzXKLgwHqZjF1UieT+TW6Q==
 
-"@storybook/react@7.1.0", "@storybook/react@^7.0.27":
+"@storybook/react@7.1.0", "@storybook/react@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@storybook/react/-/react-7.1.0.tgz#3d4d71beb5205874b59057e3078ef7eb3158315c"
   integrity sha512-yTxuc9RucWTfFxU2emoO0/KPwUkRvEUE6jUrnCDaYR6lsq9RhiZjs072t8sCyUM+9KPwQQrt96cNmKyYN7Yg5w==
@@ -17189,7 +17189,7 @@ storybook-mock-date-decorator@^1.0.1:
     "@storybook/addons" "^6.4.19"
     mockdate "^3.0.5"
 
-storybook@^7.0.27:
+storybook@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/storybook/-/storybook-7.1.0.tgz#0a2ab0d2c2e8fee2e280bb9d7bb3d513aedc79c9"
   integrity sha512-3fnLTeHzK+6cbo3sfanAvVFpi4pauvEaODbHo8I8ui/RNxENQSYHxgCK6ULWets9Zay0cXxCwe3n3G/zeVoCNg==
@@ -17605,7 +17605,7 @@ swc-loader@^0.2.3:
   resolved "https://registry.yarnpkg.com/swc-loader/-/swc-loader-0.2.3.tgz#6792f1c2e4c9ae9bf9b933b3e010210e270c186d"
   integrity sha512-D1p6XXURfSPleZZA/Lipb3A8pZ17fP4NObZvFCDjK/OKljroqDpPmsBdTraWhVBqUNpcWBQY1imWdoPScRlQ7A==
 
-swr@^2.1.2:
+swr@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/swr/-/swr-2.2.0.tgz#575c6ac1bec087847f4c86a39ccbc0043c834d6a"
   integrity sha512-AjqHOv2lAhkuUdIiBu9xbuettzAzWXmCEcLONNKJRba87WAefz8Ca9d6ds/SzrPc235n1IxWYdhJ2zF3MNUaoQ==
