@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { constructVotingContract } from "./_common";
+import { constructVotingContract } from "@libs/serverless/_common";
 
 async function getVotingInfo() {
   const voting = await constructVotingContract();
