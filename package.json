@@ -58,7 +58,6 @@
     "@storybook/nextjs": "^7.0.27",
     "@storybook/react": "^7.0.27",
     "@storybook/testing-library": "^0.2.0",
-    "@swc/core": "^1.3.69",
     "@total-typescript/ts-reset": "^0.4.2",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
