@@ -26,7 +26,7 @@ export const defaultPanelContextState = {
 };
 
 export const PanelContext = createContext<PanelContextState>(
-  defaultPanelContextState
+  defaultPanelContextState,
 );
 
 export function PanelProvider({ children }: { children: ReactNode }) {
@@ -65,7 +65,7 @@ export function PanelProvider({ children }: { children: ReactNode }) {
       setPanelOpen,
       closePanel,
     }),
-    [closePanel, id, openPanel, panelOpen]
+    [closePanel, id, openPanel, panelOpen],
   );
 
   return (

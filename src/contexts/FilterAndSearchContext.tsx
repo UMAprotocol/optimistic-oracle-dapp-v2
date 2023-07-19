@@ -34,7 +34,7 @@ export const defaultFilterAndSearchContextState: FilterAndSearchContextState = {
 };
 
 export const FilterAndSearchContext = createContext(
-  defaultFilterAndSearchContextState
+  defaultFilterAndSearchContextState,
 );
 
 export function FilterAndSearchProvider({ children }: { children: ReactNode }) {

@@ -1,5 +1,4 @@
 import type { OracleQueryUI } from "@/types";
-import type { Address } from "wagmi";
 import { erc20ABI, useAccount, useBalance, useContractRead } from "wagmi";
 
 export function useBalanceAndAllowance(query: OracleQueryUI | undefined) {
@@ -18,7 +17,7 @@ export function useBalanceAndAllowance(query: OracleQueryUI | undefined) {
     chainId,
     // typecast is safe because hook is only enabled when these
     // values are defined (see below)
-    args: [address as Address, oracleAddress as Address],
+    args: [address!, oracleAddress!],
     enabled: !!address && !!tokenAddress && !!oracleAddress,
   });
 

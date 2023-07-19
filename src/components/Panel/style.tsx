@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
 export const Text = ({ children }: { children: React.ReactNode }) => (
   <p className="text-xs sm:text-base">{children}</p>

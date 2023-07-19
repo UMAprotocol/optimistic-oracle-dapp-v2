@@ -71,7 +71,7 @@ export function useWalletIcon() {
   const [walletIcon, setWalletIcon] = useState("");
 
   const wallets = walletsAndConnectors.wallets.flatMap(
-    ({ wallets }) => wallets
+    ({ wallets }) => wallets,
   );
 
   const iconsAndIds = wallets.map(({ id, iconBackground, iconUrl }) => ({
@@ -84,9 +84,8 @@ export function useWalletIcon() {
     void findIcon();
 
     async function findIcon() {
-      const iconUrlOrGetter = iconsAndIds.find(
-        ({ id }) => id === connector?.id
-      )?.iconUrl;
+      const iconUrlOrGetter = iconsAndIds.find(({ id }) => id === connector?.id)
+        ?.iconUrl;
 
       if (!iconUrlOrGetter) return;
 

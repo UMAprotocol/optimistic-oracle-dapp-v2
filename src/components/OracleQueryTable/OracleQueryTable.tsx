@@ -29,7 +29,7 @@ export function OracleQueryTable({
 }: Props) {
   const { entriesToShow, ...paginationProps } = usePagination(
     rows,
-    findQueryIndex
+    findQueryIndex,
   );
 
   return (

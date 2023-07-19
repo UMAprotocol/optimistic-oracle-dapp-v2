@@ -1,4 +1,4 @@
-import type { PageName } from "@shared/types";
+import { PageName } from "@shared/types";
 import type { ReactNode } from "react";
 import { createContext, useState } from "react";
 

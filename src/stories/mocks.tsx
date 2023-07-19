@@ -3,12 +3,11 @@ import type { NotificationsById } from "@/contexts";
 import { parseEtherSafe, utf8ToHex } from "@/helpers";
 import type { Notification, OracleQueryUI } from "@/types";
 import { chainNames } from "@shared/constants";
+import { OOV3GraphQuery, PriceRequestsQuery } from "@shared/types";
 import type {
   Assertion,
   AssertionGraphEntity,
-  OOV3GraphQuery,
   PriceRequestGraphEntity,
-  PriceRequestsQuery,
 } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import { add, addMinutes, format, sub } from "date-fns";
@@ -20,7 +19,7 @@ import { graphql } from "msw";
 export const mockDate = new Date("2023-03-26 12:00:00");
 
 const defaultMockRequestGraphEntity = (
-  number: number
+  number: number,
 ): PriceRequestGraphEntity => {
   const identifier = "YES_OR_NO_QUERY";
   const time = makeUnixTimestamp("past", { hours: 1 });
@@ -63,7 +62,7 @@ const defaultMockRequestGraphEntity = (
 };
 
 export const defaultMockAssertionGraphEntity = (
-  number: number
+  number: number,
 ): AssertionGraphEntity => {
   const identifier = "ASSERT_TRUTH";
   const assertionTimestamp = makeUnixTimestamp("past", { hours: 1 });
@@ -121,14 +120,14 @@ export function makeMockRequestGraphEntities(
     count?: number;
     inputs?: Partial<PriceRequestGraphEntity>[];
     inputForAll?: Partial<PriceRequestGraphEntity> | undefined;
-  } = {}
+  } = {},
 ) {
   const { count, inputs = [], inputForAll } = args;
 
   const length = count || inputs.length;
 
   const requests = Array.from({ length }, (_, i) =>
-    defaultMockRequestGraphEntity(i)
+    defaultMockRequestGraphEntity(i),
   );
 
   if (inputForAll) {
@@ -147,14 +146,14 @@ export function makeMockAssertions(
     count?: number;
     inputs?: Partial<Assertion>[];
     inputForAll?: Partial<Assertion> | undefined;
-  } = {}
+  } = {},
 ) {
   const { count, inputs = [], inputForAll } = args;
 
   const length = count || inputs.length;
 
   const requests = Array.from({ length }, (_, i) =>
-    defaultMockAssertionGraphEntity(i)
+    defaultMockAssertionGraphEntity(i),
   );
 
   if (inputForAll) {
@@ -239,7 +238,7 @@ export function makeMockOracleQueryUIs({
   inputForAll?: Partial<OracleQueryUI>;
 }) {
   const defaultMocks = Array.from({ length: count }, () =>
-    makeMockOracleQueryUI()
+    makeMockOracleQueryUI(),
   );
 
   if (inputForAll) {
@@ -391,8 +390,8 @@ export function makeGraphqlHandlers(args: {
             data.optimisticPriceRequests = [];
           }
           return res(ctx.data(data));
-        }
-      )
+        },
+      ),
     );
     handlers.push(
       graphql.query(
@@ -404,8 +403,8 @@ export function makeGraphqlHandlers(args: {
             data.optimisticPriceRequests = [];
           }
           return res(ctx.data(data));
-        }
-      )
+        },
+      ),
     );
     handlers.push(
       graphql.query<OOV3GraphQuery, { skip: number }>(
@@ -417,8 +416,8 @@ export function makeGraphqlHandlers(args: {
             data.assertions = [];
           }
           return res(ctx.data(data));
-        }
-      )
+        },
+      ),
     );
     handlers.push(
       graphql.query<PriceRequestsQuery, { skip: number }>(
@@ -432,8 +431,8 @@ export function makeGraphqlHandlers(args: {
             data.optimisticPriceRequests = [];
           }
           return res(ctx.data(data));
-        }
-      )
+        },
+      ),
     );
   });
 
@@ -461,7 +460,7 @@ export const handlersForAllPages = makeGraphqlHandlers({
           ancillaryData: utf8ToHex(
             `q: title: Cozy Finance Request
             This will revert if a non-YES answer is proposed.
-            `
+            `,
           ),
           state: "Disputed",
           proposedPrice: makeEtherValueString(123),
@@ -647,7 +646,7 @@ export function makeMockRouterPathname(pathname = "") {
 
 export function makeUnixTimestamp(
   direction: "future" | "past",
-  duration: Duration
+  duration: Duration,
 ) {
   const addOrSub = direction === "future" ? add : sub;
 

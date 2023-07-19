@@ -33,7 +33,7 @@ const Template: Story = {
   ),
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
-    const canvas = within(canvasElement.parentElement as HTMLElement);
+    const canvas = within(canvasElement.parentElement!);
     const tooltip = (await canvas.findByTestId("tooltip")).children[0];
     await waitFor(() => userEvent.hover(tooltip));
   },

@@ -1,6 +1,6 @@
 import { getPageForQuery } from "@/helpers";
 import { usePageContext, usePanelContext, useQueries } from "@/hooks";
-import type { OracleQueryUI } from "@/types";
+import { OracleQueryUI } from "@/types";
 import { exists } from "@libs/utils";
 import type { ChainId, OracleType } from "@shared/types";
 import { filter, find, lowerCase } from "lodash";
@@ -57,7 +57,7 @@ export function useHandleQueryInUrl() {
             query: router.query,
           },
           undefined,
-          { scroll: false }
+          { scroll: false },
         );
       }
     }
@@ -74,7 +74,7 @@ export function useHandleQueryInUrl() {
       identifier,
       ancillaryData,
     } = Object.fromEntries(
-      new URLSearchParams(window.location.search)
+      new URLSearchParams(window.location.search),
     ) as SearchParams;
 
     const hasHash = transactionHash;
@@ -105,7 +105,7 @@ export function useHandleQueryInUrl() {
             settlementHash === transactionHash ||
             assertionHash === transactionHash
           );
-        }
+        },
       );
 
       const hasMultipleForTx = forTx.length > 1;
@@ -128,7 +128,7 @@ export function useHandleQueryInUrl() {
                   settlementLogIndex === eventIndex ||
                   assertionLogIndex === eventIndex
                 );
-              }
+              },
             )
           : forTx[0];
 
@@ -152,7 +152,7 @@ export function useHandleQueryInUrl() {
 }
 
 function getOracleTypeFromOldOracleName(
-  oracleType: OldOracleTypeName
+  oracleType: OldOracleTypeName,
 ): OracleType {
   switch (oracleType) {
     case "Optimistic":

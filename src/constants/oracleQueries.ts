@@ -1,1 +1,1 @@
-export const  maxTitleLength = 100;
+export const maxTitleLength = 100;

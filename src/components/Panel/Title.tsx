@@ -1,5 +1,5 @@
 import { getProjectIcon } from "@/constants";
-import { Project } from "@shared/types";
+import type { Project } from "@shared/types";
 import { CloseButton } from "../CloseButton";
 import { LoadingSkeleton } from "../LoadingSkeleton";
 import { TruncatedTitle } from "../TruncatedTitle";
@@ -30,7 +30,11 @@ export function Title({ project, title, isLoading, close }: Props) {
         <ProjectIcon className={iconStyles} />
       )}
       <h1 className="max-w-[400px] text-lg text-light" id="panel-title">
-        {isLoading ? <LoadingSkeleton count={2} height={16} /> : <TruncatedTitle title={title} />}
+        {isLoading ? (
+          <LoadingSkeleton count={2} height={16} />
+        ) : (
+          <TruncatedTitle title={title} />
+        )}
       </h1>
       <div className={iconStyles}>
         <CloseButton onClick={close} size={buttonClampedWidth} />

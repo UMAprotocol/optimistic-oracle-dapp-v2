@@ -3,7 +3,6 @@ import type { OracleQueryUI } from "@/types";
 import { ChainNameAndIcon } from "../ChainNameAndIcon";
 import { TruncatedTitle } from "../TruncatedTitle";
 import {
-  IconWrapper,
   TextWrapper,
   TitleHeader,
   TitleTD,

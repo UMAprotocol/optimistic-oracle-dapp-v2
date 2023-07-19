@@ -1,7 +1,7 @@
 import { Button, Panel } from "@/components";
 import { PageContext, PanelContext } from "@/contexts";
 import * as queryHooks from "@/hooks/queries";
-import { OracleQueryUI } from "@/types";
+import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
@@ -50,7 +50,7 @@ const Template: Story = {
 
 export const Loading: Story = {
   ...Template,
-}
+};
 
 export const VerifyWithDispute: Story = {
   ...Template,
@@ -60,7 +60,7 @@ export const VerifyWithDispute: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       actionType: "dispute",
-    })
+    }),
   ),
 };
 
@@ -72,7 +72,7 @@ export const VerifyWithSettle: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       actionType: "settle",
-    })
+    }),
   ),
 };
 
@@ -84,7 +84,7 @@ export const VerifyAlreadySettled: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       actionType: undefined,
-    })
+    }),
   ),
 };
 
@@ -96,7 +96,7 @@ export const Propose: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       actionType: "propose",
-    })
+    }),
   ),
 };
 
@@ -108,7 +108,7 @@ export const ProposeAlreadyProposedWithDispute: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       actionType: "dispute",
-    })
+    }),
   ),
 };
 
@@ -120,7 +120,7 @@ export const ProposeAlreadyProposedWithSettle: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       actionType: "settle",
-    })
+    }),
   ),
 };
 
@@ -132,7 +132,7 @@ export const ProposeAlreadySettled: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       actionType: undefined,
-    })
+    }),
   ),
 };
 
@@ -142,7 +142,7 @@ export const Settled: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       actionType: undefined,
-    })
+    }),
   ),
 };
 
@@ -158,7 +158,7 @@ export const WithDifferentProject: Story = {
   parameters: makePanelContentMock(
     makeMockOracleQueryUI({
       project: "Polymarket",
-    })
+    }),
   ),
 };
 
@@ -170,7 +170,7 @@ export const WithDifferentInfoIcons: Story = {
       oracleType: "Skinny Optimistic Oracle",
       chainId: 137,
       expiryType: "Time-based",
-    })
+    }),
   ),
 };
 
@@ -187,7 +187,7 @@ export const WithPrice: Story = {
     makeMockOracleQueryUI({
       oracleType: "Optimistic Oracle V1",
       valueText: "200",
-    })
+    }),
   ),
 };
 

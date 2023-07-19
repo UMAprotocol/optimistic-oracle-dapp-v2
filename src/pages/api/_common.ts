@@ -34,6 +34,6 @@ export async function constructVotingContract() {
   return new Contract(
     contractAddress,
     getAbi(contractName),
-    getProvider(chainId)
+    getProvider(chainId),
   ) as VotingV2Ethers;
 }

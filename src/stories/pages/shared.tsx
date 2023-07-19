@@ -42,7 +42,7 @@ export const Template: PageStory = {
 
 export const NotificationsDecorator: Decorator<PageStoryProps> = (
   Story,
-  { args }
+  { args },
 ) => {
   const [notifications, setNotifications] = useState(args.notifications);
   function clearNotifications() {

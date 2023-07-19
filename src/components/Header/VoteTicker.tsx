@@ -11,14 +11,14 @@ import { useInterval } from "usehooks-ts";
 export function VoteTicker() {
   const { data } = useVotingInfo();
   const [timeRemaining, setTimeRemaining] = useState(
-    formatMillisecondsUntilMidnight()
+    formatMillisecondsUntilMidnight(),
   );
   const isActive = !!data && data.activeRequests > 0 && timeRemaining !== "";
 
   function getMillisecondsUntilMidnight() {
     const now = new Date();
     const midnight = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
     );
     return midnight.getTime() - now.getTime();
   }

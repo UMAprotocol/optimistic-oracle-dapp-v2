@@ -7,7 +7,7 @@ export function useQueries() {
   const forPages = { verify, propose, settled };
   const all = useMemo(
     () => [...verify, ...propose, ...settled],
-    [propose, settled, verify]
+    [propose, settled, verify],
   );
 
   const forCurrentPage = forPages[page];
@@ -17,7 +17,7 @@ export function useQueries() {
       all,
       forCurrentPage,
     }),
-    [all, forCurrentPage]
+    [all, forCurrentPage],
   );
 }
 

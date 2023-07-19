@@ -37,7 +37,7 @@ function Wrapper({ Component, errorMessages }: Props) {
 
   function removeErrorMessage(errorMessage: ErrorMessage) {
     _setErrorMessages(
-      _errorMessages.filter(({ text }) => text !== errorMessage.text)
+      _errorMessages.filter(({ text }) => text !== errorMessage.text),
     );
   }
 
@@ -196,7 +196,7 @@ export const EthersErrorMessage: Story = {
   args: {
     errorMessages: [
       parseEthersError(
-        "Error: overflow [See: https://links.ethers.org/v5-errors-NUMERIC_FAULT-overflow]"
+        "Error: overflow [See: https://links.ethers.org/v5-errors-NUMERIC_FAULT-overflow]",
       ),
     ],
   },

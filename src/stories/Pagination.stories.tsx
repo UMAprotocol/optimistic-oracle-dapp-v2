@@ -65,7 +65,7 @@ export const TestInteractions: Story = {
   },
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
-    const canvas = within(canvasElement.parentElement as HTMLElement);
+    const canvas = within(canvasElement.parentElement!);
     // cannot go to page 1 when already on page 1
     expect(canvas.getByText("1")).toBeDisabled();
     // with 100 entries, there should be 10 pages
@@ -93,7 +93,7 @@ export const OddNumberOfEntriesRegressionTest: Story = {
   },
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
-    const canvas = within(canvasElement.parentElement as HTMLElement);
+    const canvas = within(canvasElement.parentElement!);
     const pageNumberButtons = () =>
       Array.from(canvas.getByTestId("page-buttons").children)
         .filter((child) => {
@@ -103,7 +103,7 @@ export const OddNumberOfEntriesRegressionTest: Story = {
         .map((child) => child as HTMLElement);
     const resultsPerPageDropdown = canvas.getByTestId("results-per-page");
     const resultsPerPageDropdownButton = within(
-      resultsPerPageDropdown
+      resultsPerPageDropdown,
     ).getByRole("button");
     await waitFor(() => userEvent.click(resultsPerPageDropdownButton));
     const resultsPerPage50 = canvas.getByText("50 results");
@@ -132,7 +132,7 @@ export const EvenNumberOfEntriesRegressionTest: Story = {
   },
   play: async ({ canvasElement }) => {
     // use the parent element because the portal is outside the canvas (appended to body)
-    const canvas = within(canvasElement.parentElement as HTMLElement);
+    const canvas = within(canvasElement.parentElement!);
     const pageNumberButtons = () =>
       Array.from(canvas.getByTestId("page-buttons").children)
         .filter((child) => {
@@ -142,7 +142,7 @@ export const EvenNumberOfEntriesRegressionTest: Story = {
         .map((child) => child as HTMLElement);
     const resultsPerPageDropdown = canvas.getByTestId("results-per-page");
     const resultsPerPageDropdownButton = within(
-      resultsPerPageDropdown
+      resultsPerPageDropdown,
     ).getByRole("button");
     await waitFor(() => userEvent.click(resultsPerPageDropdownButton));
     const resultsPerPage50 = canvas.getByText("50 results");

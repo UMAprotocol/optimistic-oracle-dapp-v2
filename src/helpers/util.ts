@@ -114,7 +114,7 @@ function sortVerifyQueries(verify: OracleQueryUI[]) {
     ({ livenessEndsMilliseconds, disputeHash }) => {
       if (disputeHash !== undefined) return false;
       return (livenessEndsMilliseconds ?? 0) > Date.now();
-    }
+    },
   );
 
   return [
@@ -153,11 +153,14 @@ export function getPageForQuery({ actionType }: OracleQueryUI) {
 
 export function maybeGetValueTextFromOptions(
   valueText: string | null | undefined,
-  options: DropdownItem[] | undefined
+  options: DropdownItem[] | undefined,
 ) {
   return options?.find(({ value }) => value === valueText)?.label ?? valueText;
 }
 
-export function isIn<T extends object>(key: PropertyKey, obj: T): key is keyof T {
+export function isIn<T extends object>(
+  key: PropertyKey,
+  obj: T,
+): key is keyof T {
   return key in obj;
 }

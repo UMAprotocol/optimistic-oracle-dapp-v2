@@ -18,7 +18,7 @@ async function getVotingInfo() {
 
 export default async function handler(
   _request: NextApiRequest,
-  response: NextApiResponse
+  response: NextApiResponse,
 ) {
   response.setHeader("Cache-Control", "max-age=0, s-maxage=43200"); // Cache for 12 hours, reset on re-deployment.
 

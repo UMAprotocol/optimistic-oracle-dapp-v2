@@ -49,7 +49,7 @@ export function usePagination<Entry>(entries: Entry[], findIndex?: number) {
 
       return pageNumber;
     },
-    [resultsPerPage]
+    [resultsPerPage],
   );
 
   const getEntriesForPage = useCallback(
@@ -64,7 +64,7 @@ export function usePagination<Entry>(entries: Entry[], findIndex?: number) {
       const endIndex = startIndex + newResultsPerPage;
       return entries.slice(startIndex, endIndex);
     },
-    [entries, pageNumber, resultsPerPage]
+    [entries, pageNumber, resultsPerPage],
   );
 
   const updateEntries = useCallback(
@@ -74,7 +74,7 @@ export function usePagination<Entry>(entries: Entry[], findIndex?: number) {
 
       setEntriesToShow(getEntriesForPage({ newPageNumber, newResultsPerPage }));
     },
-    [getEntriesForPage, pageNumber, resultsPerPage, setEntriesToShow]
+    [getEntriesForPage, pageNumber, resultsPerPage, setEntriesToShow],
   );
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export function usePagination<Entry>(entries: Entry[], findIndex?: number) {
     if (isLastNumbers) {
       return Array.from(
         { length: numberOfButtons + 1 },
-        (_, i) => lastPageNumber - numberOfButtons + i
+        (_, i) => lastPageNumber - numberOfButtons + i,
       );
     }
 
@@ -137,7 +137,7 @@ export function usePagination<Entry>(entries: Entry[], findIndex?: number) {
           return number + numbersPastMax;
         }
         return number;
-      }
+      },
     );
   }
 
@@ -338,7 +338,8 @@ const BaseButton = styled.button`
   font: var(--body-sm);
   background: transparent;
   border-radius: 4px;
-  transition: color var(--animation-duration),
+  transition:
+    color var(--animation-duration),
     background var(--animation-duration);
 `;
 

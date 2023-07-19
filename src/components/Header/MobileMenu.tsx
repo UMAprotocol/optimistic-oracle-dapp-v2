@@ -50,7 +50,7 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
                   {
                     "--active-indicator-color": isActiveRoute(
                       router.pathname,
-                      href
+                      href,
                     )
                       ? "var(--red-500)"
                       : "transparent",

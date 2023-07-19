@@ -7,7 +7,7 @@ export function useProposePriceInput({ proposeOptions }: OracleQueryUI) {
   const [inputError, setInputError] = useState("");
 
   const selected = proposeOptions?.find(
-    ({ value }) => value === proposePriceInput
+    ({ value }) => value === proposePriceInput,
   );
 
   function onSelect(item: DropdownItem) {

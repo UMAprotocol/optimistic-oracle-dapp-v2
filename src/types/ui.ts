@@ -44,13 +44,13 @@ export interface SolidityRequest {
 }
 
 export type ProposePriceParamsFactory = (
-  proposedPrice?: string
+  proposedPrice?: string,
 ) => ProposePriceParams | undefined;
 export type ProposePriceSkinnyParamsFactory = (
-  proposedPrice?: string
+  proposedPrice?: string,
 ) => ProposePriceSkinnyParams | undefined;
 export type DisputeAssertionParamsFactory = (
-  disputerAddress: Address | undefined
+  disputerAddress: Address | undefined,
 ) => DisputeAssertionParams | undefined;
 /**
  * Defines the shape of data required by the UI to render a price request or a an assertion.
@@ -164,7 +164,7 @@ export type ProposePriceSkinnyParams = {
     BigNumberish,
     string,
     SolidityRequest,
-    BigNumberish
+    BigNumberish,
   ];
 };
 

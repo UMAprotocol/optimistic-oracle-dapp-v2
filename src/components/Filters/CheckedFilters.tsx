@@ -25,7 +25,7 @@ export function CheckedFilters({
   reset,
 }: Props) {
   const hasCheckedFilters = Object.values(checkedFilters).some(
-    (checked) => checked.length > 0
+    (checked) => checked.length > 0,
   );
 
   function uncheckFilter(filterName: FilterName, itemName: string) {

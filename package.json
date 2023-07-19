@@ -66,6 +66,7 @@
     "@types/remove-markdown": "^0.3.1",
     "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
     "@uma/contracts-node": "^0.4.17",
     "autoprefixer": "^10.4.14",
     "chromatic": "^6.19.9",

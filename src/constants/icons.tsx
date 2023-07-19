@@ -49,16 +49,12 @@ export const chainIcons = {
   Arbitrum,
 };
 
-export function getProjectIcon(
-  project: keyof typeof projectIcons | string | null | undefined
-) {
+export function getProjectIcon(project: string | null | undefined) {
   if (!project || !isIn(project, projectIcons)) return Unknown;
   return projectIcons[project];
 }
 
-export function getCurrencyIcon(
-  currency: keyof typeof currencyIcons | string | null | undefined
-) {
+export function getCurrencyIcon(currency: string | null | undefined) {
   if (!currency || !isIn(currency, currencyIcons)) return;
   return currencyIcons[currency];
 }
