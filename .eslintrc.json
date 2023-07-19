@@ -16,8 +16,8 @@
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "@typescript-eslint/consistent-type-imports": "error",
-    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/consistent-type-definitions": "warn",
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/prefer-optional-chain": "warn",
     "@typescript-eslint/no-unused-vars": [
