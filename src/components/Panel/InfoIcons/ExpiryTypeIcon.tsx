@@ -1,7 +1,6 @@
 import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
 import type { ExpiryType } from "@shared/types";
 import Clock from "public/assets/icons/clock.svg";
-import styled from "styled-components";
 
 /**
  * Displays an icon for the given expiry type.
@@ -17,25 +16,10 @@ export function ExpiryTypeIcon({
 
   return (
     <PanelInfoIconWrapper>
-      <ClockIconWrapper>
-        <ClockIcon />
-      </ClockIconWrapper>
+      <div className="w-6 h-6 grid place-items-center bg-grey-400 rounded-full">
+        <Clock className="[&>path]:stroke-dark-text" />
+      </div>
       <PanelInfoIconText>{expiryType} Expiry</PanelInfoIconText>
     </PanelInfoIconWrapper>
   );
 }
-
-const ClockIconWrapper = styled.div`
-  width: 24px;
-  height: 24px;
-  display: grid;
-  place-items: center;
-  background: var(--grey-400);
-  border-radius: 50%;
-`;
-
-const ClockIcon = styled(Clock)`
-  path {
-    stroke: var(--dark-text);
-  }
-`;

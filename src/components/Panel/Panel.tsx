@@ -41,13 +41,15 @@ export function Panel() {
 
   return (
     <PanelBase panelOpen={panelOpen} closePanel={close}>
-      {!!props && (
+      {!!props ? (
         <>
           <Title {...props} />
           <Actions {...props} />
           <InfoIcons {...props} />
           <Details {...props} />
         </>
+      ) : (
+        <div>loading...</div>
       )}
     </PanelBase>
   );

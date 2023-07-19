@@ -1,8 +1,6 @@
 import Chevron from "public/assets/icons/chevron.svg";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import type { CSSProperties } from "styled-components";
-import styled from "styled-components";
 import { SectionSubTitle, Text } from "./style";
 
 interface Props {
@@ -30,15 +28,21 @@ export function AdditionalTextData({
       {hasDescription && (
         <>
           <SectionSubTitle>Description</SectionSubTitle>
-          <Text as="div">
+          <div className="text-xs sm:text-base">
             <ReactMarkdown
               components={{
-                a: (props) => <A {...props} target="_blank" />,
+                a: (props) => (
+                  <a
+                    className="text-red-500 hover:underline"
+                    {...props}
+                    target="_blank"
+                  />
+                ),
               }}
             >
               {description}
             </ReactMarkdown>
-          </Text>
+          </div>
         </>
       )}
       {hasQueryText && (
@@ -50,16 +54,18 @@ export function AdditionalTextData({
       {hasQueryTextHex && (
         <>
           <SectionSubTitle>
-            <ToggleShowBytesButton onClick={toggleShowBytes}>
+            <button
+              className="flex items-center bg-none"
+              onClick={toggleShowBytes}
+            >
               Bytes{" "}
-              <ChevronIcon
-                style={
-                  {
-                    "--rotation": `${chevronRotation}deg`,
-                  } as CSSProperties
-                }
+              <Chevron
+                className="w-3 ml-2 transition-[transform] [&>path]:stroke-dark"
+                style={{
+                  transform: `rotate(${chevronRotation}deg)`,
+                }}
               />
-            </ToggleShowBytesButton>
+            </button>
           </SectionSubTitle>
           {showBytes && <Text>{queryTextHex}</Text>}
         </>
@@ -67,27 +73,3 @@ export function AdditionalTextData({
     </>
   );
 }
-
-const ChevronIcon = styled(Chevron)`
-  width: 12px;
-  margin-left: 8px;
-  transform: rotate(var(--rotation));
-  transition: transform var(--animation-duration);
-  path {
-    stroke: var(--dark-text);
-  }
-`;
-
-const ToggleShowBytesButton = styled.button`
-  display: flex;
-  align-items: center;
-  background: none;
-`;
-
-const A = styled.a`
-  color: var(--red-500);
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
-`;

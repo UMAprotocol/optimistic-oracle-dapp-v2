@@ -1,11 +1,10 @@
-import { addOpacityToColor, makeUrlParamsForQuery } from "@/helpers";
+import { makeUrlParamsForQuery } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import Warning from "public/assets/icons/warning.svg";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { ErrorWrapper, Link, Text } from "../style";
+import { Link } from "../style";
 
 interface Props {
   query: OracleQueryUI;
@@ -50,24 +49,9 @@ export function Message({
   if (!hasMessage) return null;
 
   return (
-    <Wrapper>
-      <WarningIcon />
-      <MessageText>{message}</MessageText>
-    </Wrapper>
+    <div className="w-panel-content-width min-h-[48px] flex items-center gap-4 mt-5 px-4 rounded-sm bg-blue-grey-500/5 border-2 border-blue-grey-500">
+      <Warning className="[&>path]:fill-blue-grey-500" />
+      <p className="text-xs sm:text-base text-blue-grey-500">{message}</p>
+    </div>
   );
 }
-
-const Wrapper = styled(ErrorWrapper)`
-  background: ${addOpacityToColor("var(--blue-grey-500)", 0.05)};
-  border: 1px solid var(--blue-grey-500);
-`;
-
-const MessageText = styled(Text)`
-  color: var(--blue-grey-500);
-`;
-
-const WarningIcon = styled(Warning)`
-  path {
-    fill: var(--blue-grey-500);
-  }
-`;

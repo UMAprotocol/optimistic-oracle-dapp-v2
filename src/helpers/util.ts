@@ -1,4 +1,4 @@
-import { mobileAndUnder, tabletAndUnder } from "@/constants";
+import { mobileAndUnder, tabletAndUnder } from "@/constants/styles/breakpoints";
 import type { OracleQueryList } from "@/contexts";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { capitalize, orderBy, partition, words } from "lodash";

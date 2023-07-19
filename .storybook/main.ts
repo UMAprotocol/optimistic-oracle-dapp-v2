@@ -7,6 +7,7 @@ const storybookConfig: StorybookConfig = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "msw-storybook-addon",
+    "storybook-addon-module-mock"
   ],
   framework: {
     name: "@storybook/nextjs",
