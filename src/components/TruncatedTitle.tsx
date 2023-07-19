@@ -17,9 +17,9 @@ export function TruncatedTitle({ title: maybeMarkdownTitle }: Props) {
   if (titleIsTooLong)
     return (
       <Tooltip content={title}>
-        <span className="break-all cursor-pointer">{truncatedTitle}</span>
+        <span className="break-words cursor-pointer">{truncatedTitle}</span>
       </Tooltip>
     );
 
-  return <span className="break-all">{title}</span>;
+  return <span className="break-words">{title}</span>;
 }

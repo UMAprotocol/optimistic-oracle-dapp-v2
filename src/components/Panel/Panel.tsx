@@ -36,6 +36,7 @@ export function Panel() {
           query,
           ...query,
           close,
+          isLoading: false,
         }
       : undefined;
 
@@ -49,7 +50,9 @@ export function Panel() {
           <Details {...props} />
         </>
       ) : (
-        <div>loading...</div>
+        <>
+          <Title isLoading={true} close={close} />
+        </>
       )}
     </PanelBase>
   );

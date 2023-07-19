@@ -17,7 +17,7 @@ export function ExpiryTypeIcon({
   return (
     <PanelInfoIconWrapper>
       <div className="w-6 h-6 grid place-items-center bg-grey-400 rounded-full">
-        <Clock className="[&>path]:stroke-dark-text" />
+        <Clock className="[&>path]:stroke-dark" />
       </div>
       <PanelInfoIconText>{expiryType} Expiry</PanelInfoIconText>
     </PanelInfoIconWrapper>
