@@ -198,9 +198,9 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
       if (error == undefined) return;
       // index of service must align with order configs are passed into client
       const serviceConfig = serviceConfigs[i];
+      console.warn({ serviceConfig, error });
       // this error is coming from ether provider queries, this would mean fallback is broken
       if (serviceConfig?.source !== "gql") {
-        console.warn({ serviceConfig, error });
         addErrorMessage({
           text: "Currently unable to fetch all data, check back later",
           link: {
@@ -227,7 +227,6 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
       } else {
         // if we reach here, we dont have a fallback for a specific subgraph, technically this shouldnt ever happen though
         // if the app is configured correctly
-        console.warn({ serviceConfig, error });
         addErrorMessage({
           text: "Currently unable to fetch all data, check back later",
           link: {

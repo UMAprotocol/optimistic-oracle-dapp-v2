@@ -13,7 +13,7 @@ export async function getAssertions(url: string, chainId: ChainId) {
 async function fetchAllAssertions(url: string, queryName: string) {
   const result: OOV3GraphEntity[] = [];
   let skip = 0;
-  const first = 1000;
+  const first = 500;
   let assertions = await fetchAssertions(
     url,
     makeQuery(queryName, first, skip)
