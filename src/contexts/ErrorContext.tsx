@@ -17,7 +17,7 @@ export const defaultErrorContextState: ErrorContextState = {
 };
 
 export const ErrorContext = createContext<ErrorContextState>(
-  defaultErrorContextState
+  defaultErrorContextState,
 );
 
 export function ErrorProvider({ children }: { children: ReactNode }) {
@@ -30,7 +30,7 @@ export function ErrorProvider({ children }: { children: ReactNode }) {
 
   function removeErrorMessage(errorMessage: ErrorMessage) {
     setErrorMessages(
-      errorMessages.filter(({ text }) => text !== errorMessage.text)
+      errorMessages.filter(({ text }) => text !== errorMessage.text),
     );
   }
 

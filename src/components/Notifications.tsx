@@ -30,7 +30,7 @@ export function Notifications() {
                 {...notification}
                 dismiss={removeNotification}
               />
-            )
+            ),
         )}
       </Wrapper>
     </Portal>

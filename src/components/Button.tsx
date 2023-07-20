@@ -187,5 +187,7 @@ const __Button = styled.button`
     opacity: 0.25;
   }
 
-  transition: opacity, background-color var(--animation-duration);
+  transition:
+    opacity,
+    background-color var(--animation-duration);
 `;

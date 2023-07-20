@@ -12,7 +12,7 @@ export function ErrorBanner() {
   const uniqueErrorMessages = errorMessages.filter(
     (errorMessage, index) =>
       errorMessages.findIndex((error) => error.text === errorMessage.text) ===
-      index
+      index,
   );
 
   return (

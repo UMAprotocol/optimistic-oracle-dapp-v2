@@ -28,7 +28,7 @@ export function OracleQueryList({
 }: Props) {
   const { entriesToShow, ...paginationProps } = usePagination(
     items,
-    findQueryIndex
+    findQueryIndex,
   );
 
   return (

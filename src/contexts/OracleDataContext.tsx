@@ -34,7 +34,7 @@ import { createContext, useEffect, useReducer, useState } from "react";
 // this will be moved somewhere else in future pr.
 type EthersServicesList = [
   ServiceFactories,
-  Partial<Record<OracleType, Partial<Record<ChainId, Api>>>>
+  Partial<Record<OracleType, Partial<Record<ChainId, Api>>>>,
 ];
 const ethersServicesListInit: EthersServicesList = [[], {}];
 const [oracleEthersServices, oracleEthersApis] = config.providers
@@ -51,7 +51,7 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
   .reduce(
     (
       result: EthersServicesList,
-      [config, service, api]
+      [config, service, api],
     ): EthersServicesList => {
       const apiRecords = {
         ...result[1],
@@ -62,7 +62,7 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
       };
       return [[...result[0], service], apiRecords];
     },
-    ethersServicesListInit
+    ethersServicesListInit,
   );
 
 // This exposes any api calls to services to other parts of app
@@ -91,7 +91,7 @@ export const defaultOracleDataContextState: OracleDataContextState = {
 };
 
 export const OracleDataContext = createContext<OracleDataContextState>(
-  defaultOracleDataContextState
+  defaultOracleDataContextState,
 );
 
 type DispatchAction<Type extends string, Data> = {
@@ -107,13 +107,13 @@ type DispatchActions = ProcessRequestsAction | ProcessAssertionsAction;
 
 function mergeData(
   prev: OracleQueryUI | undefined,
-  next: OracleQueryUI
+  next: OracleQueryUI,
 ): OracleQueryUI {
   // we must merge data in more information, since the next data may be mission previously queried data
   const moreInformation = unionWith(
     prev?.moreInformation ?? [],
     next?.moreInformation ?? [],
-    (a, b) => a.title === b.title
+    (a, b) => a.title === b.title,
   );
   return {
     ...(prev || {}),
@@ -122,11 +122,11 @@ function mergeData(
   };
 }
 function DataReducerFactory<Input extends Request | Assertion>(
-  converter: (input: Input) => OracleQueryUI
+  converter: (input: Input) => OracleQueryUI,
 ) {
   return (
     state: OracleDataContextState,
-    updates: Input[]
+    updates: Input[],
   ): OracleDataContextState => {
     const { all = {} } = state;
     updates.forEach((update) => {
@@ -161,7 +161,7 @@ const assertionReducer = DataReducerFactory(assertionToOracleQuery);
 
 export function oracleDataReducer(
   state: OracleDataContextState,
-  action: DispatchActions
+  action: DispatchActions,
 ): OracleDataContextState {
   if (action.type === "requests") {
     return requestReducer(state, action.data);
@@ -177,10 +177,10 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
 
   const [queries, dispatch] = useReducer(
     oracleDataReducer,
-    defaultOracleDataContextState
+    defaultOracleDataContextState,
   );
   const [errors, setErrors] = useState<Errors>(
-    defaultOracleDataContextState.errors
+    defaultOracleDataContextState.errors,
   );
 
   useEffect(() => {
@@ -215,10 +215,10 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
       if (web3Fallback && web3Fallback.queryLatestRequests) {
         const web3Config = config.providers.find(
           (c) =>
-            c.type == serviceConfig.type && c.chainId == serviceConfig.chainId
+            c.type == serviceConfig.type && c.chainId == serviceConfig.chainId,
         );
         web3Fallback.queryLatestRequests(
-          web3Config?.blockHistoryLimit ?? 100000
+          web3Config?.blockHistoryLimit ?? 100000,
         );
         // if we reach here, theres a subgraph thats not working, but we can still fetch limited  history through provider
         addErrorMessage({

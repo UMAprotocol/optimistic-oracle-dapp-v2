@@ -104,7 +104,7 @@ export const OddNumberOfEntriesRegressionTest: Story = {
         .map((child) => child as HTMLElement);
     const resultsPerPageDropdown = canvas.getByTestId("results-per-page");
     const resultsPerPageDropdownButton = within(
-      resultsPerPageDropdown
+      resultsPerPageDropdown,
     ).getByRole("button");
     await waitFor(() => userEvent.click(resultsPerPageDropdownButton));
     const resultsPerPage50 = canvas.getByText("50 results");
@@ -143,7 +143,7 @@ export const EvenNumberOfEntriesRegressionTest: Story = {
         .map((child) => child as HTMLElement);
     const resultsPerPageDropdown = canvas.getByTestId("results-per-page");
     const resultsPerPageDropdownButton = within(
-      resultsPerPageDropdown
+      resultsPerPageDropdown,
     ).getByRole("button");
     await waitFor(() => userEvent.click(resultsPerPageDropdownButton));
     const resultsPerPage50 = canvas.getByText("50 results");

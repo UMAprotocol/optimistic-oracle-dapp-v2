@@ -17,7 +17,7 @@ export function Panel() {
     void closePanel();
   }
 
-  const props = !!content
+  const props = content
     ? {
         query: content,
         ...content,

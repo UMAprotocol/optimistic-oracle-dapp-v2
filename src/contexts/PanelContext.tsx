@@ -10,7 +10,7 @@ export interface PanelContextState {
   content: OracleQueryUI | undefined;
   openPanel: (
     content: OracleQueryUI,
-    isFromUserInteraction?: boolean
+    isFromUserInteraction?: boolean,
   ) => Promise<void>;
   closePanel: () => Promise<void>;
 }
@@ -23,7 +23,7 @@ export const defaultPanelContextState = {
 };
 
 export const PanelContext = createContext<PanelContextState>(
-  defaultPanelContextState
+  defaultPanelContextState,
 );
 
 export function PanelProvider({ children }: { children: ReactNode }) {
@@ -49,7 +49,7 @@ export function PanelProvider({ children }: { children: ReactNode }) {
 
   async function openPanel(
     content: OracleQueryUI,
-    isFromUserInteraction = true
+    isFromUserInteraction = true,
   ) {
     if (isFromUserInteraction) {
       const query = makeUrlParamsForQuery(content);

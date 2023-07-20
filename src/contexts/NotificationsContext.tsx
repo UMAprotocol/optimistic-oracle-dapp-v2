@@ -23,7 +23,7 @@ export const defaultNotificationsContextState: NotificationsContextState = {
 };
 
 export const NotificationsContext = createContext(
-  defaultNotificationsContextState
+  defaultNotificationsContextState,
 );
 
 export function NotificationsProvider({ children }: { children: ReactNode }) {
@@ -79,7 +79,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
   function updatePendingNotification(
     id: UniqueId,
     message: ReactNode,
-    type: "success" | "error"
+    type: "success" | "error",
   ) {
     setNotifications((prev) => ({
       ...prev,
