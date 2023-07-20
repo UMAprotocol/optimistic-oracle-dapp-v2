@@ -5,7 +5,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import NextImage from "next/image";
 import Chevron from "public/assets/icons/chevron.svg";
 import Warning from "public/assets/icons/warning.svg";
-import type { CSSProperties } from "styled-components";
+import type { CSSProperties } from "react";
 import styled from "styled-components";
 
 export function ConnectButton() {

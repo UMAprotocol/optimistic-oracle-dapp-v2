@@ -1,8 +1,8 @@
 import { darkText, red500 } from "@/constants";
 import { Indicator, Root } from "@radix-ui/react-progress";
 import { formatDuration, intervalToDuration } from "date-fns";
+import type { CSSProperties } from "react";
 import { useState } from "react";
-import type { CSSProperties } from "styled-components";
 import styled, { css } from "styled-components";
 import { useInterval } from "usehooks-ts";
 

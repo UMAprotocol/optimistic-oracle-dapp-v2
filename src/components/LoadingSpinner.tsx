@@ -1,5 +1,5 @@
 import { darkText, red500 } from "@/constants";
-import type { CSSProperties } from "styled-components";
+import type { CSSProperties } from "react";
 import styled, { keyframes } from "styled-components";
 
 interface Props {

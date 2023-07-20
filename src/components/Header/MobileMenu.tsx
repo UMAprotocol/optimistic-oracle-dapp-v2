@@ -10,7 +10,7 @@ import Github from "public/assets/icons/social/github.svg";
 import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
 import Logo from "public/assets/logo.svg";
-import type { CSSProperties } from "styled-components";
+import type { CSSProperties } from "react";
 import styled from "styled-components";
 import { MobileMenuConnectButton } from "./MobileMenuConnectButton";
 
