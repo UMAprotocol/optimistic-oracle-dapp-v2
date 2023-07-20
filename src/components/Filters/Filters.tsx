@@ -1,3 +1,5 @@
+"use client";
+
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import { useFilterAndSearchContext } from "@/hooks";
 import Sliders from "public/assets/icons/sliders.svg";

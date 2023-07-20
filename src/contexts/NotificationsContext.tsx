@@ -1,3 +1,5 @@
+"use client";
+
 import { events } from "@/helpers";
 import type {
   Notification,

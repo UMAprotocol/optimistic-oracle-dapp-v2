@@ -1,8 +1,10 @@
+"use client";
+
 import { OracleQueries } from "@/components";
 import { usePage } from "@/hooks";
 
-export default function Settled() {
-  const page = "settled";
+export default function Verify() {
+  const page = "verify";
   usePage(page);
   return <OracleQueries page={page} />;
 }

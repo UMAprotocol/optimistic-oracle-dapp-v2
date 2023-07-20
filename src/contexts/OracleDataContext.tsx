@@ -1,3 +1,5 @@
+"use client";
+
 import type { ProviderConfig } from "@/constants";
 import { config } from "@/constants";
 import {

@@ -1,3 +1,5 @@
+"use client";
+
 import { darkText, red500 } from "@/constants";
 import { Indicator, Root } from "@radix-ui/react-progress";
 import { formatDuration, intervalToDuration } from "date-fns";

@@ -1,3 +1,5 @@
+"use client";
+
 import { LoadingSpinner } from "@/components";
 import { mobile, smallMobile, tablet } from "@/constants";
 import type { Notification, UniqueId } from "@/types";

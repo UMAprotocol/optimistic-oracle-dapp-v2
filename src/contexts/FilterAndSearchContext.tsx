@@ -1,3 +1,5 @@
+"use client";
+
 import { emptyCheckedFilters, emptyFilters } from "@/constants";
 import { useFilterAndSearch, useQueries } from "@/hooks";
 import type {

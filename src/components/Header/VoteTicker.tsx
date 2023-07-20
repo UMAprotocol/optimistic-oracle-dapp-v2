@@ -1,3 +1,5 @@
+"use client";
+
 import { mobileAndUnder } from "@/constants";
 import { useVotingInfo } from "@/hooks";
 import NextLink from "next/link";

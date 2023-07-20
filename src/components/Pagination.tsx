@@ -1,3 +1,5 @@
+"use client";
+
 import { RadioDropdown } from "@/components";
 import {
   blueGrey500,

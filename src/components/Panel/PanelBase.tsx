@@ -1,3 +1,5 @@
+"use client";
+
 import { Root as Portal } from "@radix-ui/react-portal";
 import type { ReactNode } from "react";
 import { useIsClient } from "usehooks-ts";

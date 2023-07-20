@@ -1,3 +1,5 @@
+"use client";
+
 import type { ErrorMessage } from "@shared/types";
 import type { ReactNode } from "react";
 import { createContext, useState } from "react";

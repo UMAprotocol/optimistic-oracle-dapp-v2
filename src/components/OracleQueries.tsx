@@ -1,3 +1,5 @@
+"use client";
+
 import { NoQueries, OracleQueryList, OracleQueryTable } from "@/components";
 import { hideOnMobileAndUnder, showOnMobileAndUnder } from "@/helpers";
 import { useFilterAndSearchContext } from "@/hooks";

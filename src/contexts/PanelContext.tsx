@@ -1,3 +1,5 @@
+"use client";
+
 import { makeUrlParamsForQuery } from "@/helpers";
 import { useOracleDataContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";

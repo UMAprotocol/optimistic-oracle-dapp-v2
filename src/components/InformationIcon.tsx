@@ -1,3 +1,5 @@
+"use client";
+
 import { Tooltip } from "@/components";
 import Info from "public/assets/icons/info.svg";
 import type { ReactNode } from "react";

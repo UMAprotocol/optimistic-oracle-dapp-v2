@@ -1,3 +1,5 @@
+"use client";
+
 import { PanelBase } from "@/components";
 import { usePanelContext } from "@/hooks";
 import { Actions } from "./Actions";
