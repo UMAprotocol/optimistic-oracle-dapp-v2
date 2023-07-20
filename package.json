@@ -80,7 +80,7 @@
     "storybook": "^7.0.2",
     "storybook-mock-date-decorator": "^1.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "5.0.3"
+    "typescript": "5.1.6"
   },
   "msw": {
     "workerDirectory": "public"
