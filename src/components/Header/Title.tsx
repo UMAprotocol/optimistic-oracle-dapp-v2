@@ -1,4 +1,4 @@
-import { headerMdFluid, headerSmFluid, mobileAndUnder } from "@/constants";
+import { mobileAndUnder } from "@/constants";
 import { useOracleDataContext } from "@/hooks";
 import type { PageName } from "@shared/types";
 import Propose from "public/assets/icons/pages/propose.svg";
@@ -76,17 +76,17 @@ const TextWrapper = styled.div``;
 
 const TitleText = styled.h1`
   color: var(--white);
+  font: var(--header-md);
+  font-size: clamp(2.5rem, 2rem + 2.5vw, 4rem);
 
   strong {
     font-weight: inherit;
     color: var(--red-500);
   }
 
-  ${headerMdFluid}
-
   @media ${mobileAndUnder} {
-    ${headerSmFluid}
-    line-height: 1.2;
+    font-size: clamp(2rem, 1.8rem + 0.8vw, 2.5rem);
+    line-height: clamp(3.4rem, 3rem + 1.8vw, 4.5rem);
   }
 `;
 

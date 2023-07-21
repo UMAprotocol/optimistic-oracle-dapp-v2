@@ -22,12 +22,6 @@ export function addOpacityToColor(color: string, opacity: number) {
  * @param scale - a number to scale the lightness by
  * @returns a string in the format of hsla(0, 0%, 0%, 0)
  */
-export function scaleLightnessHsla(hsla: string, scale: number) {
-  const betweenParens = hsla.match(/\(([^)]+)\)/)?.[1];
-  const [h, s, l, a] = betweenParens?.split(",") ?? [];
-  const newLightness = Number(l.replace("%", "")) * scale;
-  return `hsl(${h}, ${s}, ${newLightness}%, ${a})`;
-}
 
 /**
  * Determines if a link is external or internal
