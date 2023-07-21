@@ -11,13 +11,14 @@ import {
 import { useHandleQueryInUrl, usePageContext } from "@/hooks";
 import type { ReactNode } from "react";
 import { LegacyDappLinkBanner } from "./LegacyDappLinkBanner";
+import StyledComponentsRegistry from "./StyledComponentsRegistry";
 
 export function Layout({ children }: { children: ReactNode }) {
   const { page } = usePageContext();
   useHandleQueryInUrl();
 
   return (
-    <>
+    <StyledComponentsRegistry>
       <GlobalStyle />
       <main>
         <LegacyDappLinkBanner />
@@ -28,6 +29,6 @@ export function Layout({ children }: { children: ReactNode }) {
         <Panel />
         <Notifications />
       </main>
-    </>
+    </StyledComponentsRegistry>
   );
 }
