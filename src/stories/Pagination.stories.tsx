@@ -121,7 +121,7 @@ export const OddNumberOfEntriesRegressionTest: Story = {
     expect(canvas.getByText("Entry 101")).toBeInTheDocument();
     // and the last page number button should be selected
     lastButton = pageNumberButtons()[pageNumberButtons().length - 1];
-    expect(lastButton).toHaveStyle({ color: "var(--white)" });
+    expect(lastButton).toHaveStyle({ color: "rgb(255, 255, 255)" });
   },
 };
 
