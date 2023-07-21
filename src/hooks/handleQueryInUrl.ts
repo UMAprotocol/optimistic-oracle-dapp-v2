@@ -129,6 +129,7 @@ export function useHandleQueryInUrl() {
         router.push(pathname);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queries]);
 }
 
