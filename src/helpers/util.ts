@@ -2,6 +2,7 @@ import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import type { OracleQueryList } from "@/contexts";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { capitalize, orderBy, partition, words } from "lodash";
+import type { ReadonlyURLSearchParams } from "next/navigation";
 import { css } from "styled-components";
 
 /**
@@ -170,4 +171,21 @@ export function maybeGetValueTextFromOptions(
   options: DropdownItem[] | undefined,
 ) {
   return options?.find(({ value }) => value === valueText)?.label ?? valueText;
+}
+
+/**
+ * Creates a new query string by merging with the current URLSearchParams object
+ * @param name - the name of the query parameter
+ * @param value - the value of the query parameter
+ */
+export function makeQueryString(
+  newParams: Record<string, string | null | undefined>,
+  pathname: string | null,
+  exitingSearchParams: ReadonlyURLSearchParams | null,
+) {
+  const params = new URLSearchParams(exitingSearchParams?.toString());
+  Object.entries(newParams).forEach(([key, value]) => {
+    if (value) params.set(key, value);
+  });
+  return `${pathname}?${params.toString()}`;
 }

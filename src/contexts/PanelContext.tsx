@@ -1,27 +1,24 @@
 "use client";
 
-import { makeUrlParamsForQuery } from "@/helpers";
+import { makeQueryString, makeUrlParamsForQuery } from "@/helpers";
 import { useOracleDataContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
-import { useRouter } from "next/router";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useState } from "react";
 
 export interface PanelContextState {
   panelOpen: boolean;
   content: OracleQueryUI | undefined;
-  openPanel: (
-    content: OracleQueryUI,
-    isFromUserInteraction?: boolean,
-  ) => Promise<void>;
-  closePanel: () => Promise<void>;
+  openPanel: (content: OracleQueryUI, isFromUserInteraction?: boolean) => void;
+  closePanel: () => void;
 }
 
 export const defaultPanelContextState = {
   panelOpen: false,
   content: undefined,
-  openPanel: () => Promise.resolve(),
-  closePanel: () => Promise.resolve(),
+  openPanel: () => undefined,
+  closePanel: () => undefined,
 };
 
 export const PanelContext = createContext<PanelContextState>(
@@ -33,6 +30,8 @@ export function PanelProvider({ children }: { children: ReactNode }) {
   const [id, setId] = useState<string | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   useEffect(() => {
     function onPopState() {
@@ -49,14 +48,11 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function openPanel(
-    content: OracleQueryUI,
-    isFromUserInteraction = true,
-  ) {
+  function openPanel(content: OracleQueryUI, isFromUserInteraction = true) {
     if (isFromUserInteraction) {
       const query = makeUrlParamsForQuery(content);
 
-      await router.push({ query }, undefined, { scroll: false });
+      router.push(makeQueryString(query, pathname, searchParams));
     }
 
     setId(content.id);
@@ -65,8 +61,8 @@ export function PanelProvider({ children }: { children: ReactNode }) {
   const content: OracleQueryUI | undefined =
     all !== undefined && id !== undefined ? all[id] : undefined;
 
-  async function closePanel() {
-    await router.push({ query: {} }, undefined, { scroll: false });
+  function closePanel() {
+    router.push(pathname ?? "/");
     setPanelOpen(false);
   }
 
