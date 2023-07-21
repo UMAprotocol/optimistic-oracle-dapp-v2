@@ -612,6 +612,7 @@ function parseEnv(env: Env): Config {
         chainId: 80001,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_10) {
@@ -696,6 +697,7 @@ function parseEnv(env: Env): Config {
         chainId: 80001,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_10) {
@@ -780,6 +782,7 @@ function parseEnv(env: Env): Config {
         chainId: 80001,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_10) {
@@ -870,6 +873,7 @@ function parseEnv(env: Env): Config {
         chainId: 80001,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_10) {
