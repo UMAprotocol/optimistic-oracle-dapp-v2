@@ -52,7 +52,7 @@
     --nav-bar-height: 40px;
     --vote-ticker-height: 48px;
     --panel-width: min(100%, 570px);
-    --panel-content-width: 512px;
+    --panel-content-width: min(100%, 512px);
     --page-padding: 8px;
     --page-padding-lg: 16px;
     --animation-duration: 0.3s;

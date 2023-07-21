@@ -1,4 +1,4 @@
-import { mobileAndUnder, tabletAndUnder } from "@/constants";
+import { mobileAndUnder, tabletAndUnder } from "@/constants/styles/breakpoints";
 import type { OracleQueryList } from "@/contexts";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { capitalize, orderBy, partition, words } from "lodash";
@@ -188,4 +188,11 @@ export function makeQueryString(
     if (value) params.set(key, value);
   });
   return `${pathname}?${params.toString()}`;
+}
+
+export function hasProperty<Obj extends object>(
+  key: PropertyKey,
+  obj: Obj,
+): key is keyof Obj {
+  return key in obj;
 }

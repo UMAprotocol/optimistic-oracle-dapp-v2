@@ -100,7 +100,9 @@ const AccountTitle = styled.h1`
 
 const Nav = styled.nav``;
 
-const NavItems = styled.ul``;
+const NavItems = styled.ul`
+  list-style: none;
+`;
 
 const NavItem = styled.li``;
 

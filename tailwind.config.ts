@@ -31,7 +31,7 @@ module.exports = {
       spacing: {
         "page-padding": "var(--page-padding)",
         "panel-width": "var(--panel-width)",
-        "panel-content-width": "min(100%,var(--panel-content-width))",
+        "panel-content-width": "var(--panel-content-width)",
       },
     },
   },
