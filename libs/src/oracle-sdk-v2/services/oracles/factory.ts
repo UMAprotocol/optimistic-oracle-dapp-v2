@@ -1,4 +1,4 @@
-import type { ChainId, ErrorMessage, OracleType } from "@shared/types";
+import type { ChainId, OracleType } from "@shared/types";
 import type { Handlers, Service, ServiceFactory } from "../../types";
 
 // gql1 covers skinny, v1, v2
@@ -11,14 +11,12 @@ export type GqlConfig = {
   chainId: ChainId;
   type: OracleType;
   address: string;
-  addErrorMessage: (message: ErrorMessage) => void;
 };
 export type Config = GqlConfig[];
 
-export const Factory =
-  (config: Config): ServiceFactory =>
-  (handlers: Handlers): Service => {
-    const services: Service[] = config.map((config) => {
+export const Factory = (config: Config): ServiceFactory[] => {
+  return config.map((config) => {
+    return (handlers: Handlers): Service => {
       if (
         config.source === "gql" &&
         (config.type === "Optimistic Oracle V1" ||
@@ -33,15 +31,6 @@ export const Factory =
       throw new Error(
         `Unsupported oracle type ${config.type} from ${config.source}`
       );
-    });
-
-    async function tick() {
-      await Promise.all(
-        services.map(async (service) => (service ? service.tick() : undefined))
-      );
-    }
-
-    return {
-      tick,
     };
-  };
+  });
+};

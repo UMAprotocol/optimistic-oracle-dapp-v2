@@ -1,4 +1,4 @@
-import type { ChainId, ErrorMessage, OracleType } from "@shared/types";
+import type { ChainId, OracleType } from "@shared/types";
 import { parsePriceRequestGraphEntity } from "@shared/utils";
 import type { Address } from "wagmi";
 import type { Handlers, Service, ServiceFactory } from "../../../types";
@@ -9,25 +9,13 @@ export type Config = {
   chainId: ChainId;
   address: string;
   type: OracleType;
-  addErrorMessage: (message: ErrorMessage) => void;
 };
 
 export const Factory =
   (config: Config): ServiceFactory =>
   (handlers: Handlers): Service => {
-    async function fetch({
-      url,
-      chainId,
-      address,
-      type,
-      addErrorMessage,
-    }: Config) {
-      const requests = await getPriceRequests(
-        url,
-        chainId,
-        type,
-        addErrorMessage
-      );
+    async function fetch({ url, chainId, address, type }: Config) {
+      const requests = await getPriceRequests(url, chainId, type);
       return requests.map((request) =>
         parsePriceRequestGraphEntity(request, chainId, address as Address, type)
       );

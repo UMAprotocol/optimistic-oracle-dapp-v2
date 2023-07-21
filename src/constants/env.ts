@@ -5,6 +5,7 @@ const Env = ss.object({
   NEXT_PUBLIC_DEFAULT_APY: ss.optional(ss.string()),
   NEXT_PUBLIC_INFURA_ID: ss.string(),
   NEXT_PUBLIC_DEFAULT_LIVENESS: ss.string(),
+  NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ss.string(),
   // mainnet
   NEXT_PUBLIC_SUBGRAPH_V1_1: ss.optional(ss.string()),
   // optimism
@@ -90,6 +91,8 @@ const env = ss.create(
   {
     NEXT_PUBLIC_DEFAULT_APY: process.env.NEXT_PUBLIC_DEFAULT_APY,
     NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID:
+      process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     NEXT_PUBLIC_SUBGRAPH_V1_1: process.env.NEXT_PUBLIC_SUBGRAPH_V1_1,
     NEXT_PUBLIC_SUBGRAPH_V1_10: process.env.NEXT_PUBLIC_SUBGRAPH_V1_10,
     NEXT_PUBLIC_SUBGRAPH_V1_137: process.env.NEXT_PUBLIC_SUBGRAPH_V1_137,
@@ -200,6 +203,7 @@ const ProviderConfig = ss.object({
   ]),
   url: ss.string(),
   address: ss.string(),
+  blockHistoryLimit: ss.number(),
 });
 export type ProviderConfig = ss.Infer<typeof ProviderConfig>;
 const ProviderConfigs = ss.array(ProviderConfig);
@@ -208,6 +212,7 @@ export type ProviderConfigs = ss.Infer<typeof ProviderConfigs>;
 const Config = ss.object({
   defaultApy: ss.string(),
   infuraId: ss.string(),
+  walletconnectProjectId: ss.string(),
   defaultLiveness: ss.string(),
   subgraphs: SubgraphConfigs,
   providers: ProviderConfigs,
@@ -537,6 +542,7 @@ function parseEnv(env: Env): Config {
       }),
     });
   }
+  // Providers
   if (env.NEXT_PUBLIC_PROVIDER_V1_1) {
     providers.push({
       source: "provider",
@@ -544,6 +550,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V1_1,
       chainId: 1,
       address: getContractAddress({ chainId: 1, type: "Optimistic Oracle V1" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_137) {
@@ -556,6 +563,7 @@ function parseEnv(env: Env): Config {
         chainId: 137,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_288) {
@@ -568,6 +576,7 @@ function parseEnv(env: Env): Config {
         chainId: 288,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_42161) {
@@ -580,6 +589,7 @@ function parseEnv(env: Env): Config {
         chainId: 42161,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_5) {
@@ -589,6 +599,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V1_5,
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V1" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V1_80001) {
@@ -613,6 +624,7 @@ function parseEnv(env: Env): Config {
         chainId: 10,
         type: "Optimistic Oracle V1",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_1) {
@@ -622,6 +634,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V2_1,
       chainId: 1,
       address: getContractAddress({ chainId: 1, type: "Optimistic Oracle V2" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_137) {
@@ -634,6 +647,7 @@ function parseEnv(env: Env): Config {
         chainId: 137,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_288) {
@@ -646,6 +660,7 @@ function parseEnv(env: Env): Config {
         chainId: 288,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_42161) {
@@ -658,6 +673,7 @@ function parseEnv(env: Env): Config {
         chainId: 42161,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_5) {
@@ -667,6 +683,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V2_5,
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V2" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V2_80001) {
@@ -691,6 +708,7 @@ function parseEnv(env: Env): Config {
         chainId: 10,
         type: "Optimistic Oracle V2",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_1) {
@@ -700,6 +718,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V3_1,
       chainId: 1,
       address: getContractAddress({ chainId: 1, type: "Optimistic Oracle V3" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_137) {
@@ -712,6 +731,7 @@ function parseEnv(env: Env): Config {
         chainId: 137,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_288) {
@@ -724,6 +744,7 @@ function parseEnv(env: Env): Config {
         chainId: 288,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_42161) {
@@ -736,6 +757,7 @@ function parseEnv(env: Env): Config {
         chainId: 42161,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_5) {
@@ -745,6 +767,7 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V3_5,
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V3" }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_V3_80001) {
@@ -769,6 +792,7 @@ function parseEnv(env: Env): Config {
         chainId: 10,
         type: "Optimistic Oracle V3",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_1) {
@@ -781,6 +805,7 @@ function parseEnv(env: Env): Config {
         chainId: 1,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_137) {
@@ -793,6 +818,7 @@ function parseEnv(env: Env): Config {
         chainId: 137,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_288) {
@@ -805,6 +831,7 @@ function parseEnv(env: Env): Config {
         chainId: 288,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_42161) {
@@ -817,6 +844,7 @@ function parseEnv(env: Env): Config {
         chainId: 42161,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_5) {
@@ -829,6 +857,7 @@ function parseEnv(env: Env): Config {
         chainId: 5,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   if (env.NEXT_PUBLIC_PROVIDER_SKINNY_80001) {
@@ -853,11 +882,13 @@ function parseEnv(env: Env): Config {
         chainId: 10,
         type: "Skinny Optimistic Oracle",
       }),
+      blockHistoryLimit: 100000,
     });
   }
   return {
     defaultApy: env.NEXT_PUBLIC_DEFAULT_APY ?? "30.1",
     infuraId: env.NEXT_PUBLIC_INFURA_ID,
+    walletconnectProjectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     defaultLiveness: env.NEXT_PUBLIC_DEFAULT_LIVENESS ?? "7600",
     subgraphs,
     providers,

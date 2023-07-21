@@ -172,9 +172,8 @@ export function oracleDataReducer(
 }
 export function OracleDataProvider({ children }: { children: ReactNode }) {
   const { addErrorMessage } = useErrorContext();
-  const oraclesService = oracles.Factory(
-    config.subgraphs.map((c) => ({ ...c, addErrorMessage }))
-  );
+  const oraclesServices = oracles.Factory(config.subgraphs);
+  const serviceConfigs = [...config.subgraphs, ...config.providers];
 
   const [queries, dispatch] = useReducer(
     oracleDataReducer,
@@ -186,7 +185,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // its important this client only gets initialized once
-    Client([oraclesService, ...oracleEthersServices], {
+    Client([...oraclesServices, ...oracleEthersServices], {
       requests: (requests) => dispatch({ type: "requests", data: requests }),
       assertions: (assertions) =>
         dispatch({ type: "assertions", data: assertions }),
@@ -194,9 +193,50 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  errors.forEach((error, i) => {
-    if (error) console.warn("Oracle data error", i, errors);
-  });
+  useEffect(() => {
+    errors.forEach((error, i) => {
+      if (error == undefined) return;
+      // index of service must align with order configs are passed into client
+      const serviceConfig = serviceConfigs[i];
+      console.warn({ serviceConfig, error });
+      // this error is coming from ether provider queries, this would mean fallback is broken
+      if (serviceConfig?.source !== "gql") {
+        addErrorMessage({
+          text: "Currently unable to fetch all data, check back later",
+          link: {
+            text: "Use the Legacy Dapp instead",
+            href: "https://legacy.oracle.uma.xyz",
+          },
+        });
+        return;
+      }
+      const web3Fallback =
+        oracleEthersApis?.[serviceConfig.type]?.[serviceConfig.chainId];
+      if (web3Fallback && web3Fallback.queryLatestRequests) {
+        const web3Config = config.providers.find(
+          (c) =>
+            c.type == serviceConfig.type && c.chainId == serviceConfig.chainId
+        );
+        web3Fallback.queryLatestRequests(
+          web3Config?.blockHistoryLimit ?? 100000
+        );
+        // if we reach here, theres a subgraph thats not working, but we can still fetch limited  history through provider
+        addErrorMessage({
+          text: "The Graph is experiencing downtime, site may be slower than normal",
+        });
+      } else {
+        // if we reach here, we dont have a fallback for a specific subgraph, technically this shouldnt ever happen though
+        // if the app is configured correctly
+        addErrorMessage({
+          text: "Currently unable to fetch all data, check back later",
+          link: {
+            text: "Use the Legacy Dapp instead",
+            href: "https://legacy.oracle.uma.xyz",
+          },
+        });
+      }
+    });
+  }, [errors]);
 
   return (
     <OracleDataContext.Provider value={{ ...queries, errors }}>
