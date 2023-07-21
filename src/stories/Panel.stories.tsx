@@ -28,8 +28,8 @@ function Wrapper({ content, page }: Args) {
       <PanelContext.Provider
         value={{
           panelOpen,
-          openPanel: () => Promise.resolve(setPanelOpen(true)),
-          closePanel: () => Promise.resolve(setPanelOpen(false)),
+          openPanel: () => setPanelOpen(true),
+          closePanel: () => setPanelOpen(false),
           content,
         }}
       >
