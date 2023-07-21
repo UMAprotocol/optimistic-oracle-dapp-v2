@@ -1,5 +1,5 @@
+import VerifyPage from "@/components/pages/verify";
 import { utf8ToHex } from "@/helpers";
-import VerifyPage from "@/pages";
 import type { Meta } from "@storybook/react";
 import {
   defaultMockNotifications,

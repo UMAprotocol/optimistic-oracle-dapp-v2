@@ -1,10 +1,5 @@
-"use client";
+import Propose from "@/components/pages/propose";
 
-import { OracleQueries } from "@/components";
-import { usePage } from "@/hooks";
-
-export default function Propose() {
-  const page = "propose";
-  usePage(page);
-  return <OracleQueries page={page} />;
+export default function ProposePage() {
+  return <Propose />;
 }

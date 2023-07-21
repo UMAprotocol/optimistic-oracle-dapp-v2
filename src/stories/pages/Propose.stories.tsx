@@ -1,4 +1,4 @@
-import ProposePage from "@/pages/propose";
+import ProposePage from "@/components/pages/propose";
 import type { Meta } from "@storybook/react";
 import {
   defaultMockNotifications,

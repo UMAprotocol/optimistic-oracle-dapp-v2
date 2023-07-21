@@ -10,7 +10,6 @@ import {
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import type { ReactNode } from "react";
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -23,7 +22,7 @@ const { connectors } = walletsAndConnectors;
 
 export const wagmiClient = createClient({
   autoConnect: true,
-  connectors: [new InjectedConnector()],
+  connectors,
   provider,
 });
 
