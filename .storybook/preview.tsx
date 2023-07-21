@@ -4,11 +4,11 @@ import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
 import { mockDateDecorator } from "storybook-mock-date-decorator";
 import { WagmiConfig } from "wagmi";
-import { GlobalStyle } from "../src/components/GlobalStyle";
 import { NotificationsProvider } from "../src/contexts";
-import { chains, rainbowKitTheme, wagmiClient } from "../src/pages/_app";
+import { chains, rainbowKitTheme, wagmiClient } from "../src/components/WalletConfig";
 import { mockDate } from "../src/stories/mocks";
 import "../src/styles/fonts.css";
+import "../src/styles/globals.css";
 import "./rainbow.css";
 
 initialize({
@@ -79,12 +79,6 @@ export const parameters: Parameters = {
 export const decorators: Decorator[] = [
   mockDateDecorator,
   mswDecorator,
-  (Story) => (
-    <>
-      <GlobalStyle />
-      <Story />
-    </>
-  ),
   (Story) => (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>

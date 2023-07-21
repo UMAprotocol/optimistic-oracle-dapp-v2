@@ -3,7 +3,6 @@
 import {
   ErrorBanner,
   Filters,
-  GlobalStyle,
   Header,
   Notifications,
   Panel,
@@ -19,7 +18,6 @@ export function Layout({ children }: { children: ReactNode }) {
 
   return (
     <StyledComponentsRegistry>
-      <GlobalStyle />
       <main>
         <LegacyDappLinkBanner />
         <ErrorBanner />
