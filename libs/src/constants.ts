@@ -46,6 +46,12 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 42161,
     address: getAddress("0x031A7882cE3e8b4462b057EBb0c3F23Cd731D234"),
   },
+  {
+    // mumbai
+    type: "Optimistic Oracle V1",
+    chainId: 80001,
+    address: getAddress("0xAB75727d4e89A7f7F04f57C00234a35950527115"),
+  },
   // v2
   {
     type: "Optimistic Oracle V2",
@@ -82,6 +88,12 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 42161,
     address: getAddress("0x88Ad27C41AD06f01153E7Cd9b10cBEdF4616f4d5"),
   },
+  {
+    // mumbai
+    type: "Optimistic Oracle V2",
+    chainId: 80001,
+    address: getAddress("0x60E6140330F8FE31e785190F39C1B5e5e833c2a9"),
+  },
   // v3
   {
     type: "Optimistic Oracle V3",
@@ -117,6 +129,12 @@ export const ContractInfoList: ContractInfoList = [
     type: "Optimistic Oracle V3",
     chainId: 42161,
     address: getAddress("0xa6147867264374F324524E30C02C331cF28aa879"),
+  },
+  {
+    // mumbai
+    type: "Optimistic Oracle V3",
+    chainId: 80001,
+    address: getAddress("0x263351499f82C107e540B01F0Ca959843e22464a"),
   },
   // skinny
   {
