@@ -35,7 +35,7 @@ export function PanelProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     function onPopState() {
-      if (!window.location.search) {
+      if (!searchParams) {
         setPanelOpen(false);
       }
     }
@@ -45,8 +45,7 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     return () => {
       window.removeEventListener("popstate", onPopState);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams]);
 
   function openPanel(content: OracleQueryUI, isFromUserInteraction = true) {
     if (isFromUserInteraction) {
