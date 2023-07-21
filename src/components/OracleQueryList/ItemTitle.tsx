@@ -1,13 +1,7 @@
 import { ChainNameAndIcon, TruncatedTitle } from "@/components";
 import { getProjectIcon } from "@/constants";
 import type { OracleQueryUI } from "@/types";
-import {
-  HeaderWrapper,
-  TitleHeader,
-  TitleIconWrapper,
-  TitleText,
-  TitleWrapper,
-} from "./style";
+import { HeaderWrapper, TitleHeader, TitleText, TitleWrapper } from "./style";
 
 export function ItemTitle({
   title,
@@ -17,13 +11,13 @@ export function ItemTitle({
   timeFormatted,
   expiryType,
 }: OracleQueryUI) {
-  const projectIcon = getProjectIcon(project);
+  const ProjectIcon = getProjectIcon(project);
   const isKnownProject = project !== "Unknown";
 
   return (
     <TitleWrapper>
       <HeaderWrapper>
-        <TitleIconWrapper>{projectIcon}</TitleIconWrapper>
+        <ProjectIcon className="w-[18px] h-[18px] mt-[2px]" />
         <TitleHeader>
           <TruncatedTitle title={title} />
         </TitleHeader>

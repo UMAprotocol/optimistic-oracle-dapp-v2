@@ -3,12 +3,6 @@ import { oracleQueryHover } from "../style";
 
 export const TitleWrapper = styled.div``;
 
-export const TitleIconWrapper = styled.div`
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
-`;
-
 export const HeaderWrapper = styled.div`
   display: grid;
   grid-template-columns: 18px auto;

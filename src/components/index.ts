@@ -11,7 +11,6 @@ export { ErrorMessage } from "./ErrorMessage";
 export { Filters } from "./Filters/Filters";
 export { ConnectButton } from "./Header/ConnectButton";
 export { Header } from "./Header/Header";
-export { IconWrapper } from "./IconWrapper";
 export { InformationIcon } from "./InformationIcon";
 export { Layout } from "./Layout";
 export { LoadingSpinner } from "./LoadingSpinner";

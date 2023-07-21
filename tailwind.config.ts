@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 module.exports = {
-  content: ["./src/**/*.{ts,tsx}", "./public/**/*.{css,svg}"],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     colors: {
       white: "hsl(var(--color-white) / <alpha-value>)",
