@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-white: 0 0% 100%;
+    --color-red-100: 0 100% 96%;
+    --color-red-500: 0 100% 65%;
+    --color-red-600: 0 79% 59%;
+    --color-blue-grey-300: 255 3% 69%;
+    --color-blue-grey-400: 255 2% 64%;
+    --color-blue-grey-500: 288 4% 25%;
+    --color-blue-grey-600: 285 4% 19%;
+    --color-blue-grey-700: 280 4% 15%;
+    --color-grey-50: 0 0% 99%;
+    --color-grey-100: 0 0% 98%;
+    --color-grey-400: 0 0% 94%;
+    --color-grey-500: 0 0% 91%;
+    --color-grey-900: 0 0% 12%;
+    --color-dark-text: 280 4% 15%;
+    --color-light-text: 0 0% 100%;
+    --white: hsl(var(--color-white) / 1);
+    --red-100: hsl(var(--color-red-100) / 1);
+    --red-500: hsl(var(--color-red-500) / 1);
+    --red-600: hsl(var(--color-red-600) / 1);
+    --blue-grey-300: hsl(var(--color-blue-grey-300) / 1);
+    --blue-grey-400: hsl(var(--color-blue-grey-400) / 1);
+    --blue-grey-500: hsl(var(--color-blue-grey-500) / 1);
+    --blue-grey-600: hsl(var(--color-blue-grey-600) / 1);
+    --blue-grey-700: hsl(var(--color-blue-grey-700) / 1);
+    --grey-50: hsl(var(--color-grey-50) / 1);
+    --grey-100: hsl(var(--color-grey-100) / 1);
+    --grey-400: hsl(var(--color-grey-400) / 1);
+    --grey-500: hsl(var(--color-grey-500) / 1);
+    --grey-900: hsl(var(--color-grey-900) / 1);
+    --dark-text: hsl(var(--color-dark-text) / 1);
+    --light-text: hsl(var(--color-light-text) / 1);
+    --header-lg: 400 6rem/112px "Halyard Display", sans-serif;
+    --header-md: 400 4rem/72px "Halyard Display", sans-serif;
+    --header-sm: 400 2.5rem/54px "Halyard Display", sans-serif;
+    --header-xs: 400 2rem/44px "Halyard Display", sans-serif;
+    --sub-header: 400 1rem/19px "Halyard Display", sans-serif;
+    --sub-header-sm: 400 0.75rem/16px "Halyard Display", sans-serif;
+    --body-xl: 400 1.625rem/32px "Halyard Display", sans-serif;
+    --body-lg: 400 1.25rem/28px "Halyard Display", sans-serif;
+    --body-md: 400 1.125rem/24px "Halyard Display", sans-serif;
+    --body-sm: 400 1rem/22px "Halyard Display", sans-serif;
+    --body-xs: 400 0.75rem/17px "Halyard Display", sans-serif;
+    --page-width: 1144px;
+    --header-height: 390px;
+    --nav-bar-height: 40px;
+    --vote-ticker-height: 48px;
+    --panel-width: min(100%, 570px);
+    --panel-content-width: 512px;
+    --page-padding: 8px;
+    --page-padding-lg: 16px;
+    --animation-duration: 0.3s;
+    --shadow-1: 0px 12px 20px hsl(280, var(--color-shadow-1: 0px 12px 20p) / 04);
+    --shadow-2: -6px 0px 15px hsl(280, var(--color-shadow-2: -6px 0px 15p) / 25);
+    --shadow-3: 0px 8px 25px rgba(39, 37, 40, 0.25);
+  }
+}
+
+html {
+  /* Making sure text size is only controlled by font-size */
+  -webkit-text-size-adjust: none;
+  /* Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+  /* https://marco.org/2012/11/15/text-rendering-optimize-legibility */
+  text-rendering: optimizeSpeed;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --page-padding: var(--page-padding-lg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+}
+
+* {
+  font-family: "Halyard Display", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  color: var(--dark-text);
+}
+
+body {
+  background: var(--grey-400);
+}
+
+ul,
+ol {
+  list-style-position: inside;
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+}
