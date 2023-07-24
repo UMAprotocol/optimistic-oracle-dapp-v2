@@ -1,18 +1,19 @@
+import { Pagination, usePagination } from "@/components";
 import { defaultResultsPerPage } from "@/constants";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
+import { castDraft, type Immutable } from "immer";
 import styled from "styled-components";
-import { Pagination, usePagination } from "@/components";
 import { Headers } from "./Headers";
 import { LoadingRow } from "./LoadingRow";
 import { Row } from "./Row";
 
-interface Props {
+type Props = Immutable<{
   page: PageName;
   rows: OracleQueryUI[];
   isLoading: boolean;
   findQueryIndex?: number | undefined;
-}
+}>;
 /**
  * Table for showing oracle queries.
  * Intended to be shown on desktop.
@@ -28,7 +29,7 @@ export function OracleQueryTable({
   findQueryIndex,
 }: Props) {
   const { entriesToShow, ...paginationProps } = usePagination(
-    rows,
+    castDraft(rows),
     findQueryIndex,
   );
 

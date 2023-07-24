@@ -8,10 +8,11 @@ import type {
   CheckedFiltersByFilterName,
   OracleQueryUI,
 } from "@/types";
+import type { Immutable } from "immer";
 import type { ReactNode } from "react";
-import { createContext } from "react";
+import { createContext, useMemo } from "react";
 
-export interface FilterAndSearchContextState {
+export type FilterAndSearchContextState = Immutable<{
   results: OracleQueryUI[];
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
@@ -19,7 +20,7 @@ export interface FilterAndSearchContextState {
   checkedFilters: CheckedFiltersByFilterName;
   onCheckedChange: (payload: CheckedChangePayload) => void;
   reset: () => void;
-}
+}>;
 
 export const defaultFilterAndSearchContextState: FilterAndSearchContextState = {
   results: [],
@@ -43,8 +44,10 @@ export function FilterAndSearchProvider({ children }: { children: ReactNode }) {
   const { forCurrentPage: queries } = useQueries();
   const filterAndSearchState = useFilterAndSearch(queries);
 
+  const value = useMemo(() => filterAndSearchState, [filterAndSearchState]);
+
   return (
-    <FilterAndSearchContext.Provider value={filterAndSearchState}>
+    <FilterAndSearchContext.Provider value={value}>
       {children}
     </FilterAndSearchContext.Provider>
   );
