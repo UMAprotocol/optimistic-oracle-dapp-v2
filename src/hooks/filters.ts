@@ -19,6 +19,7 @@ import { castDraft, produce } from "immer";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useImmerReducer } from "use-immer";
 import { useDebounce } from "usehooks-ts";
+import { useUrlBarContext } from "./contexts";
 
 /**
  * Combines the filter and search hooks
@@ -111,6 +112,7 @@ export function useFilters(queries: OracleQueryUI[]) {
     filtersReducer(queries),
     initialState,
   );
+  const { addSearchParam, removeSearchParam } = useUrlBarContext();
 
   useEffect(() => {
     dispatch({ type: "make-entries" });
@@ -119,8 +121,17 @@ export function useFilters(queries: OracleQueryUI[]) {
   const onCheckedChange = useCallback(
     (payload: CheckedChangePayload) => {
       dispatch({ type: "checked-change", payload });
+
+      const { filterName, checked, itemName } = payload;
+
+      if (checked) {
+        addSearchParam(filterName, itemName);
+      }
+      if (!checked) {
+        removeSearchParam(filterName);
+      }
     },
-    [dispatch],
+    [addSearchParam, dispatch, removeSearchParam],
   );
 
   const reset = useCallback(() => {

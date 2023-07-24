@@ -7,6 +7,7 @@ import {
   OracleDataProvider,
   PageProvider,
   PanelProvider,
+  UrlBarProvider,
 } from "@/contexts";
 import type { ReactNode } from "react";
 
@@ -17,7 +18,9 @@ export function Providers({ children }: { children: ReactNode }) {
         <ErrorProvider>
           <OracleDataProvider>
             <PanelProvider>
-              <FilterAndSearchProvider>{children}</FilterAndSearchProvider>
+              <UrlBarProvider>
+                <FilterAndSearchProvider>{children}</FilterAndSearchProvider>
+              </UrlBarProvider>
             </PanelProvider>
           </OracleDataProvider>
         </ErrorProvider>
