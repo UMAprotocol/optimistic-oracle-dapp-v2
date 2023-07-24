@@ -47,6 +47,7 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
 export function useSearch(queries: Immutable<OracleQueryUI[]>) {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const { addSearchParam, removeSearchParam } = useUrlBarContext();
 
   const fuse = useMemo(() => {
     return new Fuse(queries, {
@@ -55,6 +56,14 @@ export function useSearch(queries: Immutable<OracleQueryUI[]>) {
       threshold: 0.3,
     });
   }, [queries]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      addSearchParam("search", debouncedSearchTerm);
+    } else {
+      removeSearchParam("search");
+    }
+  }, [addSearchParam, debouncedSearchTerm, removeSearchParam]);
 
   const results = useMemo(() => {
     if (!debouncedSearchTerm) return queries;
