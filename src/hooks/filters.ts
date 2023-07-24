@@ -16,7 +16,7 @@ import type {
 import Fuse from "fuse.js";
 import type { Draft, Immutable } from "immer";
 import { castDraft, produce } from "immer";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useImmerReducer } from "use-immer";
 import { useDebounce } from "usehooks-ts";
 
@@ -30,11 +30,14 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
   const { filteredQueries, ...filterProps } = useFilters(queries);
   const { results, ...searchProps } = useSearch(filteredQueries);
 
-  return {
-    results,
-    ...filterProps,
-    ...searchProps,
-  };
+  return useMemo(
+    () => ({
+      results,
+      ...filterProps,
+      ...searchProps,
+    }),
+    [filterProps, results, searchProps],
+  );
 }
 
 /**
@@ -54,8 +57,7 @@ export function useSearch(queries: Immutable<OracleQueryUI[]>) {
 
   const results = useMemo(() => {
     if (!debouncedSearchTerm) return queries;
-    const results = fuse.search(debouncedSearchTerm);
-    return results.map((result) => result.item);
+    return fuse.search(debouncedSearchTerm).map(({ item }) => item);
   }, [queries, fuse, debouncedSearchTerm]);
 
   return {
@@ -114,23 +116,29 @@ export function useFilters(queries: OracleQueryUI[]) {
     dispatch({ type: "make-entries" });
   }, [queries, dispatch]);
 
-  function onCheckedChange(payload: CheckedChangePayload) {
-    dispatch({ type: "checked-change", payload });
-  }
+  const onCheckedChange = useCallback(
+    (payload: CheckedChangePayload) => {
+      dispatch({ type: "checked-change", payload });
+    },
+    [dispatch],
+  );
 
-  function reset() {
+  const reset = useCallback(() => {
     dispatch({ type: "reset" });
-  }
+  }, [dispatch]);
 
   const { filters, checkedFilters, filteredQueries } = state;
 
-  return {
-    filters,
-    checkedFilters,
-    filteredQueries,
-    onCheckedChange,
-    reset,
-  };
+  return useMemo(
+    () => ({
+      filters,
+      checkedFilters,
+      filteredQueries,
+      onCheckedChange,
+      reset,
+    }),
+    [checkedFilters, filters, filteredQueries, onCheckedChange, reset],
+  );
 }
 
 function countQueriesForFilter(
