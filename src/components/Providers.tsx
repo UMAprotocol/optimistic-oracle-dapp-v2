@@ -17,11 +17,11 @@ export function Providers({ children }: { children: ReactNode }) {
       <NotificationsProvider>
         <ErrorProvider>
           <OracleDataProvider>
-            <PanelProvider>
-              <UrlBarProvider>
+            <UrlBarProvider>
+              <PanelProvider>
                 <FilterAndSearchProvider>{children}</FilterAndSearchProvider>
-              </UrlBarProvider>
-            </PanelProvider>
+              </PanelProvider>
+            </UrlBarProvider>
           </OracleDataProvider>
         </ErrorProvider>
       </NotificationsProvider>

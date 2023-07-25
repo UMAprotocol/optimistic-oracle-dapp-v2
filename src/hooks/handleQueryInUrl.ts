@@ -122,7 +122,7 @@ export function useHandleQueryInUrl() {
         void redirectToCorrectPage();
       }
 
-      void openPanel(query, false);
+      void openPanel(query.id);
 
       function redirectToCorrectPage() {
         const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;

@@ -1,7 +1,7 @@
 "use client";
 
 import { PanelBase } from "@/components";
-import { usePanelContext } from "@/hooks";
+import { usePanelContext, useQueryById } from "@/hooks";
 import { Actions } from "./Actions";
 import { Details } from "./Details";
 import { InfoIcons } from "./InfoIcons";
@@ -13,16 +13,17 @@ import { Title } from "./Title";
  * @see `PanelContext`
  */
 export function Panel() {
-  const { content, panelOpen, closePanel } = usePanelContext();
+  const { queryId, panelOpen, closePanel } = usePanelContext();
+  const query = useQueryById(queryId);
 
   function close() {
     void closePanel();
   }
 
-  const props = content
+  const props = query
     ? {
-        query: content,
-        ...content,
+        query,
+        ...query,
         close,
       }
     : undefined;

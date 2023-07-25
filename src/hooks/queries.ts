@@ -14,3 +14,8 @@ export function useQueries() {
 
   return useMemo(() => ({ all, forCurrentPage }), [all, forCurrentPage]);
 }
+
+export function useQueryById(id: string | undefined) {
+  const { all } = useQueries();
+  return useMemo(() => all.find((q) => q.id === id), [all, id]);
+}

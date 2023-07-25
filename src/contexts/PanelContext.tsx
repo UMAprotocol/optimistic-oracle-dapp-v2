@@ -1,22 +1,27 @@
 "use client";
 
-import { makeQueryString, makeUrlParamsForQuery } from "@/helpers";
-import { useOracleDataContext } from "@/hooks";
-import type { OracleQueryUI } from "@/types";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export interface PanelContextState {
   panelOpen: boolean;
-  content: OracleQueryUI | undefined;
-  openPanel: (content: OracleQueryUI, isFromUserInteraction?: boolean) => void;
+  queryId: string | undefined;
+  setQueryId: (queryId: string | undefined) => void;
+  openPanel: (queryId?: string) => void;
   closePanel: () => void;
 }
 
 export const defaultPanelContextState = {
   panelOpen: false,
-  content: undefined,
+  queryId: undefined,
+  setQueryId: () => undefined,
   openPanel: () => undefined,
   closePanel: () => undefined,
 };
@@ -26,12 +31,9 @@ export const PanelContext = createContext<PanelContextState>(
 );
 
 export function PanelProvider({ children }: { children: ReactNode }) {
-  const { all } = useOracleDataContext();
-  const [id, setId] = useState<string | undefined>();
+  const [queryId, setQueryId] = useState<string | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   useEffect(() => {
     function onPopState() {
@@ -47,34 +49,27 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     };
   }, [searchParams]);
 
-  function openPanel(content: OracleQueryUI, isFromUserInteraction = true) {
-    if (isFromUserInteraction) {
-      const query = makeUrlParamsForQuery(content);
-
-      router.push(makeQueryString(query, pathname, searchParams));
-    }
-
-    setId(content.id);
+  const openPanel = useCallback((queryId?: string) => {
+    setQueryId(queryId);
     setPanelOpen(true);
-  }
-  const content: OracleQueryUI | undefined =
-    all !== undefined && id !== undefined ? all[id] : undefined;
+  }, []);
 
-  function closePanel() {
-    router.push(pathname ?? "/");
+  const closePanel = useCallback(() => {
     setPanelOpen(false);
-  }
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      queryId,
+      panelOpen,
+      setQueryId,
+      openPanel,
+      closePanel,
+    }),
+    [closePanel, openPanel, panelOpen, queryId],
+  );
 
   return (
-    <PanelContext.Provider
-      value={{
-        content,
-        panelOpen,
-        openPanel,
-        closePanel,
-      }}
-    >
-      {children}
-    </PanelContext.Provider>
+    <PanelContext.Provider value={value}>{children}</PanelContext.Provider>
   );
 }

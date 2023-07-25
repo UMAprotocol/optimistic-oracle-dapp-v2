@@ -7,13 +7,14 @@ import {
   Notifications,
   Panel,
 } from "@/components";
-import { usePageContext } from "@/hooks";
+import { useHandleQueryInUrl, usePageContext } from "@/hooks";
 import type { ReactNode } from "react";
 import { LegacyDappLinkBanner } from "./LegacyDappLinkBanner";
 import StyledComponentsRegistry from "./StyledComponentsRegistry";
 
 export function Layout({ children }: { children: ReactNode }) {
   const { page } = usePageContext();
+  useHandleQueryInUrl();
 
   return (
     <StyledComponentsRegistry>
