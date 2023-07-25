@@ -1,7 +1,11 @@
+import { usePageContext, usePanelContext, useQueries } from "@/hooks";
+import type { OracleQueryUI } from "@/types";
+import { exists } from "@libs/utils";
 import type { ChainId, OracleType } from "@shared/types";
+import { filter, find } from "lodash";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
-import { createContext, useCallback, useMemo } from "react";
+import { createContext, useCallback, useEffect, useMemo } from "react";
 
 type HashAndIndexParams = {
   transactionHash?: string;
@@ -54,6 +58,9 @@ export function UrlBarProvider({ children }: { children: ReactNode }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const { all: queries } = useQueries();
+  const { page } = usePageContext();
+  const { panelOpen, openPanel, setQueryId } = usePanelContext();
 
   const addSearchParam = useCallback(
     (name: string, value: string) => {
@@ -98,6 +105,164 @@ export function UrlBarProvider({ children }: { children: ReactNode }) {
     },
     [pathname, router, searchParams],
   );
+
+  // handle the current preferred way of linking to a query
+  // uses transaction hash and event index
+
+  useEffect(() => {
+    if (!searchParams) return;
+
+    const hasHash = searchParams?.has("transactionHash");
+    const hasEventIndex = searchParams?.has("eventIndex");
+
+    if (!hasHash && !hasEventIndex) return;
+
+    openPanel();
+
+    const transactionHash = searchParams.get("transactionHash")!;
+    const eventIndex = searchParams.get("eventIndex")!;
+
+    const forTx = filter<OracleQueryUI>(
+      queries,
+      ({
+        requestHash,
+        proposalHash,
+        disputeHash,
+        settlementHash,
+        assertionHash,
+      }) => {
+        return (
+          requestHash === transactionHash ||
+          proposalHash === transactionHash ||
+          disputeHash === transactionHash ||
+          settlementHash === transactionHash ||
+          assertionHash === transactionHash
+        );
+      },
+    );
+
+    const hasMultipleForTx = forTx.length > 1;
+
+    const query =
+      hasMultipleForTx && exists(eventIndex)
+        ? find<OracleQueryUI>(
+            forTx,
+            ({
+              requestLogIndex,
+              proposalLogIndex,
+              disputeLogIndex,
+              settlementLogIndex,
+              assertionLogIndex,
+            }) => {
+              return (
+                requestLogIndex === eventIndex ||
+                proposalLogIndex === eventIndex ||
+                disputeLogIndex === eventIndex ||
+                settlementLogIndex === eventIndex ||
+                assertionLogIndex === eventIndex
+              );
+            },
+          )
+        : forTx[0];
+    setQueryId(query?.id);
+  }, [queries]);
+
+  // useEffect(() => {
+  //   const hasHash = searchParams?.has("transactionHash");
+  //   const isRequestDetails =
+  //     searchParams?.has("chainId") &&
+  //     searchParams?.has("oracleType") &&
+  //     searchParams?.has("requester") &&
+  //     searchParams?.has("timestamp") &&
+  //     searchParams?.has("identifier") &&
+  //     searchParams?.has("ancillaryData");
+
+  //   if (!hasHash && !isRequestDetails) return;
+
+  //   const {
+  //     transactionHash,
+  //     eventIndex,
+  //     chainId,
+  //     oracleType,
+  //     requester,
+  //     timestamp,
+  //     identifier,
+  //     ancillaryData,
+  //   } = Object.fromEntries(searchParams?.entries() ?? []) as SearchParams;
+
+  //   let query: OracleQueryUI | undefined;
+
+  //   if (hasHash) {
+  //     const forTx = filter<OracleQueryUI>(
+  //       queries,
+  //       ({
+  //         requestHash,
+  //         proposalHash,
+  //         disputeHash,
+  //         settlementHash,
+  //         assertionHash,
+  //       }) => {
+  //         return (
+  //           requestHash === transactionHash ||
+  //           proposalHash === transactionHash ||
+  //           disputeHash === transactionHash ||
+  //           settlementHash === transactionHash ||
+  //           assertionHash === transactionHash
+  //         );
+  //       },
+  //     );
+
+  //     const hasMultipleForTx = forTx.length > 1;
+
+  //     query =
+  //       hasMultipleForTx && exists(eventIndex)
+  //         ? find<OracleQueryUI>(
+  //             forTx,
+  //             ({
+  //               requestLogIndex,
+  //               proposalLogIndex,
+  //               disputeLogIndex,
+  //               settlementLogIndex,
+  //               assertionLogIndex,
+  //             }) => {
+  //               return (
+  //                 requestLogIndex === eventIndex ||
+  //                 proposalLogIndex === eventIndex ||
+  //                 disputeLogIndex === eventIndex ||
+  //                 settlementLogIndex === eventIndex ||
+  //                 assertionLogIndex === eventIndex
+  //               );
+  //             },
+  //           )
+  //         : forTx[0];
+  //   }
+
+  //   if (isRequestDetails) {
+  //     query = find<OracleQueryUI>(queries, {
+  //       chainId,
+  //       identifier,
+  //       requester: lowerCase(requester),
+  //       oracleType: getOracleTypeFromOldOracleName(oracleType!),
+  //       timeUNIX: Number(timestamp),
+  //       queryTextHex: ancillaryData,
+  //     });
+  //   }
+
+  //   if (query && !panelOpen) {
+  //     const pageForQuery = getPageForQuery(query);
+
+  //     if (pageForQuery !== page) {
+  //       void redirectToCorrectPage();
+  //     }
+
+  //     openPanel(query.id);
+
+  //     function redirectToCorrectPage() {
+  //       const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;
+  //       router.push(pathname);
+  //     }
+  //   }
+  // }, [queries]);
 
   const value = useMemo(
     () => ({
