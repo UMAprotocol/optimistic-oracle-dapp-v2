@@ -1,7 +1,10 @@
 "use client";
 
 import { PanelBase } from "@/components";
-import { usePanelContext, useQueryById } from "@/hooks";
+import { makeUrlParamsForQuery } from "@/helpers";
+import { usePanelContext, useQueryById, useUrlBarContext } from "@/hooks";
+import type { OracleQueryUI } from "@/types";
+import { useCallback, useEffect } from "react";
 import { Actions } from "./Actions";
 import { Details } from "./Details";
 import { InfoIcons } from "./InfoIcons";
@@ -15,10 +18,31 @@ import { Title } from "./Title";
 export function Panel() {
   const { queryId, panelOpen, closePanel } = usePanelContext();
   const query = useQueryById(queryId);
+  const { addSearchParams, removeSearchParams } = useUrlBarContext();
 
-  function close() {
-    void closePanel();
-  }
+  const addHashAndIndexToUrl = useCallback(
+    (query: OracleQueryUI) => {
+      const searchParams = makeUrlParamsForQuery(query);
+      addSearchParams(searchParams);
+    },
+    [addSearchParams],
+  );
+
+  const removeHashAndIndexFromUrl = useCallback(() => {
+    removeSearchParams("transactionHash", "eventIndex");
+  }, [removeSearchParams]);
+
+  useEffect(() => {
+    if (query && panelOpen) {
+      addHashAndIndexToUrl(query);
+    } else {
+      removeHashAndIndexFromUrl();
+    }
+  }, [addHashAndIndexToUrl, query, panelOpen, removeHashAndIndexFromUrl]);
+
+  const close = useCallback(() => {
+    closePanel();
+  }, [closePanel]);
 
   const props = query
     ? {

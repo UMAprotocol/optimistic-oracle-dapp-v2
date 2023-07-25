@@ -140,8 +140,8 @@ export function makeUrlParamsForQuery({
   const isRequest = !!requestHash && !!requestLogIndex;
 
   const queryParams = {
-    transactionHash: isRequest ? requestHash : assertionHash,
-    eventIndex: isRequest ? requestLogIndex : assertionLogIndex,
+    transactionHash: isRequest ? requestHash : assertionHash!,
+    eventIndex: isRequest ? requestLogIndex : assertionLogIndex!,
   };
 
   return queryParams;
