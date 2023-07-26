@@ -2,7 +2,7 @@ import { makeUrlParamsForQuery } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
 import Warning from "public/assets/icons/warning.svg";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Link } from "../style";
 

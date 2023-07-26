@@ -4,7 +4,7 @@ import {
   NotificationsProvider,
   OracleDataProvider,
   PageProvider,
-  PanelProvider
+  PanelProvider,
 } from "@/contexts";
 import type { ReactNode } from "react";
 
