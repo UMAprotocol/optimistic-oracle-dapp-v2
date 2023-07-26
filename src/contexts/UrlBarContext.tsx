@@ -12,8 +12,6 @@ type HashAndIndexParams = {
   eventIndex?: string;
 };
 
-type OldOracleTypeName = "Optimistic" | "OptimisticV2" | "Skinny";
-
 type RequestDetailsParams = {
   chainId?: ChainId;
   oracleType?: OldOracleTypeName;
@@ -24,19 +22,6 @@ type RequestDetailsParams = {
 };
 
 type SearchParams = HashAndIndexParams & RequestDetailsParams;
-
-function getOracleTypeFromOldOracleName(
-  oracleType: OldOracleTypeName,
-): OracleType {
-  switch (oracleType) {
-    case "Optimistic":
-      return "Optimistic Oracle V1";
-    case "OptimisticV2":
-      return "Optimistic Oracle V2";
-    case "Skinny":
-      return "Skinny Optimistic Oracle";
-  }
-}
 
 export type UrlBarContextState = {
   addSearchParam: (name: string, value: string) => void;

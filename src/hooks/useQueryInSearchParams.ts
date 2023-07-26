@@ -1,7 +1,14 @@
+import {
+  isTransactionHash,
+  isValidChainId,
+  isValidOracleType,
+} from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { exists } from "@libs/utils";
+import type { ChainId, OracleType } from "@shared/types";
+import { isAddress } from "@shared/utils";
 import { castDraft } from "immer";
-import { filter, find } from "lodash";
+import { filter, find, lowerCase } from "lodash";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
@@ -10,24 +17,55 @@ import { usePanelContext } from "./contexts";
 import { useQueries } from "./queries";
 import { useUrlBar } from "./useUrlBar";
 
+function getOracleType(oracleType: string | undefined): OracleType | undefined {
+  switch (oracleType) {
+    case "Optimistic":
+      return "Optimistic Oracle V1";
+    case "OptimisticV2":
+      return "Optimistic Oracle V2";
+    case "Skinny":
+      return "Skinny Optimistic Oracle";
+    default:
+      return undefined;
+  }
+}
+
 type State = {
+  query: OracleQueryUI | undefined;
   transactionHash: string | undefined;
   eventIndex: string | undefined;
-  query: OracleQueryUI | undefined;
+  chainId: number | undefined;
+  oracleType: string | undefined;
+  requester: string | undefined;
+  timestamp: string | undefined;
+  identifier: string | undefined;
+  ancillaryData: string | undefined;
 };
 
 export function useQueryInSearchParams() {
   const { openPanel, setQueryId } = usePanelContext();
   const { all: queries } = useQueries();
   const { searchParams } = useUrlBar();
-  const router = useRouter();
   const [state, setState] = useImmer<State>({
+    query: undefined,
     transactionHash: undefined,
     eventIndex: undefined,
-    query: undefined,
+    chainId: undefined,
+    oracleType: undefined,
+    requester: undefined,
+    timestamp: undefined,
+    identifier: undefined,
+    ancillaryData: undefined,
   });
   const isHashAndIndex =
-    exists(state.transactionHash) && exists(state.eventIndex);
+    isTransactionHash(state.transactionHash) && exists(state.eventIndex);
+  const isLegacyRequestDetails =
+    isValidChainId(Number(state.chainId)) &&
+    isValidOracleType(getOracleType(state.oracleType)) &&
+    isAddress(state.requester) &&
+    exists(state.timestamp) &&
+    exists(state.identifier) &&
+    exists(state.ancillaryData);
 
   useEffectOnce(() => {
     if (!searchParams) return;
@@ -43,6 +81,26 @@ export function useQueryInSearchParams() {
     }
   });
 
+  useEffectOnce(() => {
+    if (
+      searchParams?.has("chainId") &&
+      searchParams?.has("oracleType") &&
+      searchParams?.has("requester") &&
+      searchParams?.has("timestamp") &&
+      searchParams?.has("identifier") &&
+      searchParams?.has("ancillaryData")
+    ) {
+      setState((draft) => {
+        draft.chainId = Number(searchParams.get("chainId")!);
+        draft.oracleType = searchParams.get("oracleType")!;
+        draft.requester = searchParams.get("requester")!;
+        draft.timestamp = searchParams.get("timestamp")!;
+        draft.identifier = searchParams.get("identifier")!;
+        draft.ancillaryData = searchParams.get("ancillaryData")!;
+      });
+    }
+  });
+
   useEffect(() => {
     if (state.query) {
       setQueryId(state.query.id);
@@ -50,10 +108,10 @@ export function useQueryInSearchParams() {
   }, [setQueryId, state.query]);
 
   useEffect(() => {
-    if (isHashAndIndex) {
+    if (isHashAndIndex || isLegacyRequestDetails) {
       openPanel();
     }
-  }, [isHashAndIndex, openPanel]);
+  }, [isHashAndIndex, isLegacyRequestDetails, openPanel]);
 
   useEffect(() => {
     if (!isHashAndIndex) return;
@@ -110,4 +168,30 @@ export function useQueryInSearchParams() {
     state.eventIndex,
     state.transactionHash,
   ]);
+
+  useEffect(() => {
+    if (!isLegacyRequestDetails) return;
+
+    const {
+      chainId,
+      oracleType,
+      requester,
+      timestamp,
+      identifier,
+      ancillaryData,
+    } = state;
+
+    const query = find<OracleQueryUI>(queries, {
+      chainId: chainId as ChainId,
+      identifier,
+      requester: lowerCase(requester),
+      oracleType: getOracleType(oracleType),
+      timeUNIX: Number(timestamp),
+      queryTextHex: ancillaryData,
+    });
+
+    setState((draft) => {
+      draft.query = castDraft(query);
+    });
+  });
 }

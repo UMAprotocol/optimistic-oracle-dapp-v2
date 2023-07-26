@@ -1,6 +1,9 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { makeUrlParamsForQuery } from "@/helpers";
+import { useQueryById } from "@/hooks";
+import { useUrlBar } from "@/hooks/useUrlBar";
+import type { OracleQueryUI } from "@/types";
 import type { ReactNode } from "react";
 import {
   createContext,
@@ -12,7 +15,7 @@ import {
 
 export interface PanelContextState {
   panelOpen: boolean;
-  queryId: string | undefined;
+  query: OracleQueryUI | undefined;
   setQueryId: (queryId: string | undefined) => void;
   openPanel: (queryId?: string) => void;
   closePanel: () => void;
@@ -20,7 +23,7 @@ export interface PanelContextState {
 
 export const defaultPanelContextState = {
   panelOpen: false,
-  queryId: undefined,
+  query: undefined,
   setQueryId: () => undefined,
   openPanel: () => undefined,
   closePanel: () => undefined,
@@ -33,7 +36,20 @@ export const PanelContext = createContext<PanelContextState>(
 export function PanelProvider({ children }: { children: ReactNode }) {
   const [queryId, setQueryId] = useState<string | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
-  const searchParams = useSearchParams();
+  const { addSearchParams, removeSearchParams, searchParams } = useUrlBar();
+  const query = useQueryById(queryId);
+
+  const addHashAndIndexToUrl = useCallback(
+    (query: OracleQueryUI) => {
+      const searchParams = makeUrlParamsForQuery(query);
+      addSearchParams(searchParams);
+    },
+    [addSearchParams],
+  );
+
+  const removeHashAndIndexFromUrl = useCallback(() => {
+    removeSearchParams("transactionHash", "eventIndex");
+  }, [removeSearchParams]);
 
   useEffect(() => {
     function onPopState() {
@@ -49,24 +65,31 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     };
   }, [searchParams]);
 
-  const openPanel = useCallback((queryId?: string) => {
-    setQueryId(queryId);
-    setPanelOpen(true);
-  }, []);
+  const openPanel = useCallback(
+    (queryId?: string) => {
+      if (queryId && query) {
+        addHashAndIndexToUrl(query);
+      }
+      setQueryId(queryId);
+      setPanelOpen(true);
+    },
+    [addHashAndIndexToUrl, query],
+  );
 
   const closePanel = useCallback(() => {
+    removeHashAndIndexFromUrl();
     setPanelOpen(false);
-  }, []);
+  }, [removeHashAndIndexFromUrl]);
 
   const value = useMemo(
     () => ({
-      queryId,
+      query,
       panelOpen,
       setQueryId,
       openPanel,
       closePanel,
     }),
-    [closePanel, openPanel, panelOpen, queryId],
+    [closePanel, openPanel, panelOpen, query],
   );
 
   return (

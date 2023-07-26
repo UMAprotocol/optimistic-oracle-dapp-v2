@@ -1,5 +1,3 @@
-export const currencies = ["USDC", "ETH", "RY"] as const;
-
 export const oracleTypes = [
   "Optimistic Oracle V1",
   "Optimistic Oracle V2",
@@ -30,17 +28,17 @@ export const requestStates = [
 ] as const;
 
 export const chainsById = {
-  0: "Unsupported Chain" as const,
-  1: "Ethereum" as const,
-  5: "Goerli" as const,
-  10: "Optimism" as const,
-  100: "Gnosis" as const,
-  137: "Polygon" as const,
-  288: "Boba" as const,
-  416: "SX" as const,
-  43114: "Avalanche" as const,
-  42161: "Arbitrum" as const,
-  80001: "Mumbai" as const,
-};
+  0: "Unsupported Chain",
+  1: "Ethereum",
+  5: "Goerli",
+  10: "Optimism",
+  100: "Gnosis",
+  137: "Polygon",
+  288: "Boba",
+  416: "SX",
+  43114: "Avalanche",
+  42161: "Arbitrum",
+  80001: "Mumbai",
+} as const;
 
 export const chainNames = Object.values(chainsById);
