@@ -14,7 +14,7 @@ export function useUrlBar() {
   const addSearchParam = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams?.toString());
-      params.set(name, value);
+      params.append(name, value);
       router.push(`${pathname}?${params.toString()}`);
     },
     [pathname, router, searchParams],
@@ -34,9 +34,12 @@ export function useUrlBar() {
   );
 
   const removeSearchParam = useCallback(
-    (name: string) => {
-      const params = new URLSearchParams(searchParams?.toString());
-      params.delete(name);
+    (name: string, value: string) => {
+      const params = new URLSearchParams();
+      for (const [_name, _value] of searchParams!) {
+        if (_name === name && _value === value) continue;
+        params.append(_name, _value);
+      }
       router.push(`${pathname}?${params.toString()}`);
     },
     [pathname, router, searchParams],

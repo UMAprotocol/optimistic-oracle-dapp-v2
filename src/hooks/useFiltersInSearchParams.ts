@@ -1,9 +1,9 @@
 import { useEffectOnce } from "usehooks-ts";
-import { useUrlBar } from "./useUrlBar";
 import { useFilterAndSearchContext } from "./contexts";
+import { useUrlBar } from "./useUrlBar";
 
 export function useFiltersInSearchParams() {
-  const { setSearchTerm } = useFilterAndSearchContext();
+  const { setSearchTerm, overrideCheckedFilters } = useFilterAndSearchContext();
   const { searchParams } = useUrlBar();
 
   useEffectOnce(() => {
@@ -13,6 +13,18 @@ export function useFiltersInSearchParams() {
 
     if (hasSearch) {
       setSearchTerm(searchParams.get("search")!);
+    }
+
+    const hasChainName = searchParams?.has("chainName");
+    const hasProject = searchParams?.has("project");
+    const hasOracleType = searchParams?.has("oracleType");
+
+    if (hasChainName || hasProject || hasOracleType) {
+      overrideCheckedFilters({
+        chainName: searchParams.getAll("chainName")!,
+        project: searchParams.getAll("project")!,
+        oracleType: searchParams.getAll("oracleType")!,
+      });
     }
   });
 }

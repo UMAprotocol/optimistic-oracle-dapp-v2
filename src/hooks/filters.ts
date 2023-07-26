@@ -19,7 +19,6 @@ import { castDraft, produce } from "immer";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useImmerReducer } from "use-immer";
 import { useDebounce } from "usehooks-ts";
-import { useUrlBarContext } from "./contexts";
 import { useUrlBar } from "./useUrlBar";
 
 /**
@@ -84,10 +83,15 @@ type State = Immutable<{
   filteredQueries: OracleQueryUI[];
 }>;
 
-type Action = MakeEntries | CheckedChange | Reset;
+type Action = MakeEntries | CheckedChange | Reset | AddCheckedFilters;
 
 type MakeEntries = {
   type: "make-entries";
+};
+
+type AddCheckedFilters = {
+  type: "add-checked-filters";
+  payload: CheckedFiltersByFilterName;
 };
 
 type Reset = {
@@ -122,7 +126,7 @@ export function useFilters(queries: OracleQueryUI[]) {
     filtersReducer(queries),
     initialState,
   );
-  const { addSearchParam, removeSearchParam } = useUrlBarContext();
+  const { addSearchParam, removeSearchParam } = useUrlBar();
 
   useEffect(() => {
     dispatch({ type: "make-entries" });
@@ -138,7 +142,7 @@ export function useFilters(queries: OracleQueryUI[]) {
         addSearchParam(filterName, itemName);
       }
       if (!checked) {
-        removeSearchParam(filterName);
+        removeSearchParam(filterName, itemName);
       }
     },
     [addSearchParam, dispatch, removeSearchParam],
@@ -147,6 +151,13 @@ export function useFilters(queries: OracleQueryUI[]) {
   const reset = useCallback(() => {
     dispatch({ type: "reset" });
   }, [dispatch]);
+
+  const overrideCheckedFilters = useCallback(
+    (checkedFilters: CheckedFiltersByFilterName) => {
+      dispatch({ type: "add-checked-filters", payload: checkedFilters });
+    },
+    [dispatch],
+  );
 
   const { filters, checkedFilters, filteredQueries } = state;
 
@@ -157,8 +168,16 @@ export function useFilters(queries: OracleQueryUI[]) {
       filteredQueries,
       onCheckedChange,
       reset,
+      overrideCheckedFilters,
     }),
-    [checkedFilters, filters, filteredQueries, onCheckedChange, reset],
+    [
+      filters,
+      checkedFilters,
+      filteredQueries,
+      onCheckedChange,
+      reset,
+      overrideCheckedFilters,
+    ],
   );
 }
 
@@ -229,6 +248,28 @@ function filtersReducer(queries: Immutable<OracleQueryUI[]>) {
               item.checked = false;
             }
           });
+        });
+
+        draft.checkedFilters = makeCheckedFilters(draft);
+        draft.filteredQueries = makeFilteredQueries(draft, queries);
+        break;
+      }
+      case "add-checked-filters": {
+        const { payload } = action;
+        Object.entries(payload).forEach(([filterName, values]) => {
+          const items = draft.filters[filterName as FilterName];
+          const newFilters = produce(items, (draft) => {
+            draft.All.checked = false;
+            values.forEach((value) => {
+              draft[value] = {
+                checked: true,
+                count: countQueriesForFilter(queries, {
+                  [filterName]: value,
+                }),
+              };
+            });
+          });
+          draft.filters[filterName as FilterName] = newFilters;
         });
 
         draft.checkedFilters = makeCheckedFilters(draft);
