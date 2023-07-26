@@ -1,13 +1,9 @@
 "use client";
 
-import { PanelBase } from "@/components";
+import { LoadingSpinner, PanelBase } from "@/components";
+import { addOpacityToColor } from "@/helpers";
 import { usePanelContext } from "@/hooks";
 import { useCallback } from "react";
-import { LoadingSpinner, PanelBase } from "@/components";
-import { addOpacityToColor, makeUrlParamsForQuery } from "@/helpers";
-import { usePanelContext, useQueryWithId } from "@/hooks";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { LoadingSkeleton } from "../LoadingSkeleton";
 import { Actions } from "./Actions";
 import { Details } from "./Details";
@@ -31,13 +27,13 @@ export function Panel() {
         query,
         ...query,
         close,
-          isLoading: false,
+        isLoading: false,
       }
     : undefined;
 
   return (
     <PanelBase panelOpen={panelOpen} closePanel={close}>
-      {!!props ? (
+      {props ? (
         <>
           <Title {...props} />
           <Actions {...props} />
@@ -77,7 +73,7 @@ export function Panel() {
             </div>
           </div>
           <div className="pt-16 px-page-padding lg:px-7 grid place-items-center">
-            <LoadingSpinner variant="black" size={32} />
+            <LoadingSpinner variant="black" width={32} height={32} />
           </div>
         </>
       )}

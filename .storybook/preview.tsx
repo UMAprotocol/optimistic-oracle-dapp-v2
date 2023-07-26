@@ -74,6 +74,9 @@ export const parameters: Parameters = {
     },
   },
   date: mockDate,
+  nextjs: {
+    appDirectory: true,
+  },
 };
 
 export const decorators: Decorator[] = [

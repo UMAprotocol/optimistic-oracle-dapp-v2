@@ -62,7 +62,7 @@ export function Notification({
     >
       <IndicatorWrapper>
         {type === "pending" && (
-          <LoadingSpinner variant="black" size={iconSize} />
+          <LoadingSpinner variant="black" width={iconSize} height={iconSize} />
         )}
         {type === "error" && (
           <IconWrapper>
@@ -133,15 +133,14 @@ const Link = styled(NextLink)`
   }
 `;
 
-const CloseIconWrapper = styled.div`
+const CloseIconWrapper = styled.div``;
+
+const CloseIcon = styled(Close)`
   position: absolute;
   top: 10px;
   right: 10px;
   width: 12px;
   height: 12px;
-`;
-
-const CloseIcon = styled(Close)`
   path {
     fill: var(--dark-text);
   }
