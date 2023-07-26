@@ -12,10 +12,12 @@ import { useQueryInSearchParams } from "@/hooks/useQueryInSearchParams";
 import type { ReactNode } from "react";
 import { LegacyDappLinkBanner } from "./LegacyDappLinkBanner";
 import StyledComponentsRegistry from "./StyledComponentsRegistry";
+import { useFiltersInSearchParams } from "@/hooks/useFiltersInSearchParams";
 
 export function Layout({ children }: { children: ReactNode }) {
   const { page } = usePageContext();
   useQueryInSearchParams();
+  useFiltersInSearchParams();
 
   return (
     <StyledComponentsRegistry>

@@ -9,7 +9,6 @@ import type { ChainId, OracleType } from "@shared/types";
 import { isAddress } from "@shared/utils";
 import { castDraft } from "immer";
 import { filter, find, lowerCase } from "lodash";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
 import { useEffectOnce } from "usehooks-ts";

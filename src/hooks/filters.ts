@@ -20,6 +20,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useImmerReducer } from "use-immer";
 import { useDebounce } from "usehooks-ts";
 import { useUrlBarContext } from "./contexts";
+import { useUrlBar } from "./useUrlBar";
 
 /**
  * Combines the filter and search hooks
@@ -47,7 +48,7 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
 export function useSearch(queries: Immutable<OracleQueryUI[]>) {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const { addSearchParam, removeSearchParam } = useUrlBarContext();
+  const { addSearchParam, removeSearchParam } = useUrlBar();
 
   const fuse = useMemo(() => {
     return new Fuse(queries, {
