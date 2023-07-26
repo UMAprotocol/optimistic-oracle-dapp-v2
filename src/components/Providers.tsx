@@ -1,13 +1,10 @@
-"use client";
-
 import {
   ErrorProvider,
   FilterAndSearchProvider,
   NotificationsProvider,
   OracleDataProvider,
   PageProvider,
-  PanelProvider,
-  UrlBarProvider,
+  PanelProvider
 } from "@/contexts";
 import type { ReactNode } from "react";
 
@@ -17,11 +14,9 @@ export function Providers({ children }: { children: ReactNode }) {
       <NotificationsProvider>
         <ErrorProvider>
           <OracleDataProvider>
-            <UrlBarProvider>
-              <PanelProvider>
-                <FilterAndSearchProvider>{children}</FilterAndSearchProvider>
-              </PanelProvider>
-            </UrlBarProvider>
+            <PanelProvider>
+              <FilterAndSearchProvider>{children}</FilterAndSearchProvider>
+            </PanelProvider>
           </OracleDataProvider>
         </ErrorProvider>
       </NotificationsProvider>

@@ -2,7 +2,8 @@
 
 import { PanelBase } from "@/components";
 import { makeUrlParamsForQuery } from "@/helpers";
-import { usePanelContext, useQueryById, useUrlBarContext } from "@/hooks";
+import { usePanelContext, useQueryById } from "@/hooks";
+import { useUrlBar } from "@/hooks/useUrlBar";
 import type { OracleQueryUI } from "@/types";
 import { useCallback, useEffect } from "react";
 import { Actions } from "./Actions";
@@ -18,7 +19,7 @@ import { Title } from "./Title";
 export function Panel() {
   const { queryId, panelOpen, closePanel } = usePanelContext();
   const query = useQueryById(queryId);
-  const { addSearchParams, removeSearchParams } = useUrlBarContext();
+  const { addSearchParams, removeSearchParams } = useUrlBar();
 
   const addHashAndIndexToUrl = useCallback(
     (query: OracleQueryUI) => {
@@ -35,14 +36,13 @@ export function Panel() {
   useEffect(() => {
     if (query && panelOpen) {
       addHashAndIndexToUrl(query);
-    } else {
-      removeHashAndIndexFromUrl();
     }
   }, [addHashAndIndexToUrl, query, panelOpen, removeHashAndIndexFromUrl]);
 
   const close = useCallback(() => {
     closePanel();
-  }, [closePanel]);
+    removeHashAndIndexFromUrl();
+  }, [closePanel, removeHashAndIndexFromUrl]);
 
   const props = query
     ? {
