@@ -1,7 +1,6 @@
 import { DecimalInput, RadioDropdown } from "@/components";
 import type { DropdownItem } from "@/types";
 import Close from "public/assets/icons/close.svg";
-import styled from "styled-components";
 
 interface Props {
   value: string;
@@ -23,47 +22,18 @@ export function ProposeInput({
   const isDropdown = !isCustomInput && !!props.items && props.items.length > 0;
 
   return (
-    <Wrapper>
+    <div className="relative mt-4 mb-5">
       {isDropdown ? <RadioDropdown {...props} /> : <DecimalInput {...props} />}
       {isCustomInput && (
-        <ClearInputButton
+        <button
+          className="absolute top-[10px] right-[10px] grid place-items-center w-6 h-6 rounded-full bg-grey-100 transition hover:opacity-75"
           aria-label="exit custom input"
           onClick={exitCustomInput}
           disabled={props.disabled}
         >
-          <CloseIcon />
-        </ClearInputButton>
+          <Close className="w-[10px] [&>path]:fill-dark" />
+        </button>
       )}
-    </Wrapper>
+    </div>
   );
 }
-
-const Wrapper = styled.div`
-  position: relative;
-  margin-top: 16px;
-  margin-bottom: 20px;
-`;
-
-const ClearInputButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--grey-100);
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 0.75;
-  }
-`;
-
-const CloseIcon = styled(Close)`
-  width: 10px;
-  path {
-    fill: var(--dark-text);
-  }
-`;

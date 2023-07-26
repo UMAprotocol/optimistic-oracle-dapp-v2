@@ -1,5 +1,5 @@
 import { ConnectButton } from "@/components";
-import { connectWallet, settled, smallMobileAndUnder } from "@/constants";
+import { connectWallet, settled } from "@/constants";
 import { maybeGetValueTextFromOptions } from "@/helpers";
 import {
   usePageContext,
@@ -9,10 +9,8 @@ import {
 import type { OracleQueryUI } from "@/types";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
-import type { CSSProperties } from "react";
-import styled from "styled-components";
 import { useAccount, useNetwork } from "wagmi";
-import { SectionTitle, SectionTitleWrapper, Text } from "../style";
+import { SectionTitle, SectionTitleWrapper } from "../style";
 import { Details } from "./Details";
 import { Errors } from "./Errors";
 import { Message } from "./Message";
@@ -59,7 +57,7 @@ export function Actions({ query }: Props) {
     !address || isWrongChain || alreadyProposed || alreadySettled;
   const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
   const actionsTitle = getActionsTitle();
-  const actionsIcon = pageIsSettled ? <SettledIcon /> : <PencilIcon />;
+  const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
   const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
 
   function getActionsTitle() {
@@ -78,7 +76,7 @@ export function Actions({ query }: Props) {
   }
 
   return (
-    <Wrapper>
+    <div className="bg-grey-400 px-page-padding lg:px-7 pt-5 pb-6">
       <SectionTitleWrapper>
         {actionsIcon}
         <SectionTitle>{actionsTitle}</SectionTitle>
@@ -90,15 +88,14 @@ export function Actions({ query }: Props) {
           {...inputProps}
         />
       ) : (
-        <ValueWrapper
-          style={
-            {
-              "--margin-bottom": !pageIsSettled ? "20px" : "0px",
-            } as CSSProperties
-          }
+        <div
+          className="w-panel-content-width grid items-center min-h-[44px] mt-4 px-4 rounded bg-white"
+          style={{
+            marginBottom: !pageIsSettled ? "20px" : "0px",
+          }}
         >
-          <ValueText>{valueToShow}</ValueText>
-        </ValueWrapper>
+          <p className="sm:text-lg font-semibold">{valueToShow}</p>
+        </div>
       )}
       {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
@@ -110,37 +107,6 @@ export function Actions({ query }: Props) {
         alreadySettled={alreadySettled}
       />
       <Errors errors={errors} />
-    </Wrapper>
+    </div>
   );
 }
-
-const Wrapper = styled.div`
-  background: var(--grey-400);
-  padding-inline: var(--padding-inline);
-  padding-top: 20px;
-  padding-bottom: 24px;
-`;
-
-const ValueWrapper = styled.div`
-  width: min(100%, var(--panel-content-width));
-  display: grid;
-  align-items: center;
-  min-height: 44px;
-  margin-top: 16px;
-  margin-bottom: var(--margin-bottom);
-  padding-inline: 16px;
-  border-radius: 4px;
-  background: var(--white);
-`;
-
-const ValueText = styled(Text)`
-  font: var(--body-md);
-  font-weight: 600;
-  @media ${smallMobileAndUnder} {
-    font: var(--body-sm);
-  }
-`;
-
-const PencilIcon = styled(Pencil)``;
-
-const SettledIcon = styled(Settled)``;

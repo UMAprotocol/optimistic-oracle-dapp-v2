@@ -3,7 +3,6 @@ import { Tooltip } from "@/components/Tooltip";
 import { capitalizeFirstLetter } from "@/helpers";
 import type { ActionState } from "@/hooks";
 import type { ReactNode } from "react";
-import styled from "styled-components";
 
 export function PrimaryActionButton({
   action,
@@ -12,7 +11,7 @@ export function PrimaryActionButton({
   disabledReason,
 }: ActionState) {
   return (
-    <OuterWrapper>
+    <div>
       <InnerWrapper disabled={disabled} disabledReason={disabledReason}>
         <Button
           variant="primary"
@@ -23,7 +22,7 @@ export function PrimaryActionButton({
           {capitalizeFirstLetter(title)}
         </Button>
       </InnerWrapper>
-    </OuterWrapper>
+    </div>
   );
 }
 
@@ -41,5 +40,3 @@ function InnerWrapper({
   }
   return <>{children}</>;
 }
-
-const OuterWrapper = styled.div``;

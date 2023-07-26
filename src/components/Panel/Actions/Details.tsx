@@ -1,7 +1,6 @@
 import { Currency, InformationIcon } from "@/components";
 import type { OracleQueryUI } from "@/types";
-import styled from "styled-components";
-import { Link, Text } from "../style";
+import { Link } from "../style";
 
 export function Details({
   bond,
@@ -13,35 +12,35 @@ export function Details({
   const hasReward = reward !== null;
 
   return (
-    <Wrapper>
+    <div className="mb-4">
       <TextWrapper>
-        <_Text>
+        <Text>
           Bond
           <InformationIcon content={bondInformation} />
-        </_Text>
-        <_Text>
+        </Text>
+        <Text>
           <Currency address={tokenAddress} chainId={chainId} value={bond} />
-        </_Text>
+        </Text>
       </TextWrapper>
       {hasReward && (
         <TextWrapper>
-          <_Text>
+          <Text>
             Reward
             <InformationIcon content={rewardInformation} />
-          </_Text>
-          <_Text>
+          </Text>
+          <Text>
             <Currency address={tokenAddress} chainId={chainId} value={reward} />
-          </_Text>
+          </Text>
         </TextWrapper>
       )}
       <TextWrapper>
-        <_Text>
+        <Text>
           Challenge period ends
           <InformationIcon content={livenessInformation} />
-        </_Text>
-        <_Text>{formattedLivenessEndsIn}</_Text>
+        </Text>
+        <Text>{formattedLivenessEndsIn}</Text>
       </TextWrapper>
-    </Wrapper>
+    </div>
   );
 }
 
@@ -99,20 +98,12 @@ const livenessInformation = (
   </>
 );
 
-const _Text = styled(Text)`
-  display: flex;
-  align-items: center;
-  font: var(--body-sm);
-`;
+const Text = ({ children }: { children: React.ReactNode }) => (
+  <p className="flex items-center">{children}</p>
+);
 
-const Wrapper = styled.div`
-  margin-bottom: 16px;
-`;
-
-const TextWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  &:not(:last-child) {
-    margin-bottom: 4px;
-  }
-`;
+const TextWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex justify-between [&:not(:last-child)]:mb-1">
+    {children}
+  </div>
+);
