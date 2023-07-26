@@ -1,15 +1,10 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import { usePageContext, usePanelContext } from "./contexts";
-import { useQueries } from "./queries";
 
 export function useUrlBar() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { all: queries } = useQueries();
-  const { page } = usePageContext();
-  const { panelOpen, openPanel, setQueryId } = usePanelContext();
 
   const addSearchParam = useCallback(
     (name: string, value: string) => {
@@ -34,10 +29,14 @@ export function useUrlBar() {
   );
 
   const removeSearchParam = useCallback(
-    (name: string, value: string) => {
+    (name: string, value?: string) => {
       const params = new URLSearchParams();
       for (const [_name, _value] of searchParams!) {
-        if (_name === name && _value === value) continue;
+        if (value) {
+          if (_name === name && _value === value) continue;
+        } else {
+          if (_name === name) continue;
+        }
         params.append(_name, _value);
       }
       router.push(`${pathname}?${params.toString()}`);

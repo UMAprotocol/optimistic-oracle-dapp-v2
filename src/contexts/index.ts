@@ -4,4 +4,3 @@ export * from "./NotificationsContext";
 export * from "./OracleDataContext";
 export * from "./PageContext";
 export * from "./PanelContext";
-export * from "./UrlBarContext";
