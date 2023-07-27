@@ -1,18 +1,23 @@
 import { ratedAbi } from "@shared/constants/abi";
+import type { ChainId } from "@shared/types";
 import { BigNumber } from "ethers";
 import { useContractRead } from "wagmi";
 import { SectionSubTitle, Text } from "./style";
 
+const mainnetAddress = "0x51881A1Cde5DBAE15D02aE1824940b19768d8F2b";
+const goerliAddress = "0x1dd1ea5e2b3020f2564c8509b180ffc6fdf4fb8b";
+
 type Props = {
   queryText: string;
+  chainId: ChainId;
 };
 export function RatedAssertionTextData(props: Props) {
   return (
     <>
       <SectionSubTitle>Report</SectionSubTitle>
-      <Report queryText={props.queryText} />
+      <Report {...props} />
       <SectionSubTitle>Violations</SectionSubTitle>
-      <Violations queryText={props.queryText} />
+      <Violations {...props} />
     </>
   );
 }
@@ -20,7 +25,7 @@ export function RatedAssertionTextData(props: Props) {
 export function Report(props: Props) {
   const { data: report } = useContractRead({
     abi: ratedAbi,
-    address: "0x1dd1ea5e2b3020f2564c8509b180ffc6fdf4fb8b",
+    address: props.chainId === 1 ? mainnetAddress : goerliAddress,
     functionName: "reports",
     args: [BigNumber.from(props.queryText)],
   });
@@ -48,7 +53,7 @@ export function Report(props: Props) {
 export function Violations(props: Props) {
   const { data: violations } = useContractRead({
     abi: ratedAbi,
-    address: "0x1dd1ea5e2b3020f2564c8509b180ffc6fdf4fb8b",
+    address: props.chainId === 1 ? mainnetAddress : goerliAddress,
     functionName: "getViolationsInReport",
     args: [BigNumber.from(props.queryText)],
   });

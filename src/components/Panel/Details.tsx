@@ -29,6 +29,7 @@ export function Details({
   queryTextHex,
   moreInformation,
   project,
+  chainId,
 }: OracleQueryUI) {
   const isRated = project === "Rated";
 
@@ -86,7 +87,7 @@ export function Details({
           <SectionTitle>Additional Text Data</SectionTitle>
         </SectionTitleWrapper>
         {isRated && queryText ? (
-          <RatedAssertionTextData queryText={queryText} />
+          <RatedAssertionTextData queryText={queryText} chainId={chainId} />
         ) : (
           <AdditionalTextData
             description={description}
