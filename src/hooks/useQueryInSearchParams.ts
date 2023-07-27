@@ -65,7 +65,6 @@ export function useQueryInSearchParams() {
     exists(state.timestamp) &&
     exists(state.identifier) &&
     exists(state.ancillaryData);
-
   useEffectOnce(() => {
     if (!searchParams) return;
 

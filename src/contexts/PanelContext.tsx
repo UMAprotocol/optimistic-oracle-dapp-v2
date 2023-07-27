@@ -69,8 +69,8 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     (queryId?: string) => {
       if (queryId && query) {
         addHashAndIndexToUrl(query);
+        setQueryId(queryId);
       }
-      setQueryId(queryId);
       setPanelOpen(true);
     },
     [addHashAndIndexToUrl, query],
