@@ -911,6 +911,19 @@ ${rulesRegex[1]}`;
       }
     }
   }
+
+  // handle Rated assertions
+  if (result.identifier === "ROPU_ETHx") {
+    result.project = "Rated";
+    result.title = "Verify MEV violations in ETHx staking pool";
+    result.queryText = BigNumber.from(result.queryTextHex).toString();
+    result.description = `Report ID #${result.queryText} from the Rated smart contract contains all violations that happened during the period it covers.`;
+    result.moreInformation.unshift({
+      title: "UMIP",
+      text: "UMIP-177",
+      href: "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-177.md",
+    });
+  }
   if (exists(currency)) {
     result.tokenAddress = currency;
   }
