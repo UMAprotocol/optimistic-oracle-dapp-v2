@@ -6,6 +6,7 @@ import Timestamp from "public/assets/icons/timestamp.svg";
 import { Fragment } from "react";
 import styled from "styled-components";
 import { AdditionalTextData } from "./AdditionalTextData";
+import { RatedAssertionTextData } from "./RatedAssertionTextData";
 import {
   SectionSubTitle,
   SectionTitle,
@@ -27,7 +28,10 @@ export function Details({
   queryText,
   queryTextHex,
   moreInformation,
+  project,
 }: OracleQueryUI) {
+  const isRated = project === "Rated";
+
   return (
     <Wrapper>
       <DetailWrapper>
@@ -81,11 +85,15 @@ export function Details({
           <AncillaryDataIcon />
           <SectionTitle>Additional Text Data</SectionTitle>
         </SectionTitleWrapper>
-        <AdditionalTextData
-          description={description}
-          queryText={queryText}
-          queryTextHex={queryTextHex}
-        />
+        {isRated && queryText ? (
+          <RatedAssertionTextData queryText={queryText} />
+        ) : (
+          <AdditionalTextData
+            description={description}
+            queryText={queryText}
+            queryTextHex={queryTextHex}
+          />
+        )}
       </DetailWrapper>
       <DetailWrapper>
         <SectionTitleWrapper>
