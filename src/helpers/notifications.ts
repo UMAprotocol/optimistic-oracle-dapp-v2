@@ -37,7 +37,7 @@ export function emitPendingEvent(pendingEvent: {
 export async function handleNotifications(
   tx: SendTransactionResult,
   chainId: ChainId,
-  messages: { pending: ReactNode; success: ReactNode; error: ReactNode }
+  messages: { pending: ReactNode; success: ReactNode; error: ReactNode },
 ) {
   const transactionHash = tx.hash;
   const pendingId = emitPendingEvent({

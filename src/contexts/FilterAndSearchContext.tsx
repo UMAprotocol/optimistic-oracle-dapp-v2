@@ -1,3 +1,5 @@
+"use client";
+
 import { emptyCheckedFilters, emptyFilters } from "@/constants";
 import { useFilterAndSearch, useQueries } from "@/hooks";
 import type {
@@ -34,7 +36,7 @@ export const defaultFilterAndSearchContextState: FilterAndSearchContextState = {
 };
 
 export const FilterAndSearchContext = createContext(
-  defaultFilterAndSearchContextState
+  defaultFilterAndSearchContextState,
 );
 
 export function FilterAndSearchProvider({ children }: { children: ReactNode }) {

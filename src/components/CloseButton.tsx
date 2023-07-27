@@ -1,6 +1,6 @@
 import { darkText, white } from "@/constants";
 import Close from "public/assets/icons/close.svg";
-import type { CSSProperties } from "styled-components";
+import type { CSSProperties } from "react";
 import styled from "styled-components";
 
 interface Props {

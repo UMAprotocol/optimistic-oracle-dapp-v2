@@ -48,7 +48,7 @@ export type RequiredRequest = Omit<
   customLiveness: BigNumber | null | undefined;
 };
 function canConvertToSolidityRequest(
-  request: Request
+  request: Request,
 ): request is RequiredRequest {
   return Boolean(request.currency);
 }
@@ -175,7 +175,7 @@ function getLivenessEnds(customLivenessOrExpirationTime?: string | null) {
 
 function getPriceRequestValueText(
   proposedPrice: BigNumber | null | undefined,
-  settlementPrice: BigNumber | null | undefined
+  settlementPrice: BigNumber | null | undefined,
 ) {
   const price = settlementPrice ?? proposedPrice;
   if (price === null || price === undefined) return null;
@@ -183,13 +183,13 @@ function getPriceRequestValueText(
 }
 
 function isOOV1PriceRequest(
-  request: Request | Assertion
+  request: Request | Assertion,
 ): request is ParsedOOV1GraphEntity {
   return request.oracleType === "Optimistic Oracle V1";
 }
 
 function isOOV2PriceRequest(
-  request: Request | Assertion
+  request: Request | Assertion,
 ): request is ParsedOOV2GraphEntity {
   return request.oracleType === "Optimistic Oracle V2";
 }
@@ -453,7 +453,7 @@ function getOOV2SpecificValues(request: Request) {
 function makeMoreInformationList(
   query: Request | Assertion,
   umipNumber?: string | undefined,
-  umipUrl?: string | undefined
+  umipUrl?: string | undefined,
 ) {
   const moreInformation: MoreInformationItem[] = [];
 
@@ -482,7 +482,7 @@ function makeMoreInformationList(
         title: "Requester",
         text: query.requester,
         href: makeBlockExplorerLink(query.requester, query.chainId, "address"),
-      }
+      },
     );
 
     if (query.requestHash) {
@@ -532,7 +532,7 @@ function makeMoreInformationList(
         href: makeBlockExplorerLink(
           query.settlementRecipient,
           query.chainId,
-          "address"
+          "address",
         ),
       });
     }
@@ -561,7 +561,7 @@ function makeMoreInformationList(
         href: makeBlockExplorerLink(
           query.escalationManager,
           query.chainId,
-          "address"
+          "address",
         ),
       });
     }
@@ -572,7 +572,7 @@ function makeMoreInformationList(
         href: makeBlockExplorerLink(
           query.callbackRecipient,
           query.chainId,
-          "address"
+          "address",
         ),
       });
     }
@@ -611,7 +611,7 @@ function makeMoreInformationList(
         href: makeBlockExplorerLink(
           query.settlementRecipient,
           query.chainId,
-          "address"
+          "address",
         ),
       });
     }
@@ -698,7 +698,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     result.moreInformation = makeMoreInformationList(
       request,
       umipNumber,
-      umipUrl
+      umipUrl,
     );
   }
   const { bond, eventBased } = getOOV2SpecificValues(request);
@@ -711,10 +711,10 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
 
   if (exists(proposalExpirationTimestamp)) {
     result.livenessEndsMilliseconds = getLivenessEnds(
-      proposalExpirationTimestamp
+      proposalExpirationTimestamp,
     );
     result.formattedLivenessEndsIn = toTimeFormatted(
-      proposalExpirationTimestamp
+      proposalExpirationTimestamp,
     );
   }
 
@@ -894,7 +894,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     if (isOptimisticGovernor(result.queryText)) {
       result.project = "OSnap";
       const explanationRegex = result.queryText.match(
-        /explanation:"(.*?)",rules:/
+        /explanation:"(.*?)",rules:/,
       );
       const rulesRegex = result.queryText.match(/rules:"(.*?)"/);
       if (explanationRegex && explanationRegex[1]) {

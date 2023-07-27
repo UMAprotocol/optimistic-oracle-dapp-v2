@@ -1,7 +1,7 @@
 import type { NotificationsById } from "@/contexts";
-import type VerifyPage from "@/pages";
-import type ProposePage from "@/pages/propose";
-import type SettledPage from "@/pages/settled";
+import type VerifyPage from "@/components/pages/verify";
+import type ProposePage from "@/components/pages/propose";
+import type SettledPage from "@/components/pages/settled";
 import type { ErrorMessage } from "@shared/types";
 import type { StoryObj } from "@storybook/react";
 

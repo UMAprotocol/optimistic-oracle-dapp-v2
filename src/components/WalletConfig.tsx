@@ -1,4 +1,5 @@
-import { GlobalStyle, Layout } from "@/components";
+"use client";
+
 import {
   config,
   red500,
@@ -6,18 +7,8 @@ import {
   walletsAndConnectors,
   white,
 } from "@/constants";
-import {
-  ErrorProvider,
-  FilterAndSearchProvider,
-  NotificationsProvider,
-  OracleDataProvider,
-  PageProvider,
-  PanelProvider,
-} from "@/contexts";
-import "@/styles/fonts.css";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
-import "@rainbow-me/rainbowkit/styles.css";
-import type { AppProps } from "next/app";
+import type { ReactNode } from "react";
 import { WagmiConfig, configureChains, createClient } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
@@ -42,26 +33,11 @@ export const rainbowKitTheme = darkTheme({
   overlayBlur: "small",
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export function WalletConfig({ children }: { children: ReactNode }) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
-        <PageProvider>
-          <NotificationsProvider>
-            <ErrorProvider>
-              <OracleDataProvider>
-                <PanelProvider>
-                  <FilterAndSearchProvider>
-                    <Layout>
-                      <GlobalStyle />
-                      <Component {...pageProps} />
-                    </Layout>
-                  </FilterAndSearchProvider>
-                </PanelProvider>
-              </OracleDataProvider>
-            </ErrorProvider>
-          </NotificationsProvider>
-        </PageProvider>
+        {children}
       </RainbowKitProvider>
     </WagmiConfig>
   );

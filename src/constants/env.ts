@@ -169,7 +169,7 @@ const env = ss.create(
 
     NEXT_PUBLIC_DEFAULT_LIVENESS: process.env.NEXT_PUBLIC_DEFAULT_LIVENESS,
   },
-  Env
+  Env,
 );
 
 export const ChainId = ss.enums([

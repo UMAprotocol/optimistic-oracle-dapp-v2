@@ -1,5 +1,6 @@
 import { Header } from "@/components";
-import { chains, rainbowKitTheme, wagmiClient } from "@/pages/_app";
+import { rainbowKitTheme, wagmiClient } from "@/components/WalletConfig";
+import { chains } from "@/constants";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import type { Meta, StoryObj } from "@storybook/react";
 import { WagmiConfig } from "wagmi";

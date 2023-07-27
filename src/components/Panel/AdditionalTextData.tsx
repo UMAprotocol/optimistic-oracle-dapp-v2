@@ -1,7 +1,7 @@
 import Chevron from "public/assets/icons/chevron.svg";
+import type { CSSProperties } from "react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import type { CSSProperties } from "styled-components";
 import styled from "styled-components";
 import { SectionSubTitle, Text } from "./style";
 

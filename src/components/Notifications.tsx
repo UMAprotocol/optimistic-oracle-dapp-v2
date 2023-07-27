@@ -1,3 +1,5 @@
+"use client";
+
 import { useNotificationsContext } from "@/hooks";
 import { Root as Portal } from "@radix-ui/react-portal";
 import { animated, useTransition } from "@react-spring/web";
@@ -30,7 +32,7 @@ export function Notifications() {
                 {...notification}
                 dismiss={removeNotification}
               />
-            )
+            ),
         )}
       </Wrapper>
     </Portal>

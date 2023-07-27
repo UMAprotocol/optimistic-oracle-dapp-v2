@@ -1,11 +1,13 @@
+"use client";
+
 import { getPageForQuery } from "@/helpers";
 import { usePageContext, usePanelContext, useQueries } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
+import { exists } from "@libs/utils";
 import type { ChainId, OracleType } from "@shared/types";
 import { filter, find, lowerCase } from "lodash";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { exists } from "@libs/utils";
 
 type HashAndIndexParams = {
   transactionHash?: string;
@@ -27,11 +29,23 @@ type SearchParams = HashAndIndexParams & RequestDetailsParams;
 
 export function useHandleQueryInUrl() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { openPanel, panelOpen } = usePanelContext();
   const { all: queries } = useQueries();
   const { page } = usePageContext();
 
   useEffect(() => {
+    const hasHash = searchParams?.has("transactionHash");
+    const isRequestDetails =
+      searchParams?.has("chainId") &&
+      searchParams?.has("oracleType") &&
+      searchParams?.has("requester") &&
+      searchParams?.has("timestamp") &&
+      searchParams?.has("identifier") &&
+      searchParams?.has("ancillaryData");
+
+    if (!hasHash && !isRequestDetails) return;
+
     const {
       transactionHash,
       eventIndex,
@@ -41,20 +55,7 @@ export function useHandleQueryInUrl() {
       timestamp,
       identifier,
       ancillaryData,
-    } = Object.fromEntries(
-      new URLSearchParams(window.location.search)
-    ) as SearchParams;
-
-    const hasHash = transactionHash;
-    const isRequestDetails =
-      chainId &&
-      oracleType &&
-      requester &&
-      timestamp &&
-      identifier &&
-      ancillaryData;
-
-    if (!hasHash && !isRequestDetails) return;
+    } = Object.fromEntries(searchParams?.entries() ?? []) as SearchParams;
 
     let query: OracleQueryUI | undefined;
 
@@ -75,7 +76,7 @@ export function useHandleQueryInUrl() {
             settlementHash === transactionHash ||
             assertionHash === transactionHash
           );
-        }
+        },
       );
 
       const hasMultipleForTx = forTx.length > 1;
@@ -98,7 +99,7 @@ export function useHandleQueryInUrl() {
                   settlementLogIndex === eventIndex ||
                   assertionLogIndex === eventIndex
                 );
-              }
+              },
             )
           : forTx[0];
     }
@@ -108,7 +109,7 @@ export function useHandleQueryInUrl() {
         chainId,
         identifier,
         requester: lowerCase(requester),
-        oracleType: getOracleTypeFromOldOracleName(oracleType),
+        oracleType: getOracleTypeFromOldOracleName(oracleType!),
         timeUNIX: Number(timestamp),
         queryTextHex: ancillaryData,
       });
@@ -123,24 +124,17 @@ export function useHandleQueryInUrl() {
 
       void openPanel(query, false);
 
-      async function redirectToCorrectPage() {
+      function redirectToCorrectPage() {
         const pathname = `/${pageForQuery === "verify" ? "" : pageForQuery}`;
-        await router.push(
-          {
-            pathname,
-            query: router.query,
-          },
-          undefined,
-          { scroll: false }
-        );
+        router.push(pathname);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query, queries]);
+  }, [queries]);
 }
 
 function getOracleTypeFromOldOracleName(
-  oracleType: OldOracleTypeName
+  oracleType: OldOracleTypeName,
 ): OracleType {
   switch (oracleType) {
     case "Optimistic":

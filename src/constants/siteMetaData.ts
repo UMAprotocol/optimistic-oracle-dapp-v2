@@ -1,4 +1,5 @@
-export const siteTitle = "Optimistic Oracle V2 | UMA";
+export const title = "Optimistic Oracle V2 | UMA";
 
-export const siteDescription =
-  "UMA Protocol Optimistic Oracle dApp | Version 2.0";
+export const description = "An optimistic oracle built for web3";
+
+export const images = "/assets/twitter-card.png";

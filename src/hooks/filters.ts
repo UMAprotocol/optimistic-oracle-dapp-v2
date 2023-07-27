@@ -125,7 +125,7 @@ export function useFilters(queries: OracleQueryUI[]) {
 
 function countQueriesForFilter(
   queries: OracleQueryUI[],
-  filter: Partial<{ [key in FilterName]: string }>
+  filter: Partial<{ [key in FilterName]: string }>,
 ) {
   const [filterName, itemName] = Object.entries(filter)[0];
   return queries.filter((query) => query[filterName as FilterName] === itemName)
@@ -228,7 +228,7 @@ function makeFilters({
   const newItems = cloneDeep(items);
 
   const hasItemsOtherThanAllChecked = Object.entries(items).some(
-    ([name, { checked }]) => name !== "All" && checked
+    ([name, { checked }]) => name !== "All" && checked,
   );
 
   if (itemName === "All") {
@@ -269,7 +269,7 @@ function makeCheckedFilters({ filters }: State) {
         }
         return acc;
       },
-      [] as string[]
+      [] as string[],
     );
     acc[filterName as FilterName] = checkedItems;
     return acc;
@@ -299,7 +299,7 @@ function makeFilteredQueries(state: State, queries: OracleQueryUI[]) {
 function isTheOnlyItemChecked(itemName: string, items: CheckboxItems) {
   return (
     Object.entries(items).filter(
-      ([key, { checked }]) => key !== itemName && checked
+      ([key, { checked }]) => key !== itemName && checked,
     ).length === 0
   );
 }

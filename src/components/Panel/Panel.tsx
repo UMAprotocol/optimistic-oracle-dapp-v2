@@ -1,3 +1,5 @@
+"use client";
+
 import { PanelBase } from "@/components";
 import { usePanelContext } from "@/hooks";
 import { Actions } from "./Actions";
@@ -17,7 +19,7 @@ export function Panel() {
     void closePanel();
   }
 
-  const props = !!content
+  const props = content
     ? {
         query: content,
         ...content,

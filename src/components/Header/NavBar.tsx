@@ -1,3 +1,5 @@
+"use client";
+
 import { hideOnTabletAndUnder, showOnTabletAndUnder } from "@/helpers";
 import NextLink from "next/link";
 import Hamburger from "public/assets/icons/hamburger.svg";

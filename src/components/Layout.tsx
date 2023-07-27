@@ -1,31 +1,26 @@
+"use client";
+
 import {
   ErrorBanner,
   Filters,
+  GlobalStyle,
   Header,
   Notifications,
   Panel,
 } from "@/components";
-import { siteDescription, siteTitle } from "@/constants";
-import { capitalizeFirstLetter } from "@/helpers";
 import { useHandleQueryInUrl, usePageContext } from "@/hooks";
-import Head from "next/head";
 import type { ReactNode } from "react";
-import styled from "styled-components";
 import { LegacyDappLinkBanner } from "./LegacyDappLinkBanner";
+import StyledComponentsRegistry from "./StyledComponentsRegistry";
 
 export function Layout({ children }: { children: ReactNode }) {
   const { page } = usePageContext();
   useHandleQueryInUrl();
 
   return (
-    <>
-      <Head>
-        <title>{`${siteTitle} | ${capitalizeFirstLetter(page)}`}</title>
-        <meta name="description" content={siteDescription} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Main>
+    <StyledComponentsRegistry>
+      <GlobalStyle />
+      <main>
         <LegacyDappLinkBanner />
         <ErrorBanner />
         <Header page={page} />
@@ -33,11 +28,7 @@ export function Layout({ children }: { children: ReactNode }) {
         {children}
         <Panel />
         <Notifications />
-      </Main>
-    </>
+      </main>
+    </StyledComponentsRegistry>
   );
 }
-
-const Main = styled.main`
-  height: 100%;
-`;

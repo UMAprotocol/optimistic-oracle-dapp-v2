@@ -7,7 +7,7 @@ import { useIsClient, useLocalStorage } from "usehooks-ts";
 export function LegacyDappLinkBanner() {
   const [showBanner, setShowBanner] = useLocalStorage(
     "show-legacy-dapp-banner",
-    true
+    true,
   );
   const isClient = useIsClient();
 

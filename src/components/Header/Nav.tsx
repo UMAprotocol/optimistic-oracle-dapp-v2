@@ -1,13 +1,13 @@
 import { blueGrey400, navLinks, white } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import ExternalLink from "public/assets/icons/external-link.svg";
-import type { CSSProperties } from "styled-components";
+import type { CSSProperties } from "react";
 import styled from "styled-components";
 
 export function Nav() {
-  const router = useRouter();
+  const pathname = usePathname()!;
 
   return (
     <Wrapper>
@@ -19,7 +19,7 @@ export function Nav() {
               target={isExternalLink(href) ? "_blank" : undefined}
               style={
                 {
-                  "--color": isActiveRoute(router.pathname, href)
+                  "--color": isActiveRoute(pathname, href)
                     ? white
                     : blueGrey400,
                 } as CSSProperties

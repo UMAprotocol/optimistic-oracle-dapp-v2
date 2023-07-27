@@ -2,7 +2,7 @@ import { CloseButton, PanelBase } from "@/components";
 import { navLinks, red500, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import ExternalLink from "public/assets/icons/external-link.svg";
 import Discord from "public/assets/icons/social/discord.svg";
 import Discourse from "public/assets/icons/social/discourse.svg";
@@ -10,7 +10,7 @@ import Github from "public/assets/icons/social/github.svg";
 import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
 import Logo from "public/assets/logo.svg";
-import type { CSSProperties } from "styled-components";
+import type { CSSProperties } from "react";
 import styled from "styled-components";
 import { MobileMenuConnectButton } from "./MobileMenuConnectButton";
 
@@ -19,7 +19,7 @@ interface Props {
   closePanel: () => void;
 }
 export function MobileMenu({ panelOpen, closePanel }: Props) {
-  const router = useRouter();
+  const pathname = usePathname() ?? "/";
 
   const socialIcons = {
     Discord: <DiscordIcon />,
@@ -48,10 +48,7 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
                 target={isExternalLink(href) ? "_blank" : undefined}
                 style={
                   {
-                    "--active-indicator-color": isActiveRoute(
-                      router.pathname,
-                      href
-                    )
+                    "--active-indicator-color": isActiveRoute(pathname, href)
                       ? red500
                       : "transparent",
                   } as CSSProperties

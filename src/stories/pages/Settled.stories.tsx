@@ -1,4 +1,4 @@
-import SettledPage from "@/pages/settled";
+import SettledPage from "@/components/pages/settled";
 import type { Meta } from "@storybook/react";
 import {
   defaultMockNotifications,

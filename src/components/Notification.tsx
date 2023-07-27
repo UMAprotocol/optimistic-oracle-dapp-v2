@@ -1,3 +1,5 @@
+"use client";
+
 import { LoadingSpinner } from "@/components";
 import { mobile, smallMobile, tablet } from "@/constants";
 import type { Notification, UniqueId } from "@/types";
@@ -6,8 +8,8 @@ import NextLink from "next/link";
 import Close from "public/assets/icons/close.svg";
 import Failure from "public/assets/icons/failure.svg";
 import Success from "public/assets/icons/success.svg";
+import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
-import type { CSSProperties } from "styled-components";
 import styled from "styled-components";
 import { useWindowSize } from "usehooks-ts";
 

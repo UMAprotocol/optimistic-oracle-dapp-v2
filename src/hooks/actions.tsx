@@ -164,7 +164,7 @@ export function useApproveBondAction({
     if (!query?.id) return;
     refetchConfig &&
       refetchConfig().catch((err) =>
-        console.warn("error refetching config", err)
+        console.warn("error refetching config", err),
       );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
@@ -269,7 +269,7 @@ export function useProposeAction({
   useEffect(() => {
     if (!query?.id) return;
     refetchConfig().catch((err) =>
-      console.warn("error refetching config", err)
+      console.warn("error refetching config", err),
     );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
@@ -365,7 +365,7 @@ export function useDisputeAction({
   useEffect(() => {
     if (!query?.id) return;
     refetchConfig().catch((err) =>
-      console.warn("error refetching config", err)
+      console.warn("error refetching config", err),
     );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
@@ -447,7 +447,7 @@ export function useDisputeAssertionAction({
   useEffect(() => {
     if (!query?.id) return;
     refetchConfig().catch((err) =>
-      console.warn("error refetching config", err)
+      console.warn("error refetching config", err),
     );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
@@ -531,7 +531,7 @@ export function useSettlePriceAction({
   useEffect(() => {
     if (!query?.id) return;
     refetchConfig().catch((err) =>
-      console.warn("error refetching config", err)
+      console.warn("error refetching config", err),
     );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
@@ -619,7 +619,7 @@ export function useSettleAssertionAction({
   useEffect(() => {
     if (!query?.id) return;
     refetchConfig().catch((err) =>
-      console.warn("error refetching config", err)
+      console.warn("error refetching config", err),
     );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
