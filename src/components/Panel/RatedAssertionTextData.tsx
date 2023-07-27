@@ -14,7 +14,7 @@ type Props = {
 export function RatedAssertionTextData(props: Props) {
   return (
     <>
-      <SectionSubTitle>Report</SectionSubTitle>
+      <SectionSubTitle>Report #{props.queryText}</SectionSubTitle>
       <Report {...props} />
       <SectionSubTitle>Violations</SectionSubTitle>
       <Violations {...props} />
