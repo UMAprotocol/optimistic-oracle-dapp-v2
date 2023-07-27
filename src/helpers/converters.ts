@@ -915,9 +915,9 @@ ${rulesRegex[1]}`;
   // handle Rated assertions
   if (result.identifier === "ROPU_ETHx") {
     result.project = "Rated";
-    result.title = "Possible MEV violation in ETHx staking pool";
+    result.title = "Verify MEV violations in ETHx staking pool";
     result.queryText = BigNumber.from(result.queryTextHex).toString();
-    result.description = `Please check report number ${result.queryText} for violations.`;
+    result.description = `Report ID #${result.queryText} from the Rated smart contract contains all violations that happened during the period it covers.`;
     result.moreInformation.unshift({
       title: "UMIP",
       text: "UMIP-177",
