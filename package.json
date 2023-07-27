@@ -40,6 +40,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-focus-on": "^3.9.1",
+    "react-loader-spinner": "^5.3.4",
     "react-loading-skeleton": "^3.3.1",
     "react-markdown": "^8.0.7",
     "remove-markdown": "^0.5.0",
