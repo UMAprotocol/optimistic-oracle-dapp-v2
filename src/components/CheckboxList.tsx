@@ -1,6 +1,5 @@
 import { Checkbox } from "@/components";
-import { blueGrey700 } from "@/constants";
-import { addOpacityToHsla, makeFilterTitle } from "@/helpers";
+import { addOpacityToColor, makeFilterTitle } from "@/helpers";
 import type {
   CheckboxItemsByFilterName,
   FilterName,
@@ -55,7 +54,7 @@ const CheckboxesWrapper = styled.div`
   &:not(:last-child) {
     margin-bottom: 12px;
     padding-bottom: 16px;
-    border-bottom: 1px solid ${addOpacityToHsla(blueGrey700, 0.25)};
+    border-bottom: 1px solid ${addOpacityToColor("var(--blue-grey-700)", 0.25)};
   }
   &:is(:last-child) {
     margin-bottom: 28px;

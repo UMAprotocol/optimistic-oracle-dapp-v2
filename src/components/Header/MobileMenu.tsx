@@ -1,5 +1,5 @@
 import { CloseButton, PanelBase } from "@/components";
-import { navLinks, red500, socialLinks } from "@/constants";
+import { navLinks, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
@@ -49,7 +49,7 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
                 style={
                   {
                     "--active-indicator-color": isActiveRoute(pathname, href)
-                      ? red500
+                      ? "var(--red-500)"
                       : "transparent",
                   } as CSSProperties
                 }
@@ -100,7 +100,9 @@ const AccountTitle = styled.h1`
 
 const Nav = styled.nav``;
 
-const NavItems = styled.ul``;
+const NavItems = styled.ul`
+  list-style: none;
+`;
 
 const NavItem = styled.li``;
 

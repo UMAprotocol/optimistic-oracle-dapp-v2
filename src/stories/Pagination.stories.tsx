@@ -1,5 +1,4 @@
 import { Pagination, usePagination } from "@/components";
-import { white } from "@/constants";
 import { expect } from "@storybook/jest";
 import type { Meta, StoryObj } from "@storybook/react";
 import { userEvent, waitFor, within } from "@storybook/testing-library";
@@ -122,7 +121,7 @@ export const OddNumberOfEntriesRegressionTest: Story = {
     expect(canvas.getByText("Entry 101")).toBeInTheDocument();
     // and the last page number button should be selected
     lastButton = pageNumberButtons()[pageNumberButtons().length - 1];
-    expect(lastButton).toHaveStyle({ color: white });
+    expect(lastButton).toHaveStyle({ color: "rgb(255, 255, 255)" });
   },
 };
 

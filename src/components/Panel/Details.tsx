@@ -1,5 +1,4 @@
-import { blueGrey700 } from "@/constants";
-import { addOpacityToHsla } from "@/helpers";
+import { addOpacityToColor } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
@@ -125,7 +124,7 @@ const DetailWrapper = styled.div`
     padding-top: 22px;
   }
   &:not(:last-child) {
-    border-bottom: 1px solid ${addOpacityToHsla(blueGrey700, 0.25)};
+    border-bottom: 1px solid ${addOpacityToColor("var(--blue-grey-700)", 0.25)};
   }
 `;
 

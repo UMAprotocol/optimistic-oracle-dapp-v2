@@ -4,7 +4,6 @@ import type { ChainId } from "@shared/types";
 import type { Address } from "@wagmi/core";
 import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
-import styled from "styled-components";
 import { useToken } from "wagmi";
 import { FormattedTokenValue } from "./FormattedTokenValue";
 import { LoadingSkeleton } from "./LoadingSkeleton";
@@ -29,8 +28,8 @@ export function Currency(props: Props) {
   });
   const symbol = token?.symbol;
   const decimals = token?.decimals;
-  const icon = getCurrencyIcon(symbol);
-  const hasIcon = !!icon && showIcon;
+  const Icon = getCurrencyIcon(symbol);
+  const hasIcon = !!Icon && showIcon;
   const isLoading =
     tokenLoading ||
     value === undefined ||
@@ -40,7 +39,8 @@ export function Currency(props: Props) {
 
   return (
     <OuterWrapper hasIcon={hasIcon} symbol={symbol}>
-      <InnerWrapper
+      <span
+        className="inline-flex items-center gap-2"
         style={{
           cursor: hasIcon ? "pointer" : "default",
         }}
@@ -49,12 +49,12 @@ export function Currency(props: Props) {
           <LoadingSkeleton width={80} height={16} />
         ) : (
           <>
-            {hasIcon && <IconWrapper>{icon}</IconWrapper>}{" "}
+            {hasIcon && <Icon className="w-[16px] h-[16px] inline-block" />}{" "}
             <FormattedTokenValue value={value} decimals={decimals} />{" "}
             {!hasIcon && symbol}
           </>
         )}
-      </InnerWrapper>
+      </span>
     </OuterWrapper>
   );
 }
@@ -71,14 +71,3 @@ function OuterWrapper({
   if (!hasIcon) return <>{children}</>;
   return <Tooltip content={symbol}>{children}</Tooltip>;
 }
-
-const IconWrapper = styled.span`
-  width: 16px;
-  display: inline-block;
-`;
-
-const InnerWrapper = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-`;

@@ -1,4 +1,4 @@
-import { mobileAndUnder, tabletAndUnder } from "@/constants";
+import { mobileAndUnder, tabletAndUnder } from "@/constants/styles/breakpoints";
 import type { OracleQueryList } from "@/contexts";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { capitalize, orderBy, partition, words } from "lodash";
@@ -7,14 +7,13 @@ import { css } from "styled-components";
 
 /**
  * Adds an opacity value to an hsl string
- * @param hsl - a string in the format of hsl(0, 0%, 0%)
+ * @param color - a css color string or variable
  * @param opacity - a number between 0 and 1
- * @returns a string in the format of hsla(0, 0%, 0%, 0)
+ * @returns a color-mix css color with transparency added
  */
-export function addOpacityToHsla(hsla: string, opacity: number) {
-  const betweenParens = hsla.match(/\(([^)]+)\)/)?.[1];
-  const [h, s, l] = betweenParens?.split(",") ?? [];
-  return `hsla(${h}, ${s}, ${l}, ${opacity})`;
+export function addOpacityToColor(color: string, opacity: number) {
+  const alpha = 100 - opacity * 100;
+  return `color-mix(in srgb, transparent ${alpha}%, ${color})`;
 }
 
 /**
@@ -23,12 +22,6 @@ export function addOpacityToHsla(hsla: string, opacity: number) {
  * @param scale - a number to scale the lightness by
  * @returns a string in the format of hsla(0, 0%, 0%, 0)
  */
-export function scaleLightnessHsla(hsla: string, scale: number) {
-  const betweenParens = hsla.match(/\(([^)]+)\)/)?.[1];
-  const [h, s, l, a] = betweenParens?.split(",") ?? [];
-  const newLightness = Number(l.replace("%", "")) * scale;
-  return `hsl(${h}, ${s}, ${newLightness}%, ${a})`;
-}
 
 /**
  * Determines if a link is external or internal
@@ -188,4 +181,11 @@ export function makeQueryString(
     if (value) params.set(key, value);
   });
   return `${pathname}?${params.toString()}`;
+}
+
+export function hasProperty<Obj extends object>(
+  key: PropertyKey,
+  obj: Obj,
+): key is keyof Obj {
+  return key in obj;
 }

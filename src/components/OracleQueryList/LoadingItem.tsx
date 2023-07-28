@@ -1,5 +1,4 @@
-import { red500 } from "@/constants";
-import { addOpacityToHsla } from "@/helpers";
+import { addOpacityToColor } from "@/helpers";
 import { LoadingSkeleton } from "../LoadingSkeleton";
 import {
   ClickableIconWrapper,
@@ -23,8 +22,8 @@ export function LoadingItem() {
             width="100%"
             height="100%"
             borderRadius="50%"
-            baseColor={addOpacityToHsla(red500, 0.1)}
-            highlightColor={addOpacityToHsla(red500, 0.2)}
+            baseColor={addOpacityToColor("var(--red-500)", 0.1)}
+            highlightColor={addOpacityToColor("var(--red-500)", 0.2)}
           />
         </ClickableIconWrapper>
       </ItemInnerWrapper>

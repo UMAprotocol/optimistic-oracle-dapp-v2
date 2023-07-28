@@ -1,16 +1,7 @@
 import { PanelInfoIconText, PanelInfoIconWrapper } from "@/components/style";
+import { getChainIcon } from "@/constants";
 import { chainsById } from "@shared/constants";
 import type { ChainId } from "@shared/types";
-import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
-import Avalanche from "public/assets/icons/chains/avax.svg";
-import Boba from "public/assets/icons/chains/boba.svg";
-import Ethereum from "public/assets/icons/chains/ethereum.svg";
-import Gnosis from "public/assets/icons/chains/gnosis.svg";
-import Optimism from "public/assets/icons/chains/optimism.svg";
-import Polygon from "public/assets/icons/chains/polygon.svg";
-import SX from "public/assets/icons/chains/sx.svg";
-import styled from "styled-components";
-import { IconWrapper } from "../../IconWrapper";
 
 /**
  * Displays an icon for the given chain ID.
@@ -20,46 +11,14 @@ import { IconWrapper } from "../../IconWrapper";
  */
 export function ChainIcon({ chainId }: { chainId: ChainId | undefined }) {
   if (!chainId) return null;
-
-  const icons = {
-    1: EthereumIcon,
-    5: EthereumIcon,
-    10: OptimismIcon,
-    100: GnosisIcon,
-    137: PolygonIcon,
-    288: BobaIcon,
-    416: SXIcon,
-    43114: AvalancheIcon,
-    42161: ArbitrumIcon,
-    80001: PolygonIcon,
-  };
-
   const chainName = chainsById[chainId];
-  const Icon = icons[chainId];
-  if (!Icon || !chainName) return null;
+  const Icon = getChainIcon(chainId);
+  if (!Icon) return null;
 
   return (
     <PanelInfoIconWrapper>
-      <IconWrapper width={24} height={24}>
-        <Icon />
-      </IconWrapper>
+      <Icon className="w-6 h-6" />
       <PanelInfoIconText>{chainName}</PanelInfoIconText>
     </PanelInfoIconWrapper>
   );
 }
-
-const EthereumIcon = styled(Ethereum)``;
-
-const OptimismIcon = styled(Optimism)``;
-
-const PolygonIcon = styled(Polygon)``;
-
-const ArbitrumIcon = styled(Arbitrum)``;
-
-const GnosisIcon = styled(Gnosis)``;
-
-const BobaIcon = styled(Boba)``;
-
-const SXIcon = styled(SX)``;
-
-const AvalancheIcon = styled(Avalanche)``;

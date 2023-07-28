@@ -1,73 +1,50 @@
-import { darkText, red500 } from "@/constants";
-import type { CSSProperties } from "react";
-import styled, { keyframes } from "styled-components";
+import { addOpacityToColor } from "@/helpers";
+import type { ComponentPropsWithoutRef } from "react";
+import { Oval } from "react-loader-spinner";
 
-interface Props {
-  size?: number;
-  thickness?: number;
-  variant?: "red" | "black";
-}
+type OvalProps = ComponentPropsWithoutRef<typeof Oval>;
+
+type Props = OvalProps & {
+  variant?: "red" | "black" | "white";
+};
 export function LoadingSpinner({
-  size = 200,
-  thickness = size / 10,
   variant = "red",
+  width = 26,
+  height = 26,
+  strokeWidth = 4,
+  color,
+  secondaryColor,
+  ...delegated
 }: Props) {
-  const maskSize = size / 2 - thickness;
-  const blockSize = thickness + 1;
-  const color = variant === "red" ? red500 : darkText;
+  const redPrimaryColor = "var(--red-500)";
+  const blackPrimaryColor = "var(--blue-grey-700)";
+  const whitePrimaryColor = "var(--white)";
+  const redSecondaryColor = addOpacityToColor(redPrimaryColor, 0.5);
+  const blackSecondaryColor = addOpacityToColor(blackPrimaryColor, 0.5);
+  const whiteSecondaryColor = addOpacityToColor(whitePrimaryColor, 0.5);
 
+  const _color = color
+    ? color
+    : variant === "white"
+    ? whitePrimaryColor
+    : variant === "red"
+    ? redPrimaryColor
+    : blackPrimaryColor;
+  const _secondaryColor = secondaryColor
+    ? secondaryColor
+    : variant === "white"
+    ? whiteSecondaryColor
+    : variant === "red"
+    ? redSecondaryColor
+    : blackSecondaryColor;
   return (
-    <Ring
-      style={
-        {
-          "--size": `${size}px`,
-          "--mask-size": `${maskSize}px`,
-          "--color": color,
-        } as CSSProperties
-      }
-    >
-      <Block
-        style={
-          {
-            "--block-size": `${blockSize}px`,
-            "--color": color,
-          } as CSSProperties
-        }
-      ></Block>
-    </Ring>
+    <Oval
+      width={width}
+      height={height}
+      strokeWidth={strokeWidth}
+      color={_color}
+      secondaryColor={_secondaryColor}
+      {...delegated}
+    />
   );
 }
-
-const rotate = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`;
-
-const Ring = styled.div`
-  position: relative;
-  width: var(--size);
-  height: var(--size);
-  border-radius: 50%;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    var(--color) 0deg,
-    #0000 360deg
-  );
-  mask: radial-gradient(var(--mask-size), transparent 99%, var(--color) 100%) 0
-    0;
-  animation: ${rotate} 2.5s linear infinite;
-`;
-
-const Block = styled.div`
-  width: var(--block-size);
-  height: var(--block-size);
-  background: var(--color);
-  border-radius: calc(var(--block-size) / 4);
-  position: absolute;
-  bottom: 0;
-  left: calc(50% - var(--block-size) / 2);
-`;

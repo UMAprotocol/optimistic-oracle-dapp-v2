@@ -1,5 +1,4 @@
-import { blueGrey400, grey400, white } from "@/constants";
-import { addOpacityToHsla } from "@/helpers";
+import { addOpacityToColor } from "@/helpers";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -25,8 +24,8 @@ export function LoadingSkeleton({
   inline = false,
   duration,
 }: Props) {
-  const whiteOpacity10 = addOpacityToHsla(white, 0.1);
-  const blueGrey400Opacity10 = addOpacityToHsla(blueGrey400, 0.5);
+  const whiteOpacity10 = addOpacityToColor("var(--white)", 0.1);
+  const blueGrey400Opacity10 = addOpacityToColor("var(--blue-grey-400)", 0.5);
 
   function getBaseColor() {
     if (baseColor) return baseColor;
@@ -39,9 +38,9 @@ export function LoadingSkeleton({
   function getHighlightColor() {
     if (highlightColor) return highlightColor;
 
-    if (variant === "grey") return grey400;
+    if (variant === "grey") return "var(--grey-400)";
 
-    return white;
+    return "var(--white)";
   }
 
   return (

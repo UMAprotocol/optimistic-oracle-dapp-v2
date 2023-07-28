@@ -1,31 +1,19 @@
 import { getChainIcon } from "@/constants";
 import type { ChainId, ChainName } from "@shared/types";
-import styled from "styled-components";
 
 interface Props {
   chainName: ChainName;
   chainId: ChainId;
 }
 export function ChainNameAndIcon({ chainName, chainId }: Props) {
-  const chainIcon = getChainIcon(chainId);
+  const ChainIcon = getChainIcon(chainId);
 
   return (
-    <Wrapper>
-      <IconWrapper>{chainIcon}</IconWrapper> {chainName}
-    </Wrapper>
+    <span className="inline-flex items-baseline mr-[2px] ml-[3px]">
+      {ChainIcon && (
+        <ChainIcon className="inline-block self-center w-[14px] h-[14px] mr-[3px]" />
+      )}{" "}
+      {chainName}
+    </span>
   );
 }
-
-const Wrapper = styled.span`
-  display: inline-flex;
-  align-items: baseline;
-  margin-right: 2px;
-  margin-left: 3px;
-`;
-
-const IconWrapper = styled.span`
-  display: inline-block;
-  align-self: center;
-  width: 14px;
-  margin-right: 3px;
-`;

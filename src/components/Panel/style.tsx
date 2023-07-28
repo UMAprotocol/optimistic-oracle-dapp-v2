@@ -1,5 +1,5 @@
-import { red500, smallMobileAndUnder } from "@/constants";
-import { addOpacityToHsla } from "@/helpers";
+import { smallMobileAndUnder } from "@/constants";
+import { addOpacityToColor } from "@/helpers";
 import NextLink from "next/link";
 import styled from "styled-components";
 
@@ -57,7 +57,7 @@ export const ErrorWrapper = styled.div`
   gap: 16px;
   margin-top: 20px;
   padding-inline: 16px;
-  background: ${addOpacityToHsla(red500, 0.05)};
+  background: ${addOpacityToColor("var(--red-500)", 0.05)};
   border: 1px solid var(--red-500);
   border-radius: 2px;
 `;

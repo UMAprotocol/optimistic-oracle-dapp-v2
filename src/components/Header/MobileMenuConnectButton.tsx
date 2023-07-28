@@ -1,5 +1,3 @@
-import { red500 } from "@/constants";
-import { scaleLightnessHsla } from "@/helpers";
 import { useWalletIcon } from "@/hooks";
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import NextImage from "next/image";
@@ -113,11 +111,10 @@ const ButtonSecondary = styled(Button)`
   background: var(--white);
   border: 1px solid var(--red-500);
   color: var(--red-500);
-  transition: background var(--animation-duration);
+  transition: filter var(--animation-duration);
 
   &:hover {
-    filter: unset;
-    background: ${scaleLightnessHsla(red500, 1.5)};
+    filter: brightness(1.5);
   }
 `;
 
