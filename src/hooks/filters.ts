@@ -126,7 +126,7 @@ export function useFilters(queries: OracleQueryUI[]) {
     filtersReducer(queries),
     initialState,
   );
-  const { addSearchParam, removeSearchParam } = useUrlBar();
+  const { addSearchParam, removeSearchParam, removeSearchParams } = useUrlBar();
 
   useEffect(() => {
     dispatch({ type: "make-entries" });
@@ -150,7 +150,8 @@ export function useFilters(queries: OracleQueryUI[]) {
 
   const reset = useCallback(() => {
     dispatch({ type: "reset" });
-  }, [dispatch]);
+    removeSearchParams(...filterNames);
+  }, [dispatch, removeSearchParams]);
 
   const overrideCheckedFilters = useCallback(
     (checkedFilters: CheckedFiltersByFilterName) => {
