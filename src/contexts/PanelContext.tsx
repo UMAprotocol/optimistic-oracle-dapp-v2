@@ -68,10 +68,6 @@ export function PanelProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (panelOpen && query) {
       addHashAndIndexToUrl(query);
-      return;
-    }
-    if (!panelOpen) {
-      removeHashAndIndexFromUrl();
     }
   }, [addHashAndIndexToUrl, panelOpen, query, removeHashAndIndexFromUrl]);
 
@@ -82,7 +78,8 @@ export function PanelProvider({ children }: { children: ReactNode }) {
 
   const closePanel = useCallback(() => {
     setPanelOpen(false);
-  }, []);
+    removeHashAndIndexFromUrl();
+  }, [removeHashAndIndexFromUrl]);
 
   const value = useMemo(
     () => ({
