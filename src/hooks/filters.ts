@@ -46,7 +46,7 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
  */
 export function useSearch(queries: Immutable<OracleQueryUI[]>) {
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 200);
   const { removeSearchParam, updateSearchParam } = useUrlBar();
 
   const fuse = useMemo(() => {
