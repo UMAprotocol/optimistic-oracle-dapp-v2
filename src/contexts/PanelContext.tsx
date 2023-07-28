@@ -65,21 +65,24 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     };
   }, [searchParams]);
 
-  const openPanel = useCallback(
-    (queryId?: string) => {
-      if (queryId && query) {
-        addHashAndIndexToUrl(query);
-        setQueryId(queryId);
-      }
-      setPanelOpen(true);
-    },
-    [addHashAndIndexToUrl, query],
-  );
+  useEffect(() => {
+    if (panelOpen && query) {
+      addHashAndIndexToUrl(query);
+      return;
+    }
+    if (!panelOpen) {
+      removeHashAndIndexFromUrl();
+    }
+  }, [addHashAndIndexToUrl, panelOpen, query, removeHashAndIndexFromUrl]);
+
+  const openPanel = useCallback((queryId?: string) => {
+    setQueryId(queryId);
+    setPanelOpen(true);
+  }, []);
 
   const closePanel = useCallback(() => {
-    removeHashAndIndexFromUrl();
     setPanelOpen(false);
-  }, [removeHashAndIndexFromUrl]);
+  }, []);
 
   const value = useMemo(
     () => ({
