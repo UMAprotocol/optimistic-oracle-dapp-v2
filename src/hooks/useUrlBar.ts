@@ -6,6 +6,15 @@ export function useUrlBar() {
   const pathname = usePathname();
   const router = useRouter();
 
+  const updateSearchParam = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams?.toString());
+      params.set(name, value);
+      router.push(`${pathname}?${params.toString()}`);
+    },
+    [pathname, router, searchParams],
+  );
+
   const addSearchParam = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams?.toString());
@@ -60,17 +69,19 @@ export function useUrlBar() {
   return useMemo(
     () => ({
       searchParams,
+      updateSearchParam,
       addSearchParam,
       addSearchParams,
       removeSearchParam,
       removeSearchParams,
     }),
     [
+      searchParams,
       addSearchParam,
       addSearchParams,
       removeSearchParam,
       removeSearchParams,
-      searchParams,
+      updateSearchParam,
     ],
   );
 }
