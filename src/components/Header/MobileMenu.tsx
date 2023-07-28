@@ -2,7 +2,7 @@ import { CloseButton, PanelBase } from "@/components";
 import { navLinks, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import ExternalLink from "public/assets/icons/external-link.svg";
 import Discord from "public/assets/icons/social/discord.svg";
 import Discourse from "public/assets/icons/social/discourse.svg";
@@ -19,7 +19,8 @@ interface Props {
   closePanel: () => void;
 }
 export function MobileMenu({ panelOpen, closePanel }: Props) {
-  const pathname = usePathname() ?? "/";
+  const pathname = usePathname()!;
+  const searchParams = useSearchParams();
 
   const socialIcons = {
     Discord: <DiscordIcon />,
@@ -44,7 +45,9 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
             <NavItem key={href}>
               <Link
                 onClick={closePanel}
-                href={href}
+                href={`${href}${
+                  searchParams ? `/?${searchParams.toString()}` : ""
+                }`}
                 target={isExternalLink(href) ? "_blank" : undefined}
                 style={
                   {

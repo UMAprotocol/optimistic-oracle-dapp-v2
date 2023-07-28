@@ -11,9 +11,10 @@ import type { ChainId } from "@shared/types";
  */
 export function ChainIcon({ chainId }: { chainId: ChainId | undefined }) {
   if (!chainId) return null;
+
   const chainName = chainsById[chainId];
   const Icon = getChainIcon(chainId);
-  if (!Icon) return null;
+  if (!Icon || !chainName) return null;
 
   return (
     <PanelInfoIconWrapper>

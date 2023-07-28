@@ -1,6 +1,8 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants/styles/breakpoints";
 import type { OracleQueryList } from "@/contexts";
 import type { DropdownItem, OracleQueryUI } from "@/types";
+import { chainsById, oracleTypes } from "@shared/constants";
+import type { ChainId, OracleType } from "@shared/types";
 import { capitalize, orderBy, partition, words } from "lodash";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { css } from "styled-components";
@@ -140,8 +142,8 @@ export function makeUrlParamsForQuery({
   const isRequest = !!requestHash && !!requestLogIndex;
 
   const queryParams = {
-    transactionHash: isRequest ? requestHash : assertionHash,
-    eventIndex: isRequest ? requestLogIndex : assertionLogIndex,
+    transactionHash: isRequest ? requestHash : assertionHash!,
+    eventIndex: isRequest ? requestLogIndex : assertionLogIndex!,
   };
 
   return queryParams;
@@ -188,4 +190,20 @@ export function hasProperty<Obj extends object>(
   obj: Obj,
 ): key is keyof Obj {
   return key in obj;
+}
+
+export function isTransactionHash(hash: string | undefined) {
+  return !!hash && hash.startsWith("0x") && hash.length === 66;
+}
+
+export function isValidChainId(
+  chainId: number | undefined,
+): chainId is ChainId {
+  return !!chainId && chainId in chainsById;
+}
+
+export function isValidOracleType(
+  oracleType: string | undefined,
+): oracleType is OracleType {
+  return !!oracleType && oracleType in oracleTypes;
 }

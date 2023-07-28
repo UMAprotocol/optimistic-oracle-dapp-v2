@@ -1,22 +1,30 @@
 "use client";
 
-import { makeQueryString, makeUrlParamsForQuery } from "@/helpers";
-import { useOracleDataContext } from "@/hooks";
+import { makeUrlParamsForQuery } from "@/helpers";
+import { useQueryById } from "@/hooks";
+import { useUrlBar } from "@/hooks/useUrlBar";
 import type { OracleQueryUI } from "@/types";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export interface PanelContextState {
   panelOpen: boolean;
-  content: OracleQueryUI | undefined;
-  openPanel: (content: OracleQueryUI, isFromUserInteraction?: boolean) => void;
+  query: OracleQueryUI | undefined;
+  setQueryId: (queryId: string | undefined) => void;
+  openPanel: (queryId?: string) => void;
   closePanel: () => void;
 }
 
 export const defaultPanelContextState = {
   panelOpen: false,
-  content: undefined,
+  query: undefined,
+  setQueryId: () => undefined,
   openPanel: () => undefined,
   closePanel: () => undefined,
 };
@@ -26,12 +34,22 @@ export const PanelContext = createContext<PanelContextState>(
 );
 
 export function PanelProvider({ children }: { children: ReactNode }) {
-  const { all } = useOracleDataContext();
-  const [id, setId] = useState<string | undefined>();
+  const [queryId, setQueryId] = useState<string | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const { addSearchParams, removeSearchParams, searchParams } = useUrlBar();
+  const query = useQueryById(queryId);
+
+  const addHashAndIndexToUrl = useCallback(
+    (query: OracleQueryUI) => {
+      const searchParams = makeUrlParamsForQuery(query);
+      addSearchParams(searchParams);
+    },
+    [addSearchParams],
+  );
+
+  const removeHashAndIndexFromUrl = useCallback(() => {
+    removeSearchParams("transactionHash", "eventIndex");
+  }, [removeSearchParams]);
 
   useEffect(() => {
     function onPopState() {
@@ -47,34 +65,34 @@ export function PanelProvider({ children }: { children: ReactNode }) {
     };
   }, [searchParams]);
 
-  function openPanel(content: OracleQueryUI, isFromUserInteraction = true) {
-    if (isFromUserInteraction) {
-      const query = makeUrlParamsForQuery(content);
-
-      router.push(makeQueryString(query, pathname, searchParams));
+  useEffect(() => {
+    if (panelOpen && query) {
+      addHashAndIndexToUrl(query);
     }
+  }, [addHashAndIndexToUrl, panelOpen, query, removeHashAndIndexFromUrl]);
 
-    setId(content.id);
+  const openPanel = useCallback((queryId?: string) => {
+    setQueryId(queryId);
     setPanelOpen(true);
-  }
-  const content: OracleQueryUI | undefined =
-    all !== undefined && id !== undefined ? all[id] : undefined;
+  }, []);
 
-  function closePanel() {
-    router.push(pathname ?? "/");
+  const closePanel = useCallback(() => {
     setPanelOpen(false);
-  }
+    removeHashAndIndexFromUrl();
+  }, [removeHashAndIndexFromUrl]);
+
+  const value = useMemo(
+    () => ({
+      query,
+      panelOpen,
+      setQueryId,
+      openPanel,
+      closePanel,
+    }),
+    [closePanel, openPanel, panelOpen, query],
+  );
 
   return (
-    <PanelContext.Provider
-      value={{
-        content,
-        panelOpen,
-        openPanel,
-        closePanel,
-      }}
-    >
-      {children}
-    </PanelContext.Provider>
+    <PanelContext.Provider value={value}>{children}</PanelContext.Provider>
   );
 }

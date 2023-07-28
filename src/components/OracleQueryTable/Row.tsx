@@ -26,7 +26,7 @@ export function Row({ page, row }: { page: PageName; row: OracleQueryUI }) {
   const innerCellsComponent = innerCells[page];
 
   return (
-    <TR onClick={() => void openPanel(row)}>
+    <TR onClick={() => void openPanel(row.id)}>
       <TitleCell {...row} />
       {innerCellsComponent}
       <TD>

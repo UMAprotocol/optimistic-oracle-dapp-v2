@@ -20,6 +20,7 @@ export type FilterAndSearchContextState = Immutable<{
   checkedFilters: CheckedFiltersByFilterName;
   onCheckedChange: (payload: CheckedChangePayload) => void;
   reset: () => void;
+  overrideCheckedFilters: (checkedFilters: CheckedFiltersByFilterName) => void;
 }>;
 
 export const defaultFilterAndSearchContextState: FilterAndSearchContextState = {
@@ -34,6 +35,7 @@ export const defaultFilterAndSearchContextState: FilterAndSearchContextState = {
   },
   onCheckedChange: () => null,
   reset: () => null,
+  overrideCheckedFilters: () => null,
 };
 
 export const FilterAndSearchContext = createContext(

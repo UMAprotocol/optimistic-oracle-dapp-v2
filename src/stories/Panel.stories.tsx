@@ -18,19 +18,18 @@ interface Args extends PanelContextState {
 
 type Story = StoryObj<Args>;
 
-function Wrapper({ content, page }: Args) {
+function Wrapper({ query, page }: Args) {
   const [panelOpen, setPanelOpen] = useState(true);
-
-  if (!content) return null;
 
   return (
     <PageContext.Provider value={{ page, setPage: () => null }}>
       <PanelContext.Provider
         value={{
           panelOpen,
+          setQueryId: () => null,
           openPanel: () => setPanelOpen(true),
           closePanel: () => setPanelOpen(false),
-          content,
+          query,
         }}
       >
         <Button variant="primary" onClick={() => setPanelOpen(true)}>
@@ -50,9 +49,17 @@ export const VerifyWithDispute: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       actionType: "dispute",
     }),
+  },
+};
+
+export const Loading: Story = {
+  ...Template,
+  args: {
+    page: "verify",
+    query: undefined,
   },
 };
 
@@ -60,7 +67,7 @@ export const VerifyWithSettle: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       actionType: "settle",
     }),
   },
@@ -70,7 +77,7 @@ export const VerifyAlreadySettled: Story = {
   ...Template,
   args: {
     page: "verify",
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       actionType: undefined,
     }),
   },
@@ -80,7 +87,7 @@ export const Propose: Story = {
   ...Template,
   args: {
     page: "propose",
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       actionType: "propose",
     }),
   },
@@ -90,7 +97,7 @@ export const ProposeAlreadyProposedWithDispute: Story = {
   ...Template,
   args: {
     page: "propose",
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       actionType: "dispute",
     }),
   },
@@ -100,7 +107,7 @@ export const ProposeAlreadyProposedWithSettle: Story = {
   ...Template,
   args: {
     page: "propose",
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       actionType: "settle",
     }),
   },
@@ -110,7 +117,7 @@ export const ProposeAlreadySettled: Story = {
   ...Template,
   args: {
     page: "propose",
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       actionType: undefined,
     }),
   },
@@ -119,7 +126,7 @@ export const ProposeAlreadySettled: Story = {
 export const Settled: Story = {
   ...Template,
   args: {
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       actionType: undefined,
     }),
   },
@@ -128,14 +135,14 @@ export const Settled: Story = {
 export const WithError: Story = {
   ...Template,
   args: {
-    content: makeMockOracleQueryUI(),
+    query: makeMockOracleQueryUI(),
   },
 };
 
 export const WithDifferentProject: Story = {
   ...Template,
   args: {
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       project: "Polymarket",
     }),
   },
@@ -144,7 +151,7 @@ export const WithDifferentProject: Story = {
 export const WithDifferentInfoIcons: Story = {
   ...Template,
   args: {
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       oracleType: "Skinny Optimistic Oracle",
       chainId: 137,
       expiryType: "Time-based",
@@ -155,14 +162,14 @@ export const WithDifferentInfoIcons: Story = {
 export const WithDifferentCurrency: Story = {
   ...Template,
   args: {
-    content: makeMockOracleQueryUI(),
+    query: makeMockOracleQueryUI(),
   },
 };
 
 export const WithPrice: Story = {
   ...Template,
   args: {
-    content: makeMockOracleQueryUI({
+    query: makeMockOracleQueryUI({
       oracleType: "Optimistic Oracle V1",
       valueText: "200",
     }),

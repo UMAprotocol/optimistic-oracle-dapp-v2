@@ -27,6 +27,7 @@ export function Report(props: Props) {
     abi: ratedAbi,
     address: props.chainId === 1 ? mainnetAddress : goerliAddress,
     functionName: "reports",
+    chainId: props.chainId,
     args: [BigNumber.from(props.queryText)],
   });
   if (!report) return null;
@@ -54,6 +55,7 @@ export function Violations(props: Props) {
   const { data: violations } = useContractRead({
     abi: ratedAbi,
     address: props.chainId === 1 ? mainnetAddress : goerliAddress,
+    chainId: props.chainId,
     functionName: "getViolationsInReport",
     args: [BigNumber.from(props.queryText)],
   });

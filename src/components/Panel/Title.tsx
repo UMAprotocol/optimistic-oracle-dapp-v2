@@ -1,13 +1,16 @@
 import { getProjectIcon } from "@/constants";
-import type { OracleQueryUI } from "@/types";
-import styled from "styled-components";
+import type { Project } from "@shared/types";
 import { CloseButton } from "../CloseButton";
+import { LoadingSkeleton } from "../LoadingSkeleton";
 import { TruncatedTitle } from "../TruncatedTitle";
 
-interface Props extends OracleQueryUI {
+type Props = {
+  title?: string;
+  project?: Project;
+  isLoading: boolean;
   close: () => void;
-}
-export function Title({ project, title, close }: Props) {
+};
+export function Title({ project, title, isLoading, close }: Props) {
   const ProjectIcon = getProjectIcon(project);
 
   const buttonMinWidth = "1rem";
@@ -15,31 +18,27 @@ export function Title({ project, title, close }: Props) {
   const buttonPreferredWidth = "calc(0.9rem + 0.4vw)";
   const buttonClampedWidth = `clamp(${buttonMinWidth}, ${buttonPreferredWidth}, ${buttonMaxWidth})`;
 
+  const iconStyles =
+    "min-w-[1.25rem] w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)]";
   return (
-    <Wrapper>
-      <ProjectIcon className="min-w-[1.25rem] w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)]" />
-      <TitleText id="panel-title">
-        <TruncatedTitle title={title} />
-      </TitleText>
-      <div className="min-w-[1.25rem] w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)]">
+    <div className="grid grid-cols-[auto,1fr,auto] gap-page-padding min-h-[84px] px-page-padding lg:px-7 py-5 bg-blue-grey-700">
+      {isLoading ? (
+        <div className={iconStyles}>
+          <LoadingSkeleton width="100%" height="100%" borderRadius="50%" />
+        </div>
+      ) : (
+        <ProjectIcon className={iconStyles} />
+      )}
+      <h1 className="max-w-[400px] text-lg text-light" id="panel-title">
+        {isLoading ? (
+          <LoadingSkeleton count={2} height={16} />
+        ) : (
+          <TruncatedTitle title={title} />
+        )}
+      </h1>
+      <div className={iconStyles}>
         <CloseButton onClick={close} size={buttonClampedWidth} />
       </div>
-    </Wrapper>
+    </div>
   );
 }
-
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: var(--page-padding);
-  min-height: 84px;
-  padding-inline: var(--padding-inline);
-  padding-block: 20px;
-  background: var(--blue-grey-700);
-`;
-
-const TitleText = styled.h1`
-  max-width: 400px;
-  font: var(--body-md);
-  color: var(--light-text);
-`;

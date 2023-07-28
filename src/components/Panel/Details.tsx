@@ -1,9 +1,7 @@
-import { addOpacityToColor } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import { Fragment } from "react";
-import styled from "styled-components";
 import { AdditionalTextData } from "./AdditionalTextData";
 import { RatedAssertionTextData } from "./RatedAssertionTextData";
 import {
@@ -33,10 +31,10 @@ export function Details({
   const isRated = project === "Rated";
 
   return (
-    <Wrapper>
+    <div className="pb-16 px-page-padding lg:px-7">
       <DetailWrapper>
         <SectionTitleWrapper>
-          <TimestampIcon />
+          <Timestamp />
           <SectionTitle>Timestamp</SectionTitle>
         </SectionTitleWrapper>
         <SectionSubTitle>Requested Time</SectionSubTitle>
@@ -82,7 +80,7 @@ export function Details({
       </DetailWrapper>
       <DetailWrapper>
         <SectionTitleWrapper>
-          <AncillaryDataIcon />
+          <AncillaryData />
           <SectionTitle>Additional Text Data</SectionTitle>
         </SectionTitleWrapper>
         {isRated && queryText ? (
@@ -97,7 +95,7 @@ export function Details({
       </DetailWrapper>
       <DetailWrapper>
         <SectionTitleWrapper>
-          <AncillaryDataIcon />
+          <AncillaryData />
           <SectionTitle>More information</SectionTitle>
         </SectionTitleWrapper>
         {moreInformation?.map(({ title, href, text }) => (
@@ -109,30 +107,18 @@ export function Details({
           </Fragment>
         ))}
       </DetailWrapper>
-    </Wrapper>
+    </div>
   );
 }
 
-const Wrapper = styled.div`
-  padding-inline: var(--padding-inline);
-  padding-bottom: 64px;
-`;
+function DetailWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="[&:not(:first-child)]:pt-6 [&:not(:last-child)]:border-b-blue-grey-700/25">
+      {children}
+    </div>
+  );
+}
 
-const DetailWrapper = styled.div`
-  padding-bottom: 20px;
-  &:not(:first-child) {
-    padding-top: 22px;
-  }
-  &:not(:last-child) {
-    border-bottom: 1px solid ${addOpacityToColor("var(--blue-grey-700)", 0.25)};
-  }
-`;
-
-const TimeFormat = styled.span`
-  display: inline-block;
-  margin-right: 32px;
-`;
-
-const TimestampIcon = styled(Timestamp)``;
-
-const AncillaryDataIcon = styled(AncillaryData)``;
+function TimeFormat({ children }: { children: React.ReactNode }) {
+  return <span className="inline-block mr-8">{children}</span>;
+}

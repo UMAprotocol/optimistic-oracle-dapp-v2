@@ -1,63 +1,43 @@
-import { smallMobileAndUnder } from "@/constants";
-import { addOpacityToColor } from "@/helpers";
 import NextLink from "next/link";
-import styled from "styled-components";
+import type { ComponentPropsWithoutRef } from "react";
 
-export const Text = styled.p`
-  font: var(--body-sm);
-  @media ${smallMobileAndUnder} {
-    font: var(--body-xs);
-  }
-`;
+export const Text = ({ children }: { children: React.ReactNode }) => (
+  <p className="text-xs sm:text-base">{children}</p>
+);
 
-export const Link = styled(NextLink)`
-  font: var(--body-sm);
-  font-size: inherit;
-  text-decoration: none;
-  color: var(--red-500);
-  transition: opacity var(--animation-duration);
+export const Link = (props: ComponentPropsWithoutRef<typeof NextLink>) => (
+  <NextLink
+    {...props}
+    className={`text-[length:inherit] text-red-500 transition hover:opacity-75 ${props.className}`}
+  >
+    {props.children}
+  </NextLink>
+);
 
-  &:hover {
-    opacity: 0.75;
-  }
-`;
+export const WordBreakLink = (props: ComponentPropsWithoutRef<typeof Link>) => (
+  <Link {...props} className="break-all">
+    {props.children}
+  </Link>
+);
 
-// we don't want to word-break the link in the message text
-export const WordBreakLink = styled(Link)`
-  word-break: break-all;
-`;
+export const SectionTitleWrapper = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => <div className="flex gap-3 mb-4">{children}</div>;
 
-export const SectionTitleWrapper = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-`;
+export const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="text-lg font-bold [&>span]:font-normal">{children}</h2>
+);
 
-export const SectionTitle = styled.h2`
-  font: var(--body-md);
-  font-weight: 700;
+export const SectionSubTitle = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => <h3 className="font-semibold mt-4">{children}</h3>;
 
-  span {
-    font-weight: 400;
-  }
-`;
-
-export const SectionSubTitle = styled.h3`
-  font: var(--body-sm);
-  font-weight: 600;
-
-  margin-top: 16px;
-`;
-
-export const ErrorWrapper = styled.div`
-  width: min(100%, var(--panel-content-width));
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: 20px;
-  padding-inline: 16px;
-  background: ${addOpacityToColor("var(--red-500)", 0.05)};
-  border: 1px solid var(--red-500);
-  border-radius: 2px;
-`;
+export const ErrorWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div className="w-panel-content-width min-h-[48px] flex items-center gap-4 mt-5 px-4 bg-red-500/5 border-2 border-red-500 rounded-sm">
+    {children}
+  </div>
+);

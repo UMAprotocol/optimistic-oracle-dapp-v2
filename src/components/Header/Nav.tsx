@@ -1,13 +1,14 @@
 import { navLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import ExternalLink from "public/assets/icons/external-link.svg";
 import type { CSSProperties } from "react";
 import styled from "styled-components";
 
 export function Nav() {
   const pathname = usePathname()!;
+  const searchParams = useSearchParams();
 
   return (
     <Wrapper>
@@ -15,7 +16,9 @@ export function Nav() {
         {navLinks.map(({ label, href }) => (
           <NavItem key={href}>
             <Link
-              href={href}
+              href={`${href}${
+                searchParams ? `/?${searchParams.toString()}` : ""
+              }`}
               target={isExternalLink(href) ? "_blank" : undefined}
               style={
                 {

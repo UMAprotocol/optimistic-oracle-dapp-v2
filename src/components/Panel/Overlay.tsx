@@ -1,6 +1,5 @@
 import { addOpacityToColor } from "@/helpers";
 import { AnimatePresence, motion } from "framer-motion";
-import styled from "styled-components";
 
 interface Props {
   panelOpen: boolean;
@@ -13,7 +12,8 @@ export function Overlay({ panelOpen, closePanel }: Props) {
   return (
     <AnimatePresence>
       {panelOpen && (
-        <StyledOverlay
+        <motion.div
+          className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-10"
           onClick={closePanel}
           initial={{ backgroundColor: overlayHiddenColor }}
           animate={{ backgroundColor: overlayVisibleColor }}
@@ -23,17 +23,3 @@ export function Overlay({ panelOpen, closePanel }: Props) {
     </AnimatePresence>
   );
 }
-
-const AnimatedOverlay = motion.div;
-
-const StyledOverlay = styled(AnimatedOverlay)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  z-index: 1;
-`;

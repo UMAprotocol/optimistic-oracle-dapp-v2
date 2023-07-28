@@ -12,7 +12,10 @@ import type {
 import { BigNumber } from "ethers";
 import type { Address } from "wagmi";
 
-export function isAddress(maybeAddress: string): maybeAddress is Address {
+export function isAddress(
+  maybeAddress: string | undefined,
+): maybeAddress is Address {
+  if (!maybeAddress) return false;
   return "0x" == maybeAddress.slice(0, 2);
 }
 export function assertAddress(maybeAddress: string): Address {
@@ -21,7 +24,7 @@ export function assertAddress(maybeAddress: string): Address {
   return maybeAddress;
 }
 export function handleGraphqlNullableStringOrBytes<
-  EntityKey extends { [key: string]: string | null }
+  EntityKey extends { [key: string]: string | null },
 >(entityKey: EntityKey | null) {
   if (entityKey === null) return null;
 
@@ -29,7 +32,7 @@ export function handleGraphqlNullableStringOrBytes<
 
   if (!(typeof stringOrBytes === "string" || stringOrBytes === null)) {
     console.error(
-      `Wrong type in \`handleGraphqlNullableStringOrBytes\`: Expected string or null for ${property}, got ${typeof stringOrBytes} instead`
+      `Wrong type in \`handleGraphqlNullableStringOrBytes\`: Expected string or null for ${property}, got ${typeof stringOrBytes} instead`,
     );
   }
   if (stringOrBytes === null) return null;
@@ -38,7 +41,7 @@ export function handleGraphqlNullableStringOrBytes<
 }
 
 export function handleGraphqlNullableBigInt<
-  EntityKey extends { [key: string]: string | null }
+  EntityKey extends { [key: string]: string | null },
 >(entityKey: EntityKey | null) {
   if (entityKey === null) return null;
 
@@ -46,7 +49,7 @@ export function handleGraphqlNullableBigInt<
 
   if (!(typeof bigInt === "string" || bigInt === null)) {
     console.error(
-      `Wrong type in \`handleGraphqlNullableBigInt\`: Expected string or null for ${property}, got ${typeof bigInt} instead`
+      `Wrong type in \`handleGraphqlNullableBigInt\`: Expected string or null for ${property}, got ${typeof bigInt} instead`,
     );
   }
   if (bigInt === null) return null;
@@ -55,7 +58,7 @@ export function handleGraphqlNullableBigInt<
 }
 
 export function handleGraphqlNullableBigIntToString<
-  EntityKey extends { [key: string]: string | null }
+  EntityKey extends { [key: string]: string | null },
 >(entityKey: EntityKey | null) {
   if (entityKey === null) return null;
 
@@ -63,14 +66,14 @@ export function handleGraphqlNullableBigIntToString<
 
   if (!(typeof bigInt === "string" || bigInt === null)) {
     console.error(
-      `Wrong type in \`handleGraphqlNullableBigIntToString\`: Expected string or null for ${property}, got ${typeof bigInt} instead`
+      `Wrong type in \`handleGraphqlNullableBigIntToString\`: Expected string or null for ${property}, got ${typeof bigInt} instead`,
     );
   }
   return bigInt;
 }
 
 export function handleGraphqlNullableBoolean<
-  EntityKey extends { [key: string]: boolean | null }
+  EntityKey extends { [key: string]: boolean | null },
 >(entityKey: EntityKey | null) {
   if (entityKey === null) return null;
 
@@ -78,7 +81,7 @@ export function handleGraphqlNullableBoolean<
 
   if (!(typeof boolean === "boolean" || boolean === null)) {
     console.error(
-      `Wrong type in \`handleGraphqlNullableBoolean\`: Expected boolean or null for ${property}, got ${typeof boolean} instead`
+      `Wrong type in \`handleGraphqlNullableBoolean\`: Expected boolean or null for ${property}, got ${typeof boolean} instead`,
     );
   }
 
@@ -103,7 +106,7 @@ export function parsePriceRequestGraphEntity(
   priceRequest: PriceRequestGraphEntity,
   chainId: ChainId,
   oracleAddress: Address,
-  oracleType: OracleType
+  oracleType: OracleType,
 ) {
   const {
     proposer,
@@ -240,7 +243,7 @@ export function parsePriceRequestGraphEntity(
 export function parseAssertionGraphEntity(
   assertion: AssertionGraphEntity,
   chainId: ChainId,
-  oracleAddress: Address
+  oracleAddress: Address,
 ) {
   const {
     id,
@@ -320,7 +323,7 @@ export function parseAssertionGraphEntity(
 }
 
 function isOOV2GraphEntity(
-  request: PriceRequestGraphEntity
+  request: PriceRequestGraphEntity,
 ): request is OOV2GraphEntity {
   return (
     "customLiveness" in request || "bond" in request || "eventBased" in request

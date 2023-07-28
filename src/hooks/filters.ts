@@ -19,6 +19,7 @@ import { castDraft, produce } from "immer";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useImmerReducer } from "use-immer";
 import { useDebounce } from "usehooks-ts";
+import { useUrlBar } from "./useUrlBar";
 
 /**
  * Combines the filter and search hooks
@@ -45,7 +46,8 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
  */
 export function useSearch(queries: Immutable<OracleQueryUI[]>) {
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 200);
+  const { removeSearchParam, updateSearchParam } = useUrlBar();
 
   const fuse = useMemo(() => {
     return new Fuse(queries, {
@@ -54,6 +56,14 @@ export function useSearch(queries: Immutable<OracleQueryUI[]>) {
       threshold: 0.3,
     });
   }, [queries]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      updateSearchParam("search", debouncedSearchTerm);
+    } else {
+      removeSearchParam("search");
+    }
+  }, [updateSearchParam, debouncedSearchTerm, removeSearchParam]);
 
   const results = useMemo(() => {
     if (!debouncedSearchTerm) return queries;
@@ -73,10 +83,15 @@ type State = Immutable<{
   filteredQueries: OracleQueryUI[];
 }>;
 
-type Action = MakeEntries | CheckedChange | Reset;
+type Action = MakeEntries | CheckedChange | Reset | AddCheckedFilters;
 
 type MakeEntries = {
   type: "make-entries";
+};
+
+type AddCheckedFilters = {
+  type: "add-checked-filters";
+  payload: CheckedFiltersByFilterName;
 };
 
 type Reset = {
@@ -111,6 +126,7 @@ export function useFilters(queries: OracleQueryUI[]) {
     filtersReducer(queries),
     initialState,
   );
+  const { addSearchParam, removeSearchParam, removeSearchParams } = useUrlBar();
 
   useEffect(() => {
     dispatch({ type: "make-entries" });
@@ -119,13 +135,30 @@ export function useFilters(queries: OracleQueryUI[]) {
   const onCheckedChange = useCallback(
     (payload: CheckedChangePayload) => {
       dispatch({ type: "checked-change", payload });
+
+      const { filterName, checked, itemName } = payload;
+
+      if (checked) {
+        addSearchParam(filterName, itemName);
+      }
+      if (!checked) {
+        removeSearchParam(filterName, itemName);
+      }
     },
-    [dispatch],
+    [addSearchParam, dispatch, removeSearchParam],
   );
 
   const reset = useCallback(() => {
     dispatch({ type: "reset" });
-  }, [dispatch]);
+    removeSearchParams(...filterNames);
+  }, [dispatch, removeSearchParams]);
+
+  const overrideCheckedFilters = useCallback(
+    (checkedFilters: CheckedFiltersByFilterName) => {
+      dispatch({ type: "add-checked-filters", payload: checkedFilters });
+    },
+    [dispatch],
+  );
 
   const { filters, checkedFilters, filteredQueries } = state;
 
@@ -136,8 +169,16 @@ export function useFilters(queries: OracleQueryUI[]) {
       filteredQueries,
       onCheckedChange,
       reset,
+      overrideCheckedFilters,
     }),
-    [checkedFilters, filters, filteredQueries, onCheckedChange, reset],
+    [
+      filters,
+      checkedFilters,
+      filteredQueries,
+      onCheckedChange,
+      reset,
+      overrideCheckedFilters,
+    ],
   );
 }
 
@@ -208,6 +249,28 @@ function filtersReducer(queries: Immutable<OracleQueryUI[]>) {
               item.checked = false;
             }
           });
+        });
+
+        draft.checkedFilters = makeCheckedFilters(draft);
+        draft.filteredQueries = makeFilteredQueries(draft, queries);
+        break;
+      }
+      case "add-checked-filters": {
+        const { payload } = action;
+        Object.entries(payload).forEach(([filterName, values]) => {
+          const items = draft.filters[filterName as FilterName];
+          const newFilters = produce(items, (draft) => {
+            draft.All.checked = false;
+            values.forEach((value) => {
+              draft[value] = {
+                checked: true,
+                count: countQueriesForFilter(queries, {
+                  [filterName]: value,
+                }),
+              };
+            });
+          });
+          draft.filters[filterName as FilterName] = newFilters;
         });
 
         draft.checkedFilters = makeCheckedFilters(draft);

@@ -1,6 +1,5 @@
 import Warning from "public/assets/icons/warning.svg";
-import styled from "styled-components";
-import { ErrorWrapper, Text } from "../style";
+import { ErrorWrapper } from "../style";
 
 interface Props {
   errors: string[];
@@ -14,16 +13,10 @@ export function Errors({ errors }: Props) {
     <>
       {errors.map((message) => (
         <ErrorWrapper key={message}>
-          <WarningIcon />
-          <ErrorText>{message}</ErrorText>
+          <Warning />
+          <p className="text-xs sm:text-base text-red-500">{message}</p>
         </ErrorWrapper>
       ))}
     </>
   );
 }
-
-const ErrorText = styled(Text)`
-  color: var(--red-500);
-`;
-
-const WarningIcon = styled(Warning)``;
