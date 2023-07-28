@@ -1,17 +1,19 @@
+import { Pagination, usePagination } from "@/components";
 import { defaultResultsPerPage } from "@/constants";
 import type { OracleQueryUI } from "@/types";
 import type { PageName } from "@shared/types";
+import type { Immutable } from "immer";
+import { castDraft } from "immer";
 import styled from "styled-components";
-import { Pagination, usePagination } from "@/components";
 import { Item } from "./Item";
 import { LoadingItem } from "./LoadingItem";
 
-interface Props {
+type Props = Immutable<{
   page: PageName;
   items: OracleQueryUI[];
   isLoading: boolean;
   findQueryIndex?: number | undefined;
-}
+}>;
 /**
  * Renders a list of oracle queries.
  * Intended to be shown on mobile.
@@ -27,7 +29,7 @@ export function OracleQueryList({
   findQueryIndex,
 }: Props) {
   const { entriesToShow, ...paginationProps } = usePagination(
-    items,
+    castDraft(items),
     findQueryIndex,
   );
 

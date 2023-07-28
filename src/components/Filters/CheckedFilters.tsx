@@ -4,14 +4,15 @@ import type {
   FilterName,
   OnCheckedChange,
 } from "@/types";
+import type { Immutable } from "immer";
 import { Fragment } from "react";
 import styled from "styled-components";
 
-interface Props {
+type Props = Immutable<{
   checkedFilters: CheckedFiltersByFilterName;
   onCheckedChange: OnCheckedChange;
   reset: () => void;
-}
+}>;
 
 /**
  * Displays the checked filters

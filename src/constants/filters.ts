@@ -1,4 +1,4 @@
-import type { OracleQueryUI } from "@/types";
+import type { CheckboxItems, FilterName, OracleQueryUI } from "@/types";
 export const keys: (keyof OracleQueryUI)[] = [
   "id",
   "chainId",
@@ -31,14 +31,20 @@ export const keys: (keyof OracleQueryUI)[] = [
   "proposalLogIndex",
 ];
 
-export const emptyFilters = {
-  project: { All: { checked: true, count: 0 } },
-  chainName: { All: { checked: true, count: 0 } },
-  oracleType: { All: { checked: true, count: 0 } },
-};
+export const filterNames = ["project", "chainName", "oracleType"] as const;
 
-export const emptyCheckedFilters = {
-  project: [],
-  chainName: [],
-  oracleType: [],
-};
+export const emptyFilters = filterNames.reduce(
+  (acc, filterName) => {
+    acc[filterName] = { All: { checked: true, count: 0 } };
+    return acc;
+  },
+  {} as Record<FilterName, CheckboxItems>,
+);
+
+export const emptyCheckedFilters = filterNames.reduce(
+  (acc, filterName) => {
+    acc[filterName] = [];
+    return acc;
+  },
+  {} as Record<FilterName, string[]>,
+);

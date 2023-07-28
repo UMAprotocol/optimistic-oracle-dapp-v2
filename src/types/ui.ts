@@ -1,4 +1,4 @@
-import type { actionTitles } from "@/constants";
+import type { actionTitles, filterNames } from "@/constants";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type {
   disputeAssertionAbi,
@@ -366,7 +366,9 @@ export type CheckboxItems = {
   [key: string]: CheckboxItem;
 };
 
-export type FilterName = "chainName" | "project" | "oracleType";
+export type FilterNames = typeof filterNames;
+
+export type FilterName = FilterNames[number];
 
 export type CheckedFiltersByFilterName = Record<FilterName, string[]>;
 

@@ -1,4 +1,9 @@
-import { emptyCheckedFilters, emptyFilters, keys } from "@/constants";
+import {
+  emptyCheckedFilters,
+  emptyFilters,
+  filterNames,
+  keys,
+} from "@/constants";
 import type {
   CheckboxItems,
   CheckboxItemsByFilterName,
@@ -9,8 +14,10 @@ import type {
   OracleQueryUI,
 } from "@/types";
 import Fuse from "fuse.js";
-import { cloneDeep } from "lodash";
-import { useEffect, useMemo, useReducer, useState } from "react";
+import type { Draft, Immutable } from "immer";
+import { castDraft, produce } from "immer";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useImmerReducer } from "use-immer";
 import { useDebounce } from "usehooks-ts";
 
 /**
@@ -23,17 +30,20 @@ export function useFilterAndSearch(queries: OracleQueryUI[] | undefined = []) {
   const { filteredQueries, ...filterProps } = useFilters(queries);
   const { results, ...searchProps } = useSearch(filteredQueries);
 
-  return {
-    results,
-    ...filterProps,
-    ...searchProps,
-  };
+  return useMemo(
+    () => ({
+      results,
+      ...filterProps,
+      ...searchProps,
+    }),
+    [filterProps, results, searchProps],
+  );
 }
 
 /**
  * Searches the provided queries based on search term
  */
-export function useSearch(queries: OracleQueryUI[]) {
+export function useSearch(queries: Immutable<OracleQueryUI[]>) {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
@@ -47,8 +57,7 @@ export function useSearch(queries: OracleQueryUI[]) {
 
   const results = useMemo(() => {
     if (!debouncedSearchTerm) return queries;
-    const results = fuse.search(debouncedSearchTerm);
-    return results.map((result) => result.item);
+    return fuse.search(debouncedSearchTerm).map(({ item }) => item);
   }, [queries, fuse, debouncedSearchTerm]);
 
   return {
@@ -58,11 +67,11 @@ export function useSearch(queries: OracleQueryUI[]) {
   };
 }
 
-type State = {
+type State = Immutable<{
   filters: CheckboxItemsByFilterName;
   checkedFilters: CheckedFiltersByFilterName;
   filteredQueries: OracleQueryUI[];
-};
+}>;
 
 type Action = MakeEntries | CheckedChange | Reset;
 
@@ -98,52 +107,59 @@ const initialState: State = {
  * @returns reset - reset the filters to their initial state
  */
 export function useFilters(queries: OracleQueryUI[]) {
-  const [state, dispatch] = useReducer(filtersReducer(queries), initialState);
+  const [state, dispatch] = useImmerReducer(
+    filtersReducer(queries),
+    initialState,
+  );
 
   useEffect(() => {
     dispatch({ type: "make-entries" });
-  }, [queries]);
+  }, [queries, dispatch]);
 
-  function onCheckedChange(payload: CheckedChangePayload) {
-    dispatch({ type: "checked-change", payload });
-  }
+  const onCheckedChange = useCallback(
+    (payload: CheckedChangePayload) => {
+      dispatch({ type: "checked-change", payload });
+    },
+    [dispatch],
+  );
 
-  function reset() {
+  const reset = useCallback(() => {
     dispatch({ type: "reset" });
-  }
+  }, [dispatch]);
 
   const { filters, checkedFilters, filteredQueries } = state;
 
-  return {
-    filters,
-    checkedFilters,
-    filteredQueries,
-    onCheckedChange,
-    reset,
-  };
+  return useMemo(
+    () => ({
+      filters,
+      checkedFilters,
+      filteredQueries,
+      onCheckedChange,
+      reset,
+    }),
+    [checkedFilters, filters, filteredQueries, onCheckedChange, reset],
+  );
 }
 
 function countQueriesForFilter(
-  queries: OracleQueryUI[],
-  filter: Partial<{ [key in FilterName]: string }>,
+  queries: Immutable<OracleQueryUI[]>,
+  filter: Partial<Record<FilterName, string>>,
 ) {
   const [filterName, itemName] = Object.entries(filter)[0];
   return queries.filter((query) => query[filterName as FilterName] === itemName)
     .length;
 }
 
-function filtersReducer(queries: OracleQueryUI[]) {
+function filtersReducer(queries: Immutable<OracleQueryUI[]>) {
   // use currying to capture queries
-  return function reducer(oldState: State, action: Action) {
+  return function reducer(draft: Draft<State>, action: Action) {
     switch (action.type) {
       case "make-entries": {
-        const newState = cloneDeep(oldState);
+        filterNames.forEach((filterName) => {
+          draft.filters[filterName].All.count = queries.length;
+        });
 
-        newState.filters.project.All.count = queries.length;
-        newState.filters.chainName.All.count = queries.length;
-        newState.filters.oracleType.All.count = queries.length;
-
-        Object.values(newState.filters).forEach((filter) => {
+        Object.values(draft.filters).forEach((filter) => {
           Object.entries(filter).forEach(([itemName, item]) => {
             if (itemName !== "All") {
               item.count = 0;
@@ -152,32 +168,24 @@ function filtersReducer(queries: OracleQueryUI[]) {
         });
 
         queries.forEach((query) => {
-          const { project, chainName, oracleType } = query;
-
-          newState.filters.project[project] = {
-            checked: oldState.filters.project[project]?.checked ?? false,
-            count: countQueriesForFilter(queries, { project }),
-          };
-
-          newState.filters.chainName[chainName] = {
-            checked: oldState.filters.chainName[chainName]?.checked ?? false,
-            count: countQueriesForFilter(queries, { chainName }),
-          };
-
-          newState.filters.oracleType[oracleType] = {
-            checked: oldState.filters.oracleType[oracleType]?.checked ?? false,
-            count: countQueriesForFilter(queries, { oracleType }),
-          };
+          filterNames.forEach((filterName) => {
+            draft.filters[filterName][query[filterName]] = {
+              checked:
+                draft.filters[filterName][query[filterName]]?.checked ?? false,
+              count: countQueriesForFilter(queries, {
+                [filterName]: query[filterName],
+              }),
+            };
+          });
         });
 
-        newState.checkedFilters = makeCheckedFilters(newState);
-        newState.filteredQueries = makeFilteredQueries(newState, queries);
+        draft.checkedFilters = makeCheckedFilters(draft);
+        draft.filteredQueries = makeFilteredQueries(draft, queries);
 
-        return newState;
+        break;
       }
       case "checked-change": {
-        const newState = cloneDeep(oldState);
-        const { filters } = newState;
+        const { filters } = draft;
         const { filterName, checked, itemName } = action.payload;
         const items = filters[filterName];
         const newFilters = makeFilters({
@@ -186,16 +194,13 @@ function filtersReducer(queries: OracleQueryUI[]) {
           itemName,
         });
 
-        newState.filters[filterName] = newFilters;
-        newState.checkedFilters = makeCheckedFilters(newState);
-        newState.filteredQueries = makeFilteredQueries(newState, queries);
-
-        return newState;
+        draft.filters[filterName] = newFilters;
+        draft.checkedFilters = makeCheckedFilters(draft);
+        draft.filteredQueries = makeFilteredQueries(draft, queries);
+        break;
       }
       case "reset": {
-        const newState = cloneDeep(oldState);
-
-        Object.values(newState.filters).forEach((filter) => {
+        Object.values(draft.filters).forEach((filter) => {
           Object.entries(filter).forEach(([itemName, item]) => {
             if (itemName === "All") {
               item.checked = true;
@@ -205,13 +210,12 @@ function filtersReducer(queries: OracleQueryUI[]) {
           });
         });
 
-        newState.checkedFilters = makeCheckedFilters(newState);
-        newState.filteredQueries = makeFilteredQueries(newState, queries);
-
-        return newState;
+        draft.checkedFilters = makeCheckedFilters(draft);
+        draft.filteredQueries = makeFilteredQueries(draft, queries);
+        break;
       }
       default:
-        return oldState;
+        break;
     }
   };
 }
@@ -225,59 +229,60 @@ function makeFilters({
   checked: CheckboxState;
   itemName: string;
 }) {
-  const newItems = cloneDeep(items);
-
   const hasItemsOtherThanAllChecked = Object.entries(items).some(
-    ([name, { checked }]) => name !== "All" && checked,
+    ([name, { checked }]) => name !== "All" && !!checked,
   );
 
   if (itemName === "All") {
     // if all is checked, we cannot let the user uncheck it without having at least one other item checked
-    if (!hasItemsOtherThanAllChecked) return newItems;
+    if (!hasItemsOtherThanAllChecked) return items;
 
     // if all is checked, uncheck all other items
-    Object.keys(newItems).forEach((name) => {
-      newItems[name].checked = false;
+    return produce(items, (draft) => {
+      Object.keys(draft).forEach((name) => {
+        draft[name].checked = false;
+      });
+
+      draft.All.checked = true;
     });
-
-    newItems.All.checked = true;
-
-    return newItems;
   }
 
   // if we are unchecking the only remaining checked item, check all
   if (!checked && isTheOnlyItemChecked(itemName, items)) {
-    newItems[itemName].checked = false;
-    newItems.All.checked = true;
-
-    return newItems;
+    return produce(items, (draft) => {
+      draft[itemName].checked = false;
+      draft.All.checked = true;
+    });
   }
 
   // if we are checking an item, uncheck all
-  newItems.All.checked = false;
-  newItems[itemName].checked = checked;
-
-  return newItems;
+  return produce(items, (draft) => {
+    draft.All.checked = false;
+    draft[itemName].checked = checked;
+  });
 }
 
 function makeCheckedFilters({ filters }: State) {
   return Object.entries(filters).reduce((acc, [filterName, items]) => {
-    const checkedItems = Object.entries(items).reduce(
+    const checkedItems = Object.entries(items).reduce<string[]>(
       (acc, [itemName, option]) => {
         if (option.checked && itemName !== "All") {
           acc.push(itemName);
         }
         return acc;
       },
-      [] as string[],
+      [],
     );
     acc[filterName as FilterName] = checkedItems;
     return acc;
   }, {} as CheckedFiltersByFilterName);
 }
 
-function makeFilteredQueries(state: State, queries: OracleQueryUI[]) {
-  const result = [];
+function makeFilteredQueries(
+  state: State,
+  queries: Immutable<OracleQueryUI[]>,
+) {
+  const result: Draft<OracleQueryUI[]> = [];
 
   for (const query of queries) {
     let passes = true;
@@ -289,7 +294,7 @@ function makeFilteredQueries(state: State, queries: OracleQueryUI[]) {
     }
 
     if (passes) {
-      result.push(query);
+      result.push(castDraft(query));
     }
   }
 
@@ -299,7 +304,7 @@ function makeFilteredQueries(state: State, queries: OracleQueryUI[]) {
 function isTheOnlyItemChecked(itemName: string, items: CheckboxItems) {
   return (
     Object.entries(items).filter(
-      ([key, { checked }]) => key !== itemName && checked,
+      ([key, { checked }]) => key !== itemName && !!checked,
     ).length === 0
   );
 }
