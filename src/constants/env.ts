@@ -18,6 +18,8 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_V1_42161: ss.optional(ss.string()),
   // goerli
   NEXT_PUBLIC_SUBGRAPH_V1_5: ss.optional(ss.string()),
+  // mumbai
+  NEXT_PUBLIC_SUBGRAPH_V1_80001: ss.optional(ss.string()),
 
   NEXT_PUBLIC_SUBGRAPH_V2_1: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V2_10: ss.optional(ss.string()),
@@ -25,6 +27,7 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_V2_288: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V2_42161: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V2_5: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_V2_80001: ss.optional(ss.string()),
 
   NEXT_PUBLIC_SUBGRAPH_V3_1: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V3_10: ss.optional(ss.string()),
@@ -32,6 +35,7 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_V3_288: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V3_42161: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V3_5: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_V3_80001: ss.optional(ss.string()),
 
   NEXT_PUBLIC_SUBGRAPH_SKINNY_1: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_SKINNY_10: ss.optional(ss.string()),
@@ -39,6 +43,7 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_SKINNY_288: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_SKINNY_42161: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_SKINNY_5: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_SKINNY_80001: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v1
   NEXT_PUBLIC_PROVIDER_V1_1: ss.optional(ss.string()),
@@ -47,6 +52,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V1_42161: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V1_5: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V1_10: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V1_80001: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v2
   NEXT_PUBLIC_PROVIDER_V2_1: ss.optional(ss.string()),
@@ -55,6 +61,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V2_42161: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V2_5: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V2_10: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_80001: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v3
   NEXT_PUBLIC_PROVIDER_V3_1: ss.optional(ss.string()),
@@ -63,6 +70,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V3_42161: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_5: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_10: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V3_80001: ss.optional(ss.string()),
 
   NEXT_PUBLIC_PROVIDER_SKINNY_1: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_10: ss.optional(ss.string()),
@@ -70,6 +78,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_SKINNY_288: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_42161: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_5: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_SKINNY_80001: ss.optional(ss.string()),
   // not supported yet
   // NEXT_PUBLIC_PROVIDER_V1_416: ss.optional(ss.string()),
   // NEXT_PUBLIC_PROVIDER_V1_43114: ss.optional(ss.string()),
@@ -90,6 +99,7 @@ const env = ss.create(
     NEXT_PUBLIC_SUBGRAPH_V1_288: process.env.NEXT_PUBLIC_SUBGRAPH_V1_288,
     NEXT_PUBLIC_SUBGRAPH_V1_42161: process.env.NEXT_PUBLIC_SUBGRAPH_V1_42161,
     NEXT_PUBLIC_SUBGRAPH_V1_5: process.env.NEXT_PUBLIC_SUBGRAPH_V1_5,
+    NEXT_PUBLIC_SUBGRAPH_V1_80001: process.env.NEXT_PUBLIC_SUBGRAPH_V1_80001,
 
     NEXT_PUBLIC_SUBGRAPH_V2_1: process.env.NEXT_PUBLIC_SUBGRAPH_V2_1,
     NEXT_PUBLIC_SUBGRAPH_V2_10: process.env.NEXT_PUBLIC_SUBGRAPH_V2_10,
@@ -97,6 +107,7 @@ const env = ss.create(
     NEXT_PUBLIC_SUBGRAPH_V2_288: process.env.NEXT_PUBLIC_SUBGRAPH_V2_288,
     NEXT_PUBLIC_SUBGRAPH_V2_42161: process.env.NEXT_PUBLIC_SUBGRAPH_V2_42161,
     NEXT_PUBLIC_SUBGRAPH_V2_5: process.env.NEXT_PUBLIC_SUBGRAPH_V2_5,
+    NEXT_PUBLIC_SUBGRAPH_V2_80001: process.env.NEXT_PUBLIC_SUBGRAPH_V2_80001,
 
     NEXT_PUBLIC_SUBGRAPH_V3_1: process.env.NEXT_PUBLIC_SUBGRAPH_V3_1,
     NEXT_PUBLIC_SUBGRAPH_V3_10: process.env.NEXT_PUBLIC_SUBGRAPH_V3_10,
@@ -104,6 +115,7 @@ const env = ss.create(
     NEXT_PUBLIC_SUBGRAPH_V3_288: process.env.NEXT_PUBLIC_SUBGRAPH_V3_288,
     NEXT_PUBLIC_SUBGRAPH_V3_42161: process.env.NEXT_PUBLIC_SUBGRAPH_V3_42161,
     NEXT_PUBLIC_SUBGRAPH_V3_5: process.env.NEXT_PUBLIC_SUBGRAPH_V3_5,
+    NEXT_PUBLIC_SUBGRAPH_V3_80001: process.env.NEXT_PUBLIC_SUBGRAPH_V3_80001,
 
     NEXT_PUBLIC_SUBGRAPH_SKINNY_1: process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_1,
     NEXT_PUBLIC_SUBGRAPH_SKINNY_10: process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_10,
@@ -114,6 +126,8 @@ const env = ss.create(
     NEXT_PUBLIC_SUBGRAPH_SKINNY_42161:
       process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_42161,
     NEXT_PUBLIC_SUBGRAPH_SKINNY_5: process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_5,
+    NEXT_PUBLIC_SUBGRAPH_SKINNY_80001:
+      process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_80001,
 
     // enabling providers for each chain will enable web3 data services, which are needed for real time updates
     NEXT_PUBLIC_PROVIDER_V1_1: process.env.NEXT_PUBLIC_PROVIDER_V1_1,
@@ -122,18 +136,21 @@ const env = ss.create(
     NEXT_PUBLIC_PROVIDER_V1_42161: process.env.NEXT_PUBLIC_PROVIDER_V1_42161,
     NEXT_PUBLIC_PROVIDER_V1_5: process.env.NEXT_PUBLIC_PROVIDER_V1_5,
     NEXT_PUBLIC_PROVIDER_V1_10: process.env.NEXT_PUBLIC_PROVIDER_V1_10,
+    NEXT_PUBLIC_PROVIDER_V1_80001: process.env.NEXT_PUBLIC_PROVIDER_V1_80001,
     NEXT_PUBLIC_PROVIDER_V2_1: process.env.NEXT_PUBLIC_PROVIDER_V2_1,
     NEXT_PUBLIC_PROVIDER_V2_137: process.env.NEXT_PUBLIC_PROVIDER_V2_137,
     NEXT_PUBLIC_PROVIDER_V2_288: process.env.NEXT_PUBLIC_PROVIDER_V2_288,
     NEXT_PUBLIC_PROVIDER_V2_42161: process.env.NEXT_PUBLIC_PROVIDER_V2_42161,
     NEXT_PUBLIC_PROVIDER_V2_5: process.env.NEXT_PUBLIC_PROVIDER_V2_5,
     NEXT_PUBLIC_PROVIDER_V2_10: process.env.NEXT_PUBLIC_PROVIDER_V2_10,
+    NEXT_PUBLIC_PROVIDER_V2_80001: process.env.NEXT_PUBLIC_PROVIDER_V2_80001,
     NEXT_PUBLIC_PROVIDER_V3_1: process.env.NEXT_PUBLIC_PROVIDER_V3_1,
     NEXT_PUBLIC_PROVIDER_V3_137: process.env.NEXT_PUBLIC_PROVIDER_V3_137,
     NEXT_PUBLIC_PROVIDER_V3_288: process.env.NEXT_PUBLIC_PROVIDER_V3_288,
     NEXT_PUBLIC_PROVIDER_V3_42161: process.env.NEXT_PUBLIC_PROVIDER_V3_42161,
     NEXT_PUBLIC_PROVIDER_V3_5: process.env.NEXT_PUBLIC_PROVIDER_V3_5,
     NEXT_PUBLIC_PROVIDER_V3_10: process.env.NEXT_PUBLIC_PROVIDER_V3_10,
+    NEXT_PUBLIC_PROVIDER_V3_80001: process.env.NEXT_PUBLIC_PROVIDER_V3_80001,
     NEXT_PUBLIC_PROVIDER_SKINNY_1: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_1,
     NEXT_PUBLIC_PROVIDER_SKINNY_137:
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_137,
@@ -143,6 +160,8 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_42161,
     NEXT_PUBLIC_PROVIDER_SKINNY_5: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_5,
     NEXT_PUBLIC_PROVIDER_SKINNY_10: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_10,
+    NEXT_PUBLIC_PROVIDER_SKINNY_80001:
+      process.env.NEXT_PUBLIC_PROVIDER_SKINNY_80001,
     // not supported yet
     // NEXT_PUBLIC_PROVIDER_V1_416:   process.env.NEXT_PUBLIC_PROVIDER_V1_416,
     // NEXT_PUBLIC_PROVIDER_V1_43114: process.env.NEXT_PUBLIC_PROVIDER_V1_43114,
@@ -269,6 +288,18 @@ function parseEnv(env: Env): Config {
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V1" }),
     });
   }
+  if (env.NEXT_PUBLIC_SUBGRAPH_V1_80001) {
+    subgraphs.push({
+      source: "gql",
+      url: env.NEXT_PUBLIC_SUBGRAPH_V1_80001,
+      type: "Optimistic Oracle V1",
+      chainId: 80001,
+      address: getContractAddress({
+        chainId: 80001,
+        type: "Optimistic Oracle V1",
+      }),
+    });
+  }
 
   if (env.NEXT_PUBLIC_SUBGRAPH_V2_1) {
     subgraphs.push({
@@ -336,6 +367,18 @@ function parseEnv(env: Env): Config {
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V2" }),
     });
   }
+  if (env.NEXT_PUBLIC_SUBGRAPH_V2_80001) {
+    subgraphs.push({
+      source: "gql",
+      url: env.NEXT_PUBLIC_SUBGRAPH_V2_80001,
+      type: "Optimistic Oracle V2",
+      chainId: 80001,
+      address: getContractAddress({
+        chainId: 80001,
+        type: "Optimistic Oracle V2",
+      }),
+    });
+  }
 
   if (env.NEXT_PUBLIC_SUBGRAPH_V3_1) {
     subgraphs.push({
@@ -401,6 +444,18 @@ function parseEnv(env: Env): Config {
       type: "Optimistic Oracle V3",
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V3" }),
+    });
+  }
+  if (env.NEXT_PUBLIC_SUBGRAPH_V3_80001) {
+    subgraphs.push({
+      source: "gql",
+      url: env.NEXT_PUBLIC_SUBGRAPH_V3_80001,
+      type: "Optimistic Oracle V3",
+      chainId: 80001,
+      address: getContractAddress({
+        chainId: 80001,
+        type: "Optimistic Oracle V3",
+      }),
     });
   }
   if (env.NEXT_PUBLIC_SUBGRAPH_SKINNY_1) {
@@ -475,6 +530,18 @@ function parseEnv(env: Env): Config {
       }),
     });
   }
+  if (env.NEXT_PUBLIC_SUBGRAPH_SKINNY_80001) {
+    subgraphs.push({
+      source: "gql",
+      url: env.NEXT_PUBLIC_SUBGRAPH_SKINNY_80001,
+      type: "Skinny Optimistic Oracle",
+      chainId: 80001,
+      address: getContractAddress({
+        chainId: 80001,
+        type: "Skinny Optimistic Oracle",
+      }),
+    });
+  }
   // Providers
   if (env.NEXT_PUBLIC_PROVIDER_V1_1) {
     providers.push({
@@ -532,6 +599,19 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V1_5,
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V1" }),
+      blockHistoryLimit: 100000,
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_V1_80001) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V1",
+      url: env.NEXT_PUBLIC_PROVIDER_V1_80001,
+      chainId: 80001,
+      address: getContractAddress({
+        chainId: 80001,
+        type: "Optimistic Oracle V1",
+      }),
       blockHistoryLimit: 100000,
     });
   }
@@ -607,6 +687,19 @@ function parseEnv(env: Env): Config {
       blockHistoryLimit: 100000,
     });
   }
+  if (env.NEXT_PUBLIC_PROVIDER_V2_80001) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V2",
+      url: env.NEXT_PUBLIC_PROVIDER_V2_80001,
+      chainId: 80001,
+      address: getContractAddress({
+        chainId: 80001,
+        type: "Optimistic Oracle V2",
+      }),
+      blockHistoryLimit: 100000,
+    });
+  }
   if (env.NEXT_PUBLIC_PROVIDER_V2_10) {
     providers.push({
       source: "provider",
@@ -676,6 +769,19 @@ function parseEnv(env: Env): Config {
       url: env.NEXT_PUBLIC_PROVIDER_V3_5,
       chainId: 5,
       address: getContractAddress({ chainId: 5, type: "Optimistic Oracle V3" }),
+      blockHistoryLimit: 100000,
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_V3_80001) {
+    providers.push({
+      source: "provider",
+      type: "Optimistic Oracle V3",
+      url: env.NEXT_PUBLIC_PROVIDER_V3_80001,
+      chainId: 80001,
+      address: getContractAddress({
+        chainId: 80001,
+        type: "Optimistic Oracle V3",
+      }),
       blockHistoryLimit: 100000,
     });
   }
@@ -752,6 +858,19 @@ function parseEnv(env: Env): Config {
       chainId: 5,
       address: getContractAddress({
         chainId: 5,
+        type: "Skinny Optimistic Oracle",
+      }),
+      blockHistoryLimit: 100000,
+    });
+  }
+  if (env.NEXT_PUBLIC_PROVIDER_SKINNY_80001) {
+    providers.push({
+      source: "provider",
+      type: "Skinny Optimistic Oracle",
+      url: env.NEXT_PUBLIC_PROVIDER_SKINNY_80001,
+      chainId: 80001,
+      address: getContractAddress({
+        chainId: 80001,
         type: "Skinny Optimistic Oracle",
       }),
       blockHistoryLimit: 100000,

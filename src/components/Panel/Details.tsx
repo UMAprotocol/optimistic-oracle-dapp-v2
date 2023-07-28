@@ -3,6 +3,7 @@ import AncillaryData from "public/assets/icons/ancillary-data.svg";
 import Timestamp from "public/assets/icons/timestamp.svg";
 import { Fragment } from "react";
 import { AdditionalTextData } from "./AdditionalTextData";
+import { RatedAssertionTextData } from "./RatedAssertionTextData";
 import {
   SectionSubTitle,
   SectionTitle,
@@ -24,7 +25,11 @@ export function Details({
   queryText,
   queryTextHex,
   moreInformation,
+  project,
+  chainId,
 }: OracleQueryUI) {
+  const isRated = project === "Rated";
+
   return (
     <div className="pb-16 px-page-padding lg:px-7">
       <DetailWrapper>
@@ -78,11 +83,15 @@ export function Details({
           <AncillaryData />
           <SectionTitle>Additional Text Data</SectionTitle>
         </SectionTitleWrapper>
-        <AdditionalTextData
-          description={description}
-          queryText={queryText}
-          queryTextHex={queryTextHex}
-        />
+        {isRated && queryText ? (
+          <RatedAssertionTextData queryText={queryText} chainId={chainId} />
+        ) : (
+          <AdditionalTextData
+            description={description}
+            queryText={queryText}
+            queryTextHex={queryTextHex}
+          />
+        )}
       </DetailWrapper>
       <DetailWrapper>
         <SectionTitleWrapper>

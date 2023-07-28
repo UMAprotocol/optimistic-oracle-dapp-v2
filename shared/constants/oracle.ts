@@ -15,6 +15,7 @@ export const projects = [
   "Across",
   "Sherlock",
   "OSnap",
+  "Rated",
 ] as const;
 
 export const requestStates = [
