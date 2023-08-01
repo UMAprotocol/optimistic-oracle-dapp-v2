@@ -48,6 +48,7 @@ export const DropdownContent = styled(RadixDropdown.Content)`
   background: var(--white);
   border: 1px solid var(--blue-grey-400);
   border-radius: 4px;
+  z-index: 9999;
 `;
 
 export const CheckboxBox = styled.div<{ $checked: CheckboxState }>`
