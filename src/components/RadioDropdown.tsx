@@ -57,7 +57,6 @@ const _Trigger = styled(DropdownTrigger)`
 
 const _Content = styled(DropdownContent)`
   padding-block: 0;
-  z-index: 2;
 `;
 
 const _RadioItem = styled(RadioItem)`
