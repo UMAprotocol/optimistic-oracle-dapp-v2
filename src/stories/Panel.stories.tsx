@@ -89,6 +89,33 @@ export const Propose: Story = {
     page: "propose",
     query: makeMockOracleQueryUI({
       actionType: "propose",
+      proposeOptions: [
+        {
+          label: "No",
+          value: "0",
+          secondaryLabel: "p1",
+        },
+        {
+          label: "Yes",
+          value: "1",
+          secondaryLabel: "p2",
+        },
+        {
+          label: "unknown/50-50",
+          value: "0.5",
+          secondaryLabel: "p3",
+        },
+        {
+          label: "Early request",
+          value:
+            "-57896044618658097711785492504343953926634992332820282019728.792003956564819968",
+          secondaryLabel: "p4",
+        },
+        {
+          label: "Custom",
+          value: "custom",
+        },
+      ],
     }),
   },
 };
