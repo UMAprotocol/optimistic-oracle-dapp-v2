@@ -956,10 +956,12 @@ async function runTests() {
       const detail = entry.detail as {
         chainName: string;
         oracleType: string;
+        requestNumber: string;
       };
       return {
         chainName: detail.chainName,
         oracleType: detail.oracleType,
+        requestNumber: detail.requestNumber,
         duration: entry.duration,
       };
     })
@@ -997,6 +999,7 @@ async function testFetchAllRequests(
   oracleType: string,
 ) {
   const result: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
+  let requestNumber = 1;
   let skip = 0;
   const first = 1000;
   let requests = await testFetchPriceRequests(
@@ -1004,15 +1007,18 @@ async function testFetchAllRequests(
     makeRequestsQuery(queryName, isV2, first, skip),
     chainName,
     oracleType,
+    requestNumber,
   );
   while (requests.length > 0) {
     result.push(...requests);
     skip += first;
+    requestNumber += 1;
     requests = await testFetchPriceRequests(
       url,
       makeRequestsQuery(queryName, isV2, first, skip),
       chainName,
       oracleType,
+      requestNumber,
     );
   }
   return result;
@@ -1023,6 +1029,7 @@ async function testFetchPriceRequests(
   query: string,
   chainName: string,
   oracleType: string,
+  requestNumber: number,
 ) {
   performance.mark("startFetch");
   const result = await request<
@@ -1038,6 +1045,7 @@ async function testFetchPriceRequests(
     detail: {
       chainName,
       oracleType,
+      requestNumber,
     },
   });
   return result.optimisticPriceRequests;
@@ -1066,22 +1074,26 @@ async function testFetchAllAssertions(
 ) {
   const result: OOV3GraphEntity[] = [];
   let skip = 0;
+  let requestNumber = 1;
   const first = 500;
   let assertions = await testFetchAssertions(
     url,
     makeQuery(queryName, first, skip),
     chainName,
     oracleType,
+    requestNumber,
   );
 
   while (assertions.length > 0) {
     result.push(...assertions);
     skip += first;
+    requestNumber += 1;
     assertions = await testFetchAssertions(
       url,
       makeQuery(queryName, first, skip),
       chainName,
       oracleType,
+      requestNumber,
     );
   }
 
@@ -1093,6 +1105,7 @@ async function testFetchAssertions(
   query: string,
   chainName: string,
   oracleType: string,
+  requestNumber: number,
 ) {
   performance.mark("startFetch");
   const result = await request<OOV3GraphQuery>(url, query);
@@ -1103,6 +1116,7 @@ async function testFetchAssertions(
     detail: {
       chainName,
       oracleType,
+      requestNumber,
     },
   });
   return result.assertions;
