@@ -31,6 +31,7 @@ export function AdditionalTextData({
           <div className="text-xs sm:text-base">
             <ReactMarkdown
               components={{
+                p: (props) => <p {...props} className="break-words" />,
                 a: (props) => (
                   <a
                     className="text-red-500 hover:underline"
