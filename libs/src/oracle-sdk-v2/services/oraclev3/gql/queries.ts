@@ -33,7 +33,7 @@ async function fetchAssertions(url: string, query: string) {
   return result.assertions;
 }
 
-function makeQuery(queryName: string, first: number, skip: number) {
+export function makeQuery(queryName: string, first: number, skip: number) {
   const query = gql`
   query ${queryName} {
     assertions(first: ${first}, skip: ${skip}) {

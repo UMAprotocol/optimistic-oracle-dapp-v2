@@ -12,7 +12,7 @@ import request, { gql } from "graphql-request";
 export async function getPriceRequests(
   url: string,
   chainId: ChainId,
-  oracleType: OracleType
+  oracleType: OracleType,
 ) {
   const chainName = chainsById[chainId];
   const queryName = makeQueryName(oracleType, chainName);
@@ -27,14 +27,14 @@ async function fetchAllRequests(url: string, queryName: string, isV2: boolean) {
   const first = 1000;
   let requests = await fetchPriceRequests(
     url,
-    makeQuery(queryName, isV2, first, skip)
+    makeQuery(queryName, isV2, first, skip),
   );
   while (requests.length > 0) {
     result.push(...requests);
     skip += first;
     requests = await fetchPriceRequests(
       url,
-      makeQuery(queryName, isV2, first, skip)
+      makeQuery(queryName, isV2, first, skip),
     );
   }
   return result;
@@ -50,11 +50,11 @@ async function fetchPriceRequests(url: string, query: string) {
   return result.optimisticPriceRequests;
 }
 
-function makeQuery(
+export function makeQuery(
   queryName: string,
   isV2: boolean,
   first: number,
-  skip: number
+  skip: number,
 ) {
   const query = gql`
   query ${queryName} {
