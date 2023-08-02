@@ -1,0 +1,157 @@
+[
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 2582.6507090330124
+  },
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 2562.021749973297
+  },
+  {
+    "chainName": "Ethereum",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 784.8749170303345
+  },
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 672.9641669988632
+  },
+  {
+    "chainName": "Optimism",
+    "oracleType": "Optimistic Oracle V3",
+    "duration": 651.7956250309944
+  },
+  {
+    "chainName": "Optimism",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 534.7173330187798
+  },
+  {
+    "chainName": "Ethereum",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 414.4810000061989
+  },
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 378.18983298540115
+  },
+  {
+    "chainName": "Arbitrum",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 369.4298329949379
+  },
+  {
+    "chainName": "Boba",
+    "oracleType": "Optimistic Oracle V3",
+    "duration": 363.3888750076294
+  },
+  {
+    "chainName": "Boba",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 359.0324999690056
+  },
+  {
+    "chainName": "Arbitrum",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 358.3435000181198
+  },
+  {
+    "chainName": "Ethereum",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 323.21320801973343
+  },
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 311.77562499046326
+  },
+  {
+    "chainName": "Ethereum",
+    "oracleType": "Optimistic Oracle V3",
+    "duration": 281.34433299303055
+  },
+  {
+    "chainName": "Optimism",
+    "oracleType": "Optimistic Oracle V3",
+    "duration": 237.1989169716835
+  },
+  {
+    "chainName": "Optimism",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 235.29133301973343
+  },
+  {
+    "chainName": "Optimism",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 201.31879204511642
+  },
+  {
+    "chainName": "Boba",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 174.08470803499222
+  },
+  {
+    "chainName": "Ethereum",
+    "oracleType": "Skinny Optimistic Oracle",
+    "duration": 162.7437919974327
+  },
+  {
+    "chainName": "Ethereum",
+    "oracleType": "Skinny Optimistic Oracle",
+    "duration": 160.47708296775818
+  },
+  {
+    "chainName": "Ethereum",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 118.3602499961853
+  },
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 72.96829199790955
+  },
+  {
+    "chainName": "Arbitrum",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 59.40379101037979
+  },
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 50.74112504720688
+  },
+  {
+    "chainName": "Optimism",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 43.91004204750061
+  },
+  {
+    "chainName": "Boba",
+    "oracleType": "Optimistic Oracle V1",
+    "duration": 27.13779103755951
+  },
+  {
+    "chainName": "Ethereum",
+    "oracleType": "Optimistic Oracle V3",
+    "duration": 26.837041974067688
+  },
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V3",
+    "duration": 25.446749985218048
+  },
+  {
+    "chainName": "Polygon",
+    "oracleType": "Optimistic Oracle V2",
+    "duration": 13.575290977954865
+  },
+  {
+    "chainName": "Arbitrum",
+    "oracleType": "Optimistic Oracle V3",
+    "duration": 6.570709049701691
+  }
+]
