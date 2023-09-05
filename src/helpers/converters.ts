@@ -902,7 +902,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
         if (rulesRegex && rulesRegex[1]) {
           result.description = `
 *Explanation*  
-${explanationRegex[1]}     
+[${explanationRegex[1]}](https://ipfs.io/ipfs/${explanationRegex[1]})   
 *Rules*  
 ${rulesRegex[1]}`;
         }
