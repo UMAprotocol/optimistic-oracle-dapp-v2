@@ -4,6 +4,7 @@ import Timestamp from "public/assets/icons/timestamp.svg";
 import { Fragment } from "react";
 import { AdditionalTextData } from "./AdditionalTextData";
 import { RatedAssertionTextData } from "./RatedAssertionTextData";
+import { OSnapTextData } from "./OSnapTextData";
 import {
   SectionSubTitle,
   SectionTitle,
@@ -28,7 +29,28 @@ export function Details({
   project,
   chainId,
 }: OracleQueryUI) {
-  const isRated = project === "Rated";
+  function getAdditionalTextData() {
+    if (!queryText) return undefined;
+    if (project === "Rated") {
+      return <RatedAssertionTextData queryText={queryText} chainId={chainId} />;
+    }
+    if (project === "OSnap") {
+      return (
+        <OSnapTextData
+          description={description}
+          queryText={queryText}
+          queryTextHex={queryTextHex}
+        />
+      );
+    }
+    return (
+      <AdditionalTextData
+        description={description}
+        queryText={queryText}
+        queryTextHex={queryTextHex}
+      />
+    );
+  }
 
   return (
     <div className="pb-16 px-page-padding lg:px-7">
@@ -83,15 +105,7 @@ export function Details({
           <AncillaryData />
           <SectionTitle>Additional Text Data</SectionTitle>
         </SectionTitleWrapper>
-        {isRated && queryText ? (
-          <RatedAssertionTextData queryText={queryText} chainId={chainId} />
-        ) : (
-          <AdditionalTextData
-            description={description}
-            queryText={queryText}
-            queryTextHex={queryTextHex}
-          />
-        )}
+        {getAdditionalTextData()}
       </DetailWrapper>
       <DetailWrapper>
         <SectionTitleWrapper>
