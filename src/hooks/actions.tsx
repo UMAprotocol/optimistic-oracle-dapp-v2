@@ -340,7 +340,7 @@ export function useDisputeAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { disputePriceParams, chainId } = query ?? {};
+  const { disputePriceParams, chainId, actionType } = query ?? {};
   const {
     config: disputePriceConfig,
     error: prepareDisputePriceError,
@@ -387,6 +387,7 @@ export function useDisputeAction({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disputePriceTransaction]);
 
+  if (actionType === "settle") return undefined;
   if (disputePriceParams === undefined) return undefined;
 
   if (isPrepareDisputePriceLoading) {
