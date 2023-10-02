@@ -6,6 +6,7 @@ import type { ChainId, OracleType } from "@shared/types";
 import { capitalize, orderBy, partition, words } from "lodash";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { css } from "styled-components";
+import type { Address } from "wagmi";
 
 /**
  * Adds an opacity value to an hsl string
@@ -206,4 +207,16 @@ export function isValidOracleType(
   oracleType: string | undefined,
 ): oracleType is OracleType {
   return !!oracleType && oracleType in oracleTypes;
+}
+
+export function isWagmiAddress(
+  maybeAddress: string | undefined,
+): maybeAddress is Address {
+  if (!maybeAddress) return false;
+  return "0x" == maybeAddress.slice(0, 2);
+}
+export function assertWagmiAddress(maybeAddress: string): Address {
+  if (!isWagmiAddress(maybeAddress))
+    throw new Error(`${maybeAddress} is not a valid address.`);
+  return maybeAddress;
 }

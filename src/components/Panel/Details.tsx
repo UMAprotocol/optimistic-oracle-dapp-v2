@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import { AdditionalTextData } from "./AdditionalTextData";
 import { RatedAssertionTextData } from "./RatedAssertionTextData";
 import { OSnapTextData } from "./OSnapTextData";
+import { PolymarketTextData } from "./PolymarketTextData";
 import {
   SectionSubTitle,
   SectionTitle,
@@ -37,6 +38,15 @@ export function Details({
     if (project === "OSnap") {
       return (
         <OSnapTextData
+          description={description}
+          queryText={queryText}
+          queryTextHex={queryTextHex}
+        />
+      );
+    }
+    if (project === "Polymarket") {
+      return (
+        <PolymarketTextData
           description={description}
           queryText={queryText}
           queryTextHex={queryTextHex}
