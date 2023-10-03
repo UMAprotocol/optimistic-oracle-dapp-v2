@@ -215,8 +215,9 @@ export function isWagmiAddress(
   if (!maybeAddress) return false;
   return "0x" == maybeAddress.slice(0, 2);
 }
-export function assertWagmiAddress(maybeAddress: string): Address {
+export function assertWagmiAddress(
+  maybeAddress: string,
+): asserts maybeAddress is Address {
   if (!isWagmiAddress(maybeAddress))
     throw new Error(`${maybeAddress} is not a valid address.`);
-  return maybeAddress;
 }
