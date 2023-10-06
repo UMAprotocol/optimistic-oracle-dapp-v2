@@ -59,7 +59,7 @@ export function PolymarketTextData(props: Props) {
     <>
       {bulletinUpdates?.data?.length ? (
         <>
-          <SectionSubTitle>Polymarket Clarifications</SectionSubTitle>
+          <SectionSubTitle>Polymarket Bulletin Board</SectionSubTitle>
           {bulletinUpdates.data.map((data) => {
             return (
               <Text key={data.timestamp.toString()}>
