@@ -2,7 +2,7 @@ import Verify from "@/components/pages/verify";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Optimistic Oracle V2 | Verify",
+  title: "Optimistic Oracle | Verify",
   description: "An optimistic oracle built for web3",
   icons: {
     icon: ["/favicon-32x32.png", "/favicon-16x16.png"],
@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@UMAprotocol",
-    title: "Optimistic Oracle V2 | UMA",
+    title: "Optimistic Oracle | UMA",
     images: "/assets/twitter-card.png",
   },
   openGraph: {
-    title: "Optimistic Oracle V2 | UMA",
+    title: "Optimistic Oracle | UMA",
     description: "An optimistic oracle built for web3",
     images: "/assets/twitter-card.png",
     url: "https://oracle.uma.xyz",
