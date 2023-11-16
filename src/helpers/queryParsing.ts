@@ -16,6 +16,10 @@ export function isOptimisticGovernor(decodedAncillaryData: string) {
   );
 }
 
+export function isYesOrNo(decodedIdentifier: string) {
+  return decodedIdentifier === "YES_OR_NO_QUERY";
+}
+
 export function checkIfIsCozy(decodedAncillaryData: string) {
   const cozyToken = "This will revert if a non-YES answer is proposed.";
   if (decodedAncillaryData.includes(cozyToken)) {
@@ -118,7 +122,9 @@ export function getQueryMetaData(
       description,
       umipUrl,
       umipNumber,
-      proposeOptions: undefined,
+      proposeOptions: isYesOrNo(decodedIdentifier)
+        ? makeSimpleYesOrNoOptions()
+        : undefined,
       project,
     };
   }
