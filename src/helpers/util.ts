@@ -125,7 +125,7 @@ function sortVerifyQueries(verify: OracleQueryUI[]) {
     ({ livenessEndsMilliseconds, disputeHash }) => {
       if (disputeHash !== undefined) return false;
       return (livenessEndsMilliseconds ?? 0) > Date.now();
-    },
+    }
   );
 
   return [
@@ -164,7 +164,7 @@ export function getPageForQuery({ actionType }: OracleQueryUI) {
 
 export function maybeGetValueTextFromOptions(
   valueText: string | null | undefined,
-  options: DropdownItem[] | undefined,
+  options: DropdownItem[] | undefined
 ) {
   return options?.find(({ value }) => value === valueText)?.label ?? valueText;
 }
@@ -177,7 +177,7 @@ export function maybeGetValueTextFromOptions(
 export function makeQueryString(
   newParams: Record<string, string | null | undefined>,
   pathname: string | null,
-  exitingSearchParams: ReadonlyURLSearchParams | null,
+  exitingSearchParams: ReadonlyURLSearchParams | null
 ) {
   const params = new URLSearchParams(exitingSearchParams?.toString());
   Object.entries(newParams).forEach(([key, value]) => {
@@ -188,7 +188,7 @@ export function makeQueryString(
 
 export function hasProperty<Obj extends object>(
   key: PropertyKey,
-  obj: Obj,
+  obj: Obj
 ): key is keyof Obj {
   return key in obj;
 }
@@ -198,26 +198,36 @@ export function isTransactionHash(hash: string | undefined) {
 }
 
 export function isValidChainId(
-  chainId: number | undefined,
+  chainId: number | undefined
 ): chainId is ChainId {
   return !!chainId && chainId in chainsById;
 }
 
 export function isValidOracleType(
-  oracleType: string | undefined,
+  oracleType: string | undefined
 ): oracleType is OracleType {
   return !!oracleType && oracleType in oracleTypes;
 }
 
 export function isWagmiAddress(
-  maybeAddress: string | undefined,
+  maybeAddress: string | undefined
 ): maybeAddress is Address {
   if (!maybeAddress) return false;
   return "0x" == maybeAddress.slice(0, 2);
 }
 export function assertWagmiAddress(
-  maybeAddress: string,
+  maybeAddress: string
 ): asserts maybeAddress is Address {
   if (!isWagmiAddress(maybeAddress))
     throw new Error(`${maybeAddress} is not a valid address.`);
+}
+
+/**
+ * Replaces unhelpful ethereum error/revert message with generic error message string
+ */
+export function sanitizeErrorMessage(errorMessage: string) {
+  if (errorMessage.toLocaleLowerCase().includes("cannot estimate gas")) {
+    return "Transaction Failed";
+  }
+  return errorMessage;
 }
