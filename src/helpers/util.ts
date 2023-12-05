@@ -221,3 +221,13 @@ export function assertWagmiAddress(
   if (!isWagmiAddress(maybeAddress))
     throw new Error(`${maybeAddress} is not a valid address.`);
 }
+
+/**
+ * Replaces unhelpful ethereum error/revert message with generic error message string
+ */
+export function sanitizeErrorMessage(errorMessage: string) {
+  if (errorMessage.toLocaleLowerCase().includes("cannot estimate gas")) {
+    return "Transaction Failed";
+  }
+  return errorMessage;
+}
