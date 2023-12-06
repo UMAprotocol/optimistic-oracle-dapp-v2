@@ -149,6 +149,8 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
       return "Snowtrace";
     case 42161:
       return "Arbiscan";
+    default:
+      "Block Explorer";
   }
 }
 
