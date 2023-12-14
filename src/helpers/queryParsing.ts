@@ -190,7 +190,7 @@ function dynamicPolymarketOptions(
     /res_data: (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+)/,
   );
   const correspondence = decodedAncillaryData.match(
-    /Where (p\d) corresponds to ([^,]+), (p\d) to ([^,]+), (p\d) to ([^.,]+)/,
+    /Where (p\d) corresponds to ((?:[^,]|,(?!\s))+), (p\d) to ((?:[^,]|,(?!\s))+), (p\d) to ([^.,]+)/,
   );
 
   if (!resData || !correspondence) return [];
