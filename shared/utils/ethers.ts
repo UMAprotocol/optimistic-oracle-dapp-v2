@@ -129,6 +129,31 @@ function getBlockExplorerUrlForChain(chainId: ChainId) {
   }
 }
 
+export function getBlockExplorerNameForChain(chainId: ChainId) {
+  switch (chainId) {
+    case 0:
+      return;
+    case 1 || 5:
+      return "Etherscan";
+    case 10:
+      return "Etherscan";
+    case 100:
+      return "Gnosisscan";
+    case 137 || 80001:
+      return "Polygonscan";
+    case 288:
+      return "Bobascan";
+    case 416:
+      return "SX Explorer";
+    case 43114:
+      return "Snowtrace";
+    case 42161:
+      return "Arbiscan";
+    default:
+      "Block Explorer";
+  }
+}
+
 export function makeBlockExplorerLink(
   hash: string,
   chainId: ChainId,
