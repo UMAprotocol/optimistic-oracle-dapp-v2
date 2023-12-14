@@ -30,7 +30,7 @@ export function checkIfIsCozy(decodedAncillaryData: string) {
 
 export function checkIfIsPolymarket(
   decodedIdentifier: string,
-  decodedAncillaryData: string,
+  decodedAncillaryData: string
 ) {
   const queryTitleToken = "q: title:";
   const resultDataToken = "res_data:";
@@ -44,7 +44,7 @@ export function checkIfIsPolymarket(
 
 export function getQueryMetaData(
   decodedIdentifier: string,
-  decodedQueryText: string,
+  decodedQueryText: string
 ): MetaData {
   const isAcross = decodedIdentifier === "ACROSS-V2";
   if (isAcross) {
@@ -143,7 +143,7 @@ export function getQueryMetaData(
 function getTitleFromAncillaryData(
   decodedAncillaryData: string,
   titleIdentifier = "title:",
-  descriptionIdentifier = "description:",
+  descriptionIdentifier = "description:"
 ) {
   const start = decodedAncillaryData.indexOf(titleIdentifier);
   const end =
@@ -163,7 +163,7 @@ function getTitleFromAncillaryData(
 
 function getDescriptionFromAncillaryData(
   decodedAncillaryData: string,
-  descriptionIdentifier = "description:",
+  descriptionIdentifier = "description:"
 ) {
   if (!decodedAncillaryData) {
     return undefined;
@@ -177,20 +177,20 @@ function getDescriptionFromAncillaryData(
 
   return decodedAncillaryData.substring(
     start + descriptionIdentifier.length,
-    end,
+    end
   );
 }
 
 // this will only work when there are exactly 3 or more proposeOptions, which should match most polymarket requests
 // it will only parse 3 proposeOptions, omitting p4, which is assumed to be "too early".
 function dynamicPolymarketOptions(
-  decodedAncillaryData: string,
+  decodedAncillaryData: string
 ): DropdownItem[] {
   const resData = decodedAncillaryData.match(
-    /res_data: (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+)/,
+    /res_data: (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+)/
   );
   const correspondence = decodedAncillaryData.match(
-    /Where (p\d) corresponds to ((?:[^,]|,(?!\s))+), (p\d) to ((?:[^,]|,(?!\s))+), (p\d) to ([^.,]+)/,
+    /Where (p\d) corresponds to ((?:[^,]|,(?!\s))+), (p\d) to ((?:[^,]|,(?!\s))+), (p\d) to ([^.,]+)/
   );
 
   if (!resData || !correspondence) return [];
@@ -203,7 +203,7 @@ function dynamicPolymarketOptions(
   });
 
   const correspondenceTable = Object.fromEntries(
-    chunk(cleanCorrespondence.slice(1), 2),
+    chunk(cleanCorrespondence.slice(1), 2)
   ) as Record<string, string>;
   const resDataTable = Object.fromEntries(chunk(resData.slice(1), 2)) as Record<
     string,
@@ -226,15 +226,22 @@ function dynamicPolymarketOptions(
  *
  * The res data always has proposeOptions for "yes", "no", and "unknown", and it sometimes has an option for "early request as well".
  */
+
+// res_data: p1: 0, p2: 1. Where p1 corresponds to No, p2 to Yes.
 export function maybeMakePolymarketOptions(
-  decodedAncillaryData: string,
+  decodedAncillaryData: string
 ): DropdownItem[] | undefined {
   const options1 = {
+    resData: "res_data: p1: 0, p2: 1",
+    corresponds: "Where p1 corresponds to No, p2 to Yes",
+  };
+
+  const options2 = {
     resData: "res_data: p1: 0, p2: 1, p3: 0.5",
     corresponds: "Where p2 corresponds to Yes, p1 to a No, p3 to unknown",
   };
 
-  const options2 = {
+  const options3 = {
     resData: `res_data: p1: 0, p2: 1, p3: 0.5, p4: ${earlyRequestMagicNumber}`,
     corresponds:
       "Where p1 corresponds to No, p2 to a Yes, p3 to unknown, and p4 to an early request",
@@ -245,6 +252,28 @@ export function maybeMakePolymarketOptions(
   if (
     decodedAncillaryData.includes(options1.resData) &&
     decodedAncillaryData.includes(options1.corresponds)
+  ) {
+    return [
+      {
+        label: "No",
+        value: "0",
+        secondaryLabel: "p1",
+      },
+      {
+        label: "Yes",
+        value: "1",
+        secondaryLabel: "p2",
+      },
+      {
+        label: "Custom",
+        value: "custom",
+      },
+    ];
+  }
+
+  if (
+    decodedAncillaryData.includes(options2.resData) &&
+    decodedAncillaryData.includes(options2.corresponds)
   ) {
     return [
       {
@@ -270,8 +299,8 @@ export function maybeMakePolymarketOptions(
   }
 
   if (
-    decodedAncillaryData.includes(options2.resData) &&
-    decodedAncillaryData.includes(options2.corresponds)
+    decodedAncillaryData.includes(options3.resData) &&
+    decodedAncillaryData.includes(options3.corresponds)
   ) {
     return [
       {
