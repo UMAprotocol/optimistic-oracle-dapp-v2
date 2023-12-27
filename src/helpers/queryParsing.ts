@@ -231,20 +231,24 @@ function dynamicPolymarketOptions(
 export function maybeMakePolymarketOptions(
   decodedAncillaryData: string,
 ): DropdownItem[] | undefined {
+  // this is a specific search to look for a misspelling with options "p2 to a Yes"
   const options1 = {
-    resData: "res_data: p1: 0, p2: 1",
-    corresponds: "Where p1 corresponds to No, p2 to Yes",
+    resData: `res_data: p1: 0, p2: 1, p3: 0.5, p4: ${earlyRequestMagicNumber}`,
+    corresponds:
+      "Where p1 corresponds to No, p2 to a Yes, p3 to unknown, and p4 to an early request",
   };
 
+  // this is a specific search to look for a misspelling with options "p2 to a No"
   const options2 = {
     resData: "res_data: p1: 0, p2: 1, p3: 0.5",
     corresponds: "Where p2 corresponds to Yes, p1 to a No, p3 to unknown",
   };
 
+  // this is a specific search for "neg risk markets" which only have p1/p2 options an no p3
   const options3 = {
-    resData: `res_data: p1: 0, p2: 1, p3: 0.5, p4: ${earlyRequestMagicNumber}`,
-    corresponds:
-      "Where p1 corresponds to No, p2 to a Yes, p3 to unknown, and p4 to an early request",
+    // note that these end with a period
+    resData: "res_data: p1: 0, p2: 1.",
+    corresponds: "Where p1 corresponds to No, p2 to Yes.",
   };
 
   const dynamicOptions = dynamicPolymarketOptions(decodedAncillaryData);
@@ -263,6 +267,11 @@ export function maybeMakePolymarketOptions(
         label: "Yes",
         value: "1",
         secondaryLabel: "p2",
+      },
+      {
+        label: "Unknown",
+        value: "0.5",
+        secondaryLabel: "p3",
       },
       {
         label: "Custom",
@@ -314,16 +323,6 @@ export function maybeMakePolymarketOptions(
         secondaryLabel: "p2",
       },
       {
-        label: "Unknown",
-        value: "0.5",
-        secondaryLabel: "p3",
-      },
-      {
-        label: "Early request",
-        value: earlyRequestMagicNumber,
-        secondaryLabel: "p4",
-      },
-      {
         label: "Custom",
         value: "custom",
       },
@@ -334,12 +333,7 @@ export function maybeMakePolymarketOptions(
   if (dynamicOptions.length >= 3) {
     return [
       ...dynamicOptions,
-      // we will always append early request and custom input
-      {
-        label: "Early request",
-        value: earlyRequestMagicNumber,
-        secondaryLabel: "p4",
-      },
+      // we will always append custom input
       {
         label: "Custom",
         value: "custom",
