@@ -120,6 +120,8 @@ function getBlockExplorerUrlForChain(chainId: ChainId) {
       return "https://bobascan.com";
     case 416:
       return "https://explorer.sx.technology";
+    case 1116:
+      return "https://scan.coredao.org";
     case 43114:
       return "https://snowtrace.io";
     case 42161:
@@ -145,6 +147,8 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
       return "Bobascan";
     case 416:
       return "SX Explorer";
+    case 1116:
+      return "Core Scan";
     case 43114:
       return "Snowtrace";
     case 42161:

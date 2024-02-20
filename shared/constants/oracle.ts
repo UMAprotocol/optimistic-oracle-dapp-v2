@@ -37,6 +37,7 @@ export const chainsById = {
   137: "Polygon",
   288: "Boba",
   416: "SX",
+  1116: "Core",
   43114: "Avalanche",
   42161: "Arbitrum",
   80001: "Mumbai",
