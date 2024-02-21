@@ -200,7 +200,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
       if (error == undefined) return;
       // index of service must align with order configs are passed into client
       const serviceConfig = serviceConfigs[i];
-      console.warn({ serviceConfig, error });
+      console.warn({ serviceConfig, error, i });
       // this error is coming from ether provider queries, this would mean fallback is broken
       if (serviceConfig?.source !== "gql") {
         addErrorMessage({
