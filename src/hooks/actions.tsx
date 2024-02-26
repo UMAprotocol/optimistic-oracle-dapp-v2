@@ -573,9 +573,9 @@ export function useSettlePriceAction({
   // this means this is probably disputed, but no answer available from dvm yet
   if (prepareSettlePriceError) {
     return {
-      title: disputed,
+      title: "Unable to Settle",
       disabled: true,
-      disabledReason: "This query is disputed.",
+      disabledReason: prepareSettlePriceError.message,
     };
   }
   if (isSuccess) {
