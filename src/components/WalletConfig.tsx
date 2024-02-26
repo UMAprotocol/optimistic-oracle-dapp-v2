@@ -7,21 +7,21 @@ import {
 } from "@/constants";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import type { ReactNode } from "react";
-import { WagmiConfig, configureChains, createClient } from "wagmi";
+import { WagmiConfig, configureChains, createConfig } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
-export const { chains, provider } = configureChains(supportedChains, [
+export const { chains, publicClient } = configureChains(supportedChains, [
   infuraProvider({ apiKey: config.infuraId }),
   publicProvider(),
 ]);
 
 const { connectors } = walletsAndConnectors;
 
-export const wagmiClient = createClient({
+export const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
-  provider,
+  publicClient,
 });
 
 export const rainbowKitTheme = darkTheme({
@@ -33,7 +33,7 @@ export const rainbowKitTheme = darkTheme({
 
 export function WalletConfig({ children }: { children: ReactNode }) {
   return (
-    <WagmiConfig client={wagmiClient}>
+    <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
         {children}
       </RainbowKitProvider>

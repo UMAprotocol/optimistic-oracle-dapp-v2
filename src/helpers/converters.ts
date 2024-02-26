@@ -32,7 +32,7 @@ import {
   parseEther,
 } from "@shared/utils";
 import { format } from "date-fns";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { upperCase } from "lodash";
 import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
@@ -44,8 +44,8 @@ export type RequiredRequest = Omit<
   "currency" | "bond" | "customLiveness"
 > & {
   currency: Address;
-  bond: BigNumber | null | undefined;
-  customLiveness: BigNumber | null | undefined;
+  bond: bigint | null | undefined;
+  customLiveness: bigint | null | undefined;
 };
 function canConvertToSolidityRequest(
   request: Request,
@@ -58,21 +58,17 @@ function convertToSolidityRequest(request: RequiredRequest): SolidityRequest {
     disputer: request.disputer || "0x0",
     currency: request.currency,
     settled: request.settlementHash ? true : false,
-    proposedPrice: request.proposedPrice
-      ? request.proposedPrice
-      : BigNumber.from(0),
-    resolvedPrice: request.settlementPrice
-      ? request.settlementPrice
-      : BigNumber.from(0),
+    proposedPrice: request.proposedPrice ? request.proposedPrice : 0n,
+    resolvedPrice: request.settlementPrice ? request.settlementPrice : 0n,
     expirationTime: request.proposalExpirationTimestamp
-      ? BigNumber.from(request.proposalExpirationTimestamp)
-      : BigNumber.from(0),
-    reward: request.reward ? request.reward : BigNumber.from(0),
-    finalFee: request.finalFee ? request.finalFee : BigNumber.from(0),
-    bond: request.bond ? BigNumber.from(request.bond) : BigNumber.from(0),
+      ? BigInt(request.proposalExpirationTimestamp)
+      : 0n,
+    reward: request.reward ? request.reward : BigInt(0),
+    finalFee: request.finalFee ? request.finalFee : BigInt(0),
+    bond: request.bond ? BigInt(request.bond) : BigInt(0),
     customLiveness: request.customLiveness
-      ? BigNumber.from(request.customLiveness)
-      : BigNumber.from(0),
+      ? BigInt(request.customLiveness)
+      : BigInt(0),
   };
 }
 
@@ -174,8 +170,8 @@ function getLivenessEnds(customLivenessOrExpirationTime?: string | null) {
 }
 
 function getPriceRequestValueText(
-  proposedPrice: BigNumber | null | undefined,
-  settlementPrice: BigNumber | null | undefined,
+  proposedPrice: bigint | null | undefined,
+  settlementPrice: bigint | null | undefined,
 ) {
   const price = settlementPrice ?? proposedPrice;
   if (price === null || price === undefined) return null;
@@ -204,7 +200,7 @@ function makeApproveBondSpendParams({
   oracleAddress,
   chainId,
 }: {
-  bond?: BigNumber;
+  bond?: bigint;
   tokenAddress?: Address;
   oracleAddress: Address;
   chainId: ChainId;
@@ -248,7 +244,7 @@ function makeProposePriceParams({
         bytes32Identifier,
         time,
         ancillaryData,
-        parseEther(proposedPrice),
+        parseEther(proposedPrice).toBigInt(),
       ] as const,
     };
   };
@@ -286,7 +282,7 @@ function makeProposePriceSkinnyParams({
         time,
         ancillaryData,
         request,
-        parseEther(proposedPrice),
+        parseEther(proposedPrice).toBigInt(),
       ] as const,
     };
   };
@@ -441,9 +437,9 @@ function makeSettleAssertionParams({
 
 function getOOV2SpecificValues(request: Request) {
   const isV2 = isOOV2PriceRequest(request);
-  const finalFee = request.finalFee ?? BigNumber.from(0);
+  const finalFee = request.finalFee ?? BigInt(0);
   // bond is final fee and bond together
-  const bond = isV2 && request.bond ? request.bond.add(finalFee) : finalFee;
+  const bond = isV2 && request.bond ? request.bond + finalFee : finalFee;
   const customLiveness = isV2 ? request.customLiveness : null;
   const eventBased = isV2 ? request.eventBased : null;
 
@@ -916,7 +912,9 @@ ${rulesRegex[1]}`;
   if (result.identifier === "ROPU_ETHx") {
     result.project = "Rated";
     result.title = "Verify MEV violations in ETHx staking pool";
-    result.queryText = BigNumber.from(result.queryTextHex).toString();
+    result.queryText = result.queryTextHex
+      ? BigInt(result.queryTextHex).toString()
+      : undefined;
     result.description = `Report ID #${result.queryText} from the Rated smart contract contains all violations that happened during the period it covers.`;
     result.moreInformation.unshift({
       title: "UMIP",

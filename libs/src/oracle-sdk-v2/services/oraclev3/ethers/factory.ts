@@ -126,7 +126,7 @@ const ConvertToSharedAssertion =
       // default this to true since its an assertion. if missing, UI will be missing data
       result.settlementResolution = true;
     }
-    if (bond) result.bond = bond;
+    if (bond) result.bond = bond.toBigInt();
     if (assertionTime) result.assertionTimestamp = assertionTime.toString();
     if (assertionBlockNumber)
       result.assertionBlockNumber = assertionBlockNumber.toString();

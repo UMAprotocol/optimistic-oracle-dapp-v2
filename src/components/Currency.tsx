@@ -2,7 +2,6 @@ import { Tooltip } from "@/components";
 import { getCurrencyIcon } from "@/constants";
 import type { ChainId } from "@shared/types";
 import type { Address } from "@wagmi/core";
-import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
 import { useToken } from "wagmi";
 import { FormattedTokenValue } from "./FormattedTokenValue";
@@ -11,7 +10,7 @@ import { LoadingSkeleton } from "./LoadingSkeleton";
 interface Props {
   address: Address | undefined;
   chainId: ChainId | undefined;
-  value: BigNumber | undefined;
+  value: bigint | undefined;
   showIcon?: boolean;
 }
 /**

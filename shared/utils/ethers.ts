@@ -65,7 +65,7 @@ export const commify = ethers.utils.commify;
  * @returns the formatted number
  */
 export function formatNumberForDisplay(
-  number: BigNumber | string | undefined,
+  number: bigint | string | undefined,
   options?: { decimals?: number; isFormatEther?: boolean }
 ) {
   if (!number) return "0.0";
@@ -154,7 +154,7 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
     case 42161:
       return "Arbiscan";
     default:
-      "Block Explorer";
+      return "Block Explorer";
   }
 }
 

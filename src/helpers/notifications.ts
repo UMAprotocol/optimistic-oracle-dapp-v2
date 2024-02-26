@@ -1,5 +1,5 @@
 import type { ChainId } from "@shared/types";
-import type { SendTransactionResult } from "@wagmi/core";
+import { type SendTransactionResult, waitForTransaction } from "@wagmi/core";
 import Events from "events";
 import uniqueId from "lodash/uniqueId";
 import type { ReactNode } from "react";
@@ -46,7 +46,7 @@ export async function handleNotifications(
     transactionHash,
   });
   try {
-    const result = await tx.wait();
+    const result = await waitForTransaction(tx);
     emitSuccessEvent({ message: messages.success, pendingId });
     return result;
   } catch (e) {

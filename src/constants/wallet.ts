@@ -11,6 +11,7 @@ import {
   optimism,
   polygon,
   polygonMumbai,
+  coreDao,
 } from "wagmi/chains";
 
 export const chains = [
@@ -23,6 +24,7 @@ export const chains = [
   arbitrum,
   avalanche,
   polygonMumbai,
+  coreDao,
 ];
 
 export const walletsAndConnectors = getDefaultWallets({

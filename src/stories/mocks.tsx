@@ -12,7 +12,6 @@ import type {
 } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import { add, addMinutes, format, sub } from "date-fns";
-import { BigNumber } from "ethers";
 import { uniqueId } from "lodash";
 import type { GraphQLHandler, GraphQLRequest, GraphQLVariables } from "msw";
 import { graphql } from "msw";
@@ -171,8 +170,8 @@ export function makeMockAssertions(
 const defaultMockOracleQueryUI: OracleQueryUI = {
   id: uniqueId(),
   oracleAddress: "0xA0Ae6609447e57a42c51B50EAe921D701823FFAe",
-  bond: BigNumber.from(50000000000),
-  reward: BigNumber.from(50000000000),
+  bond: 50000000000n,
+  reward: 50000000000n,
   tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   chainId: 1,
   chainName: "Ethereum",
@@ -655,7 +654,7 @@ export function makeUnixTimestamp(
 }
 
 export function makeEtherValueString(value: number, decimals = 18) {
-  return BigNumber.from(parseEtherSafe(value.toString(), decimals)).toString();
+  return parseEtherSafe(value.toString(), decimals).toString();
 }
 
 export function makeMockNotifications(inputs: Partial<Notification>[] = []) {
@@ -688,7 +687,7 @@ export const defaultMockNotifications = makeMockNotifications([
         Approving{" "}
         <Currency
           address="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-          value={BigNumber.from(50000000000)}
+          value={50000000000n}
           chainId={1}
           showIcon={false}
         />

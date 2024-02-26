@@ -105,21 +105,21 @@ const ConvertToSharedRequest =
       ancillaryData,
     };
     if (currency) result.currency = assertAddress(currency);
-    if (reward) result.reward = reward;
-    if (finalFee) result.finalFee = finalFee;
+    if (reward) result.reward = reward.toBigInt();
+    if (finalFee) result.finalFee = finalFee.toBigInt();
     if (proposer) result.proposer = proposer;
-    if (proposedPrice) result.proposedPrice = proposedPrice;
+    if (proposedPrice) result.proposedPrice = proposedPrice.toBigInt();
     if (expirationTime)
       result.proposalExpirationTimestamp = expirationTime.toString();
     if (disputer) result.disputer = disputer;
-    if (price) result.settlementPrice = price;
-    if (reward) result.settlementPayout = reward;
+    if (price) result.settlementPrice = price.toBigInt();
+    if (reward) result.settlementPayout = reward.toBigInt();
     if (settleTx) result.settlementHash = settleTx;
     if (requestBlockNumber)
       result.requestBlockNumber = requestBlockNumber.toString();
     if (requestTx) result.requestHash = requestTx;
-    if (price) result.settlementPrice = price;
-    if (reward) result.settlementPayout = reward;
+    if (price) result.settlementPrice = price.toBigInt();
+    if (reward) result.settlementPayout = reward.toBigInt();
     if (settleTx) result.settlementHash = settleTx;
     if (requestBlockNumber)
       result.requestBlockNumber = requestBlockNumber.toString();

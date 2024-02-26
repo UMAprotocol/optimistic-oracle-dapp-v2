@@ -1,5 +1,4 @@
 import type { parseAssertionGraphEntity } from "@shared/utils";
-import type { BigNumber } from "ethers";
 import type { Address } from "wagmi";
 import type { ChainId, OracleType, RequestState } from "./oracle";
 
@@ -385,15 +384,15 @@ export type ParsedOOV1GraphEntity = {
   time: string;
   requester: Address;
   currency: Address;
-  reward: BigNumber;
-  finalFee: BigNumber;
+  reward: bigint;
+  finalFee: bigint;
   proposer: string | null;
-  proposedPrice: BigNumber | null;
+  proposedPrice: bigint | null;
   proposalExpirationTimestamp: string | null;
   disputer: string | null;
   settlementRecipient: string | null;
-  settlementPrice: BigNumber | null;
-  settlementPayout: BigNumber | null;
+  settlementPrice: bigint | null;
+  settlementPayout: bigint | null;
   settlementHash: string | null;
   state: RequestState;
   requestTimestamp: string | null;
@@ -415,7 +414,7 @@ export type ParsedOOV1GraphEntity = {
 
 export type ParsedOOV2GraphEntity = ParsedOOV1GraphEntity & {
   customLiveness: string | null;
-  bond: BigNumber | null;
+  bond: bigint | null;
   eventBased: boolean | null;
 };
 

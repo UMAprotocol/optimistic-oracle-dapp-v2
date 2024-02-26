@@ -1,8 +1,7 @@
 import { formatNumberForDisplay, formatUnits } from "@shared/utils";
-import type { BigNumber } from "ethers";
 
 interface Props {
-  value: BigNumber;
+  value: bigint;
   decimals: number;
 }
 export function FormattedTokenValue({ value, decimals }: Props) {

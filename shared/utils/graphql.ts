@@ -9,7 +9,6 @@ import type {
   PriceRequestGraphEntity,
   RequestState,
 } from "@shared/types";
-import { BigNumber } from "ethers";
 import type { Address } from "wagmi";
 
 export function isAddress(
@@ -54,7 +53,7 @@ export function handleGraphqlNullableBigInt<
   }
   if (bigInt === null) return null;
 
-  return BigNumber.from(bigInt);
+  return BigInt(bigInt);
 }
 
 export function handleGraphqlNullableBigIntToString<
@@ -164,8 +163,8 @@ export function parsePriceRequestGraphEntity(
     time,
     requester,
     currency,
-    reward: BigNumber.from(reward),
-    finalFee: BigNumber.from(finalFee),
+    reward: BigInt(reward),
+    finalFee: BigInt(finalFee),
     // nullable values
     // present in both v1 and v2
     proposer: handleGraphqlNullableStringOrBytes({ proposer }),
@@ -293,7 +292,7 @@ export function parseAssertionGraphEntity(
     // assertions are taken to be true until disputed
     settlementResolution:
       settlementResolution === null ? true : settlementResolution,
-    bond: BigNumber.from(bond),
+    bond: BigInt(bond),
     assertionTimestamp: assertionTimestamp,
     assertionBlockNumber: assertionBlockNumber,
     assertionHash: assertionHash,
