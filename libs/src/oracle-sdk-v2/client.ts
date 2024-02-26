@@ -1,14 +1,14 @@
 import type { Handlers, ServiceFactories } from "./types";
 
 const isRejected = (
-  input: PromiseSettledResult<unknown>
+  input: PromiseSettledResult<unknown>,
 ): input is PromiseRejectedResult => input.status === "rejected";
 
 export function Client(factories: ServiceFactories, handlers: Handlers) {
   const services = factories.map((factory) => factory(handlers));
   async function tick() {
     const results = await Promise.allSettled(
-      services.map((service) => (service ? service.tick() : undefined))
+      services.map((service) => (service ? service.tick() : undefined)),
     );
     const errors: (Error | undefined)[] = results.map((result) => {
       if (isRejected(result)) {
@@ -27,7 +27,7 @@ export function Client(factories: ServiceFactories, handlers: Handlers) {
   // on an interval, but it depends on the source of data.
   setTimeout(() => {
     tick().catch((err) =>
-      console.error("Uncaught error in oracle service:", err)
+      console.error("Uncaught error in oracle service:", err),
     );
   });
 }

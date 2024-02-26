@@ -19,7 +19,7 @@ export function connect(address: string, provider: SignerOrProvider): Instance {
 }
 
 export const contractInterface = new utils.Interface(
-  getOptimisticOracleV3InterfaceAbi()
+  getOptimisticOracleV3InterfaceAbi(),
 );
 
 export type AssertionMade = GetEventType<Instance, "AssertionMade">;
@@ -75,7 +75,7 @@ export interface EventState {
 
 export function reduceEvents(
   state: EventState,
-  event: SerializableEvent
+  event: SerializableEvent,
 ): EventState {
   switch (event.event) {
     case "AssertionMade": {
@@ -164,7 +164,7 @@ export function reduceEvents(
 }
 export function getEventState(
   events: SerializableEvent[],
-  eventState: EventState = {}
+  eventState: EventState = {},
 ): EventState {
   return events.reduce(reduceEvents, eventState);
 }

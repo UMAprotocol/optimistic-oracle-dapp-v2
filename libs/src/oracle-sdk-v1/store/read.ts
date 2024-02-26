@@ -118,7 +118,7 @@ export default class Read {
       chain?.erc20s?.[request.currency]?.allowances?.[oracle]?.[user];
     assertExists(
       allowance,
-      "Allowance not set on user on collateral token for oracle"
+      "Allowance not set on user on collateral token for oracle",
     );
     return allowance;
   };
@@ -146,7 +146,7 @@ export default class Read {
     const result = this.state?.services?.chains?.[chainId]?.erc20s?.[address];
     assertExists(
       result,
-      `Token service not found: ${[chainId, address].join(".")}`
+      `Token service not found: ${[chainId, address].join(".")}`,
     );
     return result;
   };

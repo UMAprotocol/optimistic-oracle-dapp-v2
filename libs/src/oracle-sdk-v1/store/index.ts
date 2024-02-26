@@ -16,7 +16,10 @@ export { Write, Store, Read, Has };
  */
 export default class OracleStore {
   private store: Store<State>;
-  constructor(private emit: Emit = () => undefined, private state: State = {}) {
+  constructor(
+    private emit: Emit = () => undefined,
+    private state: State = {},
+  ) {
     this.store = new Store<State>(emit, state);
   }
   /**

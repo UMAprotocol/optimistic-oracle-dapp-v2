@@ -98,10 +98,10 @@ export function getFlags(state: State): Record<Flag, boolean> {
   if (request && request.bond && request.finalFee) {
     const totalBond = request.bond.add(request.finalFee);
     const userCollateralBalance = ignoreExistenceError(
-      read.userCollateralBalance
+      read.userCollateralBalance,
     );
     const userCollateralAllowance = ignoreExistenceError(
-      read.userCollateralAllowance
+      read.userCollateralAllowance,
     );
     flags[Flag.InsufficientBalance] = userCollateralBalance
       ? userCollateralBalance.lt(totalBond)
@@ -113,7 +113,7 @@ export function getFlags(state: State): Record<Flag, boolean> {
 
   const userAddress = ignoreExistenceError(read.userAddress);
   const commands = ignoreExistenceError(() =>
-    read.filterCommands({ done: false, user: userAddress })
+    read.filterCommands({ done: false, user: userAddress }),
   );
   if (userAddress && commands) {
     commands.forEach((command) => {
@@ -159,7 +159,7 @@ export function getMulticall2Address(chainId: number): string {
       return getAddress("0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696");
     default:
       throw new Error(
-        `No address found for deployment Multicall2 on chainId ${chainId}`
+        `No address found for deployment Multicall2 on chainId ${chainId}`,
       );
   }
 }
@@ -195,11 +195,11 @@ export const DefaultConfig =
       (config: Config, [chainId, chainConfig]) => {
         config.chains[Number(chainId)] = DefaultChainConfig(getters)(
           Number(chainId),
-          chainConfig
+          chainConfig,
         );
         return config;
       },
-      { ...config, chains: {}, oracleType }
+      { ...config, chains: {}, oracleType },
     );
   };
 
@@ -210,7 +210,7 @@ export class TransactionConfirmer {
   }
   async isConfirmed(
     hash: string,
-    confirmations = 1
+    confirmations = 1,
   ): Promise<false | TransactionReceipt> {
     try {
       const receipt = await this.getReceipt(hash);
@@ -257,7 +257,7 @@ export type RangeState = {
 export function rangeStart(
   state: Pick<RangeState, "startBlock" | "endBlock" | "multiplier"> & {
     maxRange?: number;
-  }
+  },
 ): RangeState {
   const { startBlock, endBlock, multiplier = 2 } = state;
   if (state.maxRange && state.maxRange > 0) {
@@ -384,7 +384,7 @@ export function eventKey(event: {
 export function insertOrderedAscending<T>(
   array: T[],
   element: T,
-  orderBy: (element: T) => string | number
+  orderBy: (element: T) => string | number,
 ): T[] {
   const index = sortedLastIndexBy(array, element, orderBy);
   array.splice(index, 0, element);
@@ -393,7 +393,7 @@ export function insertOrderedAscending<T>(
 export function isUnique<T>(
   array: T[],
   element: T,
-  id: (element: T) => string | number
+  id: (element: T) => string | number,
 ): boolean {
   const elementId = id(element);
   const found = array.find((next: T) => {
@@ -403,7 +403,7 @@ export function isUnique<T>(
 }
 
 export function isSupportedOracleType(
-  oracleType: string
+  oracleType: string,
 ): oracleType is OracleType {
   return oracleType in OracleType;
 }

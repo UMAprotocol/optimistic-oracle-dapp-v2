@@ -20,7 +20,7 @@ export class ContextClient {
 
 export const Step =
   <P = undefined, M extends Memory = undefined>(
-    handlers: Handlers<P, M>
+    handlers: Handlers<P, M>,
   ): StepType<P, M> =>
   async (context: Context<P, M>, now: number): Promise<Context<P, M>> => {
     assert(!context.done, "Context has ended");
@@ -56,7 +56,7 @@ export const Step =
 
 export function shouldStep(
   context: Context<unknown, unknown & Memory> | undefined,
-  now: number
+  now: number,
 ): context is Context {
   if (!context) return false;
   if (context.done) return false;
@@ -70,7 +70,7 @@ export function create<P, M extends Memory>(
   params: P,
   memory: M,
   override: Partial<ContextProps> = {},
-  now = Date.now()
+  now = Date.now(),
 ): Context<P, M> {
   const context: Context<P, M> = {
     id: uid(type + "_"),
@@ -92,7 +92,7 @@ export class ContextManager<P, M extends Memory> {
     private type: ContextType,
     private handlers: Handlers<P, M>,
     private initMemory: (params: P) => M,
-    private emit: (ctx: Context<P, M>) => void
+    private emit: (ctx: Context<P, M>) => void,
   ) {}
   create = (params: P, user?: string): string => {
     const context = create<P, M>(this.type, params, this.initMemory(params), {
@@ -105,7 +105,7 @@ export class ContextManager<P, M extends Memory> {
   async step(
     context: Context<P, M>,
     now: number = Date.now(),
-    iterations = 10
+    iterations = 10,
   ): Promise<Context<P, M>> {
     const step = Step<P, M>(this.handlers);
     let next = context;
@@ -113,7 +113,7 @@ export class ContextManager<P, M extends Memory> {
       assert(
         iterations >= 0,
         "Infinite loop detected in state machine, make sure it each state transitions to done: " +
-          context.type
+          context.type,
       );
       next = await step(next, now);
       iterations--;

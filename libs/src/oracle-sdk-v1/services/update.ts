@@ -41,7 +41,7 @@ export class Update {
     const oo = this.read().oracleService();
     const { defaultLiveness } = await oo.getProps();
     this.write((write) =>
-      write.chains(chainId).optimisticOracle().defaultLiveness(defaultLiveness)
+      write.chains(chainId).optimisticOracle().defaultLiveness(defaultLiveness),
     );
   };
   userCollateralBalance = async (): Promise<void> => {
@@ -50,7 +50,7 @@ export class Update {
     const token = this.read().collateralService();
     const result = await token.contract.balanceOf(account);
     this.write((write) =>
-      write.chains(chainId).erc20s(token.address).balance(account, result)
+      write.chains(chainId).erc20s(token.address).balance(account, result),
     );
   };
   collateralProps = async (): Promise<void> => {
@@ -58,7 +58,7 @@ export class Update {
     const token = this.read().collateralService();
     const props = await token.getProps();
     this.write((write) =>
-      write.chains(chainId).erc20s(token.address).props(props)
+      write.chains(chainId).erc20s(token.address).props(props),
     );
   };
   oracleAllowance = async (): Promise<void> => {
@@ -71,36 +71,36 @@ export class Update {
       write
         .chains(chainId)
         .erc20s(token.address)
-        .allowance(account, oracleAddress, result)
+        .allowance(account, oracleAddress, result),
     );
   };
   balance = async (
     chainId: number,
     token: string,
-    account: string
+    account: string,
   ): Promise<void> => {
     const tokenService = this.read().tokenService(chainId, token);
     const result = await tokenService.contract.balanceOf(account);
     this.write((write) =>
-      write.chains(chainId).erc20s(token).balance(account, result)
+      write.chains(chainId).erc20s(token).balance(account, result),
     );
   };
   allowance = async (
     chainId: number,
     token: string,
     account: string,
-    spender: string
+    spender: string,
   ): Promise<void> => {
     const tokenService = this.read().tokenService(chainId, token);
     const result = await tokenService.contract.allowance(account, spender);
     this.write((write) =>
-      write.chains(chainId).erc20s(token).allowance(account, spender, result)
+      write.chains(chainId).erc20s(token).allowance(account, spender, result),
     );
   };
   isConfirmed = async (
     chainId: number,
     hash: string,
-    confirmations: number
+    confirmations: number,
   ): Promise<boolean | TransactionReceipt> => {
     const txService = this.read().transactionService(chainId);
     return txService.isConfirmed(hash, confirmations);
@@ -109,7 +109,7 @@ export class Update {
   oracleEvents = async (
     chainId: number,
     startBlock = 0,
-    endBlock?: number
+    endBlock?: number,
   ): Promise<void> => {
     const provider = this.read().provider(chainId);
     const oracle = this.read().oracleService(chainId);

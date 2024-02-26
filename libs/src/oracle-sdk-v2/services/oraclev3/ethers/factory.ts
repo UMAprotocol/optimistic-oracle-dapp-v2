@@ -47,19 +47,19 @@ const AddTimestamps =
   async (assertion: SharedAssertion): Promise<SharedAssertion> => {
     if (assertion.assertionBlockNumber && !assertion.assertionTimestamp) {
       const block = await provider.getBlock(
-        Number(assertion.assertionBlockNumber)
+        Number(assertion.assertionBlockNumber),
       );
       assertion.assertionTimestamp = block.timestamp.toString();
     }
     if (assertion.disputeBlockNumber && !assertion.disputeTimestamp) {
       const block = await provider.getBlock(
-        Number(assertion.disputeBlockNumber)
+        Number(assertion.disputeBlockNumber),
       );
       assertion.disputeTimestamp = block.timestamp.toString();
     }
     if (assertion.settlementBlockNumber && !assertion.settlementTimestamp) {
       const block = await provider.getBlock(
-        Number(assertion.settlementBlockNumber)
+        Number(assertion.settlementBlockNumber),
       );
       assertion.settlementTimestamp = block.timestamp.toString();
     }
@@ -156,7 +156,7 @@ export type Api = {
 export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedAssertion = ConvertToSharedAssertion(
     config.chainId,
-    assertAddress(config.address)
+    assertAddress(config.address),
   );
   const provider = new ethers.providers.JsonRpcProvider(config.url);
   const addTimestamps = AddTimestamps(provider);
@@ -188,10 +188,10 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
         .filter((x) => x);
 
       const { assertions = {} } = getEventState(
-        parsedLogs as unknown as SerializableEvent[]
+        parsedLogs as unknown as SerializableEvent[],
       );
       const sharedAssertions = Object.values(assertions).map((assertion) =>
-        convertToSharedAssertion(assertion)
+        convertToSharedAssertion(assertion),
       );
       Promise.all(sharedAssertions.map(addTimestamps))
         .then((sharedAssertions) => {
@@ -222,7 +222,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       const eventLogs = await contract.queryFilter(
         {},
         currentStart,
-        currentEnd
+        currentEnd,
       );
       updateFromEvents(eventLogs as unknown[] as OptimisticOracleEvent[]);
       rangeState = rangeSuccessDescending({ ...rangeState, multiplier: 1 });
@@ -238,10 +238,10 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
         await queryRange(startBlock, endBlock);
         const { assertions = {} } = getEventState(logs);
         const convertedAssertions = Object.values(assertions).map(
-          convertToSharedAssertion
+          convertToSharedAssertion,
         );
         const assertionsWithTimestamps = await Promise.all(
-          convertedAssertions.map(addTimestamps)
+          convertedAssertions.map(addTimestamps),
         );
         events.emit("assertions", assertionsWithTimestamps);
       })

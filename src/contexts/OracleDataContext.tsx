@@ -48,6 +48,7 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
     if (config.type === "Optimistic Oracle V3")
       return [config, ...oracle3Ethers.Factory(config)];
     // skinny optimistic oracle is left
+    console.log("making skinny", config);
     return [config, ...skinny1Ethers.Factory(config)];
   })
   .reduce(

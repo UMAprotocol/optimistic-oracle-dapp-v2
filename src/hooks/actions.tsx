@@ -271,9 +271,10 @@ export function useProposeAction({
   });
   useEffect(() => {
     if (!query?.id) return;
-    refetchConfig().catch((err) =>
-      console.warn("error refetching config", err),
-    );
+    refetchConfig &&
+      refetchConfig().catch((err) =>
+        console.warn("error refetching config", err),
+      );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
   // notify based on proposal tx
@@ -368,9 +369,10 @@ export function useDisputeAction({
   });
   useEffect(() => {
     if (!query?.id) return;
-    refetchConfig().catch((err) =>
-      console.warn("error refetching config", err),
-    );
+    refetchConfig &&
+      refetchConfig().catch((err) =>
+        console.warn("error refetching config", err),
+      );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
   // notify based on dispute tx
@@ -451,9 +453,10 @@ export function useDisputeAssertionAction({
 
   useEffect(() => {
     if (!query?.id) return;
-    refetchConfig().catch((err) =>
-      console.warn("error refetching config", err),
-    );
+    refetchConfig &&
+      refetchConfig().catch((err) =>
+        console.warn("error refetching config", err),
+      );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
   // notify based on dispute tx
@@ -535,9 +538,10 @@ export function useSettlePriceAction({
   });
   useEffect(() => {
     if (!query?.id) return;
-    refetchConfig().catch((err) =>
-      console.warn("error refetching config", err),
-    );
+    refetchConfig &&
+      refetchConfig().catch((err) =>
+        console.warn("error refetching config", err),
+      );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
   useEffect(() => {
@@ -573,6 +577,7 @@ export function useSettlePriceAction({
       disabledReason: "Settling...",
     };
   }
+  // console.log(query)
   // unique to settle, if we have an error preparing the transaction,
   // this means this is probably disputed, but no answer available from dvm yet
   if (prepareSettlePriceError) {
@@ -623,9 +628,10 @@ export function useSettleAssertionAction({
   });
   useEffect(() => {
     if (!query?.id) return;
-    refetchConfig().catch((err) =>
-      console.warn("error refetching config", err),
-    );
+    refetchConfig &&
+      refetchConfig().catch((err) =>
+        console.warn("error refetching config", err),
+      );
     resetContractWrite();
   }, [query?.id, refetchConfig, resetContractWrite]);
   useEffect(() => {

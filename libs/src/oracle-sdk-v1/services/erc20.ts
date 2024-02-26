@@ -13,13 +13,16 @@ import type { Erc20Props } from "../types/state";
 const batchProps: Calls = [["symbol"], ["name"], ["decimals"], ["totalSupply"]];
 export class Erc20 {
   public contract: erc20.Instance;
-  constructor(protected provider: Provider, public readonly address: string) {
+  constructor(
+    protected provider: Provider,
+    public readonly address: string,
+  ) {
     this.contract = erc20.connect(address, provider);
   }
   async approve(
     signer: Signer,
     spender: string,
-    amount: BigNumberish
+    amount: BigNumberish,
   ): Promise<TransactionResponse> {
     const contract = erc20.connect(this.address, signer);
     return contract.approve(spender, amount);
@@ -40,7 +43,7 @@ export class Erc20Multicall extends Erc20 {
   constructor(
     provider: Provider,
     address: string,
-    private multicall2: Multicall2
+    private multicall2: Multicall2,
   ) {
     super(provider, address);
     this.batchRead = BatchReadWithErrors(multicall2)(this.contract);
@@ -55,7 +58,7 @@ export class Erc20Multicall extends Erc20 {
 export function factory(
   provider: Provider,
   address: string,
-  multicall2?: Multicall2
+  multicall2?: Multicall2,
 ): Erc20 {
   if (!multicall2) return new Erc20(provider, address);
   return new Erc20Multicall(provider, address, multicall2);

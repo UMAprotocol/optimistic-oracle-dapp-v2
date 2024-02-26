@@ -11,7 +11,7 @@ import OptimisticV2Factory from "./optimisticV2Factory";
 export type PublicEmit = (
   oracleType: OracleType,
   state: State,
-  prev: State
+  prev: State,
 ) => void;
 const EventHandler =
   (oracleType: OracleType, publicEmit: PublicEmit): Emit =>
@@ -20,7 +20,7 @@ const EventHandler =
 
 const Factory = (
   configTable: PartialConfigTable,
-  emit: PublicEmit
+  emit: PublicEmit,
 ): ClientTable => {
   const sortedRequests = new SortedRequests();
   return Object.fromEntries(
@@ -33,7 +33,7 @@ const Factory = (
             OptimisticFactory(
               config,
               EventHandler(oracleType, emit),
-              sortedRequests
+              sortedRequests,
             ),
           ];
         case OracleType.Skinny:
@@ -42,7 +42,7 @@ const Factory = (
             SkinnyFactory(
               config,
               EventHandler(oracleType, emit),
-              sortedRequests
+              sortedRequests,
             ),
           ];
         case OracleType.OptimisticV2:
@@ -51,13 +51,13 @@ const Factory = (
             OptimisticV2Factory(
               config,
               EventHandler(oracleType, emit),
-              sortedRequests
+              sortedRequests,
             ),
           ];
         default:
           throw new Error(`Unknown oracle type: ${oracleType}`);
       }
-    })
+    }),
   );
 };
 

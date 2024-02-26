@@ -19,7 +19,7 @@ export function Handlers(store: Store): GenericHandlers<Params, Memory> {
     async start(
       params: Params,
       memory: Memory,
-      ctx: ContextClient
+      ctx: ContextClient,
     ): Promise<void | undefined> {
       const request = await ignoreExistenceErrorAsync(store.read().request);
       // requests can change externally if not already in one of these states

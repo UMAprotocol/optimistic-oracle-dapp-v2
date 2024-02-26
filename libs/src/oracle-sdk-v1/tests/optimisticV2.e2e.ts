@@ -11,7 +11,7 @@ dotenv.config();
 assert(process.env.PROVIDER_URL_137, "requires PROVIDER_URL_137");
 
 const optimisticOracleAddress = getAddress(
-  "0xee3afe347d5c74317041e2618c49534daf887c24"
+  "0xee3afe347d5c74317041e2618c49534daf887c24",
 );
 const providerUrl = process.env.PROVIDER_URL_137;
 const chainId = 137;

@@ -16,7 +16,7 @@ export function connect(address: string, provider: SignerOrProvider): Instance {
 }
 
 export const contractInterface = new utils.Interface(
-  getOptimisticOracleInterfaceAbi()
+  getOptimisticOracleInterfaceAbi(),
 );
 
 export type RequestPrice = GetEventType<Instance, "RequestPrice">;
@@ -79,7 +79,7 @@ export interface EventState {
 }
 
 export function requestId(
-  request: Omit<RequestKey, "timestamp"> & { timestamp: BigNumberish }
+  request: Omit<RequestKey, "timestamp"> & { timestamp: BigNumberish },
 ): string {
   // this matches how we generate ids in the subgraph
   return [
@@ -225,7 +225,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
 }
 export function getEventState(
   events: Event[],
-  eventState: EventState = {}
+  eventState: EventState = {},
 ): EventState {
   return events.reduce(reduceEvents, eventState);
 }

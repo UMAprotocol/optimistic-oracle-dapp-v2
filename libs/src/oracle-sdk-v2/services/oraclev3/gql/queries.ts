@@ -16,7 +16,7 @@ async function fetchAllAssertions(url: string, queryName: string) {
   const first = 500;
   let assertions = await fetchAssertions(
     url,
-    makeQuery(queryName, first, skip)
+    makeQuery(queryName, first, skip),
   );
 
   while (assertions.length > 0) {

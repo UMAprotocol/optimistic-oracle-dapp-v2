@@ -29,11 +29,11 @@ export function Handlers(store: Store): GenericHandlers<Params, Memory> {
       const { chainId, currency, spender, amount, account, signer } = params;
       assert(
         chainId === (await signer.getChainId()),
-        "Signer on wrong chainid"
+        "Signer on wrong chainid",
       );
       assert(
         account === (await signer.getAddress()),
-        "Signer on wrong account"
+        "Signer on wrong account",
       );
 
       // create service if it does not exist

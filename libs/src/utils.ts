@@ -10,7 +10,7 @@ export type BigNumberish = number | string | BigNumber;
 // "is" syntax: https://stackoverflow.com/questions/40081332/what-does-the-is-keyword-do-in-typescript
 /* eslint-disable-next-line @typescript-eslint/ban-types */
 export function exists<T>(
-  value: T | null | undefined
+  value: T | null | undefined,
 ): value is NonNullable<T> {
   return value !== null && value !== undefined;
 }
@@ -94,7 +94,7 @@ export const BatchReadWithErrors =
     const results = await multicall2
       .batch(
         contract,
-        calls.map(([method, ...args]) => ({ method, args }))
+        calls.map(([method, ...args]) => ({ method, args })),
       )
       .readWithErrors();
     // convert results of multicall, an array of responses, into an object keyed by contract method
@@ -104,7 +104,7 @@ export const BatchReadWithErrors =
         const [method] = call;
         if (!result?.result) return [method, undefined];
         return [method, result.result[0] || result.result];
-      })
+      }),
     ) as R;
   };
 
@@ -114,7 +114,7 @@ export const BatchReadWithErrors =
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/require-await
 export async function averageBlockTimeSeconds(
   lookbackSeconds?: number,
-  networkId?: number
+  networkId?: number,
 ): Promise<number> {
   // TODO: Call an external API to get this data. Currently this value is a hard-coded estimate
   // based on the data from https://etherscan.io/chart/blocktime. ~13.5 seconds has been the average
@@ -137,7 +137,7 @@ export async function averageBlockTimeSeconds(
 
 export async function estimateBlocksElapsed(
   seconds: number,
-  cushionPercentage = 0.0
+  cushionPercentage = 0.0,
 ): Promise<number> {
   const cushionMultiplier = cushionPercentage + 1.0;
   const averageBlockTime = await averageBlockTimeSeconds();
@@ -174,7 +174,7 @@ export function eventKey(event: {
 export function insertOrderedAscending<T>(
   array: T[],
   element: T,
-  orderBy: (element: T) => string | number
+  orderBy: (element: T) => string | number,
 ): T[] {
   const index = sortedLastIndexBy(array, element, orderBy);
   array.splice(index, 0, element);
@@ -183,7 +183,7 @@ export function insertOrderedAscending<T>(
 export function isUnique<T>(
   array: T[],
   element: T,
-  id: (element: T) => string | number
+  id: (element: T) => string | number,
 ): boolean {
   const elementId = id(element);
   const found = array.find((next: T) => {
@@ -225,7 +225,7 @@ export type RangeState = {
 export function rangeStart(
   state: Pick<RangeState, "startBlock" | "endBlock" | "multiplier"> & {
     maxRange?: number;
-  }
+  },
 ): RangeState {
   const { startBlock, endBlock, multiplier = 2 } = state;
   if (state.maxRange && state.maxRange > 0) {

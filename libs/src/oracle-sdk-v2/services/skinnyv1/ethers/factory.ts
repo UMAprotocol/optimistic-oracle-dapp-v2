@@ -55,7 +55,7 @@ const AddTimestamps =
     }
     if (request.settlementBlockNumber && !request.settlementTimestamp) {
       const block = await provider.getBlock(
-        Number(request.settlementBlockNumber)
+        Number(request.settlementBlockNumber),
       );
       request.settlementTimestamp = block.timestamp.toString();
     }
@@ -91,6 +91,8 @@ const ConvertToSharedRequest =
       disputeLogIndex,
       settleLogIndex,
       state,
+      bond,
+      customLiveness,
     } = request;
     const id = requestId(request);
 
@@ -103,7 +105,9 @@ const ConvertToSharedRequest =
       identifier: parseIdentifier(identifier),
       time: timestamp.toString(),
       ancillaryData,
+      customLiveness: customLiveness ? customLiveness.toString() : undefined,
     };
+    if (bond) result.bond = bond.toBigInt();
     if (currency) result.currency = assertAddress(currency);
     if (reward) result.reward = reward.toBigInt();
     if (finalFee) result.finalFee = finalFee.toBigInt();
@@ -155,13 +159,13 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedRequest = ConvertToSharedRequest(
     config.chainId,
     assertAddress(config.address),
-    "Skinny Optimistic Oracle"
+    "Skinny Optimistic Oracle",
   );
   const provider = new ethers.providers.JsonRpcProvider(config.url);
   const oo = new SkinnyOptimisticOracle(
     provider,
     config.address,
-    config.chainId
+    config.chainId,
   );
   const events = new Events();
   const addTimestamps = AddTimestamps(provider);
@@ -170,8 +174,9 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       oo.updateFromTransactionReceipt(receipt);
       const requests: Request[] = oo.listRequests();
       const sharedRequests = requests.map((request) =>
-        convertToSharedRequest(request)
+        convertToSharedRequest(request),
       );
+      console.log("emitting skinny", sharedRequests);
       events.emit("requests", sharedRequests);
     } catch (err) {
       console.warn("Error updating skinny v1 from receipt:", err);
@@ -198,17 +203,17 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
         await queryRange(startBlock, endBlock);
         const requests = oo.listRequests();
         const convertedRequests: SharedRequest[] = Object.values(requests).map(
-          convertToSharedRequest
+          convertToSharedRequest,
         );
         const requestsWithTimestamps = await Promise.all(
-          convertedRequests.map(addTimestamps)
+          convertedRequests.map(addTimestamps),
         );
         events.emit("requests", requestsWithTimestamps);
       })
       .catch((err) => {
         console.warn(
           "error querying latest Skinny OO requests from web3 provider:",
-          err
+          err,
         );
         events.emit("error", err);
       });

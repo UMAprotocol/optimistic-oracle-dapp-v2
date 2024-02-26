@@ -22,13 +22,13 @@ export function Handlers(store: Store): GenericHandlers<Params, Memory> {
       const receipt = await provider.getTransactionReceipt(transactionHash);
       assert(
         receipt,
-        "Unable to find transaction receipt from hash: " + transactionHash
+        "Unable to find transaction receipt from hash: " + transactionHash,
       );
       const oracle = store.read().oracleService(chainId);
       const oracleAddress = store.read().oracleAddress(chainId);
       // filter out logs that originate from oracle contract
       const oracleLogs = receipt.logs.filter(
-        (log) => log.address.toLowerCase() === oracleAddress.toLowerCase()
+        (log) => log.address.toLowerCase() === oracleAddress.toLowerCase(),
       );
       // decode logs using abi
       const decodedLogs = oracleLogs.map((log) => oracle.parseLog(log));
@@ -38,27 +38,27 @@ export function Handlers(store: Store): GenericHandlers<Params, Memory> {
       // we dont actually know the type of the log, so we need to do some validation before continuing
       assert(
         log,
-        `Unable to find optimistic oracle event at ${transactionHash} eventIndex ${eventIndex}`
+        `Unable to find optimistic oracle event at ${transactionHash} eventIndex ${eventIndex}`,
       );
       assert(
         log.args,
-        `Unable to find optimistic oracle event args at ${transactionHash} eventIndex ${eventIndex}`
+        `Unable to find optimistic oracle event args at ${transactionHash} eventIndex ${eventIndex}`,
       );
       assert(
         log.args.timestamp,
-        `Unable to find optimistic oracle event.timestamp at ${transactionHash} eventIndex ${eventIndex}`
+        `Unable to find optimistic oracle event.timestamp at ${transactionHash} eventIndex ${eventIndex}`,
       );
       assert(
         log.args.requester,
-        `Unable to find optimistic oracle event.requester at ${transactionHash} eventIndex ${eventIndex}`
+        `Unable to find optimistic oracle event.requester at ${transactionHash} eventIndex ${eventIndex}`,
       );
       assert(
         log.args.ancillaryData,
-        `Unable to find optimistic oracle event.ancillaryData at ${transactionHash} eventIndex ${eventIndex}`
+        `Unable to find optimistic oracle event.ancillaryData at ${transactionHash} eventIndex ${eventIndex}`,
       );
       assert(
         log.args.identifier,
-        `Unable to find optimistic oracle event.identifier at ${transactionHash} eventIndex ${eventIndex}`
+        `Unable to find optimistic oracle event.identifier at ${transactionHash} eventIndex ${eventIndex}`,
       );
 
       // we can parse out the necessary params to kick off fetching the state of the request

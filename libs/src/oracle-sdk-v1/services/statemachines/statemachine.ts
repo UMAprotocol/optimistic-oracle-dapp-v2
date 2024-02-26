@@ -91,7 +91,7 @@ export class StateMachine {
         ContextType.setUser,
         setUser.Handlers(store),
         setUser.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.clearUser]: new ContextManager<
         clearUser.Params,
@@ -100,7 +100,7 @@ export class StateMachine {
         ContextType.clearUser,
         clearUser.Handlers(store),
         clearUser.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.setActiveRequest]: new ContextManager<
         setActiveRequest.Params,
@@ -109,13 +109,13 @@ export class StateMachine {
         ContextType.setActiveRequest,
         setActiveRequest.Handlers(store),
         setActiveRequest.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.approve]: new ContextManager<approve.Params, approve.Memory>(
         ContextType.approve,
         approve.Handlers(store),
         approve.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.disputePrice]: new ContextManager<
         disputePrice.Params,
@@ -124,7 +124,7 @@ export class StateMachine {
         ContextType.disputePrice,
         disputePrice.Handlers(store),
         disputePrice.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.proposePrice]: new ContextManager<
         proposePrice.Params,
@@ -133,7 +133,7 @@ export class StateMachine {
         ContextType.proposePrice,
         proposePrice.Handlers(store),
         proposePrice.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.switchOrAddChain]: new ContextManager<
         switchOrAddChain.Params,
@@ -142,7 +142,7 @@ export class StateMachine {
         ContextType.switchOrAddChain,
         switchOrAddChain.Handlers(store),
         switchOrAddChain.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.pollActiveRequest]: new ContextManager<
         pollActiveRequest.Params,
@@ -151,7 +151,7 @@ export class StateMachine {
         ContextType.pollActiveRequest,
         pollActiveRequest.Handlers(store),
         pollActiveRequest.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.pollActiveUser]: new ContextManager<
         pollActiveUser.Params,
@@ -160,7 +160,7 @@ export class StateMachine {
         ContextType.pollActiveUser,
         pollActiveUser.Handlers(store),
         pollActiveUser.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.fetchPastEvents]: new ContextManager<
         fetchPastEvents.Params,
@@ -169,7 +169,7 @@ export class StateMachine {
         ContextType.fetchPastEvents,
         fetchPastEvents.Handlers(store),
         fetchPastEvents.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.pollNewEvents]: new ContextManager<
         pollNewEvents.Params,
@@ -178,7 +178,7 @@ export class StateMachine {
         ContextType.pollNewEvents,
         pollNewEvents.Handlers(store),
         pollNewEvents.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.setActiveRequestByTransaction]: new ContextManager<
         setActiveRequestByTransaction.Params,
@@ -187,13 +187,13 @@ export class StateMachine {
         ContextType.setActiveRequestByTransaction,
         setActiveRequestByTransaction.Handlers(store),
         setActiveRequestByTransaction.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.settle]: new ContextManager<settle.Params, settle.Memory>(
         ContextType.settle,
         settle.Handlers(store),
         settle.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
       [ContextType.updateActiveRequest]: new ContextManager<
         updateActiveRequest.Params,
@@ -202,7 +202,7 @@ export class StateMachine {
         ContextType.updateActiveRequest,
         updateActiveRequest.Handlers(store),
         updateActiveRequest.initMemory,
-        this.handleCreate
+        this.handleCreate,
       ),
     };
   }
@@ -247,14 +247,14 @@ export class StateMachine {
         case ContextType.setUser: {
           next = await this.types[context.type].step(
             context as unknown as Context<setUser.Params, setUser.Memory>,
-            now
+            now,
           );
           break;
         }
         case ContextType.clearUser: {
           next = await this.types[context.type].step(
             context as unknown as Context<clearUser.Params, clearUser.Memory>,
-            now
+            now,
           );
           break;
         }
@@ -264,14 +264,14 @@ export class StateMachine {
               setActiveRequest.Params,
               setActiveRequest.Memory
             >,
-            now
+            now,
           );
           break;
         }
         case ContextType.approve: {
           next = await this.types[context.type].step(
             context as unknown as Context<approve.Params, approve.Memory>,
-            now
+            now,
           );
           break;
         }
@@ -281,7 +281,7 @@ export class StateMachine {
               disputePrice.Params,
               disputePrice.Memory
             >,
-            now
+            now,
           );
           break;
         }
@@ -291,7 +291,7 @@ export class StateMachine {
               proposePrice.Params,
               proposePrice.Memory
             >,
-            now
+            now,
           );
           break;
         }
@@ -301,7 +301,7 @@ export class StateMachine {
               switchOrAddChain.Params,
               switchOrAddChain.Memory
             >,
-            now
+            now,
           );
           break;
         }
@@ -311,7 +311,7 @@ export class StateMachine {
               pollActiveRequest.Params,
               pollActiveRequest.Memory
             >,
-            now
+            now,
           );
           break;
         }
@@ -321,7 +321,7 @@ export class StateMachine {
               pollActiveUser.Params,
               pollActiveUser.Memory
             >,
-            now
+            now,
           );
           break;
         }
@@ -331,7 +331,7 @@ export class StateMachine {
               fetchPastEvents.Params,
               fetchPastEvents.Memory
             >,
-            now
+            now,
           );
           break;
         }
@@ -341,7 +341,7 @@ export class StateMachine {
               pollNewEvents.Params,
               pollNewEvents.Memory
             >,
-            now
+            now,
           );
           break;
         }
@@ -351,14 +351,14 @@ export class StateMachine {
               setActiveRequestByTransaction.Params,
               setActiveRequestByTransaction.Memory
             >,
-            now
+            now,
           );
           break;
         }
         case ContextType.settle: {
           next = await this.types[context.type].step(
             context as unknown as Context<settle.Params, settle.Memory>,
-            now
+            now,
           );
           break;
         }
@@ -368,7 +368,7 @@ export class StateMachine {
               updateActiveRequest.Params,
               updateActiveRequest.Memory
             >,
-            now
+            now,
           );
           break;
         }

@@ -13,7 +13,7 @@ export class ExistenceError extends Error {
 // Special assert which checks for existence and throw existence error
 export function assertExists<T>(
   condition: T,
-  message = ""
+  message = "",
 ): asserts condition is NonNullable<T> {
   if (!exists(condition)) throw new ExistenceError(message);
 }
@@ -30,7 +30,7 @@ export function ignoreExistenceError<X>(call: () => X): X | undefined {
 
 // same function but for async calls
 export async function ignoreExistenceErrorAsync<X>(
-  call: () => X | Promise<X>
+  call: () => X | Promise<X>,
 ): Promise<X | undefined> {
   try {
     return await call();

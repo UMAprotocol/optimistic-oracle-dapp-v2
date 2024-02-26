@@ -36,13 +36,13 @@ export function Handlers(store: Store): GenericHandlers<Params, Memory> {
       } = params;
       assert(
         chainId === (await signer.getChainId()),
-        "Signer on wrong chainid"
+        "Signer on wrong chainid",
       );
       const oracle = store.read().oracleService(chainId);
       const tx = await oracle.proposePrice(
         signer,
         { requester, identifier, timestamp, ancillaryData },
-        proposedPrice
+        proposedPrice,
       );
       memory.hash = tx.hash;
       return "confirm";

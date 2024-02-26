@@ -29,7 +29,7 @@ export const Factory = (config: Config): ServiceFactory[] => {
         return gql3.Factory(config)(handlers);
       }
       throw new Error(
-        `Unsupported oracle type ${config.type} from ${config.source}`
+        `Unsupported oracle type ${config.type} from ${config.source}`,
       );
     };
   });
