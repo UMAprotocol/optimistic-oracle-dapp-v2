@@ -17,11 +17,12 @@ import {
   settled,
   settling,
 } from "@/constants";
-import { oracleEthersApis } from "@/contexts";
+// Reinable when we have a good way to convert wagmi logs to ethers logs
+// import { oracleEthersApis } from "@/contexts";
 import { handleNotifications } from "@/helpers";
 import { useBalanceAndAllowance } from "@/hooks";
 import type { ActionTitle, OracleQueryUI } from "@/types";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   useAccount,
   useConnect,
@@ -187,7 +188,7 @@ export function useApproveBondAction({
   }, [approveBondSpendTransaction, bond, chainId, tokenAddress]);
 
   if (actionType !== "propose" && actionType !== "dispute") return undefined;
-  if (balance && bond && balance.value?.lt(bond)) {
+  if (balance && bond && balance.value < bond) {
     return {
       title: insufficientBalance,
       disabled: true,
@@ -196,7 +197,7 @@ export function useApproveBondAction({
   }
   if (!approveBondSpendParams) return undefined;
   const needsToApprove =
-    allowance !== undefined && bond !== undefined && allowance.lt(bond);
+    allowance !== undefined && bond !== undefined && allowance < bond;
   if (!needsToApprove) return undefined;
 
   if (isPrepareApproveBondSpendLoading) {
@@ -258,8 +259,10 @@ export function useProposeAction({
     request: {
       ...proposePriceConfig.request,
       // increase gas limit, this is due to user potentially editing approval amount in wallet, and running out of gas
-      // we cannot unset this because typescript expects a bignumber
-      gasLimit: proposePriceConfig?.request?.gasLimit?.mul(2),
+      // we cannot unset this because typescript expects a bigint
+      gas: proposePriceConfig?.request?.gas
+        ? proposePriceConfig?.request?.gas * 2n
+        : undefined,
     },
   });
 
@@ -281,12 +284,13 @@ export function useProposeAction({
       success: <>Proposed price</>,
       error: <>Failed to propose price</>,
     })
-      .then((receipt) => {
-        if (receipt && query)
-          oracleEthersApis?.[query.oracleType]?.[
-            chainId
-          ]?.updateFromTransactionReceipt(receipt);
-      })
+      // TODO: this is disabled because wagmi move from ethers, should look into updating this eventually
+      // .then((receipt) => {
+      //   if (receipt && query)
+      //     oracleEthersApis?.[query.oracleType]?.[
+      //       chainId
+      //     ]?.updateFromTransactionReceipt(receipt);
+      // })
       .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [proposePriceTransaction]);
@@ -377,12 +381,12 @@ export function useDisputeAction({
       success: <>Disputed price</>,
       error: <>Failed to dispute price</>,
     })
-      .then((receipt) => {
-        if (receipt && query)
-          oracleEthersApis?.[query.oracleType]?.[
-            chainId
-          ]?.updateFromTransactionReceipt(receipt);
-      })
+      // .then((receipt) => {
+      //   if (receipt && query)
+      //     oracleEthersApis?.[query.oracleType]?.[
+      //       chainId
+      //     ]?.updateFromTransactionReceipt(receipt);
+      // })
       .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disputePriceTransaction]);
@@ -460,12 +464,12 @@ export function useDisputeAssertionAction({
       success: <>Disputed assertion</>,
       error: <>Failed to dispute assertion</>,
     })
-      .then((receipt) => {
-        if (receipt && query)
-          oracleEthersApis?.[query.oracleType]?.[
-            chainId
-          ]?.updateFromTransactionReceipt(receipt);
-      })
+      // .then((receipt) => {
+      //   if (receipt && query)
+      //     oracleEthersApis?.[query.oracleType]?.[
+      //       chainId
+      //     ]?.updateFromTransactionReceipt(receipt);
+      // })
       .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disputeAssertionTransaction]);
@@ -543,12 +547,12 @@ export function useSettlePriceAction({
       success: <>Settled price</>,
       error: <>Failed to settle price</>,
     })
-      .then((receipt) => {
-        if (receipt && query)
-          oracleEthersApis?.[query.oracleType]?.[
-            chainId
-          ]?.updateFromTransactionReceipt(receipt);
-      })
+      // .then((receipt) => {
+      //   if (receipt && query)
+      //     oracleEthersApis?.[query.oracleType]?.[
+      //       chainId
+      //     ]?.updateFromTransactionReceipt(receipt);
+      // })
       .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settlePriceTransaction]);
@@ -631,12 +635,12 @@ export function useSettleAssertionAction({
       success: <>Settled assertion</>,
       error: <>Failed to settle assertion</>,
     })
-      .then((receipt) => {
-        if (receipt && query)
-          oracleEthersApis?.[query.oracleType]?.[
-            chainId
-          ]?.updateFromTransactionReceipt(receipt);
-      })
+      // .then((receipt) => {
+      //   if (receipt && query)
+      //     oracleEthersApis?.[query.oracleType]?.[
+      //       chainId
+      //     ]?.updateFromTransactionReceipt(receipt);
+      // })
       .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settleAssertionTransaction]);

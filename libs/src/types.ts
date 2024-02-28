@@ -12,6 +12,10 @@ export type {
   TransactionResponse,
 } from "@ethersproject/abstract-provider";
 
+export type {
+  WaitForTransactionResult,
+} from "@wagmi/core";
+
 type Result = ethers.utils.Result;
 export type { Result, BigNumberish };
 

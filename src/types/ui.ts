@@ -18,7 +18,6 @@ import type {
   OracleType,
   Project,
 } from "@shared/types";
-import type { BigNumber } from "ethers";
 import type { ReactNode } from "react";
 import type { Address, erc20ABI } from "wagmi";
 
@@ -34,13 +33,13 @@ export interface SolidityRequest {
   disputer: string; // Address of the disputer.
   currency: string; // ERC20 token used to pay rewards and fees.
   settled: boolean; // True if the request is settled.
-  proposedPrice: BigNumber; // Price that the proposer submitted.
-  resolvedPrice: BigNumber; // Price resolved once the request is settled.
-  expirationTime: BigNumber; // Time at which the request auto-settles without a dispute.
-  reward: BigNumber; // Amount of the currency to pay to the proposer on settlement.
-  finalFee: BigNumber; // Final fee to pay to the Store upon request to the DVM.
-  bond: BigNumber; // Bond that the proposer and disputer must pay on top of the final fee.
-  customLiveness: BigNumber; // Custom liveness value set by the requester.
+  proposedPrice: bigint; // Price that the proposer submitted.
+  resolvedPrice: bigint; // Price resolved once the request is settled.
+  expirationTime: bigint; // Time at which the request auto-settles without a dispute.
+  reward: bigint; // Amount of the currency to pay to the proposer on settlement.
+  finalFee: bigint; // Final fee to pay to the Store upon request to the DVM.
+  bond: bigint; // Bond that the proposer and disputer must pay on top of the final fee.
+  customLiveness: bigint; // Custom liveness value set by the requester.
 }
 
 export type ProposePriceParamsFactory = (
@@ -96,8 +95,8 @@ export type OracleQueryUI = {
   // for oo-v2 bond is the final fee unless `setBond` has been called,
   // it is in the `bond` field returned for the request
   // for oo-v3 the bond is always the `bond` field returned for the request
-  bond?: BigNumber;
-  reward?: BigNumber | null;
+  bond?: bigint;
+  reward?: bigint | null;
   tokenAddress?: Address;
   approveBondSpendParams?: ApproveBondSpendParams | undefined;
   proposePriceParams?:
@@ -138,7 +137,7 @@ export type ApproveBondSpendParams = {
   functionName: "approve";
   chainId: ChainId;
   // oracle address and bond
-  args: readonly [Address, BigNumber];
+  args: readonly [Address, bigint];
 };
 
 export type ProposePriceParams = {
@@ -148,7 +147,7 @@ export type ProposePriceParams = {
   functionName: "proposePrice";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData, proposedPrice
-  args: readonly [Address, string, BigNumberish, string, BigNumberish];
+  args: readonly [Address, string, BigIntish, string, BigIntish];
 };
 
 export type ProposePriceSkinnyParams = {
@@ -161,10 +160,10 @@ export type ProposePriceSkinnyParams = {
   args: readonly [
     Address,
     string,
-    BigNumberish,
+    BigIntish,
     string,
     SolidityRequest,
-    BigNumberish,
+    BigIntish,
   ];
 };
 
@@ -175,7 +174,7 @@ export type DisputePriceParams = {
   functionName: "disputePrice";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData
-  args: readonly [Address, string, BigNumberish, string];
+  args: readonly [Address, string, BigIntish, string];
 };
 
 export type DisputePriceSkinnyParams = {
@@ -185,7 +184,7 @@ export type DisputePriceSkinnyParams = {
   functionName: "disputePrice";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData, request
-  args: readonly [Address, string, BigNumberish, string, SolidityRequest];
+  args: readonly [Address, string, BigIntish, string, SolidityRequest];
 };
 
 export type SettlePriceParams = {
@@ -195,7 +194,7 @@ export type SettlePriceParams = {
   functionName: "settle";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData
-  args: readonly [Address, string, BigNumberish, string];
+  args: readonly [Address, string, BigIntish, string];
 };
 
 export type SettlePriceSkinnyParams = {
@@ -205,7 +204,7 @@ export type SettlePriceSkinnyParams = {
   functionName: "settle";
   chainId: ChainId;
   // requester, identifier, timestamp, ancillaryData, request
-  args: readonly [Address, string, BigNumberish, string, SolidityRequest];
+  args: readonly [Address, string, BigIntish, string, SolidityRequest];
 };
 
 export type DisputeAssertionParams = {
@@ -228,7 +227,7 @@ export type SettleAssertionParams = {
   args: readonly [string];
 };
 
-export type BigNumberish = string | number | BigNumber;
+export type BigIntish = string | number | bigint;
 
 export type Tag = {
   icon: string;
@@ -244,8 +243,8 @@ export type Token = {
   symbol: string;
   icon: string;
   // actions
-  formatAmount: (wei: BigNumberish) => string;
-  approve: (address: string, spender: string, amount: BigNumberish) => void;
+  formatAmount: (wei: BigIntish) => string;
+  approve: (address: string, spender: string, amount: BigIntish) => void;
   balance: (address: string) => void;
   details: () => void;
 };
@@ -292,7 +291,7 @@ export type QueryDetails = {
   primaryAction: {
     disabled: boolean;
     tooltip: string;
-    submit: (input?: BigNumberish) => void;
+    submit: (input?: BigIntish) => void;
     label: string;
   };
 };
@@ -317,7 +316,7 @@ export type ProposeQueryDetails = QueryDetails & {
   bondToken: Token;
   rewardToken: Token;
   challengePeriod: string;
-  propose: (value: BigNumberish) => void;
+  propose: (value: BigIntish) => void;
 };
 export type ProposeQuery = {
   type: "propose";

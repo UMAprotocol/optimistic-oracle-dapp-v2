@@ -1,6 +1,5 @@
 import { ratedAbi } from "@shared/constants/abi";
 import type { ChainId } from "@shared/types";
-import { BigNumber } from "ethers";
 import { useContractRead } from "wagmi";
 import { SectionSubTitle, Text } from "./style";
 
@@ -28,10 +27,10 @@ export function Report(props: Props) {
     address: props.chainId === 1 ? mainnetAddress : goerliAddress,
     functionName: "reports",
     chainId: props.chainId,
-    args: [BigNumber.from(props.queryText)],
+    args: [BigInt(props.queryText)],
   });
   if (!report) return null;
-  const { fromEpoch, toEpoch, timestamp, assertionID } = report;
+  const [fromEpoch, toEpoch, timestamp, assertionID] = report;
 
   return (
     <div>
@@ -57,7 +56,7 @@ export function Violations(props: Props) {
     address: props.chainId === 1 ? mainnetAddress : goerliAddress,
     chainId: props.chainId,
     functionName: "getViolationsInReport",
-    args: [BigNumber.from(props.queryText)],
+    args: [BigInt(props.queryText)],
   });
   if (!violations) return null;
 

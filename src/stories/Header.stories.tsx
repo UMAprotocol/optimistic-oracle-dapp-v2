@@ -1,5 +1,5 @@
 import { Header } from "@/components";
-import { rainbowKitTheme, wagmiClient } from "@/components/WalletConfig";
+import { rainbowKitTheme, wagmiConfig } from "@/components/WalletConfig";
 import { chains } from "@/constants";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import type { Meta, StoryObj } from "@storybook/react";
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof Header>;
 
 const Template: Story = {
   render: (args) => (
-    <WagmiConfig client={wagmiClient}>
+    <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
         <Header {...args} />
       </RainbowKitProvider>
