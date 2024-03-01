@@ -3,6 +3,28 @@ import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type { DropdownItem, MetaData } from "@/types";
 import { chunk } from "lodash";
 
+// hard coded known poly addresses:
+// https://github.com/UMAprotocol/protocol/blob/master/packages/monitor-v2/src/monitor-polymarket/common.ts#L474
+const polymarketBinaryAdapterAddress =
+  "0xCB1822859cEF82Cd2Eb4E6276C7916e692995130";
+const polymarketCtfAdapterAddress =
+  "0x6A9D222616C90FcA5754cd1333cFD9b7fb6a4F74";
+const polymarketCtfAdapterAddressV2 =
+  "0x2f5e3684cb1f318ec51b00edba38d79ac2c0aa9d";
+const polymarketCtfExchangeAddress =
+  "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E";
+
+export const polymarketRequesters = [
+  polymarketBinaryAdapterAddress.toLowerCase(),
+  polymarketCtfAdapterAddress.toLowerCase(),
+  polymarketCtfAdapterAddressV2.toLowerCase(),
+  polymarketCtfExchangeAddress.toLowerCase(),
+];
+
+export function isPolymarketRequester(address: string): boolean {
+  return polymarketRequesters.includes(address.toLowerCase());
+}
+
 function makeSimpleYesOrNoOptions() {
   return [
     { label: "Yes", value: "1", secondaryLabel: "1" },
@@ -31,10 +53,12 @@ export function checkIfIsCozy(decodedAncillaryData: string) {
 export function checkIfIsPolymarket(
   decodedIdentifier: string,
   decodedAncillaryData: string,
+  requester: string,
 ) {
   const queryTitleToken = "q: title:";
   const resultDataToken = "res_data:";
   const isPolymarket =
+    isPolymarketRequester(requester) &&
     decodedIdentifier === "YES_OR_NO_QUERY" &&
     decodedAncillaryData.includes(queryTitleToken) &&
     decodedAncillaryData.includes(resultDataToken);
@@ -45,6 +69,7 @@ export function checkIfIsPolymarket(
 export function getQueryMetaData(
   decodedIdentifier: string,
   decodedQueryText: string,
+  requester: string,
 ): MetaData {
   const isAcross = decodedIdentifier === "ACROSS-V2";
   if (isAcross) {
@@ -64,7 +89,11 @@ export function getQueryMetaData(
     };
   }
 
-  const isPolymarket = checkIfIsPolymarket(decodedIdentifier, decodedQueryText);
+  const isPolymarket = checkIfIsPolymarket(
+    decodedIdentifier,
+    decodedQueryText,
+    requester,
+  );
   if (isPolymarket) {
     const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
     const ancillaryDataDescription =

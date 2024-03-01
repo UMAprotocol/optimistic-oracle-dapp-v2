@@ -684,9 +684,9 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     bytes32Identifier = formatBytes32String(identifier);
   }
 
-  if (exists(identifier) && exists(result.queryText)) {
+  if (exists(identifier) && exists(result.queryText) && exists(requester)) {
     const { title, description, umipUrl, umipNumber, project, proposeOptions } =
-      getQueryMetaData(identifier, result.queryText);
+      getQueryMetaData(identifier, result.queryText, requester);
     result.title = title;
     result.description = description;
     result.project = project;
