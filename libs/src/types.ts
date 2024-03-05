@@ -12,9 +12,7 @@ export type {
   TransactionResponse,
 } from "@ethersproject/abstract-provider";
 
-export type {
-  WaitForTransactionResult,
-} from "@wagmi/core";
+export type { WaitForTransactionResult } from "@wagmi/core";
 
 type Result = ethers.utils.Result;
 export type { Result, BigNumberish };
@@ -38,9 +36,7 @@ export type SignerOrProvider =
   | providers.Provider
   | providers.BaseProvider
   | Signer
-  | Provider
-  | providers.JsonRpcProvider
-  | ethers.Signer;
+  | providers.JsonRpcProvider;
 
 export type SerializableEvent = Omit<
   Event,
@@ -58,7 +54,7 @@ export type SerializableEvent = Omit<
 // to a version where Ethers events are exported as first class types.
 export type GetEventType<
   ContractType extends Contract,
-  EventName extends string
+  EventName extends string,
 > = ReturnType<
   ContractType["filters"][EventName] extends Callable
     ? ContractType["filters"][EventName]

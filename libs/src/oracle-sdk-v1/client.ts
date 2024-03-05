@@ -19,7 +19,7 @@ export class Client {
     public readonly store: Store,
     public readonly update: Update,
     public readonly sm: StateMachine,
-    public readonly poller: StateMachine
+    public readonly poller: StateMachine,
   ) {}
   setUser(params: Partial<User>): string {
     const address = params.address && ethers.utils.getAddress(params.address);
@@ -46,7 +46,7 @@ export class Client {
     return result;
   }
   setActiveRequestByTransaction(
-    params: setActiveRequestByTransaction.Params
+    params: setActiveRequestByTransaction.Params,
   ): string {
     const result = this.sm.types.setActiveRequestByTransaction.create(params);
     this.sm.types.updateActiveRequest.create(undefined);
@@ -73,7 +73,7 @@ export class Client {
         confirmations: 1,
         checkTxIntervalSec,
       },
-      user.address
+      user.address,
     );
   }
   proposePrice(proposedPriceDecimals: string | number): string {
@@ -96,7 +96,7 @@ export class Client {
         confirmations: 1,
         checkTxIntervalSec,
       },
-      user.address
+      user.address,
     );
   }
   disputePrice(): string {
@@ -117,7 +117,7 @@ export class Client {
         currency: request.currency,
         checkTxIntervalSec,
       },
-      user.address
+      user.address,
     );
   }
   settle(): string {
@@ -138,7 +138,7 @@ export class Client {
         currency: request.currency,
         checkTxIntervalSec,
       },
-      user.address
+      user.address,
     );
   }
   switchOrAddChain(): string {
@@ -149,14 +149,14 @@ export class Client {
     assert(inputRequest.chainId, "requires active request chainId");
     return this.sm.types.switchOrAddChain.create(
       { chainId: inputRequest.chainId, provider: user.provider },
-      user.address
+      user.address,
     );
   }
   // runs statemachine step loop pretty fast by default.
   startInterval(delayMs = 1): void {
     assert(
       !this.intervalStarted,
-      "Interval already started, try stopping first"
+      "Interval already started, try stopping first",
     );
     this.intervalStarted = true;
     loop(async () => {
@@ -195,7 +195,7 @@ export function factory(
   config: state.Config,
   emit: Emit,
   OptimisticOracle: NewOracle,
-  sortedRequests: SortedRequests
+  sortedRequests: SortedRequests,
 ): Client {
   const store = new Store(emit);
   store.write((write) => {
@@ -216,8 +216,8 @@ export function factory(
           new OptimisticOracle(
             provider,
             chain.optimisticOracleAddress,
-            chain.chainId
-          )
+            chain.chainId,
+          ),
         );
     }
   });
@@ -236,12 +236,12 @@ export function factory(
         startBlock: chainConfig.earliestBlockNumber,
         maxRange: chainConfig.maxEventRangeQuery,
       },
-      "poller"
+      "poller",
     );
     // long running poller which only looks for new events
     poller.types.pollNewEvents.create(
       { chainId: Number(chainId), pollRateSec: chainConfig.checkTxIntervalSec },
-      "poller"
+      "poller",
     );
   }
   // create active request poller for all chains. Should only have one of these

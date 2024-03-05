@@ -19,7 +19,7 @@ describe("Oracle Store", function () {
       done();
     });
     store.write((write) =>
-      write.inputs().user().set({ address: "test", chainId: 1 })
+      write.inputs().user().set({ address: "test", chainId: 1 }),
     );
   });
   test("set input", function (done) {
@@ -37,7 +37,7 @@ describe("Oracle Store", function () {
         timestamp: 1,
         ancillaryData: "d",
         chainId: 1,
-      })
+      }),
     );
   });
   test("set balance", function (done) {
@@ -46,13 +46,13 @@ describe("Oracle Store", function () {
       done();
     });
     store.write((write) =>
-      write.chains(1).erc20s("test").balance("user1", BigNumber.from(1))
+      write.chains(1).erc20s("test").balance("user1", BigNumber.from(1)),
     );
   });
   test("set allowance", function (done) {
     events.once("change", (state: State) => {
       assert.ok(
-        state.chains?.[1]?.erc20s?.test?.allowances?.oracle?.user1?.eq(1)
+        state.chains?.[1]?.erc20s?.test?.allowances?.oracle?.user1?.eq(1),
       );
       done();
     });
@@ -60,7 +60,7 @@ describe("Oracle Store", function () {
       write
         .chains(1)
         .erc20s("test")
-        .allowance("user1", "oracle", BigNumber.from(1))
+        .allowance("user1", "oracle", BigNumber.from(1)),
     );
   });
   test("get chainId", function () {

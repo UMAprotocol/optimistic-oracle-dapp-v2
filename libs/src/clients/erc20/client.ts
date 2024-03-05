@@ -64,7 +64,7 @@ export function reduceEvents(state: EventState = {}, event: Event): EventState {
 
 export function getEventState(
   events: Event[],
-  initialState: EventState = {}
+  initialState: EventState = {},
 ): EventState {
   return events.reduce(reduceEvents, initialState);
 }

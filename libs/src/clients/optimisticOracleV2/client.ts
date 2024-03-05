@@ -16,7 +16,7 @@ export function connect(address: string, provider: SignerOrProvider): Instance {
 }
 
 export const contractInterface = new utils.Interface(
-  getOptimisticOracleV2InterfaceAbi()
+  getOptimisticOracleV2InterfaceAbi(),
 );
 
 export type RequestPrice = GetEventType<Instance, "RequestPrice">;
@@ -87,7 +87,7 @@ export interface EventState {
 }
 
 export function requestId(
-  request: Omit<RequestKey, "timestamp"> & { timestamp: BigNumberish }
+  request: Omit<RequestKey, "timestamp"> & { timestamp: BigNumberish },
 ): string {
   // if enabling sorting, put timestamp first
   return [
@@ -233,7 +233,7 @@ export function reduceEvents(state: EventState, event: Event): EventState {
 }
 export function getEventState(
   events: Event[],
-  eventState: EventState = {}
+  eventState: EventState = {},
 ): EventState {
   return events.reduce(reduceEvents, eventState);
 }

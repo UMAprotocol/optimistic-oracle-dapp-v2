@@ -48,7 +48,7 @@ export class Multicall<MulticallType extends multicall.Instance>
       target: contractInstance.address,
       callData: contractInstance.interface.encodeFunctionData(
         call.method,
-        call.args
+        call.args,
       ),
     };
   }
@@ -58,7 +58,7 @@ export class Multicall<MulticallType extends multicall.Instance>
     const { contractInstance, call } = request;
     return contractInstance.interface.decodeFunctionResult(
       call.method,
-      response
+      response,
     );
   }
 
@@ -80,10 +80,10 @@ export class Multicall<MulticallType extends multicall.Instance>
   // reads from the contract, returns the read results in order that requests were queued.
   public async read(_requests: Request[] = this.requests) {
     const encodedRequests = _requests.map((request) =>
-      this.encodeRequest(request)
+      this.encodeRequest(request),
     );
     const { returnData } = await this.multicallClient.callStatic.aggregate(
-      encodedRequests
+      encodedRequests,
     );
     const zipped = zip(_requests, returnData);
     return zipped.map(([request, response]) => {

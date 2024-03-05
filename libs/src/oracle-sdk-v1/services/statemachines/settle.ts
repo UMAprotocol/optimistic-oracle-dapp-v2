@@ -34,7 +34,7 @@ export function Handlers(store: Store): GenericHandlers<Params, Memory> {
       } = params;
       assert(
         chainId === (await signer.getChainId()),
-        "Signer on wrong chainid"
+        "Signer on wrong chainid",
       );
 
       const oracle = store.read().oracleService(chainId);

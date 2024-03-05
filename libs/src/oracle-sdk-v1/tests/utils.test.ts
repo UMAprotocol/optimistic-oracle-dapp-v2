@@ -42,11 +42,11 @@ describe("Oracle Utils", function () {
     assert.equal(rangeState.currentRange, expectedRange);
     assert.equal(
       rangeState.currentEnd,
-      endBlock - Math.floor(expectedRange / 2)
+      endBlock - Math.floor(expectedRange / 2),
     );
     assert.equal(
       rangeState.currentStart,
-      endBlock - (Math.floor(expectedRange / 2) + expectedRange)
+      endBlock - (Math.floor(expectedRange / 2) + expectedRange),
     );
     assert.ok(!rangeState.done);
 

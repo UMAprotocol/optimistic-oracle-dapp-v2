@@ -35,7 +35,7 @@ export type ContextProps = {
 
 export type Context<
   P = undefined,
-  M extends Memory = undefined
+  M extends Memory = undefined,
 > = ContextProps & {
   memory: M;
   params: P;
@@ -44,7 +44,7 @@ export type Context<
 export type Handler<P = undefined, M extends Memory = undefined> = (
   params: P,
   memory: M,
-  client: ContextClient
+  client: ContextClient,
 ) => string | undefined | void | Promise<string | undefined | void>;
 
 export type Handlers<P = undefined, M extends Memory = undefined> = Record<
@@ -56,9 +56,9 @@ export type Handlers<P = undefined, M extends Memory = undefined> = Record<
 
 export type Step<P = undefined, M extends Memory = undefined> = (
   context: Context<P, M>,
-  now: number
+  now: number,
 ) => Promise<Context<P, M>>;
 
 export type Emit<P = undefined, M extends Memory = undefined> = (
-  context: Context<P, M>
+  context: Context<P, M>,
 ) => void;

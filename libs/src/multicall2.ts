@@ -13,12 +13,12 @@ class Multicall2 extends Multicall<multicall2.Instance> {
   // reads from the contract, returns the read and error results in order that requests were queued.
   public async readWithErrors(_requests: Request[] = this.requests) {
     const encodedRequests = _requests.map((request) =>
-      this.encodeRequest(request)
+      this.encodeRequest(request),
     );
     const [, , returnData] =
       await this.multicallClient.callStatic.tryBlockAndAggregate(
         false,
-        encodedRequests
+        encodedRequests,
       );
     const zipped = zip(_requests, returnData);
     return zipped.map(([request, response]) => {

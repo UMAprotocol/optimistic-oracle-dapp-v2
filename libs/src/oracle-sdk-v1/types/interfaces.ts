@@ -76,12 +76,12 @@ export interface OracleInterface {
   getRequest: (props: RequestKey) => Request;
   disputePrice: (
     signer: Signer,
-    key: RequestKey
+    key: RequestKey,
   ) => Promise<TransactionResponse>;
   proposePrice: (
     signer: Signer,
     key: RequestKey,
-    price: BigNumberish
+    price: BigNumberish,
   ) => Promise<TransactionResponse>;
   settle: (signer: Signer, key: RequestKey) => Promise<TransactionResponse>;
   update: (startBlock: number, endBlock: number | "latest") => Promise<void>;

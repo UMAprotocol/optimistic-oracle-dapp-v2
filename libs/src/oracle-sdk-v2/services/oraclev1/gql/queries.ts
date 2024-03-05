@@ -12,22 +12,25 @@ import request, { gql } from "graphql-request";
 export async function getPriceRequests(
   url: string,
   chainId: ChainId,
-  oracleType: OracleType
+  oracleType: OracleType,
 ) {
   const chainName = chainsById[chainId];
   const queryName = makeQueryName(oracleType, chainName);
-  const isV2 = oracleType === "Optimistic Oracle V2";
-  const result = await fetchAllRequests(url, queryName, isV2);
+  const result = await fetchAllRequests(url, queryName, oracleType);
   return result;
 }
 
-async function fetchAllRequests(url: string, queryName: string, isV2: boolean) {
+async function fetchAllRequests(
+  url: string,
+  queryName: string,
+  oracleType: OracleType,
+) {
   const result: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
   let skip = 0;
   const first = 1000;
   let requests = await fetchPriceRequests(
     url,
-    makeQuery(queryName, isV2, first, skip)
+    makeQuery(queryName, oracleType, first, skip),
   );
 
   // thegraph wont allow skip > 5000,
@@ -36,24 +39,23 @@ async function fetchAllRequests(url: string, queryName: string, isV2: boolean) {
     skip += first;
     requests = await fetchPriceRequests(
       url,
-      makeQuery(queryName, isV2, first, skip)
+      makeQuery(queryName, oracleType, first, skip),
     );
   }
-  
+
   // have to use time based logic after we run out of skip size
   while (requests.length === first) {
     result.push(...requests);
-    const lastTime = requests[requests.length-1].time;
+    const lastTime = requests[requests.length - 1].time;
     requests = await fetchPriceRequests(
       url,
-      makeTimeBasedQuery(queryName,isV2,first,Number(lastTime))
-    )
+      makeTimeBasedQuery(queryName, oracleType, first, Number(lastTime)),
+    );
   }
 
   result.push(...requests);
 
   return result;
-  
 }
 
 async function fetchPriceRequests(url: string, query: string) {
@@ -68,9 +70,9 @@ async function fetchPriceRequests(url: string, query: string) {
 
 function makeQuery(
   queryName: string,
-  isV2: boolean,
+  oracleType: OracleType,
   first: number,
-  skip: number
+  skip: number,
 ) {
   const query = gql`
   query ${queryName} {
@@ -108,11 +110,19 @@ function makeQuery(
       settlementHash
       settlementLogIndex
       ${
-        isV2
+        oracleType === "Optimistic Oracle V2"
           ? `
             customLiveness
             bond
             eventBased
+            `
+          : ""
+      }
+      ${
+        oracleType === "Skinny Optimistic Oracle"
+          ? `
+            customLiveness
+            bond
             `
           : ""
       }
@@ -125,7 +135,7 @@ function makeQuery(
 
 function makeTimeBasedQuery(
   queryName: string,
-  isV2: boolean,
+  oracleType: OracleType,
   first: number,
   lastTime: number,
 ) {
@@ -165,11 +175,19 @@ function makeTimeBasedQuery(
       settlementHash
       settlementLogIndex
       ${
-        isV2
+        oracleType === "Optimistic Oracle V2"
           ? `
             customLiveness
             bond
             eventBased
+            `
+          : ""
+      }
+      ${
+        oracleType === "Skinny Optimistic Oracle"
+          ? `
+            customLiveness
+            bond
             `
           : ""
       }

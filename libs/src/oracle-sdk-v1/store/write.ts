@@ -61,7 +61,7 @@ export class Erc20 {
   allowance(
     account: string,
     spender: string,
-    amount: ethersTypes.BigNumber
+    amount: ethersTypes.BigNumber,
   ): void {
     if (!this.state.allowances) this.state.allowances = {};
     if (!this.state.allowances[spender]) this.state.allowances[spender] = {};
@@ -122,7 +122,7 @@ export class Services {
     this.state.erc20s[address] = Erc20Factory(
       this.state.provider,
       address,
-      this.state.multicall2
+      this.state.multicall2,
     );
   }
   optimisticOracle(optimisticOracle: OracleInterface): void {
@@ -135,7 +135,7 @@ export class Services {
     if (!this.state.provider) return;
     this.state.multicall2 = new Multicall2(
       multicall2Address,
-      this.state.provider
+      this.state.provider,
     );
   }
 }
@@ -169,7 +169,7 @@ export default class Write {
     this.state.error = error;
   }
   command(
-    context: statemachine.Context<unknown, unknown & statemachine.Memory>
+    context: statemachine.Context<unknown, unknown & statemachine.Memory>,
   ): void {
     if (!this.state.commands) this.state.commands = {};
     this.state.commands[context.id] = context;

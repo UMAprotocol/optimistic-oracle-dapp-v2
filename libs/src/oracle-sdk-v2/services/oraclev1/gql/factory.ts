@@ -17,7 +17,12 @@ export const Factory =
     async function fetch({ url, chainId, address, type }: Config) {
       const requests = await getPriceRequests(url, chainId, type);
       return requests.map((request) =>
-        parsePriceRequestGraphEntity(request, chainId, address as Address, type)
+        parsePriceRequestGraphEntity(
+          request,
+          chainId,
+          address as Address,
+          type,
+        ),
       );
     }
     async function tick() {

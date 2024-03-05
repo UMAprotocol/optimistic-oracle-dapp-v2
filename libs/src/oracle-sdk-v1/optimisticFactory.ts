@@ -9,7 +9,7 @@ import type { Emit } from "./store";
 const Factory = (
   config: state.PartialConfig,
   emit: Emit,
-  sortedRequests: SortedRequests = new SortedRequests()
+  sortedRequests: SortedRequests = new SortedRequests(),
 ): Client => {
   const fullConfig = DefaultConfig({
     getMulticall2Address,

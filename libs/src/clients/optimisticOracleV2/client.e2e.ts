@@ -17,7 +17,7 @@ describe("OptimisticOracleV2", function () {
   let client: Client.Instance;
   test("inits", function () {
     const provider = ethers.providers.getDefaultProvider(
-      process.env.PROVIDER_URL_137
+      process.env.PROVIDER_URL_137,
     );
     client = Client.connect(address, provider);
     assert.ok(client);
@@ -32,7 +32,7 @@ describe("OptimisticOracleV2", function () {
       requester,
       identifier,
       timestamp,
-      ancillaryData
+      ancillaryData,
     );
     assert.ok(request);
   });

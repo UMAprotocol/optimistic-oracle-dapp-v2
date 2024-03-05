@@ -16,7 +16,7 @@ export const Factory =
     async function fetch({ url, chainId, address }: Config) {
       const requests = await getAssertions(url, chainId);
       return requests.map((request) =>
-        parseAssertionGraphEntity(request, chainId, address as Address)
+        parseAssertionGraphEntity(request, chainId, address as Address),
       );
     }
     async function tick() {

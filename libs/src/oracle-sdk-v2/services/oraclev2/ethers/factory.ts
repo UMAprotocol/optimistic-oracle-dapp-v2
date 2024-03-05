@@ -55,7 +55,7 @@ const AddTimestamps =
     }
     if (request.settlementBlockNumber && !request.settlementTimestamp) {
       const block = await provider.getBlock(
-        Number(request.settlementBlockNumber)
+        Number(request.settlementBlockNumber),
       );
       request.settlementTimestamp = block.timestamp.toString();
     }
@@ -155,7 +155,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedRequest = ConvertToSharedRequest(
     config.chainId,
     assertAddress(config.address),
-    "Optimistic Oracle V2"
+    "Optimistic Oracle V2",
   );
   const provider = new ethers.providers.JsonRpcProvider(config.url);
   const oo = new OptimisticOracleV2(provider, config.address, config.chainId);
@@ -166,7 +166,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       oo.updateFromTransactionReceipt(receipt);
       const requests: Request[] = oo.listRequests();
       const sharedRequests = requests.map((request) =>
-        convertToSharedRequest(request)
+        convertToSharedRequest(request),
       );
       events.emit("requests", sharedRequests);
     } catch (err) {
@@ -194,17 +194,17 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
         await queryRange(startBlock, endBlock);
         const requests = oo.listRequests();
         const convertedRequests: SharedRequest[] = Object.values(requests).map(
-          convertToSharedRequest
+          convertToSharedRequest,
         );
         const requestsWithTimestamps = await Promise.all(
-          convertedRequests.map(addTimestamps)
+          convertedRequests.map(addTimestamps),
         );
         events.emit("requests", requestsWithTimestamps);
       })
       .catch((err) => {
         console.warn(
           "error querying latest OOV2 requests from web3 provider:",
-          err
+          err,
         );
         events.emit("error", err);
       });

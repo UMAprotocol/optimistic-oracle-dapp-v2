@@ -45,7 +45,7 @@ export class OptimisticOracleV2 implements OracleInterface {
   constructor(
     protected provider: Provider,
     protected address: string,
-    public readonly chainId: number
+    public readonly chainId: number,
   ) {
     this.contract = connect(address, provider);
   }
@@ -63,7 +63,7 @@ export class OptimisticOracleV2 implements OracleInterface {
   };
   private setDisputeHash(
     { requester, identifier, timestamp, ancillaryData }: RequestKey,
-    hash: string
+    hash: string,
   ): Request {
     return this.upsertRequest({
       requester,
@@ -75,7 +75,7 @@ export class OptimisticOracleV2 implements OracleInterface {
   }
   private setProposeHash(
     { requester, identifier, timestamp, ancillaryData }: RequestKey,
-    hash: string
+    hash: string,
   ): Request {
     return this.upsertRequest({
       requester,
@@ -87,7 +87,7 @@ export class OptimisticOracleV2 implements OracleInterface {
   }
   private setSettleHash(
     { requester, identifier, timestamp, ancillaryData }: RequestKey,
-    hash: string
+    hash: string,
   ): Request {
     return this.upsertRequest({
       requester,
@@ -116,13 +116,13 @@ export class OptimisticOracleV2 implements OracleInterface {
       requester,
       identifier,
       timestamp,
-      ancillaryData
+      ancillaryData,
     );
     const state = await this.contract.callStatic.getState(
       requester,
       identifier,
       timestamp,
-      ancillaryData
+      ancillaryData,
     );
     return this.upsertRequest({
       ...request,
@@ -150,25 +150,25 @@ export class OptimisticOracleV2 implements OracleInterface {
   }
   async disputePrice(
     signer: Signer,
-    { requester, identifier, timestamp, ancillaryData }: RequestKey
+    { requester, identifier, timestamp, ancillaryData }: RequestKey,
   ): Promise<TransactionResponse> {
     const contract = connect(this.address, signer);
     const tx = await contract.disputePrice(
       requester,
       identifier,
       timestamp,
-      ancillaryData
+      ancillaryData,
     );
     this.setDisputeHash(
       { requester, identifier, timestamp, ancillaryData },
-      tx.hash
+      tx.hash,
     );
     return tx;
   }
   async proposePrice(
     signer: Signer,
     { requester, identifier, timestamp, ancillaryData }: RequestKey,
-    price: BigNumberish
+    price: BigNumberish,
   ): Promise<TransactionResponse> {
     const contract = connect(this.address, signer);
     const tx = await contract.proposePrice(
@@ -176,34 +176,34 @@ export class OptimisticOracleV2 implements OracleInterface {
       identifier,
       timestamp,
       ancillaryData,
-      price
+      price,
     );
     this.setProposeHash(
       { requester, identifier, timestamp, ancillaryData },
-      tx.hash
+      tx.hash,
     );
     return tx;
   }
   async settle(
     signer: Signer,
-    { requester, identifier, timestamp, ancillaryData }: RequestKey
+    { requester, identifier, timestamp, ancillaryData }: RequestKey,
   ): Promise<TransactionResponse> {
     const contract = connect(this.address, signer);
     const tx = await contract.settle(
       requester,
       identifier,
       timestamp,
-      ancillaryData
+      ancillaryData,
     );
     this.setSettleHash(
       { requester, identifier, timestamp, ancillaryData },
-      tx.hash
+      tx.hash,
     );
     return tx;
   }
   async update(
     startBlock = 0,
-    endBlock: number | "latest" = "latest"
+    endBlock: number | "latest" = "latest",
   ): Promise<void> {
     const events = await this.contract.queryFilter({}, startBlock, endBlock);
     this.updateFromEvents(events as unknown[] as OptimisticOracleEvent[]);
