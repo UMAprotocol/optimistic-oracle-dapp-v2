@@ -44,3 +44,4 @@ export const chainsById = {
 } as const;
 
 export const chainNames = Object.values(chainsById);
+
