@@ -50,24 +50,25 @@ type Transaction =
   | TransferFundsTransaction;
 
 export type OsnapPluginData = {
-  safe: {
-    safeName: string;
-    safeAddress: string;
-    network: string;
-    moduleAddress: string;
-    transactions: Transaction[];
+  oSnap: {
+    safe: {
+      safeName: string;
+      safeAddress: string;
+      network: string;
+      moduleAddress: string;
+      transactions: Transaction[];
+    };
   };
 };
+
 // type guard for checking safe data stored on ipfs by snapshot
 export function isOsnapProposalPluginData(
   proposalData: unknown
 ): proposalData is OsnapPluginData {
-  return proposalData &&
-    typeof proposalData === "object" &&
-    "oSnap" in proposalData &&
-    proposalData["oSnap"] &&
-    typeof proposalData["oSnap"] === "object" &&
-    "safe" in proposalData["oSnap"]
-    ? true
-    : false;
+  if (typeof proposalData === "object" && proposalData !== null) {
+    const data = proposalData as OsnapPluginData;
+    const hasOsnapData = !!data?.oSnap?.safe;
+    return hasOsnapData;
+  }
+  return false;
 }

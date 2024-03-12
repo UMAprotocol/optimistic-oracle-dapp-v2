@@ -1,6 +1,11 @@
 import { SectionSubTitle, Link } from "./style";
 import { AdditionalTextData } from "./AdditionalTextData";
-import { snapshotProposalLink, useIpfs } from "@/helpers/snapshot";
+import {
+  getOsnapProposalPluginData,
+  snapshotProposalLink,
+  useIpfs,
+} from "@/helpers/snapshot";
+import { TenderlySimulation } from "./TenderlySimulation";
 
 interface Props {
   description: string | undefined;
@@ -14,6 +19,7 @@ export function OSnapTextData(props: Props) {
     : undefined;
   const ipfs = useIpfs(explanationRegex ? explanationRegex[1] : undefined);
   const snapshotLink = snapshotProposalLink(ipfs?.data);
+  const osnapData = getOsnapProposalPluginData(ipfs?.data);
   return (
     <>
       {snapshotLink ? (
@@ -24,6 +30,7 @@ export function OSnapTextData(props: Props) {
           </Link>
         </div>
       ) : undefined}
+      {osnapData && <TenderlySimulation safe={osnapData.oSnap.safe} />}
       <AdditionalTextData {...props} />
     </>
   );
