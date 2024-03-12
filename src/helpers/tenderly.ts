@@ -14,7 +14,7 @@ export type TenderlySimulationResult = {
 export const OSNAP_GAS_SUBSIDY = 500_000;
 
 export async function simulateTransaction(
-  safeData: OsnapPluginData["oSnap"]["safe"]
+  safeData: OsnapPluginData["oSnap"]["safe"],
 ) {
   const response = await fetch(SIMULATION_ENDPOINT, {
     headers: new Headers({

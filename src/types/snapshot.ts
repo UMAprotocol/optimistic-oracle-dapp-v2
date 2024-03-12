@@ -63,7 +63,7 @@ export type OsnapPluginData = {
 
 // type guard for checking safe data stored on ipfs by snapshot
 export function isOsnapProposalPluginData(
-  proposalData: unknown
+  proposalData: unknown,
 ): proposalData is OsnapPluginData {
   if (typeof proposalData === "object" && proposalData !== null) {
     const data = proposalData as OsnapPluginData;
