@@ -128,6 +128,8 @@ function getBlockExplorerUrlForChain(chainId: ChainId) {
       return "https://arbiscan.io";
     case 80001:
       return "https://mumbai.polygonscan.com";
+    case 11155111:
+      return "https://sepolia.etherscan.io";
   }
 }
 
@@ -135,7 +137,7 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
   switch (chainId) {
     case 0:
       return;
-    case 1 || 5:
+    case 1 || 5 || 11155111:
       return "Etherscan";
     case 10:
       return "Etherscan";
