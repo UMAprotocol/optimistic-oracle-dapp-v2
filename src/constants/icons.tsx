@@ -17,6 +17,7 @@ import Across from "public/assets/icons/projects/across.svg";
 import Cozy from "public/assets/icons/projects/cozy.svg";
 import OSnap from "public/assets/icons/projects/osnap.svg";
 import Polymarket from "public/assets/icons/projects/polymarket.svg";
+import PolyBet from "public/assets/icons/projects/polybet.svg";
 import Sherlock from "public/assets/icons/projects/sherlock.svg";
 import Rated from "public/assets/icons/projects/rated.svg";
 import Unknown from "public/assets/icons/projects/unknown.svg";
@@ -24,6 +25,7 @@ import Unknown from "public/assets/icons/projects/unknown.svg";
 export const projectIcons = {
   Unknown,
   "Cozy Finance": Cozy,
+  PolyBet,
   Polymarket,
   Across,
   Sherlock,
