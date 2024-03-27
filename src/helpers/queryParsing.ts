@@ -437,9 +437,7 @@ export function maybeMakePolymarketOptions(
 
 // this will only work when there are exactly 3 or more proposeOptions, which should match most polybet requests
 // it will only parse 3 proposeOptions, omitting p4, which is assumed to be "too early".
-function dynamicPolybetOptions(
-  decodedAncillaryData: string,
-): DropdownItem[] {
+function dynamicPolybetOptions(decodedAncillaryData: string): DropdownItem[] {
   const resData = decodedAncillaryData.match(
     /res_data: (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+)/,
   );
