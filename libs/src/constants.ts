@@ -58,6 +58,12 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 80001,
     address: getAddress("0xAB75727d4e89A7f7F04f57C00234a35950527115"),
   },
+  {
+    // sepolia
+    type: "Optimistic Oracle V1",
+    chainId: 11155111,
+    address: getAddress("0x18Ca744fd1960d9Dda0Af5E22CC5C92aD75901E8"),
+  },
   // v2
   {
     type: "Optimistic Oracle V2",
@@ -105,6 +111,12 @@ export const ContractInfoList: ContractInfoList = [
     type: "Optimistic Oracle V2",
     chainId: 80001,
     address: getAddress("0x60E6140330F8FE31e785190F39C1B5e5e833c2a9"),
+  },
+  {
+    // sepolia
+    type: "Optimistic Oracle V2",
+    chainId: 11155111,
+    address: getAddress("0x9f1263B8f0355673619168b5B8c0248f1d03e88C"),
   },
   // v3
   {
@@ -154,6 +166,12 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 80001,
     address: getAddress("0x263351499f82C107e540B01F0Ca959843e22464a"),
   },
+  {
+    // sepolia
+    type: "Optimistic Oracle V3",
+    chainId: 11155111,
+    address: getAddress("0xFd9e2642a170aDD10F53Ee14a93FcF2F31924944"),
+  },
   // skinny
   {
     // mainnet
@@ -171,17 +189,23 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 5,
     address: getAddress("0x5a9Ed5DaC741e20cA6587d0c5C39C0992Db305C1"),
   },
+  {
+    // sepolia
+    type: "Skinny Optimistic Oracle",
+    chainId: 11155111,
+    address: getAddress("0x255483434aba5a75dc60c1391bB162BCd9DE2882"),
+  },
 ];
 export function getContractInfo(params: {
   chainId: number;
   type: string;
 }): ContractInfo {
   const found = ContractInfoList.find(
-    ({ chainId, type }) => chainId === params.chainId && type === params.type,
+    ({ chainId, type }) => chainId === params.chainId && type === params.type
   );
   if (!found)
     throw new Error(
-      `Unable to find contract info for ${params.type} on chain ${params.chainId}`,
+      `Unable to find contract info for ${params.type} on chain ${params.chainId}`
     );
   return found;
 }

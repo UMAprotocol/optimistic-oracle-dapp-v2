@@ -41,7 +41,7 @@ export const chainsById = {
   43114: "Avalanche",
   42161: "Arbitrum",
   80001: "Mumbai",
+  11155111: "Sepolia",
 } as const;
 
 export const chainNames = Object.values(chainsById);
-

@@ -20,6 +20,7 @@ export function OSnapTextData(props: Props) {
   const ipfs = useIpfs(explanationRegex ? explanationRegex[1] : undefined);
   const snapshotLink = snapshotProposalLink(ipfs?.data);
   const osnapData = getOsnapProposalPluginData(ipfs?.data);
+
   return (
     <>
       {snapshotLink ? (
