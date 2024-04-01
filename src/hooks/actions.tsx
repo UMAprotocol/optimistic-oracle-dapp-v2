@@ -500,6 +500,16 @@ export function useDisputeAssertionAction({
       disabledReason: "Already disputed.",
     };
   }
+  if (
+    prepareDisputeAssertionError?.message &&
+    prepareDisputeAssertionError?.message.includes("already disputed")
+  ) {
+    return {
+      title: disputed,
+      disabled: true,
+      disabledReason: "Already disputed.",
+    };
+  }
   return {
     title: dispute,
     action: disputeAssertion,

@@ -11,6 +11,7 @@ export const expiryTypes = ["Event-based", "Time-based"] as const;
 export const projects = [
   "Unknown",
   "Polymarket",
+  "PolyBet",
   "Cozy Finance",
   "Across",
   "Sherlock",
