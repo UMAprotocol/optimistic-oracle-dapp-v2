@@ -201,11 +201,11 @@ export function getContractInfo(params: {
   type: string;
 }): ContractInfo {
   const found = ContractInfoList.find(
-    ({ chainId, type }) => chainId === params.chainId && type === params.type
+    ({ chainId, type }) => chainId === params.chainId && type === params.type,
   );
   if (!found)
     throw new Error(
-      `Unable to find contract info for ${params.type} on chain ${params.chainId}`
+      `Unable to find contract info for ${params.type} on chain ${params.chainId}`,
     );
   return found;
 }

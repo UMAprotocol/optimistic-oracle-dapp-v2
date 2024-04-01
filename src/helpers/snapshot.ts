@@ -46,7 +46,7 @@ export function snapshotProposalLink(ipfsData: unknown) {
 }
 
 export function getOsnapProposalPluginData(
-  ipfsData: unknown
+  ipfsData: unknown,
 ): OsnapPluginData | null {
   const pluginsData = (ipfsData as SnapshotData)?.data?.message?.plugins;
   if (!pluginsData) return null;
