@@ -10,8 +10,21 @@ async function getIpfs(hash?: string) {
   return await response.json();
 }
 
+export function useIpfsProposalData(queryText: string | undefined) {
+  const explanationRegex = queryText
+    ? queryText.match(/explanation:"(.*?)",rules:/)
+    : undefined;
+  return useIpfs(explanationRegex ? explanationRegex[1] : undefined);
+}
+
+export function useSnapPluginData(queryText: string | undefined) {
+  const ipfsProposalData = useIpfsProposalData(queryText);
+  if (ipfsProposalData?.data) {
+    return getOsnapProposalPluginData(ipfsProposalData.data);
+  }
+}
 export function useIpfs(hash?: string) {
-  return useSWR(`/ipfs/${hash}`, () => {
+  return useSWR(hash ? `/ipfs/${hash}` : null, () => {
     assert(hash, "Missing ipfs hash");
     return getIpfs(hash);
   });
@@ -26,14 +39,14 @@ export function snapshotProposalLink(ipfsData: unknown) {
 
   if (space && hash) {
     return {
-      link: `https://snapshot.org/#/${space}/proposal/${hash}`,
+      link: `http://localhost:8080/#/${space}/proposal/${hash}`,
       title: title ?? space,
     };
   }
 }
 
 export function getOsnapProposalPluginData(
-  ipfsData: unknown,
+  ipfsData: unknown
 ): OsnapPluginData | null {
   const pluginsData = (ipfsData as SnapshotData)?.data?.message?.plugins;
   if (!pluginsData) return null;

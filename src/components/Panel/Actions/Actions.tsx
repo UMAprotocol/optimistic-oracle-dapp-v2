@@ -16,12 +16,21 @@ import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
 import { ProposeInput } from "./ProposeInput";
+import { TenderlySimulation } from "../TenderlySimulation";
+import { useSnapPluginData } from "@/helpers/snapshot";
 
 interface Props {
   query: OracleQueryUI;
 }
 export function Actions({ query }: Props) {
-  const { chainId, oracleType, valueText, actionType, proposeOptions } = query;
+  const {
+    chainId,
+    oracleType,
+    valueText,
+    actionType,
+    proposeOptions,
+    queryText,
+  } = query;
   const { proposePriceInput, inputError, ...inputProps } =
     useProposePriceInput(query);
   const primaryAction = usePrimaryPanelAction({
@@ -59,6 +68,7 @@ export function Actions({ query }: Props) {
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
   const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
+  const osnapData = useSnapPluginData(queryText);
 
   function getActionsTitle() {
     if (pageIsSettled) return "Settled as";
@@ -100,6 +110,8 @@ export function Actions({ query }: Props) {
       {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
       {showConnectButton && <ConnectButton />}
+      {osnapData && <TenderlySimulation osnapPluginData={osnapData.oSnap} />}
+
       <Message
         query={query}
         page={page}

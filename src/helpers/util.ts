@@ -7,6 +7,8 @@ import { capitalize, orderBy, partition, words } from "lodash";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { css } from "styled-components";
 import type { Address } from "wagmi";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 /**
  * Adds an opacity value to an hsl string
@@ -125,7 +127,7 @@ function sortVerifyQueries(verify: OracleQueryUI[]) {
     ({ livenessEndsMilliseconds, disputeHash }) => {
       if (disputeHash !== undefined) return false;
       return (livenessEndsMilliseconds ?? 0) > Date.now();
-    },
+    }
   );
 
   return [
@@ -164,7 +166,7 @@ export function getPageForQuery({ actionType }: OracleQueryUI) {
 
 export function maybeGetValueTextFromOptions(
   valueText: string | null | undefined,
-  options: DropdownItem[] | undefined,
+  options: DropdownItem[] | undefined
 ) {
   return options?.find(({ value }) => value === valueText)?.label ?? valueText;
 }
@@ -177,7 +179,7 @@ export function maybeGetValueTextFromOptions(
 export function makeQueryString(
   newParams: Record<string, string | null | undefined>,
   pathname: string | null,
-  exitingSearchParams: ReadonlyURLSearchParams | null,
+  exitingSearchParams: ReadonlyURLSearchParams | null
 ) {
   const params = new URLSearchParams(exitingSearchParams?.toString());
   Object.entries(newParams).forEach(([key, value]) => {
@@ -188,7 +190,7 @@ export function makeQueryString(
 
 export function hasProperty<Obj extends object>(
   key: PropertyKey,
-  obj: Obj,
+  obj: Obj
 ): key is keyof Obj {
   return key in obj;
 }
@@ -198,25 +200,25 @@ export function isTransactionHash(hash: string | undefined) {
 }
 
 export function isValidChainId(
-  chainId: number | undefined,
+  chainId: number | undefined
 ): chainId is ChainId {
   return !!chainId && chainId in chainsById;
 }
 
 export function isValidOracleType(
-  oracleType: string | undefined,
+  oracleType: string | undefined
 ): oracleType is OracleType {
   return !!oracleType && oracleType in oracleTypes;
 }
 
 export function isWagmiAddress(
-  maybeAddress: string | undefined,
+  maybeAddress: string | undefined
 ): maybeAddress is Address {
   if (!maybeAddress) return false;
   return "0x" == maybeAddress.slice(0, 2);
 }
 export function assertWagmiAddress(
-  maybeAddress: string,
+  maybeAddress: string
 ): asserts maybeAddress is Address {
   if (!isWagmiAddress(maybeAddress))
     throw new Error(`${maybeAddress} is not a valid address.`);
@@ -230,4 +232,8 @@ export function sanitizeErrorMessage(errorMessage: string) {
     return "Transaction Failed";
   }
   return errorMessage;
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
