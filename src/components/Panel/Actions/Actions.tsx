@@ -44,6 +44,7 @@ export function Actions({ query }: Props) {
 
   const pageIsPropose = page === "propose";
   const pageIsSettled = page === "settled";
+  const pageIsVerify = page === "verify";
   const hasAction = primaryAction !== undefined;
   const noAction = !hasAction;
   const actionIsDispute = actionType === "dispute";
@@ -110,7 +111,9 @@ export function Actions({ query }: Props) {
       {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
       {showConnectButton && <ConnectButton />}
-      {osnapData && <TenderlySimulation osnapPluginData={osnapData.oSnap} />}
+      {osnapData && pageIsVerify && (
+        <TenderlySimulation osnapPluginData={osnapData.oSnap} />
+      )}
 
       <Message
         query={query}
