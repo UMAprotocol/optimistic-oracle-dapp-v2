@@ -1,5 +1,5 @@
-import { SIMULATION_ENDPOINT } from "@/constants/tenderly";
 import type { OsnapPluginData } from "@/types";
+import { config } from "@/constants/env";
 
 export type TenderlySimulationResult = {
   id: string;
@@ -14,7 +14,7 @@ export type TenderlySimulationResult = {
 export const OSNAP_GAS_SUBSIDY = 500_000;
 
 export async function simulateTransaction(safeData: OsnapPluginData["oSnap"]) {
-  const response = await fetch(SIMULATION_ENDPOINT, {
+  const response = await fetch(config.simulationEndpoint, {
     headers: new Headers({
       "content-type": "application/json",
     }),
