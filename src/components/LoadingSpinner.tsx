@@ -6,6 +6,7 @@ type OvalProps = ComponentPropsWithoutRef<typeof Oval>;
 
 type Props = OvalProps & {
   variant?: "red" | "black" | "white";
+  className?: string;
 };
 export function LoadingSpinner({
   variant = "red",
@@ -14,6 +15,7 @@ export function LoadingSpinner({
   strokeWidth = 4,
   color,
   secondaryColor,
+  className,
   ...delegated
 }: Props) {
   const redPrimaryColor = "var(--red-500)";

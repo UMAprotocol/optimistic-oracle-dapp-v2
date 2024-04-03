@@ -7,6 +7,8 @@ import { capitalize, orderBy, partition, words } from "lodash";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { css } from "styled-components";
 import type { Address } from "wagmi";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 /**
  * Adds an opacity value to an hsl string
@@ -230,4 +232,8 @@ export function sanitizeErrorMessage(errorMessage: string) {
     return "Transaction Failed";
   }
   return errorMessage;
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
