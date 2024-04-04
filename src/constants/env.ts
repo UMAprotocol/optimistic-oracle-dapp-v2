@@ -102,6 +102,15 @@ const Env = ss.object({
   // NEXT_PUBLIC_PROVIDER_V1_416: ss.optional(ss.string()),
   // NEXT_PUBLIC_PROVIDER_V1_43114: ss.optional(ss.string()),
   // NEXT_PUBLIC_PROVIDER_V1_80001: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_V1_8453: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_V2_8453: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_V3_8453: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_SKINNY_8453: ss.optional(ss.string()),
+
+  NEXT_PUBLIC_PROVIDER_V1_8453: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_8453: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V3_8453: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_SKINNY_8453: ss.optional(ss.string()),
 });
 export type Env = ss.Infer<typeof Env>;
 
@@ -219,12 +228,24 @@ const env = ss.create(
     // NEXT_PUBLIC_PROVIDER_V1_80001: process.env.NEXT_PUBLIC_PROVIDER_V1_80001,
 
     NEXT_PUBLIC_DEFAULT_LIVENESS: process.env.NEXT_PUBLIC_DEFAULT_LIVENESS,
+
+    // base chain
+    NEXT_PUBLIC_PROVIDER_V1_8453: process.env.NEXT_PUBLIC_PROVIDER_V1_8453,
+    NEXT_PUBLIC_PROVIDER_V2_8453: process.env.NEXT_PUBLIC_PROVIDER_V2_8453,
+    NEXT_PUBLIC_PROVIDER_V3_8453: process.env.NEXT_PUBLIC_PROVIDER_V3_8453,
+    NEXT_PUBLIC_PROVIDER_SKINNY_8453:
+      process.env.NEXT_PUBLIC_PROVIDER_SKINNY_8453,
+    NEXT_PUBLIC_SUBGRAPH_V1_8453: process.env.NEXT_PUBLIC_SUBGRAPH_V1_8453,
+    NEXT_PUBLIC_SUBGRAPH_V2_8453: process.env.NEXT_PUBLIC_SUBGRAPH_V2_8453,
+    NEXT_PUBLIC_SUBGRAPH_V3_8453: process.env.NEXT_PUBLIC_SUBGRAPH_V3_8453,
+    NEXT_PUBLIC_SUBGRAPH_SKINNY_8453:
+      process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_8453,
   },
   Env,
 );
 
 export const ChainId = ss.enums([
-  1, 5, 10, 100, 137, 288, 416, 11155111, 1116, 42161, 43114, 80001,
+  1, 5, 10, 100, 137, 288, 416, 8453, 11155111, 1116, 42161, 43114, 80001,
 ]);
 const SubgraphConfig = ss.object({
   source: ss.literal("gql"),

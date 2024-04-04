@@ -13,6 +13,7 @@ import {
   polygonMumbai,
   coreDao,
   sepolia,
+  base,
 } from "wagmi/chains";
 
 export const chains = [
@@ -27,6 +28,7 @@ export const chains = [
   polygonMumbai,
   coreDao,
   sepolia,
+  base,
 ];
 
 export const walletsAndConnectors = getDefaultWallets({
