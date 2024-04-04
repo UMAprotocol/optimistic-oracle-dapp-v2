@@ -39,7 +39,7 @@ export const chainsById = {
   288: "Boba",
   416: "SX",
   1116: "Core",
-  8353: "Base",
+  8453: "Base",
   43114: "Avalanche",
   42161: "Arbitrum",
   80001: "Mumbai",

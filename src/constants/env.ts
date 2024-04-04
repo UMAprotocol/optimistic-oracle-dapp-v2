@@ -245,7 +245,7 @@ const env = ss.create(
 );
 
 export const ChainId = ss.enums([
-  1, 5, 10, 100, 137, 288, 416, 11155111, 1116, 42161, 43114, 80001,
+  1, 5, 10, 100, 137, 288, 416, 8453, 11155111, 1116, 42161, 43114, 80001,
 ]);
 const SubgraphConfig = ss.object({
   source: ss.literal("gql"),
