@@ -59,6 +59,12 @@ export const ContractInfoList: ContractInfoList = [
     address: getAddress("0xAB75727d4e89A7f7F04f57C00234a35950527115"),
   },
   {
+    // amoy
+    type: "Optimistic Oracle V1",
+    chainId: 80002,
+    address: getAddress("0x3baD7AD0728f9917d1Bf08af5782dCbD516cDd96"),
+  },
+  {
     // sepolia
     type: "Optimistic Oracle V1",
     chainId: 11155111,
@@ -119,6 +125,12 @@ export const ContractInfoList: ContractInfoList = [
     address: getAddress("0x60E6140330F8FE31e785190F39C1B5e5e833c2a9"),
   },
   {
+    // amoy
+    type: "Optimistic Oracle V2",
+    chainId: 80002,
+    address: getAddress("0x38fAc33bD20D4c4Cce085C0f347153C06CbA2968"),
+  },
+  {
     // sepolia
     type: "Optimistic Oracle V2",
     chainId: 11155111,
@@ -177,6 +189,12 @@ export const ContractInfoList: ContractInfoList = [
     type: "Optimistic Oracle V3",
     chainId: 80001,
     address: getAddress("0x263351499f82C107e540B01F0Ca959843e22464a"),
+  },
+  {
+    // amoy
+    type: "Optimistic Oracle V3",
+    chainId: 80002,
+    address: getAddress("0xd8866E76441df243fc98B892362Fc6264dC3ca80"),
   },
   {
     // sepolia

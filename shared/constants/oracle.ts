@@ -43,6 +43,7 @@ export const chainsById = {
   43114: "Avalanche",
   42161: "Arbitrum",
   80001: "Mumbai",
+  80002: "Amoy",
   11155111: "Sepolia",
 } as const;
 

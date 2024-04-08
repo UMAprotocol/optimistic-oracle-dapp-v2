@@ -130,6 +130,8 @@ function getBlockExplorerUrlForChain(chainId: ChainId) {
       return "https://arbiscan.io";
     case 80001:
       return "https://mumbai.polygonscan.com";
+    case 80002:
+      return "https://www.oklink.com/amoy";
     case 11155111:
       return "https://sepolia.etherscan.io";
   }

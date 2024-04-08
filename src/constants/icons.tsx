@@ -47,6 +47,7 @@ export const chainIcons = {
   Gnosis,
   Polygon,
   Mumbai: Polygon,
+  Amoy: Polygon,
   Boba,
   SX,
   Avalanche,
