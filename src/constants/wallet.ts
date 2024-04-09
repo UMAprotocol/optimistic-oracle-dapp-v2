@@ -1,6 +1,8 @@
 import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { config } from "@/constants";
 
+import { polygonAmoy } from "./customChains";
+
 import {
   arbitrum,
   avalanche,
@@ -29,6 +31,7 @@ export const chains = [
   coreDao,
   sepolia,
   base,
+  polygonAmoy,
 ];
 
 export const walletsAndConnectors = getDefaultWallets({
