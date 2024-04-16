@@ -132,6 +132,8 @@ function getBlockExplorerUrlForChain(chainId: ChainId) {
       return "https://mumbai.polygonscan.com";
     case 80002:
       return "https://www.oklink.com/amoy";
+    case 81457:
+      return "https://blastscan.io";
     case 11155111:
       return "https://sepolia.etherscan.io";
   }
@@ -161,6 +163,8 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
       return "Snowtrace";
     case 42161:
       return "Arbiscan";
+    case 81457:
+      return "Blastscan";
     default:
       return "Block Explorer";
   }

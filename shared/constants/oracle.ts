@@ -44,6 +44,7 @@ export const chainsById = {
   42161: "Arbitrum",
   80001: "Mumbai",
   80002: "Amoy",
+  81457: "Blast",
   11155111: "Sepolia",
 } as const;
 
