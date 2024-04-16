@@ -1,5 +1,9 @@
-import type { OsnapPluginData } from "@/types";
-import { isOsnapProposalPluginData, type SnapshotData } from "@/types";
+import type { PluginTypes } from "@/types";
+import {
+  isOsnapProposalPluginData,
+  isSafeSnapProposalPluginData,
+  type SnapshotData,
+} from "@/types";
 import assert from "assert";
 import useSWR from "swr";
 
@@ -17,11 +21,12 @@ export function useIpfsProposalData(queryText: string | undefined) {
   return useIpfs(explanationRegex ? explanationRegex[1] : undefined);
 }
 
-export function useSnapPluginData(queryText: string | undefined) {
+export function useOsnapPluginData(queryText: string | undefined): PluginTypes {
   const ipfsProposalData = useIpfsProposalData(queryText);
   if (ipfsProposalData?.data) {
-    return getOsnapProposalPluginData(ipfsProposalData.data);
+    return parsePluginData(ipfsProposalData.data);
   }
+  return null;
 }
 
 export function useIpfs(hash?: string) {
@@ -46,13 +51,16 @@ export function snapshotProposalLink(ipfsData: unknown) {
   }
 }
 
-export function getOsnapProposalPluginData(
-  ipfsData: unknown,
-): OsnapPluginData | null {
+export function parsePluginData(ipfsData: unknown): PluginTypes {
   const pluginsData = (ipfsData as SnapshotData)?.data?.message?.plugins;
   if (!pluginsData) return null;
   const parsed = JSON.parse(pluginsData);
-  const isOsnapProposal = isOsnapProposalPluginData(parsed);
-  if (!isOsnapProposal) return null;
-  return parsed;
+
+  if (isOsnapProposalPluginData(parsed)) {
+    return parsed.oSnap;
+  }
+  if (isSafeSnapProposalPluginData(parsed)) {
+    return "safeSnap";
+  }
+  return null;
 }
