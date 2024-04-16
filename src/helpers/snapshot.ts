@@ -23,6 +23,7 @@ export function useSnapPluginData(queryText: string | undefined) {
     return getOsnapProposalPluginData(ipfsProposalData.data);
   }
 }
+
 export function useIpfs(hash?: string) {
   return useSWR(hash ? `/ipfs/${hash}` : null, () => {
     assert(hash, "Missing ipfs hash");
@@ -39,7 +40,7 @@ export function snapshotProposalLink(ipfsData: unknown) {
 
   if (space && hash) {
     return {
-      link: `http://localhost:8080/#/${space}/proposal/${hash}`,
+      link: `https://snapshot.org/#/${space}/proposal/${hash}`,
       title: title ?? space,
     };
   }
