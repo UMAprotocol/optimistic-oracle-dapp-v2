@@ -43,7 +43,7 @@ export function Actions({ query }: Props) {
 
   const pageIsPropose = page === "propose";
   const pageIsSettled = page === "settled";
-  const pageIsVerify = true; // page === "verify"; // TODO: revert
+  const pageIsVerify = page === "verify";
   const hasAction = primaryAction !== undefined;
   const noAction = !hasAction;
   const actionIsDispute = actionType === "dispute";
