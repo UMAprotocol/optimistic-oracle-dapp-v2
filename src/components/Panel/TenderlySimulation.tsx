@@ -12,10 +12,44 @@ import { LoadingSpinner } from "../LoadingSpinner";
 import ExternalLink from "public/assets/icons/external-link-2.svg";
 import Refresh from "public/assets/icons/refresh.svg";
 import { cn } from "@/helpers";
+import { useOsnapPluginData } from "@/helpers/snapshot";
+import Warning from "public/assets/icons/warning.svg";
+import Link from "next/link";
 
-type SimulationProps = {
-  osnapPluginData: OsnapPluginData["oSnap"];
+type Props = {
+  queryText: string | undefined;
 };
+
+export function SimulateIfOsnap({ queryText }: Props) {
+  const pluginData = useOsnapPluginData(queryText);
+
+  if (!pluginData) {
+    return;
+  }
+
+  if (pluginData === "safeSnap") {
+    return (
+      <div className="text-sm flex items-start justify-start gap-1 py-1 w-panel-content-width">
+        <div className="leading-6 h-6 w-6 flex items-center justify-center">
+          <Warning className="h-[1em] w-[1em]" />
+        </div>
+
+        <p className="leading-6">
+          Tenderly Simulation not available. Please migrate to the official{" "}
+          <Link
+            className="text-red-500 hover:underline "
+            target="_blank"
+            href="https://docs.uma.xyz/developers/osnap/osnap-configuration-parameters-1"
+          >
+            oSnap plugin.
+          </Link>
+        </p>
+      </div>
+    );
+  }
+
+  return <TenderlySimulation osnapPluginData={pluginData} />;
+}
 
 type SimulationState =
   | {
@@ -41,7 +75,11 @@ type SimulationState =
       status: "IDLE";
     };
 
-export function TenderlySimulation({ osnapPluginData }: SimulationProps) {
+type SimulationProps = {
+  osnapPluginData: OsnapPluginData["oSnap"];
+};
+
+function TenderlySimulation({ osnapPluginData }: SimulationProps) {
   const [status, setStatus] = useState<SimulationState>({
     status: "IDLE",
   });
@@ -87,7 +125,7 @@ export function TenderlySimulation({ osnapPluginData }: SimulationProps) {
   }
 
   return (
-    <div className="w-full mt-2">
+    <div className="w-panel-content-width mt-2 ">
       {!(status.status === "SUCCESS" || status.status === "FAIL") ? (
         <button
           disabled={status.status === "LOADING"}
