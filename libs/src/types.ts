@@ -3,7 +3,6 @@ import type {
   TypedEventFilterEthers as TypedEventFilter,
   TypedEventEthers as TypedEvent,
 } from "@uma/contracts-frontend";
-import type { Provider } from "@ethersproject/providers";
 import type { Signer } from "@ethersproject/abstract-signer";
 export type { Log } from "@ethersproject/abstract-provider";
 export type {

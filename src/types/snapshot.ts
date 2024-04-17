@@ -61,13 +61,21 @@ export type OsnapPluginData = {
   };
 };
 
+export type PluginTypes = "safeSnap" | null | OsnapPluginData["oSnap"];
+
+export function isSafeSnapProposalPluginData(proposalData: unknown): boolean {
+  if (typeof proposalData === "object" && proposalData !== null) {
+    return !!(proposalData as Record<"safeSnap", unknown>)?.safeSnap;
+  }
+  return false;
+}
+
 // type guard for checking safe data stored on ipfs by snapshot
 export function isOsnapProposalPluginData(
   proposalData: unknown,
 ): proposalData is OsnapPluginData {
   if (typeof proposalData === "object" && proposalData !== null) {
-    const data = proposalData as OsnapPluginData;
-    const hasOsnapData = !!data?.oSnap?.safe;
+    const hasOsnapData = !!(proposalData as OsnapPluginData)?.oSnap?.safe;
     return hasOsnapData;
   }
   return false;

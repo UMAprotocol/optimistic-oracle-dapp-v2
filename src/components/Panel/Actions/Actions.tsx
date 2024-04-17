@@ -16,8 +16,7 @@ import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
 import { ProposeInput } from "./ProposeInput";
-import { TenderlySimulation } from "../TenderlySimulation";
-import { useSnapPluginData } from "@/helpers/snapshot";
+import { SimulateIfOsnap } from "../TenderlySimulation";
 
 interface Props {
   query: OracleQueryUI;
@@ -69,7 +68,6 @@ export function Actions({ query }: Props) {
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
   const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
-  const osnapData = useSnapPluginData(queryText);
 
   function getActionsTitle() {
     if (pageIsSettled) return "Settled as";
@@ -111,9 +109,7 @@ export function Actions({ query }: Props) {
       {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
       {showConnectButton && <ConnectButton />}
-      {osnapData && pageIsVerify && (
-        <TenderlySimulation osnapPluginData={osnapData.oSnap} />
-      )}
+      {pageIsVerify && <SimulateIfOsnap queryText={queryText} />}
 
       <Message
         query={query}
