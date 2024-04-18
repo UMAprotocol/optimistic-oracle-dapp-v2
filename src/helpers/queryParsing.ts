@@ -47,6 +47,19 @@ function makeSimpleYesOrNoOptions() {
     { label: "No", value: "0", secondaryLabel: "0" },
   ];
 }
+function makeMutlipleChoiceOptions(
+  options: { label: string; value: string; secondaryLabel: string }[],
+) {
+  return [
+    ...options,
+    {
+      label: "Answer not possible",
+      value:
+        "57896044618658097711785492504343953926634992332820282019728.792003956564819967",
+      secondaryLabel: "type(int256).max",
+    },
+  ];
+}
 export function isOptimisticGovernor(decodedAncillaryData: string) {
   return (
     decodedAncillaryData.includes("rules:") &&
@@ -203,15 +216,19 @@ export function getQueryMetaData(
         project: "Unknown",
       };
     } catch (err) {
+      let description = `Error decoding description`;
+      if (err instanceof Error) {
+        description += `: ${err.message}`;
+      }
       console.error("Error parsing multipechoicequery", decodedQueryText, err);
       return {
         title: "Multiple Choice query",
-        description: decodedQueryText,
+        description,
         umipUrl:
           "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-181.md",
         umipNumber: "UMIP-181",
         project: "Unknown",
-        proposeOptions: makeSimpleYesOrNoOptions(),
+        proposeOptions: makeMutlipleChoiceOptions(makeSimpleYesOrNoOptions()),
       };
     }
   }
@@ -283,24 +300,27 @@ function decodeMultipleChoiceQuery(decodedAncillaryData: string) {
   const endOfObjectIndex = decodedAncillaryData.lastIndexOf("}");
   const maybeJson =
     endOfObjectIndex > 0
-      ? decodedAncillaryData.slice(0, endOfObjectIndex)
+      ? decodedAncillaryData.slice(0, endOfObjectIndex + 1)
       : decodedAncillaryData;
+
   const json = JSON.parse(maybeJson);
   if (!isMultipleChoicQueryFormat(json))
     throw new Error("Malformed ancillary data");
   return {
     title: json.title,
     description: json.description,
-    proposeOptions: (
-      json.options ?? [
-        ["No", "0"],
-        ["Yes", "1"],
-      ]
-    ).map((opt: [string, string]) => ({
-      label: opt[0],
-      value: opt[1],
-      secondaryLabel: opt[1],
-    })),
+    proposeOptions: makeMutlipleChoiceOptions(
+      (
+        json.options ?? [
+          ["No", "0"],
+          ["Yes", "1"],
+        ]
+      ).map((opt: [string, string]) => ({
+        label: opt[0],
+        value: opt[1],
+        secondaryLabel: opt[1],
+      })),
+    ),
   };
 }
 
