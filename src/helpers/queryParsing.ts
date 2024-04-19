@@ -1,6 +1,7 @@
 import { earlyRequestMagicNumber } from "@/constants";
 import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type { DropdownItem, MetaData } from "@/types";
+import { formatEther } from "@/helpers";
 import { chunk } from "lodash";
 
 // hard coded known poly addresses:
@@ -47,7 +48,15 @@ function makeSimpleYesOrNoOptions() {
     { label: "No", value: "0", secondaryLabel: "0" },
   ];
 }
-function makeMutlipleChoiceOptions(
+// This is specifically for the mutliple choice identifier, all values must be specified in WEI
+// and values are always scaled as if they were eth on proposal, so we must do a conversion here.
+function makeMultipleChoiceYesOrNoOptions() {
+  return [
+    { label: "Yes", value: formatEther("1"), secondaryLabel: "1" },
+    { label: "No", value: "0", secondaryLabel: "0" },
+  ];
+}
+function makeMultipleChoiceOptions(
   options: { label: string; value: string; secondaryLabel: string }[],
 ) {
   return [
@@ -228,7 +237,9 @@ export function getQueryMetaData(
           "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-181.md",
         umipNumber: "UMIP-181",
         project: "Unknown",
-        proposeOptions: makeMutlipleChoiceOptions(makeSimpleYesOrNoOptions()),
+        proposeOptions: makeMultipleChoiceOptions(
+          makeMultipleChoiceYesOrNoOptions(),
+        ),
       };
     }
   }
@@ -296,6 +307,16 @@ const isMultipleChoicQueryFormat = (
   return "object" === typeof input && null !== input && $io0(input);
 };
 
+function ensureInteger(value: string): string {
+  const num = Number(value);
+  if (!Number.isInteger(num)) {
+    throw new Error(
+      `The value '${value}' needs to be specified in WEI, integers only.`,
+    );
+  }
+  return value;
+}
+
 function decodeMultipleChoiceQuery(decodedAncillaryData: string) {
   const endOfObjectIndex = decodedAncillaryData.lastIndexOf("}");
   const maybeJson =
@@ -309,16 +330,17 @@ function decodeMultipleChoiceQuery(decodedAncillaryData: string) {
   return {
     title: json.title,
     description: json.description,
-    proposeOptions: makeMutlipleChoiceOptions(
+    proposeOptions: makeMultipleChoiceOptions(
       (
         json.options ?? [
           ["No", "0"],
-          ["Yes", "1"],
+          ["Yes", formatEther("1")],
         ]
       ).map((opt: [string, string]) => ({
         label: opt[0],
-        value: opt[1],
-        secondaryLabel: opt[1],
+        // converting wei into ether because all values are scaled to wei when proposed
+        value: formatEther(ensureInteger(opt[1])),
+        secondaryLabel: `${opt[1]}`,
       })),
     ),
   };
