@@ -587,7 +587,6 @@ export function useSettlePriceAction({
       disabledReason: "Settling...",
     };
   }
-  // console.log(query)
   // unique to settle, if we have an error preparing the transaction,
   // this means this is probably disputed, but no answer available from dvm yet
   if (prepareSettlePriceError) {
