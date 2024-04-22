@@ -15,8 +15,9 @@ export function Errors({ errors }: Props) {
     <>
       {errors.map((message) => (
         <ErrorWrapper key={message}>
-          <Warning />
-          <p className="text-xs sm:text-base text-red-500">
+          <Warning className="shrink-0 h-4 w-4" />
+
+          <p className="text-xs w-full min-w-0 sm:text-base text-red-500 break-words inline-block">
             {sanitizeErrorMessage(message)}
           </p>
         </ErrorWrapper>
