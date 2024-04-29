@@ -169,11 +169,7 @@ export function maybeGetValueTextFromOptions(
   valueText: string | null | undefined,
   options: DropdownItem[] | undefined,
 ) {
-  //  early request not in original proposal
-  if (isEarlyVote(valueText)) {
-    return "Early Request";
-  }
-  return options?.find(({ value }) => value === valueText)?.label ?? valueText;
+  return options?.find(({ value }) => value === valueText)?.label ?? isEarlyVote(valueText) ? "Early Request" : valueText;
 }
 
 /**

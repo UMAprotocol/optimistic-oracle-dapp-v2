@@ -1,3 +1,4 @@
+import { isBigNumberish } from "@ethersproject/bignumber/lib/bignumber";
 import { bigNumberFromFloatString } from "@shared/utils";
 
 export const earlyRequestMagicNumber =
@@ -11,7 +12,7 @@ export const earlyRequestMagicNumberWei =
  * This function compares only the integer part of earlyRequestMagicNumber and param "value"
  */
 export function isEarlyVote(value: string | undefined | null): boolean {
-  if (!value) return false;
+  if (!value || !isBigNumberish(value)) return false;
 
   const asBigInt = takeIntegerAsBigNumber(value)
  return [earlyRequestMagicNumber, earlyRequestMagicNumberWei].map(takeIntegerAsBigNumber).some(num => num.eq(asBigInt))
