@@ -4,7 +4,11 @@ import { initialize, mswDecorator } from "msw-storybook-addon";
 import React from "react";
 import { mockDateDecorator } from "storybook-mock-date-decorator";
 import { WagmiConfig } from "wagmi";
-import { chains, rainbowKitTheme, wagmiClient } from "../src/components/WalletConfig";
+import {
+  chains,
+  rainbowKitTheme,
+  wagmiClient,
+} from "../src/components/WalletConfig";
 import { NotificationsProvider } from "../src/contexts";
 import { mockDate } from "../src/stories/mocks";
 import "../src/styles/fonts.css";

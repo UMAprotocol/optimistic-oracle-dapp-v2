@@ -26,7 +26,7 @@ export const IDENTIFIER_NON_18_PRECISION = {
 type IdentifierNon18Precision = keyof typeof IDENTIFIER_NON_18_PRECISION;
 
 function isNon18Precision(
-  identifier: string
+  identifier: string,
 ): identifier is IdentifierNon18Precision {
   return identifier in IDENTIFIER_NON_18_PRECISION;
 }
@@ -39,11 +39,11 @@ export const getPrecisionForIdentifier = (identifier: string): number => {
 
 export function parsePriceStringWithPrecision(
   vote: string,
-  decodedIdentifier: string
+  decodedIdentifier: string,
 ) {
   // check the precision to use from our table of precisions
   const identifierPrecision = BigNumber.from(
-    getPrecisionForIdentifier(decodedIdentifier)
+    getPrecisionForIdentifier(decodedIdentifier),
   ).toString();
   return parseFixed(vote, identifierPrecision).toString();
 }
@@ -66,7 +66,7 @@ export const commify = ethers.utils.commify;
  */
 export function formatNumberForDisplay(
   number: bigint | string | undefined,
-  options?: { decimals?: number; isFormatEther?: boolean }
+  options?: { decimals?: number; isFormatEther?: boolean },
 ) {
   if (!number) return "0.0";
   const { decimals = 2, isFormatEther = false } = options || {};
@@ -122,8 +122,8 @@ function getBlockExplorerUrlForChain(chainId: ChainId) {
       return "https://explorer.sx.technology";
     case 1116:
       return "https://scan.coredao.org";
-    case 8453: 
-      return "https://basescan.org"
+    case 8453:
+      return "https://basescan.org";
     case 43114:
       return "https://snowtrace.io";
     case 42161:
@@ -157,8 +157,8 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
       return "SX Explorer";
     case 1116:
       return "Core Scan";
-    case 8453: 
-      return "Base Scan"
+    case 8453:
+      return "Base Scan";
     case 43114:
       return "Snowtrace";
     case 42161:
@@ -173,7 +173,7 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
 export function makeBlockExplorerLink(
   hash: string,
   chainId: ChainId,
-  type: "tx" | "address" | "block"
+  type: "tx" | "address" | "block",
 ) {
   const url = getBlockExplorerUrlForChain(chainId);
 
