@@ -193,6 +193,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         dispatch({ type: "assertions", data: assertions }),
       errors: setErrors,
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -238,6 +239,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         });
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errors]);
 
   return (
