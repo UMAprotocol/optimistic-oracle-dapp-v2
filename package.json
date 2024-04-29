@@ -2,9 +2,11 @@
   "name": "optimistic-oracle-dapp-v2",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./prettier.config.js",
     "predev": "yarn update-approved-identifiers",
     "prebuild": "yarn update-approved-identifiers",
     "start": "next start",
