@@ -9,6 +9,7 @@ import { css } from "styled-components";
 import type { Address } from "wagmi";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { isEarlyVote } from "@/constants";
 
 /**
  * Adds an opacity value to an hsl string
@@ -168,7 +169,7 @@ export function maybeGetValueTextFromOptions(
   valueText: string | null | undefined,
   options: DropdownItem[] | undefined,
 ) {
-  return options?.find(({ value }) => value === valueText)?.label ?? valueText;
+  return options?.find(({ value }) => value === valueText)?.label ?? isEarlyVote(valueText) ? "Early Request" : valueText;
 }
 
 /**

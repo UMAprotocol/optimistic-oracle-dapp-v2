@@ -297,6 +297,7 @@ const isMultipleChoicQueryFormat = (
     (undefined === input?.options || //eslint-disable-line
       (Array.isArray(input.options) && //eslint-disable-line
         input.options.every( //eslint-disable-line
+          //eslint-disable-line
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (elem: any) =>
             Array.isArray(elem) &&

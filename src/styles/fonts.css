@@ -1,6 +1,7 @@
 @font-face {
   font-family: "Halyard Display";
-  src: url("/fonts/HalyardDisplay-Regular.woff2") format("woff2"),
+  src:
+    url("/fonts/HalyardDisplay-Regular.woff2") format("woff2"),
     url("/fonts/HalyardDisplay-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
