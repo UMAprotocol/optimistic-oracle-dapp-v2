@@ -16,6 +16,15 @@
     "comma-dangle": 0,
     "@typescript-eslint/consistent-type-imports": "error",
     "no-inner-declarations": "off",
+    "no-mixed-operators": [
+      "error",
+      {
+        "groups": [
+         ["&&", "||", "??", "?:"]
+      ],
+      "allowSamePrecedence": true
+      }
+    ] ,
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
