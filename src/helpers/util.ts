@@ -18,7 +18,7 @@ import { isEarlyVote } from "@/constants";
  * @returns a color-mix css color with transparency added
  */
 export function addOpacityToColor(color: string, opacity: number) {
-  const alpha = 100 - opacity * 100;
+  const alpha = 100 - (opacity * 100);
   return `color-mix(in srgb, transparent ${alpha}%, ${color})`;
 }
 
@@ -169,7 +169,7 @@ export function maybeGetValueTextFromOptions(
   valueText: string | null | undefined,
   options: DropdownItem[] | undefined,
 ) {
-  return options?.find(({ value }) => value === valueText)?.label ?? isEarlyVote(valueText) ? "Early Request" : valueText;
+  return  options?.find(({ value }) => value === valueText)?.label ?? (isEarlyVote(valueText) ? "Early Request" : valueText)
 }
 
 /**

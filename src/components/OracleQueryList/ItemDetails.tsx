@@ -45,8 +45,8 @@ export function ItemDetails({
         <ItemDetailsText>Proposal</ItemDetailsText>
         <ItemDetailsText>{valueToShow}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
-      {livenessEndsMilliseconds !== undefined &&
-      timeMilliseconds !== undefined ? (
+      {(livenessEndsMilliseconds !== undefined &&
+      timeMilliseconds !== undefined) ? (
         <ItemDetailsInnerWrapper>
           <ItemDetailsText>Challenge Period Left</ItemDetailsText>
           <LivenessProgressBar
@@ -61,7 +61,7 @@ export function ItemDetails({
   );
 
   const proposeDetails =
-    hasBond || hasReward ? (
+    (hasBond || hasReward) ? (
       <ItemDetailsWrapper>
         {hasBond && (
           <ItemDetailsInnerWrapper>
