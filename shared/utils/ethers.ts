@@ -68,7 +68,7 @@ export function formatNumberForDisplay(
   number: bigint | string | undefined,
   options?: { decimals?: number; isFormatEther?: boolean },
 ) {
-  if (!number) return "0.0";
+  if (!number) return "0";
   const { decimals = 2, isFormatEther = false } = options || {};
   const _number = isFormatEther ? formatEther(number) : number.toString();
   return truncateDecimals(commify(_number), decimals);
