@@ -17,7 +17,8 @@
     "build-storybook": "storybook build",
     "chromatic": "npx chromatic --project-token=e13461f750dc",
     "chromatic-accept": "npx chromatic --project-token=e13461f750dc --auto-accept-changes",
-    "update-approved-identifiers": "ts-node ./scripts/approvedIdentifiersTableParser.ts"
+    "update-approved-identifiers": "ts-node ./scripts/approvedIdentifiersTableParser.ts",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -93,5 +94,9 @@
     "workerDirectory": "public"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "optimistic-oracle-dapp-v2@0.1.0"
+  "_id": "optimistic-oracle-dapp-v2@0.1.0",
+  "devDependencies": {
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.2"
+  }
 }
