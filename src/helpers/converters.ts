@@ -439,7 +439,7 @@ function getOOV2SpecificValues(request: Request) {
   const isV2 = isOOV2PriceRequest(request);
   const finalFee = request.finalFee ?? BigInt(0);
   // bond is final fee and bond together
-  const bond = (isV2 && request.bond) ? request.bond + finalFee : finalFee;
+  const bond = isV2 && request.bond ? request.bond + finalFee : finalFee;
   const customLiveness = isV2 ? request.customLiveness : null;
   const eventBased = isV2 ? request.eventBased : null;
 

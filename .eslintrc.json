@@ -19,12 +19,10 @@
     "no-mixed-operators": [
       "warn",
       {
-        "groups": [
-         ["&&", "||", "??", "?:"]
-      ],
-      "allowSamePrecedence": true
+        "groups": [["&&", "||", "??", "?:"]],
+        "allowSamePrecedence": true
       }
-    ] ,
+    ],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {

@@ -79,7 +79,7 @@ function Wrapper({ Component, errorMessages }: Props) {
             addErrorMessage({
               text: errorMessageTextInput,
               link:
-                (errorMessageTextInput && errorMessageLinkHrefInput)
+                errorMessageTextInput && errorMessageLinkHrefInput
                   ? {
                       text: errorMessageLinkTextInput,
                       href: errorMessageLinkHrefInput,

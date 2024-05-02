@@ -136,7 +136,7 @@ export function useQueryInSearchParams() {
     const hasMultipleForTx = forTx.length > 1;
 
     const query =
-      (hasMultipleForTx && exists(state.eventIndex))
+      hasMultipleForTx && exists(state.eventIndex)
         ? find<OracleQueryUI>(
             forTx,
             ({
