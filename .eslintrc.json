@@ -17,7 +17,7 @@
     "@typescript-eslint/consistent-type-imports": "error",
     "no-inner-declarations": "off",
     "no-mixed-operators": [
-      "error",
+      "warn",
       {
         "groups": [
          ["&&", "||", "??", "?:"]
