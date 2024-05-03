@@ -14,12 +14,13 @@ export const earlyRequestMagicNumberWei =
 export function isEarlyVote(value: string | undefined | null): boolean {
   if (!value || !isBigNumberish(value)) return false;
 
-  const asBigInt = takeIntegerAsBigNumber(value)
- return [earlyRequestMagicNumber, earlyRequestMagicNumberWei].map(takeIntegerAsBigNumber).some(num => num.eq(asBigInt))
+  const asBigInt = takeIntegerAsBigNumber(value);
+  return [earlyRequestMagicNumber, earlyRequestMagicNumberWei]
+    .map(takeIntegerAsBigNumber)
+    .some((num) => num.eq(asBigInt));
 }
 
 function takeIntegerAsBigNumber(value: string) {
   // remove commas, if present, remove decimals, take only integer
-  return bigNumberFromFloatString(value.replace(/,/g, "").split(".")[0])
+  return bigNumberFromFloatString(value.replace(/,/g, "").split(".")[0]);
 }
-

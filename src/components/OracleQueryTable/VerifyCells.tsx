@@ -26,9 +26,9 @@ export function VerifyCells({
         </Text>
       </TD>
       {disputeHash && <TD>Disputed</TD>}
-      {(!disputeHash &&
+      {!disputeHash &&
       livenessEndsMilliseconds !== undefined &&
-      timeMilliseconds !== undefined) ? (
+      timeMilliseconds !== undefined ? (
         <TD>
           <LivenessProgressBar
             startTime={timeMilliseconds}

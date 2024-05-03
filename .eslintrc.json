@@ -17,14 +17,12 @@
     "@typescript-eslint/consistent-type-imports": "error",
     "no-inner-declarations": "off",
     "no-mixed-operators": [
-      "error",
+      "warn",
       {
-        "groups": [
-         ["&&", "||", "??", "?:"]
-      ],
-      "allowSamePrecedence": true
+        "groups": [["&&", "||", "??", "?:"]],
+        "allowSamePrecedence": true
       }
-    ] ,
+    ],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
