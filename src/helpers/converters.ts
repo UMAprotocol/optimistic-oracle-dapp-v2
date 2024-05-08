@@ -671,7 +671,22 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   if (exists(reward)) {
     result.reward = reward;
   }
-  result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
+  // With multiple chocie query, values are specified in WEI unlike other identifiers where they are specified in ETh
+  if (
+    exists(identifier) &&
+    parseIdentifier(identifier) === "MULTIPLE_CHOICE_QUERY"
+  ) {
+    // all our parsing logic assume ether but its not the case for this identifier,
+    // so we need to show this as raw eth with no decimal truncation
+    const price = settlementPrice ?? proposedPrice;
+    if (price === null || price === undefined) {
+      result.valueText = "";
+    } else {
+      result.valueText = ethers.utils.formatEther(price);
+    }
+  } else {
+    result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
+  }
 
   if (exists(ancillaryData)) {
     result.queryTextHex = ancillaryData;
