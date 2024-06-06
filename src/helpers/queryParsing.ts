@@ -57,7 +57,7 @@ function makeMultipleChoiceYesOrNoOptions() {
   ];
 }
 function makeMultipleChoiceOptions(
-  options: { label: string; value: string; secondaryLabel: string }[]
+  options: { label: string; value: string; secondaryLabel: string }[],
 ) {
   return [
     ...options,
@@ -91,7 +91,7 @@ export function checkIfIsCozy(decodedAncillaryData: string) {
 export function checkIfIsPolymarket(
   decodedIdentifier: string,
   decodedAncillaryData: string,
-  requester: string
+  requester: string,
 ) {
   const queryTitleToken = "q: title:";
   const resultDataToken = "res_data:";
@@ -107,7 +107,7 @@ export function checkIfIsPolymarket(
 export function checkIfIsPolybet(
   decodedIdentifier: string,
   decodedAncillaryData: string,
-  requester: string
+  requester: string,
 ) {
   const resultDataToken = "res_data:";
   const isPolybet =
@@ -121,7 +121,7 @@ export function checkIfIsPolybet(
 export function getQueryMetaData(
   decodedIdentifier: string,
   decodedQueryText: string,
-  requester: string
+  requester: string,
 ): MetaData {
   const isAcross = decodedIdentifier === "ACROSS-V2";
   if (isAcross) {
@@ -144,7 +144,7 @@ export function getQueryMetaData(
   const isPolymarket = checkIfIsPolymarket(
     decodedIdentifier,
     decodedQueryText,
-    requester
+    requester,
   );
   if (isPolymarket) {
     const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
@@ -170,7 +170,7 @@ export function getQueryMetaData(
   const isPolybet = checkIfIsPolybet(
     decodedIdentifier,
     decodedQueryText,
-    requester
+    requester,
   );
   if (isPolybet) {
     const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
@@ -238,7 +238,7 @@ export function getQueryMetaData(
         umipNumber: "UMIP-181",
         project: "Unknown",
         proposeOptions: makeMultipleChoiceOptions(
-          makeMultipleChoiceYesOrNoOptions()
+          makeMultipleChoiceYesOrNoOptions(),
         ),
       };
     }
@@ -288,7 +288,7 @@ type MultipleChoiceQuery = {
 };
 
 const isMultipleChoiceQueryFormat = (
-  input: unknown
+  input: unknown,
 ): input is MultipleChoiceQuery => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const $io0 = (input: any): boolean =>
@@ -304,7 +304,7 @@ const isMultipleChoiceQueryFormat = (
             Array.isArray(elem) &&
             elem.length === 2 &&
             "string" === typeof elem[0] &&
-            "string" === typeof elem[1]
+            "string" === typeof elem[1],
         )));
   return "object" === typeof input && null !== input && $io0(input);
 };
@@ -313,7 +313,7 @@ function ensureInteger(value: string): string {
   const num = Number(value);
   if (!Number.isInteger(num)) {
     throw new Error(
-      `The value '${value}' needs to be specified in WEI, integers only.`
+      `The value '${value}' needs to be specified in WEI, integers only.`,
     );
   }
   return value;
@@ -343,7 +343,7 @@ function decodeMultipleChoiceQuery(decodedAncillaryData: string) {
         // converting wei into ether because all values are scaled to wei when proposed
         value: formatEther(ensureInteger(opt[1])),
         secondaryLabel: `${opt[1]}`,
-      }))
+      })),
     ),
   };
 }
@@ -358,7 +358,7 @@ function polybetGetTitleIfNoTitleIdentifier(decodedAncillaryData: string) {
 function getTitleFromAncillaryData(
   decodedAncillaryData: string,
   titleIdentifier = "title:",
-  descriptionIdentifier = "description:"
+  descriptionIdentifier = "description:",
 ) {
   const start = decodedAncillaryData.indexOf(titleIdentifier);
   const end =
@@ -378,7 +378,7 @@ function getTitleFromAncillaryData(
 
 function getDescriptionFromAncillaryData(
   decodedAncillaryData: string,
-  descriptionIdentifier = "description:"
+  descriptionIdentifier = "description:",
 ) {
   if (!decodedAncillaryData) {
     return undefined;
@@ -392,20 +392,20 @@ function getDescriptionFromAncillaryData(
 
   return decodedAncillaryData.substring(
     start + descriptionIdentifier.length,
-    end
+    end,
   );
 }
 
 // this will only work when there are exactly 3 or more proposeOptions, which should match most polymarket requests
 // it will only parse 3 proposeOptions, omitting p4, which is assumed to be "too early".
 function dynamicPolymarketOptions(
-  decodedAncillaryData: string
+  decodedAncillaryData: string,
 ): DropdownItem[] {
   const resData = decodedAncillaryData.match(
-    /res_data: (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+)/
+    /res_data: (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+)/,
   );
   const correspondence = decodedAncillaryData.match(
-    /Where (p\d) corresponds to ((?:[^,]|,(?!\s))+), (p\d) to ((?:[^,]|,(?!\s))+), (p\d) to ([^.,]+)/
+    /Where (p\d) corresponds to ((?:[^,]|,(?!\s))+), (p\d) to ((?:[^,]|,(?!\s))+), (p\d) to ([^.,]+)/,
   );
 
   if (!resData || !correspondence) return [];
@@ -418,7 +418,7 @@ function dynamicPolymarketOptions(
   });
 
   const correspondenceTable = Object.fromEntries(
-    chunk(cleanCorrespondence.slice(1), 2)
+    chunk(cleanCorrespondence.slice(1), 2),
   ) as Record<string, string>;
   const resDataTable = Object.fromEntries(chunk(resData.slice(1), 2)) as Record<
     string,
@@ -444,7 +444,7 @@ function dynamicPolymarketOptions(
 
 // res_data: p1: 0, p2: 1. Where p1 corresponds to No, p2 to Yes.
 export function maybeMakePolymarketOptions(
-  decodedAncillaryData: string
+  decodedAncillaryData: string,
 ): DropdownItem[] | undefined {
   // this is a specific search to look for a misspelling with options "p2 to a Yes"
   const options1 = {
@@ -561,10 +561,10 @@ export function maybeMakePolymarketOptions(
 // it will only parse 3 proposeOptions, omitting p4, which is assumed to be "too early".
 function dynamicPolybetOptions(decodedAncillaryData: string): DropdownItem[] {
   const resData = decodedAncillaryData.match(
-    /res_data: (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+)/
+    /res_data: (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+), (p\d): (\d+\.\d+|\d+)/,
   );
   const correspondence = decodedAncillaryData.match(
-    /Where (p\d) corresponds to ((?:[^,]|,(?!\s))+), (p\d) to ((?:[^,]|,(?!\s))+), (p\d) to ([^.,]+)/
+    /Where (p\d) corresponds to ((?:[^,]|,(?!\s))+), (p\d) to ((?:[^,]|,(?!\s))+), (p\d) to ([^.,]+)/,
   );
 
   if (!resData || !correspondence) return [];
@@ -577,7 +577,7 @@ function dynamicPolybetOptions(decodedAncillaryData: string): DropdownItem[] {
   });
 
   const correspondenceTable = Object.fromEntries(
-    chunk(cleanCorrespondence.slice(1), 2)
+    chunk(cleanCorrespondence.slice(1), 2),
   ) as Record<string, string>;
   const resDataTable = Object.fromEntries(chunk(resData.slice(1), 2)) as Record<
     string,
@@ -596,7 +596,7 @@ function dynamicPolybetOptions(decodedAncillaryData: string): DropdownItem[] {
 }
 
 export function maybeMakePolybetOptions(
-  decodedAncillaryData: string
+  decodedAncillaryData: string,
 ): DropdownItem[] | undefined {
   // this is a specific search to look for a misspelling with options "p2 to a Yes"
   const options1 = {
