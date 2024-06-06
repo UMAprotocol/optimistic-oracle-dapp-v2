@@ -3,7 +3,7 @@ import { AdditionalTextData } from "./AdditionalTextData";
 import { useContractRead, type Address } from "wagmi";
 import { polymarketBulletinAbi } from "@shared/constants/abi";
 import { utils } from "ethers";
-import { toTimeFormatted, isWagmiAddress } from "@/helpers";
+import { isWagmiAddress, toUtcTimeFormatted } from "@/helpers";
 
 interface Props {
   description: string | undefined;
@@ -63,7 +63,7 @@ export function PolymarketTextData(props: Props) {
           {bulletinUpdates.data.map((data) => {
             return (
               <Text key={data.timestamp.toString()}>
-                {toTimeFormatted(data.timestamp.toString())}:{" "}
+                {toUtcTimeFormatted(data.timestamp.toString())}:{" "}
                 {utils.toUtf8String(data.update)}
               </Text>
             );

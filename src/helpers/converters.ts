@@ -120,6 +120,17 @@ export function toTimeFormatted(timestamp: number | string) {
   return format(toTimeMilliseconds(timestamp), "Pp");
 }
 
+export function toUtcTimeFormatted(timestamp: number | string) {
+  const date = new Date(toTimeMilliseconds(timestamp));
+  // use user's language but keep it as UTC time
+  return new Intl.DateTimeFormat(navigator.language, {
+    dateStyle: "short",
+    timeStyle: "short",
+    hour12: true,
+    timeZone: "UTC",
+  }).format(date);
+}
+
 export function getChainName(chainId: number): ChainName {
   if (!isSupportedChain(chainId))
     throw new Error(`Unsupported Chain ${chainId}`);
