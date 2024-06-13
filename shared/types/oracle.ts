@@ -22,7 +22,7 @@ export type Request = {
   ancillaryData: string;
   time: string;
   requester: Address;
-  bond: bigint | null | undefined;
+  bond?: bigint | null;
 } & (Partial<ParsedOOV1GraphEntity> | Partial<ParsedOOV2GraphEntity>);
 
 export type Assertion = {
