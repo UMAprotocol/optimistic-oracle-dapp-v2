@@ -97,14 +97,28 @@ export class OptimisticOracleV2 implements OracleInterface {
       settleTx: hash,
     });
   }
-  private updateFromEvents = (events: OptimisticOracleEvent[]) => {
+  private updateFromEvents = async (events: OptimisticOracleEvent[]) => {
     events.forEach((event) => {
       if (isUnique(this.events, event, eventKey)) {
         insertOrderedAscending(this.events, event, eventKey);
       }
     });
+
     const { requests = {} } = getEventState(this.events);
     Object.values(requests).map((request) => this.upsertRequest(request));
+
+    // some data from events may be incomplete,
+    // we need to fetch latest data for each request directly from OO contract
+    const updatesFromContractRead = Object.values(requests).map((request) => {
+      return this.fetchRequest({
+        requester: request.requester,
+        identifier: request.identifier,
+        timestamp: request.timestamp,
+        ancillaryData: request.ancillaryData,
+      });
+    });
+    // update each request in parallel
+    await Promise.allSettled(updatesFromContractRead);
   };
   async fetchRequest({
     requester,
@@ -206,14 +220,16 @@ export class OptimisticOracleV2 implements OracleInterface {
     endBlock: number | "latest" = "latest",
   ): Promise<void> {
     const events = await this.contract.queryFilter({}, startBlock, endBlock);
-    this.updateFromEvents(events as unknown[] as OptimisticOracleEvent[]);
+    await this.updateFromEvents(events as unknown[] as OptimisticOracleEvent[]);
   }
   async getProps(): Promise<OracleProps> {
     return {
       defaultLiveness: await this.contract.defaultLiveness(),
     };
   }
-  updateFromTransactionReceipt(receipt: TransactionReceipt): void {
+  async updateFromTransactionReceipt(
+    receipt: TransactionReceipt,
+  ): Promise<void> {
     const events = receipt.logs
       .map((log) => {
         try {
@@ -224,7 +240,7 @@ export class OptimisticOracleV2 implements OracleInterface {
         }
       })
       .filter(Boolean);
-    this.updateFromEvents(events as unknown[] as OptimisticOracleEvent[]);
+    await this.updateFromEvents(events as unknown[] as OptimisticOracleEvent[]);
   }
   listRequests(): Request[] {
     return Object.values(this.requests);

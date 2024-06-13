@@ -91,6 +91,7 @@ const ConvertToSharedRequest =
       disputeLogIndex,
       settleLogIndex,
       state,
+      bond,
     } = request;
     const id = requestId(request);
 
@@ -137,7 +138,7 @@ const ConvertToSharedRequest =
     if (settleBlockNumber)
       result.settlementBlockNumber = settleBlockNumber.toString();
     if (settleLogIndex) result.settlementLogIndex = settleLogIndex.toString();
-
+    if (bond) result.bond = bond.toBigInt();
     // unable to get the following values, omit their keys to avoid
     // overriding other sources when merged in final store
     // dont know how this comes from events
@@ -148,7 +149,7 @@ const ConvertToSharedRequest =
     return result;
   };
 export type Api = {
-  updateFromTransactionReceipt: (receipt: TransactionReceipt) => void;
+  updateFromTransactionReceipt: (receipt: TransactionReceipt) => Promise<void>;
   queryLatestRequests?: (blocksAgo: number) => void;
 };
 export const Factory = (config: Config): [ServiceFactory, Api] => {
@@ -161,9 +162,9 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const oo = new OptimisticOracleV2(provider, config.address, config.chainId);
   const events = new Events();
   const addTimestamps = AddTimestamps(provider);
-  function updateFromTransactionReceipt(receipt: TransactionReceipt) {
+  async function updateFromTransactionReceipt(receipt: TransactionReceipt) {
     try {
-      oo.updateFromTransactionReceipt(receipt);
+      await oo.updateFromTransactionReceipt(receipt);
       const requests: Request[] = oo.listRequests();
       const sharedRequests = requests.map((request) =>
         convertToSharedRequest(request),
@@ -186,6 +187,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       rangeState = rangeFailureDescending(rangeState);
     }
   }
+
   function queryLatestRequests(blocksAgo: number) {
     provider
       .getBlockNumber()
