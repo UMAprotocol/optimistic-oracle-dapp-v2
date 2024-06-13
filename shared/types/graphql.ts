@@ -410,6 +410,7 @@ export type ParsedOOV1GraphEntity = {
   settlementTimestamp: string | null;
   settlementBlockNumber: string | null;
   settlementLogIndex: string | null;
+  bond: bigint | null | undefined;
 };
 
 export type ParsedOOV2GraphEntity = ParsedOOV1GraphEntity & {

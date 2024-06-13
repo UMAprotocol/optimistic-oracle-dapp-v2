@@ -84,6 +84,7 @@ export function requestId(
 ): string {
   // if enabling sorting, put timestamp first
   return [
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     request.timestamp.toString(),
     request.identifier,
     request.requester,

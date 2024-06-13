@@ -80,7 +80,8 @@ export type Request = RequestKey &
     disputeLogIndex: number;
     settleLogIndex: number;
     requestSettings: RequestSettings;
-  }>;
+  }> &
+  Partial<RequestSettings>;
 
 export interface EventState {
   requests?: Record<string, Request>;
@@ -92,6 +93,7 @@ export function requestId(
   // if enabling sorting, put timestamp first
   return [
     parseIdentifier(request.identifier),
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     request.timestamp.toString(),
     request.ancillaryData,
   ].join("-");
