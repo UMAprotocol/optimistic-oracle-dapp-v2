@@ -9,7 +9,6 @@ import {
 import type { OracleQueryUI } from "@/types";
 import Pencil from "public/assets/icons/pencil.svg";
 import Settled from "public/assets/icons/settled.svg";
-import { useAccount, useNetwork } from "wagmi";
 import { SectionTitle, SectionTitleWrapper } from "../style";
 import { Details } from "./Details";
 import { Errors } from "./Errors";
@@ -22,14 +21,8 @@ interface Props {
   query: OracleQueryUI;
 }
 export function Actions({ query }: Props) {
-  const {
-    chainId,
-    oracleType,
-    valueText,
-    actionType,
-    proposeOptions,
-    queryText,
-  } = query;
+  const { oracleType, valueText, actionType, proposeOptions, queryText } =
+    query;
   const { proposePriceInput, inputError, ...inputProps } =
     useProposePriceInput(query);
   const primaryAction = usePrimaryPanelAction({
@@ -37,8 +30,6 @@ export function Actions({ query }: Props) {
     proposePriceInput,
   });
 
-  const { address } = useAccount();
-  const { chain: connectedChain } = useNetwork();
   const { page } = usePageContext();
 
   const pageIsPropose = page === "propose";
@@ -51,7 +42,6 @@ export function Actions({ query }: Props) {
   const actionIsSettled = primaryAction?.title === settled;
   const alreadyProposed = pageIsPropose && (actionIsDispute || actionIsSettle);
   const alreadySettled = !pageIsSettled && (noAction || actionIsSettled);
-  const isWrongChain = connectedChain?.id !== chainId;
   const isConnectWallet = primaryAction?.title === connectWallet;
 
   const showPrimaryActionButton =
@@ -62,8 +52,7 @@ export function Actions({ query }: Props) {
     !alreadySettled;
   const showConnectButton =
     isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
-  const disableInput =
-    !address || isWrongChain || alreadyProposed || alreadySettled;
+  const disableInput = alreadyProposed || alreadySettled;
   const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
