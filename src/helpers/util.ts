@@ -236,6 +236,9 @@ export function sanitizeErrorMessage(errorMessage: string) {
   if (errorMessage.toLowerCase().includes("cannot estimate gas")) {
     return "Transaction Failed";
   }
+  if (errorMessage.toLowerCase().includes("rejected the request")) {
+    return "Transaction Rejected";
+  }
   if (
     alreadyDisputedV2([new Error(errorMessage)]) ||
     alreadyDisputedV3([new Error(errorMessage)])
