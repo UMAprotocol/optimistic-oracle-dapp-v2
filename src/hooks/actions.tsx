@@ -253,7 +253,7 @@ export function useProposeAction({
   } = usePrepareContractWrite({
     ...proposePriceParams?.(proposePriceInput),
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "propose",
   });
   const {
     write: proposePrice,
@@ -369,7 +369,7 @@ export function useDisputeAction({
   } = usePrepareContractWrite({
     ...disputePriceParams,
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "dispute",
   });
   const {
     write: disputePrice,
@@ -451,7 +451,7 @@ export function useDisputeAssertionAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { disputeAssertionParams, chainId } = query ?? {};
+  const { disputeAssertionParams, chainId, actionType } = query ?? {};
   const { address } = useAccount();
   const {
     config: disputeAssertionConfig,
@@ -461,7 +461,7 @@ export function useDisputeAssertionAction({
   } = usePrepareContractWrite({
     ...disputeAssertionParams?.(address),
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "dispute",
   });
   const {
     write: disputeAssertion,
@@ -548,7 +548,7 @@ export function useSettlePriceAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { settlePriceParams, chainId } = query ?? {};
+  const { settlePriceParams, chainId, actionType } = query ?? {};
   const {
     config: settlePriceConfig,
     error: prepareSettlePriceError,
@@ -557,7 +557,7 @@ export function useSettlePriceAction({
   } = usePrepareContractWrite({
     ...settlePriceParams,
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "settle",
   });
   const {
     write: settlePrice,
@@ -612,9 +612,9 @@ export function useSettlePriceAction({
   }
   if (alreadySettledV2([settlePriceError, prepareSettlePriceError])) {
     return {
-      title: "Already settled",
+      title: "Unable to Settle",
       disabled: true,
-      disabledReason: "Already settled",
+      disabledReason: "Unable to Settle",
     };
   }
   // unique to settle, if we have an error preparing the transaction,
@@ -644,7 +644,7 @@ export function useSettleAssertionAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { settleAssertionParams, chainId } = query ?? {};
+  const { settleAssertionParams, chainId, actionType } = query ?? {};
   const {
     config: settleAssertionConfig,
     error: prepareSettleAssertionError,
@@ -653,7 +653,7 @@ export function useSettleAssertionAction({
   } = usePrepareContractWrite({
     ...settleAssertionParams,
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "settle",
   });
   const {
     write: settleAssertion,
