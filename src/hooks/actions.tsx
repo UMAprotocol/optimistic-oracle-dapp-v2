@@ -19,7 +19,12 @@ import {
 } from "@/constants";
 // Reinable when we have a good way to convert wagmi logs to ethers logs
 // import { oracleEthersApis } from "@/contexts";
-import { handleNotifications } from "@/helpers";
+import {
+  alreadyDisputedV2,
+  alreadyDisputedV3,
+  alreadyProposed,
+  handleNotifications,
+} from "@/helpers";
 import { useBalanceAndAllowance } from "@/hooks";
 import type { ActionTitle, OracleQueryUI } from "@/types";
 import React, { useEffect } from "react";
@@ -328,6 +333,14 @@ export function useProposeAction({
       return {
         title: proposed,
         disabled: true,
+        disabledReason: "Successfully proposed.",
+      };
+    }
+
+    if (alreadyProposed([prepareProposePriceError, proposePriceError])) {
+      return {
+        title: disputed,
+        disabled: true,
         disabledReason: "Already proposed.",
       };
     }
@@ -401,6 +414,14 @@ export function useDisputeAction({
       title: dispute,
       disabled: true,
       disabledReason: "Preparing dispute transaction...",
+    };
+  }
+
+  if (alreadyDisputedV2([prepareDisputePriceError, disputePriceError])) {
+    return {
+      title: disputed,
+      disabled: true,
+      disabledReason: "Already disputed.",
     };
   }
   if (isDisputePriceLoading || isDisputingPrice) {
@@ -497,12 +518,11 @@ export function useDisputeAssertionAction({
     return {
       title: disputed,
       disabled: true,
-      disabledReason: "Already disputed.",
+      disabledReason: "Successfully disputed.",
     };
   }
   if (
-    prepareDisputeAssertionError?.message &&
-    prepareDisputeAssertionError?.message.includes("already disputed")
+    alreadyDisputedV3([prepareDisputeAssertionError, disputeAssertionError])
   ) {
     return {
       title: disputed,
@@ -510,6 +530,7 @@ export function useDisputeAssertionAction({
       disabledReason: "Already disputed.",
     };
   }
+
   return {
     title: dispute,
     action: disputeAssertion,
