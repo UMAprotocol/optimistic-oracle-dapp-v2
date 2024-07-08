@@ -221,6 +221,7 @@ export function isWagmiAddress(
   if (!maybeAddress) return false;
   return "0x" == maybeAddress.slice(0, 2);
 }
+
 export function assertWagmiAddress(
   maybeAddress: string,
 ): asserts maybeAddress is Address {
@@ -229,13 +230,63 @@ export function assertWagmiAddress(
 }
 
 /**
- * Replaces unhelpful ethereum error/revert message with generic error message string
+ * Replaces cryptic revert or error messages
  */
 export function sanitizeErrorMessage(errorMessage: string) {
-  if (errorMessage.toLocaleLowerCase().includes("cannot estimate gas")) {
+  if (errorMessage.toLowerCase().includes("cannot estimate gas")) {
     return "Transaction Failed";
   }
+  if (errorMessage.toLowerCase().includes("rejected the request")) {
+    return "Transaction Rejected";
+  }
+  if (
+    alreadyDisputedV2([new Error(errorMessage)]) ||
+    alreadyDisputedV3([new Error(errorMessage)])
+  ) {
+    return "Already Disputed";
+  }
+  if (alreadyProposed([new Error(errorMessage)])) {
+    return "Already Proposed";
+  }
+  if (
+    alreadySettledV2([new Error(errorMessage)]) ||
+    alreadySettledV3([new Error(errorMessage)])
+  ) {
+    return "Already Settled";
+  }
+
   return errorMessage;
+}
+
+export function errorsContain(
+  errors: (Error | null)[],
+  message: string,
+): boolean {
+  return errors.some((e) => {
+    return (
+      e?.message && e.message.toLowerCase().includes(message.toLowerCase())
+    );
+  });
+}
+
+export function alreadyDisputedV2(errors: (Error | null)[]) {
+  return errorsContain(errors, "disputePriceFor: Disputed"); // v2
+}
+
+export function alreadyDisputedV3(errors: (Error | null)[]) {
+  return errorsContain(errors, "already disputed"); // v3
+}
+
+export function alreadyProposed(errors: (Error | null)[]) {
+  return errorsContain(errors, "proposePriceFor: Requested"); // v2
+}
+
+export function alreadySettledV2(errors: (Error | null)[]) {
+  return errorsContain(errors, "_settle: not settleable"); // v2
+}
+
+export function alreadySettledV3(errors: (Error | null)[]) {
+  return errorsContain(errors, "already settled"); // v3
 }
 
 export function cn(...inputs: ClassValue[]) {

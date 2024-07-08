@@ -19,7 +19,14 @@ import {
 } from "@/constants";
 // Reinable when we have a good way to convert wagmi logs to ethers logs
 // import { oracleEthersApis } from "@/contexts";
-import { handleNotifications } from "@/helpers";
+import {
+  alreadyDisputedV2,
+  alreadyDisputedV3,
+  alreadyProposed,
+  alreadySettledV2,
+  alreadySettledV3,
+  handleNotifications,
+} from "@/helpers";
 import { useBalanceAndAllowance } from "@/hooks";
 import type { ActionTitle, OracleQueryUI } from "@/types";
 import React, { useEffect } from "react";
@@ -246,7 +253,7 @@ export function useProposeAction({
   } = usePrepareContractWrite({
     ...proposePriceParams?.(proposePriceInput),
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "propose",
   });
   const {
     write: proposePrice,
@@ -328,6 +335,14 @@ export function useProposeAction({
       return {
         title: proposed,
         disabled: true,
+        disabledReason: "Successfully proposed.",
+      };
+    }
+
+    if (alreadyProposed([prepareProposePriceError, proposePriceError])) {
+      return {
+        title: disputed,
+        disabled: true,
         disabledReason: "Already proposed.",
       };
     }
@@ -354,7 +369,7 @@ export function useDisputeAction({
   } = usePrepareContractWrite({
     ...disputePriceParams,
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "dispute",
   });
   const {
     write: disputePrice,
@@ -403,6 +418,14 @@ export function useDisputeAction({
       disabledReason: "Preparing dispute transaction...",
     };
   }
+
+  if (alreadyDisputedV2([prepareDisputePriceError, disputePriceError])) {
+    return {
+      title: disputed,
+      disabled: true,
+      disabledReason: "Already disputed.",
+    };
+  }
   if (isDisputePriceLoading || isDisputingPrice) {
     return {
       title: disputing,
@@ -428,7 +451,7 @@ export function useDisputeAssertionAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { disputeAssertionParams, chainId } = query ?? {};
+  const { disputeAssertionParams, chainId, actionType } = query ?? {};
   const { address } = useAccount();
   const {
     config: disputeAssertionConfig,
@@ -438,7 +461,7 @@ export function useDisputeAssertionAction({
   } = usePrepareContractWrite({
     ...disputeAssertionParams?.(address),
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "dispute",
   });
   const {
     write: disputeAssertion,
@@ -497,12 +520,11 @@ export function useDisputeAssertionAction({
     return {
       title: disputed,
       disabled: true,
-      disabledReason: "Already disputed.",
+      disabledReason: "Successfully disputed.",
     };
   }
   if (
-    prepareDisputeAssertionError?.message &&
-    prepareDisputeAssertionError?.message.includes("already disputed")
+    alreadyDisputedV3([prepareDisputeAssertionError, disputeAssertionError])
   ) {
     return {
       title: disputed,
@@ -510,6 +532,7 @@ export function useDisputeAssertionAction({
       disabledReason: "Already disputed.",
     };
   }
+
   return {
     title: dispute,
     action: disputeAssertion,
@@ -525,7 +548,7 @@ export function useSettlePriceAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { settlePriceParams, chainId } = query ?? {};
+  const { settlePriceParams, chainId, actionType } = query ?? {};
   const {
     config: settlePriceConfig,
     error: prepareSettlePriceError,
@@ -534,7 +557,7 @@ export function useSettlePriceAction({
   } = usePrepareContractWrite({
     ...settlePriceParams,
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "settle",
   });
   const {
     write: settlePrice,
@@ -587,6 +610,13 @@ export function useSettlePriceAction({
       disabledReason: "Settling...",
     };
   }
+  if (alreadySettledV2([settlePriceError, prepareSettlePriceError])) {
+    return {
+      title: "Unable to Settle",
+      disabled: true,
+      disabledReason: "Unable to Settle",
+    };
+  }
   // unique to settle, if we have an error preparing the transaction,
   // this means this is probably disputed, but no answer available from dvm yet
   if (prepareSettlePriceError) {
@@ -614,7 +644,7 @@ export function useSettleAssertionAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
-  const { settleAssertionParams, chainId } = query ?? {};
+  const { settleAssertionParams, chainId, actionType } = query ?? {};
   const {
     config: settleAssertionConfig,
     error: prepareSettleAssertionError,
@@ -623,7 +653,7 @@ export function useSettleAssertionAction({
   } = usePrepareContractWrite({
     ...settleAssertionParams,
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && actionType === "settle",
   });
   const {
     write: settleAssertion,
@@ -674,6 +704,13 @@ export function useSettleAssertionAction({
       title: settling,
       disabled: true,
       disabledReason: "Settling...",
+    };
+  }
+  if (alreadySettledV3([settleAssertionError, prepareSettleAssertionError])) {
+    return {
+      title: "Already settled",
+      disabled: true,
+      disabledReason: "Already settled",
     };
   }
   // unique to settle, if we have an error preparing the transaction,
