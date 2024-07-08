@@ -23,6 +23,8 @@ import {
   alreadyDisputedV2,
   alreadyDisputedV3,
   alreadyProposed,
+  alreadySettledV2,
+  alreadySettledV3,
   handleNotifications,
 } from "@/helpers";
 import { useBalanceAndAllowance } from "@/hooks";
@@ -608,6 +610,13 @@ export function useSettlePriceAction({
       disabledReason: "Settling...",
     };
   }
+  if (alreadySettledV2([settlePriceError, prepareSettlePriceError])) {
+    return {
+      title: "Already settled",
+      disabled: true,
+      disabledReason: "Already settled",
+    };
+  }
   // unique to settle, if we have an error preparing the transaction,
   // this means this is probably disputed, but no answer available from dvm yet
   if (prepareSettlePriceError) {
@@ -695,6 +704,13 @@ export function useSettleAssertionAction({
       title: settling,
       disabled: true,
       disabledReason: "Settling...",
+    };
+  }
+  if (alreadySettledV3([settleAssertionError, prepareSettleAssertionError])) {
+    return {
+      title: "Already settled",
+      disabled: true,
+      disabledReason: "Already settled",
     };
   }
   // unique to settle, if we have an error preparing the transaction,

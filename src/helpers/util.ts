@@ -245,6 +245,12 @@ export function sanitizeErrorMessage(errorMessage: string) {
   if (alreadyProposed([new Error(errorMessage)])) {
     return "Already Proposed";
   }
+  if (
+    alreadySettledV2([new Error(errorMessage)]) ||
+    alreadySettledV3([new Error(errorMessage)])
+  ) {
+    return "Already Settled";
+  }
 
   return errorMessage;
 }
@@ -270,6 +276,14 @@ export function alreadyDisputedV3(errors: (Error | null)[]) {
 
 export function alreadyProposed(errors: (Error | null)[]) {
   return errorsContain(errors, "proposePriceFor: Requested"); // v2
+}
+
+export function alreadySettledV2(errors: (Error | null)[]) {
+  return errorsContain(errors, "_settle: not settleable"); // v2
+}
+
+export function alreadySettledV3(errors: (Error | null)[]) {
+  return errorsContain(errors, "already settled"); // v3
 }
 
 export function cn(...inputs: ClassValue[]) {
