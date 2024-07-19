@@ -203,6 +203,12 @@ export function parseIdentifier(identifier: string | null | undefined): string {
   return utf8.replace(/[^\x20-\x7E]+/g, "");
 }
 
+export function extractSnapshotSpace(queryText: string): string | null {
+  const regex = /https:\/\/snapshot\.org\/#\/([a-zA-Z0-9.-]+)\/?/;
+  const match = queryText.match(regex);
+  return match ? match[1] : null;
+}
+
 // This state is meant for adjusting a start/end block when querying events. Some apis will fail if the range
 // is too big, so the following functions will adjust range dynamically.
 export type RangeState = {
