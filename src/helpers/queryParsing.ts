@@ -466,7 +466,15 @@ export function maybeMakePolymarketOptions(
     corresponds: "Where p1 corresponds to No, p2 to Yes.",
   };
 
+  // this is a specific search for "neg risk markets" which only have p1/p2 options an no p3
+  const options4 = {
+    // note that these end with a period
+    resData: "res_data: p1: 0, p2: 1, p3: 0.5",
+    corresponds: "Where p1 corresponds to No, p2 to Yes, p3 to unknown",
+  };
+
   const dynamicOptions = dynamicPolymarketOptions(decodedAncillaryData);
+  console.log({ dynamicOptions });
 
   if (
     decodedAncillaryData.includes(options1.resData) &&
@@ -536,6 +544,33 @@ export function maybeMakePolymarketOptions(
         label: "Yes",
         value: "1",
         secondaryLabel: "p2",
+      },
+      {
+        label: "Custom",
+        value: "custom",
+      },
+    ];
+  }
+
+  if (
+    decodedAncillaryData.includes(options4.resData) &&
+    decodedAncillaryData.includes(options4.corresponds)
+  ) {
+    return [
+      {
+        label: "No",
+        value: "0",
+        secondaryLabel: "p1",
+      },
+      {
+        label: "Yes",
+        value: "1",
+        secondaryLabel: "p2",
+      },
+      {
+        label: "Unknown",
+        value: "0.5",
+        secondaryLabel: "p3",
       },
       {
         label: "Custom",
