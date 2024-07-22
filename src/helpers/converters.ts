@@ -5,7 +5,7 @@ import type {
   OracleQueryUI,
   SolidityRequest,
 } from "@/types";
-import { exists, parseIdentifier } from "@libs/utils";
+import { exists, extractSnapshotSpace, parseIdentifier } from "@libs/utils";
 import { chainsById } from "@shared/constants";
 import {
   disputeAssertionAbi,
@@ -52,6 +52,7 @@ function canConvertToSolidityRequest(
 ): request is RequiredRequest {
   return Boolean(request.currency);
 }
+
 function convertToSolidityRequest(request: RequiredRequest): SolidityRequest {
   return {
     proposer: request.proposer || "0x0",
@@ -915,22 +916,27 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
     result.description = result.queryText;
     if (isOptimisticGovernor(result.queryText)) {
       result.project = "OSnap";
+      const spaceName = extractSnapshotSpace(result.queryText);
       const explanationRegex = result.queryText.match(
         /explanation:"(.*?)",rules:/,
       );
       const rulesRegex = result.queryText.match(/rules:"(.*?)"/);
+      let title = "OSnap Request";
+      if (spaceName) {
+        title = `OSnap Request - ${spaceName} `;
+      }
+
       if (explanationRegex && explanationRegex[1]) {
-        result.title = `OSnap Request ${explanationRegex[1]}`;
+        title = `${title}\n${explanationRegex[1]}`;
         if (rulesRegex && rulesRegex[1]) {
           result.description = `
-*Explanation*  
-[${explanationRegex[1]}](https://ipfs.io/ipfs/${explanationRegex[1]})   
-*Rules*  
+*Explanation*
+[${explanationRegex[1]}](https://ipfs.io/ipfs/${explanationRegex[1]})
+*Rules*
 ${rulesRegex[1]}`;
         }
-      } else {
-        result.title = "OSnap Request";
       }
+      result.title = title;
     }
   }
 
