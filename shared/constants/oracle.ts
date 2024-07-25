@@ -40,6 +40,7 @@ export const chainsById = {
   416: "SX",
   1116: "Core",
   8453: "Base",
+  84532: "Base Sepolia",
   43114: "Avalanche",
   42161: "Arbitrum",
   80001: "Mumbai",

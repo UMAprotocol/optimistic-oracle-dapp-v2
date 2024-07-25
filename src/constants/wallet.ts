@@ -16,6 +16,7 @@ import {
   coreDao,
   sepolia,
   base,
+  baseSepolia,
 } from "wagmi/chains";
 
 export const chains = [
@@ -31,6 +32,7 @@ export const chains = [
   coreDao,
   sepolia,
   base,
+  baseSepolia,
   polygonAmoy,
   blast,
 ];
