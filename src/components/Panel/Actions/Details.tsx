@@ -19,7 +19,12 @@ export function Details({
           <InformationIcon content={bondInformation} />
         </Text>
         <Text>
-          <Currency address={tokenAddress} chainId={chainId} value={bond} />
+          <Currency
+            showAddressLink
+            address={tokenAddress}
+            chainId={chainId}
+            value={bond}
+          />
         </Text>
       </TextWrapper>
       {hasReward && (
@@ -29,7 +34,12 @@ export function Details({
             <InformationIcon content={rewardInformation} />
           </Text>
           <Text>
-            <Currency address={tokenAddress} chainId={chainId} value={reward} />
+            <Currency
+              showAddressLink
+              address={tokenAddress}
+              chainId={chainId}
+              value={reward}
+            />
           </Text>
         </TextWrapper>
       )}
@@ -103,7 +113,7 @@ const Text = ({ children }: { children: React.ReactNode }) => (
 );
 
 const TextWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex justify-between [&:not(:last-child)]:mb-1">
+  <div className="flex justify-between last-of-type:mt-4 [&:not(:last-child)]:mb-1">
     {children}
   </div>
 );
