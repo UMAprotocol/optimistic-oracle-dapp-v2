@@ -292,3 +292,9 @@ export function alreadySettledV3(errors: (Error | null)[]) {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function truncateAddress(address: Address | undefined) {
+  if (address) {
+    return `${address.slice(0, 5)}...${address.slice(-5)}`;
+  }
+}
