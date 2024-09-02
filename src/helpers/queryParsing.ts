@@ -26,6 +26,21 @@ export function isPolymarketRequester(address: string): boolean {
   return polymarketRequesters.includes(address.toLowerCase());
 }
 
+// Predict.Fun Adapters
+
+const predictFunBinaryOutcomeAdapter =
+  "0x0C1331E4a4bBD59B7aae2902290506bf8fbE3e6c";
+const predictFunNegRiskAdapter = "0xB0c308abeC5d321A7B6a8E3ce43A368276178F7A";
+
+export const predictFunRequesters = [
+  predictFunBinaryOutcomeAdapter.toLowerCase(),
+  predictFunNegRiskAdapter.toLowerCase(),
+];
+
+export function isPredictFunRequester(address: string): boolean {
+  return predictFunRequesters.includes(address.toLowerCase());
+}
+
 // hard coded polybet addresses
 const polybetPolygonCtfAdapterAddressV2 =
   "0x7dbb803Aeb717Ae9b0420C30669E128d6aa2E304";
@@ -104,6 +119,22 @@ export function checkIfIsPolymarket(
   return isPolymarket;
 }
 
+export function checkIfIsPredictFun(
+  decodedIdentifier: string,
+  decodedAncillaryData: string,
+  requester: string,
+) {
+  const queryTitleToken = "q: title:";
+  const resultDataToken = "res_data:";
+  const isPredictFun =
+    isPredictFunRequester(requester) &&
+    decodedIdentifier === "YES_OR_NO_QUERY" &&
+    decodedAncillaryData.includes(queryTitleToken) &&
+    decodedAncillaryData.includes(resultDataToken);
+
+  return isPredictFun;
+}
+
 export function checkIfIsPolybet(
   decodedIdentifier: string,
   decodedAncillaryData: string,
@@ -164,6 +195,32 @@ export function getQueryMetaData(
       umipNumber,
       proposeOptions: maybeMakePolymarketOptions(decodedQueryText),
       project: "Polymarket",
+    };
+  }
+
+  const isPredictFun = checkIfIsPredictFun(
+    decodedIdentifier,
+    decodedQueryText,
+    requester,
+  );
+  if (isPredictFun) {
+    const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
+    const ancillaryDataDescription =
+      getDescriptionFromAncillaryData(decodedQueryText);
+    const title = ancillaryDataTitle ?? decodedIdentifier;
+    const description =
+      ancillaryDataDescription ?? "No description was found for this request.";
+    const umipNumber = "umip-107";
+    const umipUrl =
+      "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
+
+    return {
+      title,
+      description,
+      umipUrl,
+      umipNumber,
+      proposeOptions: maybeMakePolymarketOptions(decodedQueryText),
+      project: "Predict.Fun",
     };
   }
 
