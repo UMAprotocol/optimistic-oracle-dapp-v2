@@ -21,6 +21,7 @@ import PolyBet from "public/assets/icons/projects/polybet.svg";
 import Sherlock from "public/assets/icons/projects/sherlock.svg";
 import Rated from "public/assets/icons/projects/rated.svg";
 import Unknown from "public/assets/icons/projects/unknown.svg";
+import PredictFun from "public/assets/icons/projects/predict-fun.svg";
 
 export const projectIcons = {
   Unknown,
@@ -31,6 +32,7 @@ export const projectIcons = {
   Sherlock,
   OSnap,
   Rated,
+  "Predict.Fun": PredictFun,
 };
 
 export const currencyIcons = {
@@ -60,8 +62,9 @@ export function getProjectIcon(project: string | null | undefined) {
 }
 
 export function getCurrencyIcon(currency: string | null | undefined) {
-  if (!currency || !hasProperty(currency, currencyIcons)) return;
-  return currencyIcons[currency];
+  const transformed = narrowSymbol(currency);
+  if (!transformed || !hasProperty(transformed, currencyIcons)) return;
+  return currencyIcons[transformed];
 }
 
 export function getChainIcon(chainId: ChainId | undefined) {
@@ -69,4 +72,15 @@ export function getChainIcon(chainId: ChainId | undefined) {
   const chain = chainsById[chainId];
   if (!chain || !hasProperty(chain, chainIcons)) return;
   return chainIcons[chain];
+}
+// some chains have diff symbols for bridged/native usdc, expand this as you add more chains
+const BRIDGED_USDC_SYMBOLS = ["USDB", "USDzC"];
+
+function narrowSymbol(token: string | null | undefined) {
+  if (!token) return;
+  if (BRIDGED_USDC_SYMBOLS.includes(token)) {
+    return "USDC";
+  }
+
+  return token;
 }
