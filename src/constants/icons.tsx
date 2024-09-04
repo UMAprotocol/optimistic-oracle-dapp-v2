@@ -13,6 +13,7 @@ import DAI from "public/assets/icons/currencies/dai.svg";
 import ETH from "public/assets/icons/currencies/eth.svg";
 import UMA from "public/assets/icons/currencies/uma.svg";
 import USDC from "public/assets/icons/currencies/usdc.svg";
+import USDB from "public/assets/icons/currencies/usdb.svg";
 import Across from "public/assets/icons/projects/across.svg";
 import Cozy from "public/assets/icons/projects/cozy.svg";
 import OSnap from "public/assets/icons/projects/osnap.svg";
@@ -40,6 +41,7 @@ export const currencyIcons = {
   UMA,
   DAI,
   WETH: ETH,
+  USDB,
 };
 
 export const chainIcons = {
@@ -62,9 +64,8 @@ export function getProjectIcon(project: string | null | undefined) {
 }
 
 export function getCurrencyIcon(currency: string | null | undefined) {
-  const transformed = narrowSymbol(currency);
-  if (!transformed || !hasProperty(transformed, currencyIcons)) return;
-  return currencyIcons[transformed];
+  if (!currency || !hasProperty(currency, currencyIcons)) return;
+  return currencyIcons[currency];
 }
 
 export function getChainIcon(chainId: ChainId | undefined) {
@@ -72,15 +73,4 @@ export function getChainIcon(chainId: ChainId | undefined) {
   const chain = chainsById[chainId];
   if (!chain || !hasProperty(chain, chainIcons)) return;
   return chainIcons[chain];
-}
-// some chains have diff symbols for bridged/native usdc, expand this as you add more chains
-const BRIDGED_USDC_SYMBOLS = ["USDB", "USDzC"];
-
-function narrowSymbol(token: string | null | undefined) {
-  if (!token) return;
-  if (BRIDGED_USDC_SYMBOLS.includes(token)) {
-    return "USDC";
-  }
-
-  return token;
 }
