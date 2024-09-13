@@ -20,6 +20,61 @@ export async function getPriceRequests(
   return result;
 }
 
+export async function* getPriceRequestsIncremental(
+  url: string,
+  chainId: ChainId,
+  oracleType: OracleType,
+) {
+  const chainName = chainsById[chainId];
+  const queryName = makeQueryName(oracleType, chainName);
+  // Iterate over the async generator from fetchAllRequests
+  for await (const requests of fetchAllRequestsIncremental(
+    url,
+    queryName,
+    oracleType,
+  )) {
+    // Yield each batch of requests
+    yield requests;
+  }
+}
+async function* fetchAllRequestsIncremental(
+  url: string,
+  queryName: string,
+  oracleType: OracleType,
+) {
+  let skip = 0;
+  const first = 500;
+  let lastTime: number | undefined = undefined;
+
+  while (true) {
+    // Determine if we should use skip or time-based pagination
+    const query =
+      lastTime === undefined
+        ? makeQuery(queryName, oracleType, first, skip)
+        : makeTimeBasedQuery(queryName, oracleType, first, lastTime);
+
+    const requests = await fetchPriceRequests(url, query);
+
+    if (requests.length === 0) {
+      yield [];
+      break; // No more data to fetch
+    }
+
+    yield requests; // Yield the batch of requests
+
+    if (lastTime === undefined) {
+      skip += first;
+
+      // Switch to time-based pagination if skip exceeds 5000
+      if (skip >= 5000) {
+        lastTime = Number(requests[requests.length - 1].time);
+      }
+    } else {
+      // Update lastTime to the latest time in the batch
+      lastTime = Number(requests[requests.length - 1].time);
+    }
+  }
+}
 async function fetchAllRequests(
   url: string,
   queryName: string,

@@ -2,7 +2,7 @@ import type { ChainId, OracleType } from "@shared/types";
 import { parsePriceRequestGraphEntity } from "@shared/utils";
 import type { Address } from "wagmi";
 import type { Handlers, Service, ServiceFactory } from "../../../types";
-import { getPriceRequests } from "./queries";
+import { getPriceRequestsIncremental } from "./queries";
 
 export type Config = {
   url: string;
@@ -15,20 +15,25 @@ export const Factory =
   (config: Config): ServiceFactory =>
   (handlers: Handlers): Service => {
     async function fetch({ url, chainId, address, type }: Config) {
-      const requests = await getPriceRequests(url, chainId, type);
-      return requests.map((request) =>
-        parsePriceRequestGraphEntity(
-          request,
-          chainId,
-          address as Address,
-          type,
-        ),
-      );
+      for await (const requests of getPriceRequestsIncremental(
+        url,
+        chainId,
+        type,
+      )) {
+        handlers?.requests?.(
+          requests.map((request) =>
+            parsePriceRequestGraphEntity(
+              request,
+              chainId,
+              address as Address,
+              type,
+            ),
+          ),
+        );
+      }
     }
     async function tick() {
-      if (handlers.requests) {
-        handlers.requests(await fetch(config));
-      }
+      await fetch(config);
     }
 
     return {

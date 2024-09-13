@@ -531,7 +531,6 @@ export function maybeMakePolymarketOptions(
   };
 
   const dynamicOptions = dynamicPolymarketOptions(decodedAncillaryData);
-  console.log({ dynamicOptions });
 
   if (
     decodedAncillaryData.includes(options1.resData) &&
