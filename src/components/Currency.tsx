@@ -8,6 +8,7 @@ import { FormattedTokenValue } from "./FormattedTokenValue";
 import { LoadingSkeleton } from "./LoadingSkeleton";
 import { makeBlockExplorerLink } from "@shared/utils";
 import { truncateAddress } from "@/helpers";
+import { resolveUsdcSymbol } from "@/constants/tokens";
 
 interface Props {
   address: Address | undefined;
@@ -16,6 +17,7 @@ interface Props {
   showIcon?: boolean;
   showAddressLink?: boolean;
 }
+
 /**
  * Displays a currency icon and amount.
  * If the currency is a known currency, the icon will be displayed.
@@ -34,9 +36,10 @@ export function Currency(props: Props) {
     chainId,
     enabled: !!address && !!chainId,
   });
-  const symbol = token?.symbol;
+  const symbolForDisplay =
+    resolveUsdcSymbol(chainId, token?.address) ?? token?.symbol;
   const decimals = token?.decimals;
-  const Icon = getCurrencyIcon(symbol);
+  const Icon = getCurrencyIcon(token?.symbol);
   const hasIcon = !!Icon && showIcon;
   const isLoading =
     tokenLoading ||
@@ -58,11 +61,11 @@ export function Currency(props: Props) {
             href={`${makeBlockExplorerLink(address, chainId, "address")}`}
             className="border text-sm inline-flex gap-2 items-center border-dashed border-dark/50 hover:border-dark rounded-lg px-1 mr-1"
           >
-            {truncateAddress(address)}
+            {symbolForDisplay}
             {hasIcon ? (
               <Icon className="w-[16px] h-[16px] inline-block" />
             ) : (
-              symbol
+              symbolForDisplay
             )}
           </a>
           <FormattedTokenValue value={value} decimals={decimals} />{" "}
@@ -74,13 +77,13 @@ export function Currency(props: Props) {
       <>
         {hasIcon && <Icon className="w-[16px] h-[16px] inline-block" />}{" "}
         <FormattedTokenValue value={value} decimals={decimals} />{" "}
-        {!hasIcon && symbol}
+        {!hasIcon && symbolForDisplay}
       </>
     );
   }
 
   return (
-    <OuterWrapper hasIcon={hasIcon} symbol={symbol}>
+    <OuterWrapper hasIcon={hasIcon} symbol={truncateAddress(address)}>
       <span
         className="inline-flex items-center gap-2"
         style={{

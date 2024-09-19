@@ -446,6 +446,7 @@ export function useDisputeAction({
     errors: [prepareDisputePriceError?.message, disputePriceError?.message],
   };
 }
+
 export function useDisputeAssertionAction({
   query,
 }: {
@@ -453,6 +454,7 @@ export function useDisputeAssertionAction({
 }): ActionState | undefined {
   const { disputeAssertionParams, chainId, actionType } = query ?? {};
   const { address } = useAccount();
+  console.log("HERE", disputeAssertionParams?.(address));
   const {
     config: disputeAssertionConfig,
     error: prepareDisputeAssertionError,
