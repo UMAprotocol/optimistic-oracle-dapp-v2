@@ -446,6 +446,7 @@ export function useDisputeAction({
     errors: [prepareDisputePriceError?.message, disputePriceError?.message],
   };
 }
+
 export function useDisputeAssertionAction({
   query,
 }: {
