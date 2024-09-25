@@ -22,7 +22,6 @@ export function Client(factories: ServiceFactories, handlers: Handlers) {
     });
     handlers.errors && handlers.errors(errors);
   }
-
   // this will be changed eventually, we will need to re-request data
   // on an interval, but it depends on the source of data.
   setTimeout(() => {

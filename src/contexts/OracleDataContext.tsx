@@ -38,6 +38,8 @@ type EthersServicesList = [
   ServiceFactories,
   Partial<Record<OracleType, Partial<Record<ChainId, Api>>>>,
 ];
+// keep a list we can iterate easily over
+export const oracleEthersApiList: Array<[ChainId, Api]> = [];
 const ethersServicesListInit: EthersServicesList = [[], {}];
 const [oracleEthersServices, oracleEthersApis] = config.providers
   .map((config): [ProviderConfig, ServiceFactory, Api] => {
@@ -55,6 +57,7 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
       result: EthersServicesList,
       [config, service, api],
     ): EthersServicesList => {
+      oracleEthersApiList.push([config.chainId, api]);
       const apiRecords = {
         ...result[1],
         [config.type]: {
@@ -184,7 +187,6 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
   const [errors, setErrors] = useState<Errors>(
     defaultOracleDataContextState.errors,
   );
-
   useEffect(() => {
     // its important this client only gets initialized once
     Client([...oraclesServices, ...oracleEthersServices], {
