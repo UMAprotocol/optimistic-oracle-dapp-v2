@@ -59,9 +59,22 @@ export function usePrimaryPanelAction({
   // these are in order of importance
   const accountAction = useAccountAction({ query });
   const approveBondAction = useApproveBondAction({ query });
-  const proposeAction = useProposeAction({ query, proposePriceInput });
-  const disputeAction = useDisputeAction({ query });
-  const disputeAssertionAction = useDisputeAssertionAction({ query });
+  // only prepare action functions when bond is approved to avoid premature revert
+  const bondAmountApproved = !approveBondAction;
+
+  const proposeAction = useProposeAction({
+    query,
+    proposePriceInput,
+    prepare: bondAmountApproved,
+  });
+  const disputeAction = useDisputeAction({
+    query,
+    prepare: bondAmountApproved,
+  });
+  const disputeAssertionAction = useDisputeAssertionAction({
+    query,
+    prepare: bondAmountApproved,
+  });
   const settlePriceAction = useSettlePriceAction({ query });
   const settleAssertionAction = useSettleAssertionAction({ query });
 
@@ -240,9 +253,11 @@ export function useApproveBondAction({
 export function useProposeAction({
   query,
   proposePriceInput,
+  prepare,
 }: {
   query?: OracleQueryUI;
   proposePriceInput?: string;
+  prepare?: boolean;
 }): ActionState | undefined {
   const { proposePriceParams, chainId, actionType } = query ?? {};
   const {
@@ -253,7 +268,7 @@ export function useProposeAction({
   } = usePrepareContractWrite({
     ...proposePriceParams?.(proposePriceInput),
     scopeKey: query?.id,
-    enabled: !!query?.id && actionType === "propose",
+    enabled: prepare && !!query?.id && actionType === "propose",
   });
   const {
     write: proposePrice,
@@ -357,8 +372,10 @@ export function useProposeAction({
 
 export function useDisputeAction({
   query,
+  prepare,
 }: {
   query?: OracleQueryUI;
+  prepare?: boolean;
 }): ActionState | undefined {
   const { disputePriceParams, chainId, actionType } = query ?? {};
   const {
@@ -369,7 +386,7 @@ export function useDisputeAction({
   } = usePrepareContractWrite({
     ...disputePriceParams,
     scopeKey: query?.id,
-    enabled: !!query?.id && actionType === "dispute",
+    enabled: prepare && !!query?.id && actionType === "dispute",
   });
   const {
     write: disputePrice,
@@ -449,8 +466,10 @@ export function useDisputeAction({
 
 export function useDisputeAssertionAction({
   query,
+  prepare,
 }: {
   query?: OracleQueryUI;
+  prepare?: boolean;
 }): ActionState | undefined {
   const { disputeAssertionParams, chainId, actionType } = query ?? {};
   const { address } = useAccount();
@@ -462,7 +481,7 @@ export function useDisputeAssertionAction({
   } = usePrepareContractWrite({
     ...disputeAssertionParams?.(address),
     scopeKey: query?.id,
-    enabled: !!query?.id && actionType === "dispute",
+    enabled: prepare && !!query?.id && actionType === "dispute",
   });
   const {
     write: disputeAssertion,
