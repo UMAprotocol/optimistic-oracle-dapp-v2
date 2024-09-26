@@ -151,6 +151,7 @@ const ConvertToSharedRequest =
 export type Api = {
   updateFromTransactionReceipt: (receipt: TransactionReceipt) => Promise<void>;
   queryLatestRequests?: (blocksAgo: number) => void;
+  updateFromTransactionHash?: (transactionHash: string) => Promise<void>;
 };
 export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedRequest = ConvertToSharedRequest(
@@ -173,6 +174,10 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     } catch (err) {
       console.warn("Error updating oov2 from receipt:", err);
     }
+  }
+  async function updateFromTransactionHash(transactionHash: string) {
+    const receipt = await provider.getTransactionReceipt(transactionHash);
+    await updateFromTransactionReceipt(receipt);
   }
   const service = (handlers: Handlers): Service => {
     if (handlers.requests) events.on("requests", handlers.requests);
@@ -217,6 +222,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     {
       updateFromTransactionReceipt,
       queryLatestRequests,
+      updateFromTransactionHash,
     },
   ];
 };

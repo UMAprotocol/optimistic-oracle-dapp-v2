@@ -15,6 +15,7 @@ import { useEffectOnce } from "usehooks-ts";
 import { usePanelContext } from "./contexts";
 import { useQueries } from "./queries";
 import { useUrlBar } from "./useUrlBar";
+import { oracleEthersApiList } from "@/contexts";
 
 function getOracleType(oracleType: string | undefined): OracleType | undefined {
   switch (oracleType) {
@@ -71,11 +72,24 @@ export function useQueryInSearchParams() {
     const hasHash = searchParams?.has("transactionHash");
     const hasEventIndex = searchParams?.has("eventIndex");
 
-    if (hasHash && hasEventIndex) {
-      setState((draft) => {
-        draft.transactionHash = searchParams.get("transactionHash")!;
-        draft.eventIndex = searchParams.get("eventIndex")!;
+    if (hasHash) {
+      const transactionHash = searchParams?.get("transactionHash");
+      oracleEthersApiList.forEach(([, api]) => {
+        api
+          .updateFromTransactionHash?.(transactionHash!)
+          .catch((err) =>
+            console.error(
+              "Error fetching tx by hash in useWueryInSearchParams",
+              err,
+            ),
+          );
       });
+      if (hasEventIndex) {
+        setState((draft) => {
+          draft.transactionHash = transactionHash!;
+          draft.eventIndex = searchParams.get("eventIndex")!;
+        });
+      }
     }
   });
 

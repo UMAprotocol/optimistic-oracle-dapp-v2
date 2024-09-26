@@ -152,6 +152,7 @@ const ConvertToSharedAssertion =
 export type Api = {
   updateFromTransactionReceipt: (receipt: TransactionReceipt) => void;
   queryLatestRequests?: (blocksAgo: number) => void;
+  updateFromTransactionHash?: (transactionHash: string) => Promise<void>;
 };
 export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedAssertion = ConvertToSharedAssertion(

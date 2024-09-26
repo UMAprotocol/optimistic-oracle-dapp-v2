@@ -17,8 +17,6 @@ import {
   settled,
   settling,
 } from "@/constants";
-// Reinable when we have a good way to convert wagmi logs to ethers logs
-// import { oracleEthersApis } from "@/contexts";
 import {
   alreadyDisputedV2,
   alreadyDisputedV3,
