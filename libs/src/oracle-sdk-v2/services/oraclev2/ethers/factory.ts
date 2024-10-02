@@ -110,7 +110,7 @@ const ConvertToSharedRequest =
     if (finalFee) result.finalFee = finalFee.toBigInt();
     if (proposer) result.proposer = proposer;
     if (proposedPrice) result.proposedPrice = proposedPrice.toBigInt();
-    if (expirationTime)
+    if (expirationTime && expirationTime.toNumber() > 0)
       result.proposalExpirationTimestamp = expirationTime.toString();
     if (disputer) result.disputer = disputer;
     if (price) result.settlementPrice = price.toBigInt();
