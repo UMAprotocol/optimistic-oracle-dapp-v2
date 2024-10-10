@@ -18,7 +18,10 @@ export const projects = [
   "OSnap",
   "Rated",
   "Predict.Fun",
+  "Infinite Games",
 ] as const;
+
+export type ProjectName = (typeof projects)[number];
 
 export const requestStates = [
   "Invalid",

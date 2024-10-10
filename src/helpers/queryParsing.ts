@@ -3,6 +3,7 @@ import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type { DropdownItem, MetaData } from "@/types";
 import { formatEther } from "@/helpers";
 import { chunk } from "lodash";
+import type { ProjectName } from "@shared/constants";
 
 // hard coded known poly addresses:
 // https://github.com/UMAprotocol/protocol/blob/master/packages/monitor-v2/src/monitor-polymarket/common.ts#L474
@@ -27,7 +28,6 @@ export function isPolymarketRequester(address: string): boolean {
 }
 
 // Predict.Fun Adapters
-
 const predictFunBinaryOutcomeAdapter =
   "0x0C1331E4a4bBD59B7aae2902290506bf8fbE3e6c";
 const predictFunNegRiskAdapter = "0xB0c308abeC5d321A7B6a8E3ce43A368276178F7A";
@@ -39,6 +39,16 @@ export const predictFunRequesters = [
 
 export function isPredictFunRequester(address: string): boolean {
   return predictFunRequesters.includes(address.toLowerCase());
+}
+
+// Infinite Games Requesters
+const infiniteGamesRequesters = [
+  "0x8edec74d4e93b69bb8b1d9ba888d498a58846cb5",
+  "0x4cb80ebdcabc9420edd4b5a5b296bbc86848206d",
+];
+
+export function isInfiniteGamesRequester(address: string): boolean {
+  return infiniteGamesRequesters.includes(address.toLowerCase());
 }
 
 // hard coded polybet addresses
@@ -63,6 +73,7 @@ function makeSimpleYesOrNoOptions() {
     { label: "No", value: "0", secondaryLabel: "0" },
   ];
 }
+
 // This is specifically for the mutliple choice identifier, all values must be specified in WEI
 // and values are always scaled as if they were eth on proposal, so we must do a conversion here.
 function makeMultipleChoiceYesOrNoOptions() {
@@ -133,6 +144,16 @@ export function checkIfIsPredictFun(
     decodedAncillaryData.includes(resultDataToken);
 
   return isPredictFun;
+}
+
+export function checkIfIsInfiniteGames(
+  decodedIdentifier: string,
+  requester: string,
+) {
+  return (
+    isInfiniteGamesRequester(requester) &&
+    decodedIdentifier === "MULTIPLE_CHOICE_QUERY"
+  );
 }
 
 export function checkIfIsPolybet(
@@ -272,33 +293,13 @@ export function getQueryMetaData(
       project: "Cozy Finance",
     };
   }
+
   if (decodedIdentifier === "MULTIPLE_CHOICE_QUERY") {
-    try {
-      return {
-        ...decodeMultipleChoiceQuery(decodedQueryText),
-        umipUrl:
-          "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-181.md",
-        umipNumber: "UMIP-181",
-        project: "Unknown",
-      };
-    } catch (err) {
-      let description = `Error decoding description`;
-      if (err instanceof Error) {
-        description += `: ${err.message}`;
-      }
-      console.error("Error parsing multipechoicequery", decodedQueryText, err);
-      return {
-        title: "Multiple Choice query",
-        description,
-        umipUrl:
-          "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-181.md",
-        umipNumber: "UMIP-181",
-        project: "Unknown",
-        proposeOptions: makeMultipleChoiceOptions(
-          makeMultipleChoiceYesOrNoOptions(),
-        ),
-      };
-    }
+    const projectName = checkIfIsInfiniteGames(decodedIdentifier, requester)
+      ? "Infinite Games"
+      : "Unknown";
+
+    return tryParseMultipleChoiceQuery(decodedQueryText, projectName);
   }
 
   const identifierDetails = approvedIdentifiers[decodedIdentifier];
@@ -365,6 +366,38 @@ const isMultipleChoiceQueryFormat = (
         )));
   return "object" === typeof input && null !== input && $io0(input);
 };
+
+function tryParseMultipleChoiceQuery(
+  decodedQueryText: string,
+  projectName: ProjectName,
+): MetaData {
+  try {
+    return {
+      ...decodeMultipleChoiceQuery(decodedQueryText),
+      umipUrl:
+        "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-181.md",
+      umipNumber: "UMIP-181",
+      project: projectName,
+    };
+  } catch (err) {
+    let description = `Error decoding description`;
+    if (err instanceof Error) {
+      description += `: ${err.message}`;
+    }
+    console.error("Error parsing multipechoicequery", decodedQueryText, err);
+    return {
+      title: "Multiple Choice query",
+      description,
+      umipUrl:
+        "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-181.md",
+      umipNumber: "UMIP-181",
+      project: "Unknown",
+      proposeOptions: makeMultipleChoiceOptions(
+        makeMultipleChoiceYesOrNoOptions(),
+      ),
+    };
+  }
+}
 
 function ensureInteger(value: string): string {
   const num = Number(value);

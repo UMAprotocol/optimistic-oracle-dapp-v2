@@ -53,7 +53,6 @@ export function Details({
         />
       );
     }
-    // @todo: add predict.fun
     return (
       <AdditionalTextData
         description={description}
