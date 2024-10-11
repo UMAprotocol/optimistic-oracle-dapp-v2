@@ -1,4 +1,5 @@
 import { hasProperty } from "@/helpers";
+import type { ProjectName } from "@shared/constants";
 import { chainsById } from "@shared/constants";
 import type { ChainId } from "@shared/types";
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
@@ -23,8 +24,12 @@ import Sherlock from "public/assets/icons/projects/sherlock.svg";
 import Rated from "public/assets/icons/projects/rated.svg";
 import Unknown from "public/assets/icons/projects/unknown.svg";
 import PredictFun from "public/assets/icons/projects/predict-fun.svg";
+import InfiniteGames from "public/assets/icons/projects/infinite-games.svg";
 
-export const projectIcons = {
+export const projectIcons: Record<
+  ProjectName,
+  React.FC<React.SVGProps<HTMLOrSVGElement>>
+> = {
   Unknown,
   "Cozy Finance": Cozy,
   PolyBet,
@@ -34,6 +39,7 @@ export const projectIcons = {
   OSnap,
   Rated,
   "Predict.Fun": PredictFun,
+  "Infinite Games": InfiniteGames,
 };
 
 export const currencyIcons = {
@@ -58,8 +64,9 @@ export const chainIcons = {
   Arbitrum,
 };
 
-export function getProjectIcon(project: string | null | undefined) {
-  if (!project || !hasProperty(project, projectIcons)) return Unknown;
+export function getProjectIcon(project: ProjectName | null | undefined) {
+  if (!project || !hasProperty(project, projectIcons))
+    return projectIcons.Unknown;
   return projectIcons[project];
 }
 
