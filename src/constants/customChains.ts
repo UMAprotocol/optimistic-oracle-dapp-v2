@@ -57,3 +57,30 @@ export const blast = defineChain({
     },
   },
 });
+
+export const blastSepolia = defineChain({
+  id: 168587773,
+  name: "Blast Spolia",
+  network: "blastSepolia",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: { http: ["https://sepolia.blast.io"] },
+    public: { http: ["https://sepolia.blast.io"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blastscan",
+      url: "https://sepolia.blastscan.io/",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      blockCreated: 756690,
+    },
+  },
+});
