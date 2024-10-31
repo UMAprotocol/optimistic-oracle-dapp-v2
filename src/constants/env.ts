@@ -78,6 +78,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V1_80002: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V1_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V1_11155111: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V1_168587773: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v2
   NEXT_PUBLIC_PROVIDER_V2_1: ss.optional(ss.string()),
@@ -91,6 +92,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V2_80002: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V2_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V2_11155111: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_168587773: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v3
   NEXT_PUBLIC_PROVIDER_V3_1: ss.optional(ss.string()),
@@ -104,6 +106,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V3_80002: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_11155111: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V3_168587773: ss.optional(ss.string()),
 
   NEXT_PUBLIC_PROVIDER_SKINNY_1: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_10: ss.optional(ss.string()),
@@ -116,10 +119,12 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_SKINNY_80002: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_11155111: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_SKINNY_168587773: ss.optional(ss.string()),
   // not supported yet
   // NEXT_PUBLIC_PROVIDER_V1_416: ss.optional(ss.string()),
   // NEXT_PUBLIC_PROVIDER_V1_43114: ss.optional(ss.string()),
   // NEXT_PUBLIC_PROVIDER_V1_80001: ss.optional(ss.string()),
+  // NEXT_PUBLIC_SUBGRAPH_V3_168587773: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V1_8453: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V2_8453: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V3_8453: ss.optional(ss.string()),

@@ -136,6 +136,8 @@ function getBlockExplorerUrlForChain(chainId: ChainId) {
       return "https://blastscan.io";
     case 11155111:
       return "https://sepolia.etherscan.io";
+    case 168587773:
+      return "https://sepolia.blastscan.io/";
   }
 }
 
@@ -143,13 +145,16 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
   switch (chainId) {
     case 0:
       return;
-    case 1 || 5 || 11155111:
+    case 1:
+    case 5:
+    case 11155111:
       return "Etherscan";
     case 10:
       return "Etherscan";
     case 100:
       return "Gnosisscan";
-    case 137 || 80001:
+    case 137:
+    case 80001:
       return "Polygonscan";
     case 288:
       return "Bobascan";
@@ -164,6 +169,7 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
     case 42161:
       return "Arbiscan";
     case 81457:
+    case 168587773:
       return "Blastscan";
     default:
       return "Block Explorer";
