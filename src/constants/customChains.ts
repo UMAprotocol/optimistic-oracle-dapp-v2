@@ -60,7 +60,7 @@ export const blast = defineChain({
 
 export const blastSepolia = defineChain({
   id: 168587773,
-  name: "Blast Spolia",
+  name: "Blast Sepolia",
   network: "blastSepolia",
   nativeCurrency: {
     decimals: 18,
