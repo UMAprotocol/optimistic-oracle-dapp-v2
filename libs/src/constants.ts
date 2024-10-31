@@ -154,6 +154,12 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 81457,
     address: getAddress("0x4e8E101924eDE233C13e2D8622DC8aED2872d505"),
   },
+  {
+    // blast sepolia
+    type: "Optimistic Oracle V2",
+    chainId: 168587773,
+    address: getAddress("0xD8c6dD978a3768F7DDfE3A9aAD2c3Fd75Fa9B6Fd"),
+  },
   // v3
   {
     type: "Optimistic Oracle V3",
@@ -225,6 +231,12 @@ export const ContractInfoList: ContractInfoList = [
     type: "Optimistic Oracle V3",
     chainId: 81457,
     address: getAddress("0xE8FF2a3d5Cc19DDcBd93328371E1Dd8995e7AfAA"),
+  },
+  {
+    // blast sepolia
+    type: "Optimistic Oracle V3",
+    chainId: 168587773,
+    address: getAddress("0xad5503B3C7e35EAF0E88df80b4B626eD0C0404A0"),
   },
   // skinny
   {

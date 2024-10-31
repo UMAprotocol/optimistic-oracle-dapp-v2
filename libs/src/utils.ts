@@ -128,6 +128,9 @@ export async function averageBlockTimeSeconds(
     // Source: https://polygonscan.com/chart/blocktime
     case 137:
       return 2.5;
+    case 81457:
+    case 168587773:
+      return 2;
     case 1:
       return defaultBlockTimeSeconds;
     default:

@@ -51,6 +51,7 @@ export const chainsById = {
   80002: "Amoy",
   81457: "Blast",
   11155111: "Sepolia",
+  168587773: "Blast Sepolia",
 } as const;
 
 export const chainNames = Object.values(chainsById);
