@@ -3,7 +3,7 @@ import type { OracleQueryList } from "@/contexts";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { chainsById, oracleTypes } from "@shared/constants";
 import type { ChainId, OracleType } from "@shared/types";
-import { capitalize, orderBy, partition, words } from "lodash";
+import { capitalize, orderBy, partition, words, sortedIndexBy } from "lodash";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { css } from "styled-components";
 import type { Address } from "wagmi";
@@ -296,5 +296,134 @@ export function cn(...inputs: ClassValue[]) {
 export function truncateAddress(address: Address | undefined) {
   if (address) {
     return `${address.slice(0, 5)}...${address.slice(-5)}`;
+  }
+}
+
+export type SortableOracleQuery = {
+  livenessEndsMilliseconds?: number | null | undefined;
+  timeMilliseconds?: number | null | undefined;
+  disputeHash?: string | null | undefined;
+};
+
+export function compareOracleQuery(
+  a: SortableOracleQuery,
+  b: SortableOracleQuery,
+): number {
+  const now = Date.now();
+
+  const aInLiveness =
+    (a.livenessEndsMilliseconds ?? 0) > now && a.disputeHash === undefined;
+  const bInLiveness =
+    (b.livenessEndsMilliseconds ?? 0) > now && b.disputeHash === undefined;
+
+  if (aInLiveness && !bInLiveness) return -1;
+  if (!aInLiveness && bInLiveness) return 1;
+
+  if (aInLiveness && bInLiveness) {
+    // Both are in liveness, compare by livenessEndsMilliseconds
+    return (
+      (a.livenessEndsMilliseconds ?? 0) - (b.livenessEndsMilliseconds ?? 0)
+    );
+  } else {
+    if (
+      (b.timeMilliseconds === null || b.timeMilliseconds === undefined) &&
+      (a.timeMilliseconds === null || a.timeMilliseconds === undefined)
+    ) {
+      return 0;
+    }
+    if (b.timeMilliseconds === null || b.timeMilliseconds === undefined) {
+      return 1;
+    }
+    if (a.timeMilliseconds === null || a.timeMilliseconds === undefined) {
+      return -1;
+    }
+    // Neither are in liveness, compare by timeMilliseconds in descending order
+    return a.timeMilliseconds - b.timeMilliseconds;
+  }
+}
+type Comparator<T> = (a: T, b: T) => number;
+type MergeFunction<T> = (existing: T, newEntry: T) => T;
+type GetIdFunction<T> = (element: T) => string;
+
+export class SortedList<T> {
+  public list: T[] = [];
+  private comparator: Comparator<T>;
+  private mergeFn: MergeFunction<T>;
+  private getIdFn: GetIdFunction<T>;
+  private idMap: Map<string, number> = new Map();
+  public updateCount = 0;
+
+  constructor(
+    comparator: Comparator<T>,
+    mergeFn: MergeFunction<T>,
+    getIdFn: GetIdFunction<T>,
+  ) {
+    this.comparator = comparator;
+    this.mergeFn = mergeFn;
+    this.getIdFn = getIdFn;
+  }
+
+  upsert = (value: T): void => {
+    const id = this.getIdFn(value);
+    if (this.idMap.has(id)) {
+      const index = this.idMap.get(id)!;
+      const existingValue = this.list[index];
+      const mergedValue = this.mergeFn(existingValue, value);
+      this.list[index] = mergedValue;
+    } else {
+      const insertIndex = sortedIndexBy(this.list, value, (item) => item);
+      this.list.splice(insertIndex, 0, value);
+      this.idMap.set(id, insertIndex);
+
+      for (let i = insertIndex + 1; i < this.list.length; i++) {
+        this.idMap.set(this.getIdFn(this.list[i]), i);
+      }
+      this.updateCount++;
+    }
+  };
+  set = (value: T): void => {
+    const id = this.getIdFn(value);
+    if (this.idMap.has(id)) {
+      throw new Error(`Element with id ${id} already exists.`);
+    }
+    const insertIndex = sortedIndexBy(this.list, value, (item) => item);
+    this.list.splice(insertIndex, 0, value);
+    this.idMap.set(id, insertIndex);
+    for (let i = insertIndex + 1; i < this.list.length; i++) {
+      this.idMap.set(this.getIdFn(this.list[i]), i);
+    }
+    this.updateCount++;
+  };
+
+  has = (id: string): boolean => {
+    return this.idMap.has(id);
+  };
+
+  get = (id: string): T | undefined => {
+    const index = this.idMap.get(id);
+    return index !== undefined ? this.list[index] : undefined;
+  };
+
+  delete = (id: string): boolean => {
+    if (!this.idMap.has(id)) {
+      return false;
+    }
+    const index = this.idMap.get(id)!;
+    this.list.splice(index, 1);
+    this.idMap.delete(id);
+
+    for (let i = index; i < this.list.length; i++) {
+      this.idMap.set(this.getIdFn(this.list[i]), i);
+    }
+    this.updateCount++;
+    return true;
+  };
+
+  size(): number {
+    return this.list.length;
+  }
+
+  toSortedArray(): T[] {
+    return [...this.list];
   }
 }
