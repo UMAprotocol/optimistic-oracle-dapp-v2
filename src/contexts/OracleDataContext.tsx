@@ -6,7 +6,8 @@ import {
   assertionToOracleQuery,
   getPageForQuery,
   requestToOracleQuery,
-  sortQueries,
+  compareOracleQuery,
+  SortedList,
 } from "@/helpers";
 import { useErrorContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
@@ -20,17 +21,10 @@ import {
   skinny1Ethers,
 } from "@libs/oracle-sdk-v2/services";
 import type { Api } from "@libs/oracle-sdk-v2/services/oraclev1/ethers";
-import type {
-  Assertion,
-  Assertions,
-  ChainId,
-  OracleType,
-  Request,
-  Requests,
-} from "@shared/types";
+import type { Assertion, ChainId, OracleType, Request } from "@shared/types";
 import unionWith from "lodash/unionWith";
 import type { ReactNode } from "react";
-import { createContext, useEffect, useReducer, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 //TODO: hate this approach, will need to refactor in future, current services interface does not make it easy to define custom functions
 // this will be moved somewhere else in future pr.
@@ -99,17 +93,6 @@ export const OracleDataContext = createContext<OracleDataContextState>(
   defaultOracleDataContextState,
 );
 
-type DispatchAction<Type extends string, Data> = {
-  type: Type;
-  data: Data;
-};
-// replace many requests, used when querying data from the graph
-type ProcessRequestsAction = DispatchAction<"requests", Requests>;
-// same thing with assertions
-type ProcessAssertionsAction = DispatchAction<"assertions", Assertions>;
-
-type DispatchActions = ProcessRequestsAction | ProcessAssertionsAction;
-
 function mergeData(
   prev: OracleQueryUI | undefined,
   next: OracleQueryUI,
@@ -126,73 +109,99 @@ function mergeData(
     moreInformation,
   };
 }
-function DataReducerFactory<Input extends Request | Assertion>(
-  converter: (input: Input) => OracleQueryUI,
-) {
-  return (
-    state: OracleDataContextState,
-    updates: Input[],
-  ): OracleDataContextState => {
-    const { all = {} } = state;
-    updates.forEach((update) => {
-      const queryUpdate = converter(update);
-      all[update.id] = mergeData(all[update.id], queryUpdate);
-    });
-    const init: {
-      verify: OracleQueryList;
-      propose: OracleQueryList;
-      settled: OracleQueryList;
-    } = {
-      verify: [],
-      propose: [],
-      settled: [],
-    };
-    const queries = Object.values(all).reduce((result, query) => {
-      const pageForQuery = getPageForQuery(query);
-      result[pageForQuery].push(query);
-      return result;
-    }, init);
+const verifyList = new SortedList(compareOracleQuery, mergeData, (x) => x.id);
+const proposeList = new SortedList(compareOracleQuery, mergeData, (x) => x.id);
+const settledList = new SortedList(compareOracleQuery, mergeData, (x) => x.id);
 
-    return {
-      ...state,
-      all: { ...all },
-      ...sortQueries(queries),
-    };
-  };
-}
-
-const requestReducer = DataReducerFactory(requestToOracleQuery);
-const assertionReducer = DataReducerFactory(assertionToOracleQuery);
-
-export function oracleDataReducer(
-  state: OracleDataContextState,
-  action: DispatchActions,
-): OracleDataContextState {
-  if (action.type === "requests") {
-    return requestReducer(state, action.data);
-  } else if (action.type === "assertions") {
-    return assertionReducer(state, action.data);
-  }
-  return state;
-}
 export function OracleDataProvider({ children }: { children: ReactNode }) {
   const { addErrorMessage } = useErrorContext();
   const oraclesServices = oracles.Factory(config.subgraphs);
   const serviceConfigs = [...config.subgraphs, ...config.providers];
 
-  const [queries, dispatch] = useReducer(
-    oracleDataReducer,
-    defaultOracleDataContextState,
-  );
+  const [queries, setQueries] = useState(defaultOracleDataContextState);
   const [errors, setErrors] = useState<Errors>(
     defaultOracleDataContextState.errors,
   );
   useEffect(() => {
+    let lastProposeUpdate = 0;
+    let lastVerifyUpdate = 0;
+    let lastSettledUpdate = 0;
+    // sorted list of queries
+    setInterval(() => {
+      const state: OracleDataContextState = {
+        errors: [],
+        all: {},
+        verify: verifyList.list,
+        propose: proposeList.list,
+        settled: settledList.list,
+      };
+      let dirty = false;
+      if (verifyList.updateCount > lastVerifyUpdate) {
+        state.verify = verifyList.toSortedArray();
+        lastVerifyUpdate = verifyList.updateCount;
+        dirty = true;
+      }
+      if (proposeList.updateCount > lastProposeUpdate) {
+        state.propose = proposeList.toSortedArray();
+        lastProposeUpdate = proposeList.updateCount;
+        dirty = true;
+      }
+      if (settledList.updateCount > lastSettledUpdate) {
+        state.settled = settledList.toSortedArray();
+        lastSettledUpdate = settledList.updateCount;
+        dirty = true;
+      }
+      if (dirty) {
+        setQueries(state);
+      }
+    }, 5000);
+
     // its important this client only gets initialized once
     Client([...oraclesServices, ...oracleEthersServices], {
-      requests: (requests) => dispatch({ type: "requests", data: requests }),
-      assertions: (assertions) =>
-        dispatch({ type: "assertions", data: assertions }),
+      requests: (requests) => {
+        for (const req of requests) {
+          const query = requestToOracleQuery(req);
+          const prev =
+            proposeList.get(query.id) ??
+            verifyList.get(query.id) ??
+            settledList.get(query.id);
+          const merged = { ...prev, ...query };
+          // we need to delete from previous list incase they moved from one to another changing state
+          if (proposeList.has(query.id)) proposeList.delete(query.id);
+          if (verifyList.has(query.id)) verifyList.delete(query.id);
+          if (settledList.has(query.id)) settledList.delete(query.id);
+
+          const pageForQuery = getPageForQuery(merged);
+          if (pageForQuery === "propose") {
+            proposeList.set(merged);
+          } else if (pageForQuery === "settled") {
+            settledList.set(merged);
+          } else if (pageForQuery === "verify") {
+            verifyList.set(merged);
+          }
+        }
+      },
+      assertions: (assertions) => {
+        for (const a of assertions) {
+          const query = assertionToOracleQuery(a);
+          const prev =
+            proposeList.get(query.id) ??
+            verifyList.get(query.id) ??
+            settledList.get(query.id);
+          const pageForQuery = getPageForQuery(query);
+          const merged = { ...prev, ...query };
+          if (proposeList.has(query.id)) proposeList.delete(query.id);
+          if (verifyList.has(query.id)) verifyList.delete(query.id);
+          if (settledList.has(query.id)) settledList.delete(query.id);
+          if (pageForQuery === "propose") {
+            proposeList.upsert(merged);
+          } else if (pageForQuery === "settled") {
+            settledList.upsert(merged);
+          } else if (pageForQuery === "verify") {
+            verifyList.upsert(merged);
+          }
+        }
+      },
       errors: setErrors,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
