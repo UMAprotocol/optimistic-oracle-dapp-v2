@@ -41,6 +41,7 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_V2_80002: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V2_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V2_11155111: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_V2_168587773: ss.optional(ss.string()),
 
   NEXT_PUBLIC_SUBGRAPH_V3_1: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V3_10: ss.optional(ss.string()),
@@ -53,6 +54,7 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_V3_80002: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V3_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_V3_11155111: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_V3_168587773: ss.optional(ss.string()),
 
   NEXT_PUBLIC_SUBGRAPH_SKINNY_1: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_SKINNY_10: ss.optional(ss.string()),
@@ -65,6 +67,7 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_SKINNY_80002: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_SKINNY_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_SKINNY_11155111: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_SKINNY_168587773: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v1
   NEXT_PUBLIC_PROVIDER_V1_1: ss.optional(ss.string()),
@@ -158,6 +161,8 @@ const env = ss.create(
     NEXT_PUBLIC_SUBGRAPH_V1_81457: process.env.NEXT_PUBLIC_SUBGRAPH_V1_81457,
     NEXT_PUBLIC_SUBGRAPH_V1_11155111:
       process.env.NEXT_PUBLIC_SUBGRAPH_V1_11155111,
+    // NEXT_PUBLIC_SUBGRAPH_V1_168587773:
+    //   process.env.NEXT_PUBLIC_SUBGRAPH_V1_168587773,
 
     NEXT_PUBLIC_SUBGRAPH_V2_1: process.env.NEXT_PUBLIC_SUBGRAPH_V2_1,
     NEXT_PUBLIC_SUBGRAPH_V2_10: process.env.NEXT_PUBLIC_SUBGRAPH_V2_10,
@@ -171,6 +176,8 @@ const env = ss.create(
     NEXT_PUBLIC_SUBGRAPH_V2_81457: process.env.NEXT_PUBLIC_SUBGRAPH_V2_81457,
     NEXT_PUBLIC_SUBGRAPH_V2_11155111:
       process.env.NEXT_PUBLIC_SUBGRAPH_V2_11155111,
+    // NEXT_PUBLIC_SUBGRAPH_V2_168587773:
+    //   process.env.NEXT_PUBLIC_SUBGRAPH_V2_168587773,
 
     NEXT_PUBLIC_SUBGRAPH_V3_1: process.env.NEXT_PUBLIC_SUBGRAPH_V3_1,
     NEXT_PUBLIC_SUBGRAPH_V3_10: process.env.NEXT_PUBLIC_SUBGRAPH_V3_10,
@@ -184,6 +191,8 @@ const env = ss.create(
     NEXT_PUBLIC_SUBGRAPH_V3_81457: process.env.NEXT_PUBLIC_SUBGRAPH_V3_81457,
     NEXT_PUBLIC_SUBGRAPH_V3_11155111:
       process.env.NEXT_PUBLIC_SUBGRAPH_V3_11155111,
+    // NEXT_PUBLIC_SUBGRAPH_V3_168587773:
+    //   process.env.NEXT_PUBLIC_SUBGRAPH_V3_168587773,
 
     NEXT_PUBLIC_SUBGRAPH_SKINNY_1: process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_1,
     NEXT_PUBLIC_SUBGRAPH_SKINNY_10: process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_10,
@@ -204,6 +213,8 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_81457,
     NEXT_PUBLIC_SUBGRAPH_SKINNY_11155111:
       process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_11155111,
+    // NEXT_PUBLIC_SUBGRAPH_SKINNY_168587773:
+    //   process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_168587773,
 
     // enabling providers for each chain will enable web3 data services, which are needed for real time updates
     NEXT_PUBLIC_PROVIDER_V1_1: process.env.NEXT_PUBLIC_PROVIDER_V1_1,
@@ -218,6 +229,8 @@ const env = ss.create(
     NEXT_PUBLIC_PROVIDER_V1_81457: process.env.NEXT_PUBLIC_PROVIDER_V1_81457,
     NEXT_PUBLIC_PROVIDER_V1_11155111:
       process.env.NEXT_PUBLIC_PROVIDER_V1_11155111,
+    // NEXT_PUBLIC_PROVIDER_V1_168587773:
+    //   process.env.NEXT_PUBLIC_PROVIDER_V1_168587773,
 
     NEXT_PUBLIC_PROVIDER_V2_1: process.env.NEXT_PUBLIC_PROVIDER_V2_1,
     NEXT_PUBLIC_PROVIDER_V2_137: process.env.NEXT_PUBLIC_PROVIDER_V2_137,
@@ -231,6 +244,8 @@ const env = ss.create(
     NEXT_PUBLIC_PROVIDER_V2_81457: process.env.NEXT_PUBLIC_PROVIDER_V2_81457,
     NEXT_PUBLIC_PROVIDER_V2_11155111:
       process.env.NEXT_PUBLIC_PROVIDER_V2_11155111,
+    NEXT_PUBLIC_PROVIDER_V2_168587773:
+      process.env.NEXT_PUBLIC_PROVIDER_V2_168587773,
 
     NEXT_PUBLIC_PROVIDER_V3_1: process.env.NEXT_PUBLIC_PROVIDER_V3_1,
     NEXT_PUBLIC_PROVIDER_V3_137: process.env.NEXT_PUBLIC_PROVIDER_V3_137,
@@ -244,6 +259,8 @@ const env = ss.create(
     NEXT_PUBLIC_PROVIDER_V3_81457: process.env.NEXT_PUBLIC_PROVIDER_V3_81457,
     NEXT_PUBLIC_PROVIDER_V3_11155111:
       process.env.NEXT_PUBLIC_PROVIDER_V3_11155111,
+    NEXT_PUBLIC_PROVIDER_V3_168587773:
+      process.env.NEXT_PUBLIC_PROVIDER_V3_168587773,
 
     NEXT_PUBLIC_PROVIDER_SKINNY_1: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_1,
     NEXT_PUBLIC_PROVIDER_SKINNY_137:
@@ -264,6 +281,8 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_81457,
     NEXT_PUBLIC_PROVIDER_SKINNY_11155111:
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_11155111,
+    // NEXT_PUBLIC_PROVIDER_SKINNY_168587773:
+    //   process.env.NEXT_PUBLIC_PROVIDER_SKINNY_168587773,
 
     // not supported yet
     // NEXT_PUBLIC_PROVIDER_V1_416:   process.env.NEXT_PUBLIC_PROVIDER_V1_416,
@@ -289,7 +308,7 @@ const env = ss.create(
 
 export const ChainId = ss.enums([
   1, 5, 10, 100, 137, 288, 416, 8453, 11155111, 1116, 42161, 43114, 80001,
-  80002, 81457,
+  80002, 81457, 168587773,
 ]);
 const SubgraphConfig = ss.object({
   source: ss.literal("gql"),
