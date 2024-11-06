@@ -183,14 +183,18 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     if (handlers.requests) events.on("requests", handlers.requests);
   };
   async function queryRange(startBlock: number, endBlock: number) {
-    let rangeState = rangeStart({ startBlock, endBlock });
-    const { currentStart, currentEnd } = rangeState;
-    try {
-      await oo.update(currentStart, currentEnd);
-      rangeState = rangeSuccessDescending({ ...rangeState, multiplier: 1 });
-    } catch (err) {
-      rangeState = rangeFailureDescending(rangeState);
-    }
+    let rangeState = rangeStart({ startBlock, endBlock, maxRange: 10000 });
+    do {
+      const { currentStart, currentEnd } = rangeState;
+      console.log({ currentStart, currentEnd });
+      try {
+        await oo.update(currentStart, currentEnd);
+        rangeState = rangeSuccessDescending({ ...rangeState, multiplier: 1 });
+      } catch (err) {
+        console.error(err, "Error loading oov ethers range");
+        rangeState = rangeFailureDescending({ ...rangeState, multiplier: 2 });
+      }
+    } while (!rangeState.done);
   }
 
   function queryLatestRequests(blocksAgo: number) {
@@ -200,6 +204,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
         const startBlock = endBlock - blocksAgo;
         await queryRange(startBlock, endBlock);
         const requests = oo.listRequests();
+        console.log("requests", requests);
         const convertedRequests: SharedRequest[] = Object.values(requests).map(
           convertToSharedRequest,
         );

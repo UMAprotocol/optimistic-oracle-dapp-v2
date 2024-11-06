@@ -220,6 +220,7 @@ export class OptimisticOracleV2 implements OracleInterface {
     endBlock: number | "latest" = "latest",
   ): Promise<void> {
     const events = await this.contract.queryFilter({}, startBlock, endBlock);
+    if (events.length > 0) console.log(events);
     await this.updateFromEvents(events as unknown[] as OptimisticOracleEvent[]);
   }
   async getProps(): Promise<OracleProps> {

@@ -38,6 +38,7 @@ type EthersServicesList = [
   ServiceFactories,
   Partial<Record<OracleType, Partial<Record<ChainId, Api>>>>,
 ];
+console.log("config", config);
 // keep a list we can iterate easily over
 export const oracleEthersApiList: Array<[ChainId, Api]> = [];
 const ethersServicesListInit: EthersServicesList = [[], {}];
@@ -195,6 +196,11 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         dispatch({ type: "assertions", data: assertions }),
       errors: setErrors,
     });
+    // TODO: only do this if theres no subgraph for this chain/oracle
+    oracleEthersApiList.map(
+      ([, service]) =>
+        service.queryLatestRequests && service.queryLatestRequests(100000),
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
