@@ -1,4 +1,4 @@
-import { getContractAddress } from "@libs/constants";
+import { getContractAddress, getContractInfo } from "@libs/constants";
 import * as ss from "superstruct";
 
 const Env = ss.object({
@@ -338,6 +338,7 @@ const ProviderConfig = ss.object({
   ]),
   url: ss.string(),
   address: ss.string(),
+  deployBlock: ss.optional(ss.number()),
   blockHistoryLimit: ss.number(),
 });
 export type ProviderConfig = ss.Infer<typeof ProviderConfig>;
@@ -411,15 +412,17 @@ function parseEnv(env: Env): Config {
           providers.push(provider);
         }
       } else {
+        const contractConfig = getContractInfo({
+          chainId: parseInt(chainId),
+          type: `Optimistic Oracle ${version}`,
+        });
         const provider = {
           source: "provider",
           type: `Optimistic Oracle ${version}`,
           url: value,
           chainId: parseInt(chainId),
-          address: getContractAddress({
-            chainId: parseInt(chainId),
-            type: `Optimistic Oracle ${version}`,
-          }),
+          address: contractConfig.address,
+          deployBlock: contractConfig.deployBlock,
           blockHistoryLimit: 100000,
         };
         if (ss.is(provider, ProviderConfig)) {

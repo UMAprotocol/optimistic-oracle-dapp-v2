@@ -38,6 +38,7 @@ type EthersServicesList = [
   ServiceFactories,
   Partial<Record<OracleType, Partial<Record<ChainId, Api>>>>,
 ];
+console.log("config", config);
 // keep a list we can iterate easily over
 export const oracleEthersApiList: Array<[ChainId, Api]> = [];
 const ethersServicesListInit: EthersServicesList = [[], {}];
@@ -175,6 +176,13 @@ export function oracleDataReducer(
   }
   return state;
 }
+
+function isSubgraphDefined(chainId: number): boolean {
+  return Boolean(
+    config.subgraphs.find((subgraph) => subgraph.chainId === chainId),
+  );
+}
+
 export function OracleDataProvider({ children }: { children: ReactNode }) {
   const { addErrorMessage } = useErrorContext();
   const oraclesServices = oracles.Factory(config.subgraphs);
@@ -195,6 +203,17 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         dispatch({ type: "assertions", data: assertions }),
       errors: setErrors,
     });
+
+    oracleEthersApiList.map(
+      ([chainId, service]) =>
+        !isSubgraphDefined(chainId) &&
+        service.queryLatestRequests &&
+        service.queryLatestRequests(
+          100000,
+          config.providers.find((chain) => chain.chainId === chainId)
+            ?.deployBlock,
+        ),
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -224,6 +243,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         );
         web3Fallback.queryLatestRequests(
           web3Config?.blockHistoryLimit ?? 100000,
+          web3Config?.deployBlock,
         );
         // if we reach here, theres a subgraph thats not working, but we can still fetch limited  history through provider
         addErrorMessage({
