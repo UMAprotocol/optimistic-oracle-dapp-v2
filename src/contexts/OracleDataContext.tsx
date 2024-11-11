@@ -208,7 +208,11 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
       ([chainId, service]) =>
         !isSubgraphDefined(chainId) &&
         service.queryLatestRequests &&
-        service.queryLatestRequests(100000),
+        service.queryLatestRequests(
+          100000,
+          config.providers.find((chain) => chain.chainId === chainId)
+            ?.deployBlock,
+        ),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
