@@ -12,6 +12,7 @@ export function Client(factories: ServiceFactories, handlers: Handlers) {
     );
     const errors: (Error | undefined)[] = results.map((result) => {
       if (isRejected(result)) {
+        console.log(result);
         if (result.reason instanceof Error) {
           return result.reason;
         } else {
