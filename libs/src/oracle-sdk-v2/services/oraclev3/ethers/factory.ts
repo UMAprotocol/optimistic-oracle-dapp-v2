@@ -231,11 +231,14 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       rangeState = rangeFailureDescending(rangeState);
     }
   }
-  function queryLatestRequests(blocksAgo: number) {
+  function queryLatestRequests(blocksAgo: number, deployBlock?: number) {
     provider
       .getBlockNumber()
       .then(async (endBlock) => {
-        const startBlock = endBlock - blocksAgo;
+        const defaultStartBlock = endBlock - blocksAgo;
+        const startBlock = deployBlock
+          ? Math.max(defaultStartBlock, deployBlock)
+          : defaultStartBlock;
         await queryRange(startBlock, endBlock);
         const { assertions = {} } = getEventState(logs);
         const convertedAssertions = Object.values(assertions).map(

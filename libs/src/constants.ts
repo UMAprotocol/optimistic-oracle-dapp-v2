@@ -285,6 +285,13 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 8453,
     address: getAddress("0x2aBf1Bd76655de80eDB3086114315Eec75AF500c"),
   },
+  // story odyssey
+  {
+    type: "Optimistic Oracle V3",
+    chainId: 1516,
+    address: getAddress("0x3CA11702f7c0F28e0b4e03C31F7492969862C569"),
+    deployBlock: 298453,
+  },
 ];
 export function getContractInfo(params: {
   chainId: number;

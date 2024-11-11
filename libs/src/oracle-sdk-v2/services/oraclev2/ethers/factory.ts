@@ -197,11 +197,14 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     } while (!rangeState.done);
   }
 
-  function queryLatestRequests(blocksAgo: number) {
+  function queryLatestRequests(blocksAgo: number, deployBlock?: number) {
     provider
       .getBlockNumber()
       .then(async (endBlock) => {
-        const startBlock = endBlock - blocksAgo;
+        const defaultStartBlock = endBlock - blocksAgo;
+        const startBlock = deployBlock
+          ? Math.max(defaultStartBlock, deployBlock)
+          : defaultStartBlock;
         await queryRange(startBlock, endBlock);
         const requests = oo.listRequests();
         console.log("requests", requests);

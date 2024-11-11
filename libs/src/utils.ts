@@ -131,6 +131,8 @@ export async function averageBlockTimeSeconds(
     case 81457:
     case 168587773:
       return 2;
+    case 1516:
+      return 3;
     case 1:
       return defaultBlockTimeSeconds;
     default:

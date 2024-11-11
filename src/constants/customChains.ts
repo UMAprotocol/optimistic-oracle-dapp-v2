@@ -83,4 +83,33 @@ export const blastSepolia = defineChain({
       blockCreated: 756690,
     },
   },
+  testnet: true,
+});
+
+export const storyOdyssey = defineChain({
+  id: 1516,
+  name: "Story Odyssey",
+  network: "storyOdyssey",
+  nativeCurrency: {
+    decimals: 18,
+    name: "IP",
+    symbol: "IP",
+  },
+  rpcUrls: {
+    default: { http: ["https://rpc.odyssey.storyrpc.io/"] },
+    public: { http: ["https://rpc.odyssey.storyrpc.io/"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Storyscan",
+      url: "https://odyssey-testnet-explorer.storyscan.xyz",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      blockCreated: 14880,
+    },
+  },
+  testnet: true,
 });

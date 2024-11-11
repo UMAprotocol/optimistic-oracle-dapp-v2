@@ -138,6 +138,8 @@ function getBlockExplorerUrlForChain(chainId: ChainId) {
       return "https://sepolia.etherscan.io";
     case 168587773:
       return "https://sepolia.blastscan.io/";
+    case 1516:
+      return "https://odyssey-testnet-explorer.storyscan.xyz";
   }
 }
 
@@ -171,6 +173,8 @@ export function getBlockExplorerNameForChain(chainId: ChainId) {
     case 81457:
     case 168587773:
       return "Blastscan";
+    case 1516:
+      return "Storyscan";
     default:
       return "Block Explorer";
   }
