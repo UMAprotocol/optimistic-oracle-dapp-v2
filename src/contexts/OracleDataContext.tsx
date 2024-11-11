@@ -230,6 +230,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         );
         web3Fallback.queryLatestRequests(
           web3Config?.blockHistoryLimit ?? 100000,
+          web3Config?.deployBlock,
         );
         // if we reach here, theres a subgraph thats not working, but we can still fetch limited  history through provider
         addErrorMessage({

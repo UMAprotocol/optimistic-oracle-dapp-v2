@@ -149,7 +149,7 @@ const ConvertToSharedRequest =
   };
 export type Api = {
   updateFromTransactionReceipt: (receipt: TransactionReceipt) => void;
-  queryLatestRequests?: (blocksAgo: number) => void;
+  queryLatestRequests?: (blocksAgo: number, deployBlock?: number) => void;
   updateFromTransactionHash?: (transactionHash: string) => Promise<void>;
 };
 export const Factory = (config: Config): [ServiceFactory, Api] => {
@@ -187,11 +187,14 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       rangeState = rangeFailureDescending(rangeState);
     }
   }
-  function queryLatestRequests(blocksAgo: number) {
+  function queryLatestRequests(blocksAgo: number, deployBlock?: number) {
     provider
       .getBlockNumber()
       .then(async (endBlock) => {
-        const startBlock = endBlock - blocksAgo;
+        const defaultStartBlock = endBlock - blocksAgo;
+        const startBlock = deployBlock
+          ? Math.max(defaultStartBlock, deployBlock)
+          : defaultStartBlock;
         await queryRange(startBlock, endBlock);
         const requests = oo.listRequests();
         const convertedRequests: SharedRequest[] = Object.values(requests).map(

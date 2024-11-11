@@ -7,6 +7,7 @@ type ContractInfo = {
   chainId: number;
   address: string;
   type: ContractType;
+  deployBlock?: number;
 };
 type ContractInfoList = ContractInfo[];
 export const ContractInfoList: ContractInfoList = [
@@ -159,6 +160,7 @@ export const ContractInfoList: ContractInfoList = [
     type: "Optimistic Oracle V2",
     chainId: 168587773,
     address: getAddress("0xD8c6dD978a3768F7DDfE3A9aAD2c3Fd75Fa9B6Fd"),
+    deployBlock: 8274989,
   },
   // v3
   {
@@ -237,6 +239,7 @@ export const ContractInfoList: ContractInfoList = [
     type: "Optimistic Oracle V3",
     chainId: 168587773,
     address: getAddress("0xad5503B3C7e35EAF0E88df80b4B626eD0C0404A0"),
+    deployBlock: 1115239,
   },
   // skinny
   {
