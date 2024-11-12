@@ -17,6 +17,11 @@ import { useQueries } from "./queries";
 import { useUrlBar } from "./useUrlBar";
 import { oracleEthersApiList } from "@/contexts";
 
+function isValidInteger(str: string): boolean {
+  const num = parseInt(str, 10);
+  return !isNaN(num) && num.toString() === str.trim();
+}
+
 function getOracleType(oracleType: string | undefined): OracleType | undefined {
   switch (oracleType) {
     case "Optimistic":
@@ -57,8 +62,7 @@ export function useQueryInSearchParams() {
     identifier: undefined,
     ancillaryData: undefined,
   });
-  const isHashAndIndex =
-    isTransactionHash(state.transactionHash) && exists(state.eventIndex);
+  const isHashAndIndex = isTransactionHash(state.transactionHash);
   const isLegacyRequestDetails =
     isValidChainId(Number(state.chainId)) &&
     isValidOracleType(getOracleType(state.oracleType)) &&
@@ -70,10 +74,10 @@ export function useQueryInSearchParams() {
     if (!searchParams) return;
 
     const hasHash = searchParams?.has("transactionHash");
-    const hasEventIndex = searchParams?.has("eventIndex");
 
     if (hasHash) {
       const transactionHash = searchParams?.get("transactionHash");
+
       oracleEthersApiList.forEach(([, api]) => {
         api
           .updateFromTransactionHash?.(transactionHash!)
@@ -84,12 +88,16 @@ export function useQueryInSearchParams() {
             ),
           );
       });
-      if (hasEventIndex) {
-        setState((draft) => {
-          draft.transactionHash = transactionHash!;
-          draft.eventIndex = searchParams.get("eventIndex")!;
-        });
-      }
+      const hasEventIndex = searchParams?.has("eventIndex");
+      setState((draft) => {
+        draft.transactionHash = transactionHash!;
+        const eventIndex = searchParams.get("eventIndex");
+        if (hasEventIndex && eventIndex && isValidInteger(eventIndex)) {
+          draft.eventIndex = eventIndex;
+        } else {
+          draft.eventIndex = undefined;
+        }
+      });
     }
   });
 
@@ -136,40 +144,76 @@ export function useQueryInSearchParams() {
         disputeHash,
         settlementHash,
         assertionHash,
+        requestLogIndex,
+        proposalLogIndex,
+        disputeLogIndex,
+        settlementLogIndex,
+        assertionLogIndex,
       }) => {
-        return (
-          requestHash === state.transactionHash ||
-          proposalHash === state.transactionHash ||
-          disputeHash === state.transactionHash ||
-          settlementHash === state.transactionHash ||
-          assertionHash === state.transactionHash
-        );
+        let match = false;
+        if (requestHash === state.transactionHash) {
+          if (exists(state.eventIndex)) {
+            if (requestLogIndex === state.eventIndex) {
+              match = true;
+            }
+          } else {
+            match = true;
+          }
+        } else if (proposalHash === state.transactionHash) {
+          if (exists(state.eventIndex)) {
+            if (proposalLogIndex === state.eventIndex) {
+              match = true;
+            }
+          } else {
+            match = true;
+          }
+        } else if (disputeHash === state.transactionHash) {
+          if (exists(state.eventIndex)) {
+            if (disputeLogIndex === state.eventIndex) {
+              match = true;
+            }
+          } else {
+            match = true;
+          }
+        } else if (settlementHash === state.transactionHash) {
+          if (exists(state.eventIndex)) {
+            if (settlementLogIndex === state.eventIndex) {
+              match = true;
+            }
+          } else {
+            match = true;
+          }
+        } else if (assertionHash === state.transactionHash) {
+          if (exists(state.eventIndex)) {
+            if (assertionLogIndex === state.eventIndex) {
+              match = true;
+            }
+          } else {
+            match = true;
+          }
+        }
+        return match;
       },
     );
 
-    const hasMultipleForTx = forTx.length > 1;
-
-    const query =
-      hasMultipleForTx && exists(state.eventIndex)
-        ? find<OracleQueryUI>(
-            forTx,
-            ({
-              requestLogIndex,
-              proposalLogIndex,
-              disputeLogIndex,
-              settlementLogIndex,
-              assertionLogIndex,
-            }) => {
-              return (
-                requestLogIndex === state.eventIndex ||
-                proposalLogIndex === state.eventIndex ||
-                disputeLogIndex === state.eventIndex ||
-                settlementLogIndex === state.eventIndex ||
-                assertionLogIndex === state.eventIndex
-              );
-            },
-          )
-        : forTx[0];
+    // sort these by highest score. this is in case we get into a situation where we have
+    // a matches dispute tx, b matchs request tx. always prefer request tx match, so we score
+    // those higher. so that when we match event ids, we take the higher score tx automatically.
+    forTx.sort((a, b) => {
+      let score = 0;
+      if (a.requestHash === state.transactionHash) score -= 4;
+      if (b.requestHash === state.transactionHash) score += 4;
+      if (a.proposalHash === state.transactionHash) score -= 3;
+      if (b.proposalHash === state.transactionHash) score += 3;
+      if (a.disputeHash === state.transactionHash) score -= 2;
+      if (b.disputeHash === state.transactionHash) score += 2;
+      if (a.settlementHash === state.transactionHash) score -= 1;
+      if (b.settlementHash === state.transactionHash) score += 1;
+      if (a.assertionHash === state.transactionHash) score -= 4;
+      if (b.assertionHash === state.transactionHash) score += 4;
+      return score;
+    });
+    const query = forTx[0];
     setState((draft) => {
       draft.query = castDraft(query);
     });
