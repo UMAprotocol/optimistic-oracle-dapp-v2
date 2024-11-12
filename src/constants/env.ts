@@ -412,7 +412,7 @@ function parseEnv(env: Env): Config {
             chainId: parseInt(chainId),
             type: "Skinny Optimistic Oracle",
           }),
-          blockHistoryLimit: 100000,
+          blockHistoryLimit: 1000000,
         };
         if (ss.is(provider, ProviderConfig)) {
           providers.push(provider);
@@ -429,7 +429,7 @@ function parseEnv(env: Env): Config {
           chainId: parseInt(chainId),
           address: contractConfig.address,
           deployBlock: contractConfig.deployBlock,
-          blockHistoryLimit: 100000,
+          blockHistoryLimit: 1000000,
         };
         if (ss.is(provider, ProviderConfig)) {
           providers.push(provider);

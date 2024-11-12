@@ -186,7 +186,6 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     let rangeState = rangeStart({ startBlock, endBlock, maxRange: 10000 });
     do {
       const { currentStart, currentEnd } = rangeState;
-      console.log({ currentStart, currentEnd });
       try {
         await oo.update(currentStart, currentEnd);
         rangeState = rangeSuccessDescending({ ...rangeState, multiplier: 1 });
@@ -207,7 +206,6 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
           : defaultStartBlock;
         await queryRange(startBlock, endBlock);
         const requests = oo.listRequests();
-        console.log("requests", requests);
         const convertedRequests: SharedRequest[] = Object.values(requests).map(
           convertToSharedRequest,
         );

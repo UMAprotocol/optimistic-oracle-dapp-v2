@@ -217,19 +217,22 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     });
   };
   async function queryRange(startBlock: number, endBlock: number) {
-    let rangeState = rangeStart({ startBlock, endBlock });
-    const { currentStart, currentEnd } = rangeState;
-    try {
-      const eventLogs = await contract.queryFilter(
-        {},
-        currentStart,
-        currentEnd,
-      );
-      updateFromEvents(eventLogs as unknown[] as OptimisticOracleEvent[]);
-      rangeState = rangeSuccessDescending({ ...rangeState, multiplier: 1 });
-    } catch (err) {
-      rangeState = rangeFailureDescending(rangeState);
-    }
+    let rangeState = rangeStart({ startBlock, endBlock, maxRange: 10000 });
+    do {
+      const { currentStart, currentEnd } = rangeState;
+      try {
+        const eventLogs = await contract.queryFilter(
+          {},
+          currentStart,
+          currentEnd,
+        );
+        updateFromEvents(eventLogs as unknown[] as OptimisticOracleEvent[]);
+        rangeState = rangeSuccessDescending({ ...rangeState, multiplier: 1 });
+      } catch (err) {
+        console.error(err, "Error loading oov ethers range");
+        rangeState = rangeFailureDescending({ ...rangeState, multiplier: 2 });
+      }
+    } while (!rangeState.done);
   }
   function queryLatestRequests(blocksAgo: number, deployBlock?: number) {
     provider
