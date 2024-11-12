@@ -82,6 +82,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V1_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V1_11155111: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V1_168587773: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V1_1516: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v2
   NEXT_PUBLIC_PROVIDER_V2_1: ss.optional(ss.string()),
@@ -96,6 +97,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V2_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V2_11155111: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V2_168587773: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V2_1516: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v3
   NEXT_PUBLIC_PROVIDER_V3_1: ss.optional(ss.string()),
@@ -110,6 +112,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V3_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_11155111: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_168587773: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_V3_1516: ss.optional(ss.string()),
 
   NEXT_PUBLIC_PROVIDER_SKINNY_1: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_10: ss.optional(ss.string()),
@@ -229,6 +232,7 @@ const env = ss.create(
     NEXT_PUBLIC_PROVIDER_V1_81457: process.env.NEXT_PUBLIC_PROVIDER_V1_81457,
     NEXT_PUBLIC_PROVIDER_V1_11155111:
       process.env.NEXT_PUBLIC_PROVIDER_V1_11155111,
+    NEXT_PUBLIC_PROVIDER_V1_1516: process.env.NEXT_PUBLIC_PROVIDER_V1_1516,
     // NEXT_PUBLIC_PROVIDER_V1_168587773:
     //   process.env.NEXT_PUBLIC_PROVIDER_V1_168587773,
 
@@ -246,6 +250,7 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_PROVIDER_V2_11155111,
     NEXT_PUBLIC_PROVIDER_V2_168587773:
       process.env.NEXT_PUBLIC_PROVIDER_V2_168587773,
+    NEXT_PUBLIC_PROVIDER_V2_1516: process.env.NEXT_PUBLIC_PROVIDER_V2_1516,
 
     NEXT_PUBLIC_PROVIDER_V3_1: process.env.NEXT_PUBLIC_PROVIDER_V3_1,
     NEXT_PUBLIC_PROVIDER_V3_137: process.env.NEXT_PUBLIC_PROVIDER_V3_137,
@@ -261,6 +266,7 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_PROVIDER_V3_11155111,
     NEXT_PUBLIC_PROVIDER_V3_168587773:
       process.env.NEXT_PUBLIC_PROVIDER_V3_168587773,
+    NEXT_PUBLIC_PROVIDER_V3_1516: process.env.NEXT_PUBLIC_PROVIDER_V3_1516,
 
     NEXT_PUBLIC_PROVIDER_SKINNY_1: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_1,
     NEXT_PUBLIC_PROVIDER_SKINNY_137:
@@ -308,7 +314,7 @@ const env = ss.create(
 
 export const ChainId = ss.enums([
   1, 5, 10, 100, 137, 288, 416, 8453, 11155111, 1116, 42161, 43114, 80001,
-  80002, 81457, 168587773,
+  80002, 81457, 168587773, 1516,
 ]);
 const SubgraphConfig = ss.object({
   source: ss.literal("gql"),
@@ -406,7 +412,7 @@ function parseEnv(env: Env): Config {
             chainId: parseInt(chainId),
             type: "Skinny Optimistic Oracle",
           }),
-          blockHistoryLimit: 100000,
+          blockHistoryLimit: 1000000,
         };
         if (ss.is(provider, ProviderConfig)) {
           providers.push(provider);
@@ -423,7 +429,7 @@ function parseEnv(env: Env): Config {
           chainId: parseInt(chainId),
           address: contractConfig.address,
           deployBlock: contractConfig.deployBlock,
-          blockHistoryLimit: 100000,
+          blockHistoryLimit: 1000000,
         };
         if (ss.is(provider, ProviderConfig)) {
           providers.push(provider);

@@ -177,16 +177,27 @@ export function oracleDataReducer(
   return state;
 }
 
-function isSubgraphDefined(chainId: number): boolean {
-  return Boolean(
-    config.subgraphs.find((subgraph) => subgraph.chainId === chainId),
-  );
-}
+const serviceConfigs = [
+  ...config.providers.map((provider) => {
+    if (provider.source === "provider") {
+      return {
+        ...provider,
+        isSubgraphDefined: Boolean(
+          config.subgraphs.find(
+            (subgraph) =>
+              subgraph.type === provider.type &&
+              subgraph.chainId === provider.chainId,
+          ),
+        ),
+      };
+    }
+  }),
+  ...config.subgraphs,
+];
 
 export function OracleDataProvider({ children }: { children: ReactNode }) {
   const { addErrorMessage } = useErrorContext();
   const oraclesServices = oracles.Factory(config.subgraphs);
-  const serviceConfigs = [...config.subgraphs, ...config.providers];
 
   const [queries, dispatch] = useReducer(
     oracleDataReducer,
@@ -204,17 +215,22 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
       errors: setErrors,
     });
 
-    oracleEthersApiList.map(
-      ([chainId, service]) =>
-        !isSubgraphDefined(chainId) &&
-        service.queryLatestRequests &&
-        service.queryLatestRequests(
-          100000,
-          config.providers.find((chain) => chain.chainId === chainId)
-            ?.deployBlock,
-        ),
-    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //  for provider configs that don't have a subgraph, fetch those events immediately
+  useEffect(() => {
+    serviceConfigs.forEach((service) => {
+      if (service?.source === "provider" && !service.isSubgraphDefined) {
+        const web3Fallback =
+          oracleEthersApis?.[service.type]?.[service.chainId];
+        web3Fallback?.queryLatestRequests &&
+          web3Fallback.queryLatestRequests(
+            service.blockHistoryLimit ?? 100000,
+            service.deployBlock,
+          );
+      }
+    });
   }, []);
 
   useEffect(() => {
