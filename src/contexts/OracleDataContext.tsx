@@ -38,7 +38,6 @@ type EthersServicesList = [
   ServiceFactories,
   Partial<Record<OracleType, Partial<Record<ChainId, Api>>>>,
 ];
-console.log("config", config);
 // keep a list we can iterate easily over
 export const oracleEthersApiList: Array<[ChainId, Api]> = [];
 const ethersServicesListInit: EthersServicesList = [[], {}];
