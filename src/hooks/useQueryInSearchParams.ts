@@ -17,11 +17,6 @@ import { useQueries } from "./queries";
 import { useUrlBar } from "./useUrlBar";
 import { oracleEthersApiList } from "@/contexts";
 
-function isValidInteger(str: string): boolean {
-  const num = parseInt(str, 10);
-  return !isNaN(num) && num.toString() === str.trim();
-}
-
 function getOracleType(oracleType: string | undefined): OracleType | undefined {
   switch (oracleType) {
     case "Optimistic":
@@ -92,7 +87,11 @@ export function useQueryInSearchParams() {
       setState((draft) => {
         draft.transactionHash = transactionHash!;
         const eventIndex = searchParams.get("eventIndex");
-        if (hasEventIndex && eventIndex && isValidInteger(eventIndex)) {
+        if (
+          hasEventIndex &&
+          eventIndex &&
+          Number.isInteger(Number(eventIndex))
+        ) {
           draft.eventIndex = eventIndex;
         } else {
           draft.eventIndex = undefined;
