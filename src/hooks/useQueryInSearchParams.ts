@@ -143,79 +143,91 @@ export function useQueryInSearchParams() {
         disputeHash,
         settlementHash,
         assertionHash,
-        requestLogIndex,
-        proposalLogIndex,
-        disputeLogIndex,
-        settlementLogIndex,
-        assertionLogIndex,
       }) => {
-        let match = false;
-        if (requestHash === state.transactionHash) {
-          if (exists(state.eventIndex)) {
-            if (requestLogIndex === state.eventIndex) {
-              match = true;
-            }
-          } else {
-            match = true;
-          }
-        } else if (proposalHash === state.transactionHash) {
-          if (exists(state.eventIndex)) {
-            if (proposalLogIndex === state.eventIndex) {
-              match = true;
-            }
-          } else {
-            match = true;
-          }
-        } else if (disputeHash === state.transactionHash) {
-          if (exists(state.eventIndex)) {
-            if (disputeLogIndex === state.eventIndex) {
-              match = true;
-            }
-          } else {
-            match = true;
-          }
-        } else if (settlementHash === state.transactionHash) {
-          if (exists(state.eventIndex)) {
-            if (settlementLogIndex === state.eventIndex) {
-              match = true;
-            }
-          } else {
-            match = true;
-          }
-        } else if (assertionHash === state.transactionHash) {
-          if (exists(state.eventIndex)) {
-            if (assertionLogIndex === state.eventIndex) {
-              match = true;
-            }
-          } else {
-            match = true;
-          }
-        }
-        return match;
+        return [
+          requestHash,
+          proposalHash,
+          disputeHash,
+          settlementHash,
+          assertionHash,
+        ].includes(state.transactionHash);
       },
     );
 
+    // adding this because sometimes event indexes are not exact
+    function eventDistanceScore(value: number, target: number) {
+      const distance = Math.abs(value - target);
+      if (distance === 0) return 0;
+      const maxDistance = Math.max(distance, 10);
+      return -(maxDistance / 10);
+    }
+    function score(a: OracleQueryUI) {
+      let score = 0;
+      if (a.requestHash === state.transactionHash) {
+        score += 4;
+        if (exists(state.eventIndex) && exists(a.requestLogIndex)) {
+          score += eventDistanceScore(
+            Number(a.requestLogIndex),
+            Number(state.eventIndex),
+          );
+        }
+      }
+      if (a.proposalHash === state.transactionHash) {
+        score += 3;
+        if (exists(state.eventIndex) && exists(a.proposalLogIndex)) {
+          score += eventDistanceScore(
+            Number(a.proposalLogIndex),
+            Number(state.eventIndex),
+          );
+        }
+      }
+      if (a.disputeHash === state.transactionHash) {
+        score += 2;
+        if (exists(state.eventIndex) && exists(a.disputeLogIndex)) {
+          score += eventDistanceScore(
+            Number(a.disputeLogIndex),
+            Number(state.eventIndex),
+          );
+        }
+      }
+      if (a.settlementHash === state.transactionHash) {
+        score += 1;
+        if (exists(state.eventIndex) && exists(a.settlementLogIndex)) {
+          score += eventDistanceScore(
+            Number(a.settlementLogIndex),
+            Number(state.eventIndex),
+          );
+        }
+      }
+      if (a.assertionHash === state.transactionHash) {
+        score += 4;
+        if (exists(state.eventIndex) && exists(a.assertionLogIndex)) {
+          score += eventDistanceScore(
+            Number(a.assertionLogIndex),
+            Number(state.eventIndex),
+          );
+        }
+      }
+      return score;
+    }
     // sort these by highest score. this is in case we get into a situation where we have
     // a matches dispute tx, b matchs request tx. always prefer request tx match, so we score
     // those higher. so that when we match event ids, we take the higher score tx automatically.
     forTx.sort((a, b) => {
-      let score = 0;
-      if (a.requestHash === state.transactionHash) score -= 4;
-      if (b.requestHash === state.transactionHash) score += 4;
-      if (a.proposalHash === state.transactionHash) score -= 3;
-      if (b.proposalHash === state.transactionHash) score += 3;
-      if (a.disputeHash === state.transactionHash) score -= 2;
-      if (b.disputeHash === state.transactionHash) score += 2;
-      if (a.settlementHash === state.transactionHash) score -= 1;
-      if (b.settlementHash === state.transactionHash) score += 1;
-      if (a.assertionHash === state.transactionHash) score -= 4;
-      if (b.assertionHash === state.transactionHash) score += 4;
-      return score;
+      return score(b) - score(a);
     });
     const query = forTx[0];
-    setState((draft) => {
-      draft.query = castDraft(query);
-    });
+    const query2 = forTx[1];
+    // only update if we have a score above 0, and theres no tie between first and second, otherwise lets not show a match
+    if (
+      query &&
+      score(query) > 0 &&
+      ((query && !query2) || (query && query2 && score(query) > score(query2)))
+    ) {
+      setState((draft) => {
+        draft.query = castDraft(query);
+      });
+    }
   }, [
     isHashAndIndex,
     queries,
