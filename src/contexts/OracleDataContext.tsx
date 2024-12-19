@@ -270,8 +270,8 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         addErrorMessage({
           text: "Currently unable to fetch all data, check back later",
           link: {
-            text: "Use the Legacy Dapp instead",
-            href: "https://legacy.oracle.uma.xyz",
+            text: "or use our dispute CLI tool instead",
+            href: "https://github.com/UMAprotocol/mass-dispute-cli",
           },
         });
       }
