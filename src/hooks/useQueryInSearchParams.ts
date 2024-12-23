@@ -157,7 +157,7 @@ export function useQueryInSearchParams() {
     // adding this because sometimes event indexes are not exact
     function eventDistanceScore(value: number, target: number) {
       const distance = Math.abs(value - target);
-      if (distance === 0) return 0;
+      if (distance === 0) return 4;
       const maxDistance = Math.max(distance, 10);
       return -(maxDistance / 10);
     }
