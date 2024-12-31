@@ -269,10 +269,6 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         // if the app is configured correctly
         addErrorMessage({
           text: "Currently unable to fetch all data, check back later",
-          link: {
-            text: "or use our dispute CLI tool instead",
-            href: "https://github.com/UMAprotocol/mass-dispute-cli",
-          },
         });
       }
     });
