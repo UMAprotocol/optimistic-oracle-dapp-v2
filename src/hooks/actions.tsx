@@ -731,15 +731,17 @@ export function useSettleAssertionAction({
       disabledReason: "Already settled",
     };
   }
+
   // unique to settle, if we have an error preparing the transaction,
   // this means this is probably disputed, but no answer available from dvm yet
   if (prepareSettleAssertionError) {
     return {
-      title: disputed,
+      title: "Settle",
       disabled: true,
-      disabledReason: "This query is disputed.",
+      disabledReason: "This transaction is likely to fail.",
     };
   }
+
   if (isSuccess) {
     return {
       title: settled,
