@@ -738,7 +738,7 @@ export function useSettleAssertionAction({
     return {
       title: "Settle",
       disabled: true,
-      disabledReason: "This transaction is likely to fail.",
+      disabledReason: "Transaction simulation failed.",
     };
   }
 
