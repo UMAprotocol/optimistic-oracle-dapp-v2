@@ -26,6 +26,7 @@ import {
   handleNotifications,
 } from "@/helpers";
 import { useBalanceAndAllowance } from "@/hooks";
+import type { PriceInputProps } from "@/hooks";
 import type { ActionTitle, OracleQueryUI } from "@/types";
 import React, { useEffect } from "react";
 import {
@@ -47,12 +48,13 @@ export type ActionState = Partial<{
   title: ActionTitle;
   errors: (string | null | undefined)[];
 }>;
+
 export function usePrimaryPanelAction({
   query,
-  proposePriceInput,
+  formattedProposePriceInput,
 }: {
   query?: OracleQueryUI;
-  proposePriceInput?: string;
+  formattedProposePriceInput?: PriceInputProps["formattedValue"];
 }): ActionState | undefined {
   // these are in order of importance
   const accountAction = useAccountAction({ query });
@@ -62,7 +64,7 @@ export function usePrimaryPanelAction({
 
   const proposeAction = useProposeAction({
     query,
-    proposePriceInput,
+    proposePriceInput: formattedProposePriceInput,
     prepare: bondAmountApproved,
   });
   const disputeAction = useDisputeAction({

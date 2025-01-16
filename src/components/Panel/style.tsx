@@ -24,10 +24,10 @@ export const SectionTitleWrapper = ({
   children,
 }: {
   children: React.ReactNode;
-}) => <div className="flex gap-3 mb-4">{children}</div>;
+}) => <div className="flex gap-3 mb-4 items-center">{children}</div>;
 
 export const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="text-lg font-bold [&>span]:font-normal">{children}</h2>
+  <h2 className="text-lg font-medium [&>span]:font-normal">{children}</h2>
 );
 
 export const SectionSubTitle = ({

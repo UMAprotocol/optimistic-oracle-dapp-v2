@@ -14,22 +14,24 @@ import { Details } from "./Details";
 import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
-import { ProposeInput } from "./ProposeInput";
 import { SimulateIfOsnap } from "../TenderlySimulation";
+import { ProposeInput } from "./ProposeInput";
 
 interface Props {
   query: OracleQueryUI;
 }
+
 export function Actions({ query }: Props) {
   const { oracleType, valueText, actionType, proposeOptions, queryText } =
     query;
-  const { proposePriceInput, inputError, ...inputProps } =
-    useProposePriceInput(query);
+  const inputProps = useProposePriceInput(query);
+
   const primaryAction = usePrimaryPanelAction({
     query,
-    proposePriceInput,
+    formattedProposePriceInput: inputProps.formattedValue,
   });
 
+  console.log("inputProps", inputProps);
   const { page } = usePageContext();
 
   const pageIsPropose = page === "propose";
@@ -53,7 +55,10 @@ export function Actions({ query }: Props) {
   const showConnectButton =
     isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
   const disableInput = alreadyProposed || alreadySettled;
-  const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
+  const errors = [
+    inputProps.inputError,
+    ...(primaryAction?.errors || []),
+  ].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
   const valuesToShow = Array.isArray(valueText)
@@ -82,11 +87,7 @@ export function Actions({ query }: Props) {
         <SectionTitle>{actionsTitle}</SectionTitle>
       </SectionTitleWrapper>
       {pageIsPropose ? (
-        <ProposeInput
-          value={proposePriceInput}
-          disabled={disableInput}
-          {...inputProps}
-        />
+        <ProposeInput disabled={disableInput} {...inputProps} />
       ) : (
         <div
           className="w-panel-content-width grid items-center min-h-[44px] mt-4 px-4 rounded bg-white"

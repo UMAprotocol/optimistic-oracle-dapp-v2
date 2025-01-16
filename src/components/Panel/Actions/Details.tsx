@@ -12,7 +12,7 @@ export function Details({
   const hasReward = reward !== null;
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 bg-white rounded-md py-2 px-3">
       <TextWrapper>
         <Text>
           Bond

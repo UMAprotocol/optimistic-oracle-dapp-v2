@@ -1,24 +1,38 @@
 import { DecimalInput, RadioDropdown } from "@/components";
-import type { DropdownItem } from "@/types";
+import { cn } from "@/helpers";
+import type {
+  SingleInputProps,
+  MultipleInputProps,
+} from "@/hooks/proposePriceInput";
+import { INPUT_TYPES } from "@/hooks/proposePriceInput";
 import Close from "public/assets/icons/close.svg";
 
-interface Props {
-  value: string;
+type CommonProps = {
   disabled: boolean;
-  items: DropdownItem[] | undefined;
-  selected: DropdownItem | undefined;
-  isCustomInput: boolean;
-  onInput: (value: string) => void;
-  onSelect: (item: DropdownItem) => void;
-  addErrorMessage: (value: string) => void;
-  removeErrorMessage: () => void;
-  exitCustomInput: () => void;
+};
+
+type PriceInputProps =
+  | (SingleInputProps & CommonProps)
+  | (MultipleInputProps & CommonProps);
+
+export function ProposeInput(props: PriceInputProps) {
+  return (
+    <div className="flex flex-col w-full gap-2 mb-2">
+      {props.inputType === INPUT_TYPES.SINGLE ? (
+        <ProposeInputSingle {...props} />
+      ) : (
+        <MultipleValuesInput {...props} />
+      )}
+    </div>
+  );
 }
-export function ProposeInput({
+
+function ProposeInputSingle({
   isCustomInput,
   exitCustomInput,
+  inputType,
   ...props
-}: Props) {
+}: SingleInputProps & CommonProps) {
   const isDropdown = !isCustomInput && !!props.items && props.items.length > 0;
 
   return (
@@ -34,6 +48,40 @@ export function ProposeInput({
           <Close className="w-[10px] [&>path]:fill-dark" />
         </button>
       )}
+    </div>
+  );
+}
+
+function MultipleValuesInput(props: MultipleInputProps) {
+  const items = Object.entries(props?.proposePriceInput);
+
+  if (!items?.length) return null;
+
+  return (
+    <div
+      className={cn(
+        "flex gap-2 items-center justify-between w-full mb-2 relative",
+        { "flex-col": items?.length > 2 },
+      )}
+    >
+      {items.map(([label, value]) => (
+        <label
+          key={label}
+          htmlFor={`input-${label}`}
+          className="flex flex-col gap-2 font-bold "
+        >
+          {label}
+          <DecimalInput
+            id={`input-${label}`}
+            placeholder={"Enter score"} // TODO: make this dynamic
+            maxDecimals={0}
+            value={value}
+            onInput={(_val) => props.onChange({ label, value: _val })}
+            addErrorMessage={props.addErrorMessage}
+            removeErrorMessage={props.removeErrorMessage}
+          />
+        </label>
+      ))}
     </div>
   );
 }
