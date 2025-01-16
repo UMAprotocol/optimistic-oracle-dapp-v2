@@ -76,7 +76,8 @@ export type OracleQueryUI = {
   queryText?: string;
   // for price requests the value text is null until a price is proposed. Then it is the proposed price. After a price is settled it is the settled price.
   // for assertions the value text is null until settlement, after which it is the `settlementResolution` field
-  valueText?: string | null;
+  valueText?: string | string[] | null;
+
   timeUTC?: string;
   timeUNIX?: number;
   timeMilliseconds?: number;

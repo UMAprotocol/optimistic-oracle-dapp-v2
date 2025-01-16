@@ -7,7 +7,9 @@ export function SettledCells({
   valueText,
   proposeOptions,
 }: OracleQueryUI) {
-  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
+  const valuesToShow = Array.isArray(valueText)
+    ? valueText
+    : [maybeGetValueTextFromOptions(valueText, proposeOptions)];
 
   return (
     <>
@@ -15,7 +17,7 @@ export function SettledCells({
         <Text>{oracleType}</Text>
       </TD>
       <TD>
-        <Text>{valueToShow}</Text>
+        <Text>{valuesToShow.join(", ")}</Text>
       </TD>
     </>
   );

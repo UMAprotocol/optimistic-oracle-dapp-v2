@@ -14,11 +14,13 @@ export function VerifyCells({
   chainId,
   tokenAddress,
 }: OracleQueryUI) {
-  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
+  const valuesToShow = Array.isArray(valueText)
+    ? valueText
+    : [maybeGetValueTextFromOptions(valueText, proposeOptions)];
   return (
     <>
       <TD>
-        <Text>{valueToShow}</Text>
+        <Text>{valuesToShow.join(",")}</Text>
       </TD>
       <TD>
         <Text>
