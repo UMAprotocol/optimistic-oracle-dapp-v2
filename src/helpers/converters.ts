@@ -39,6 +39,9 @@ import { erc20ABI } from "wagmi";
 import { formatBytes32String } from "./ethers";
 import { getQueryMetaData } from "./queryParsing";
 
+export const MIN_INT256 = -(BigInt(2) ** BigInt(255));
+export const MAX_INT256 = BigInt(2) ** BigInt(255) - BigInt(1);
+
 export type RequiredRequest = Omit<
   Request,
   "currency" | "bond" | "customLiveness"
@@ -725,10 +728,10 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
       result.valueText = "-";
     } else {
       // this is an array of strings now representings scores as uints
-      result.valueText = parseMultipleQueryPrice(
+      result.valueText = decodeMultipleQuery(
         price.toString(),
         result.proposeOptions.length,
-      );
+      ).toString();
     }
   } else {
     result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
@@ -1027,42 +1030,56 @@ ${rulesRegex[1]}`;
 }
 
 // input user values as regular numbers
-export function formatMultipleQueryPrice(inputValues: string[]): string {
-  if (inputValues.length > 7) {
-    throw new Error("Input values array length must not exceed 7.");
+export function decodeMultipleQueryPriceAtIndex(
+  encodedPrice: bigint,
+  index: number,
+): number {
+  if (index < 0 || index > 6) {
+    throw new Error("Index out of range");
+  }
+  // Shift the bits of encodedPrice to the right by (32 * index) positions.
+  // This operation effectively moves the desired 32-bit segment to the least significant position.
+  // The bitwise AND operation with 0xffffffff ensures that only the least significant 32 bits are retained,
+  // effectively extracting the 32-bit value at the specified index.
+  return Number((encodedPrice >> BigInt(32 * index)) & BigInt(0xffffffff));
+}
+export function encodeMultipleQuery(values: number[]): bigint {
+  if (values.length > 7) {
+    throw new Error("Maximum of 7 values allowed");
   }
 
-  let result = BigInt(0);
+  let encodedPrice = BigInt(0);
 
-  inputValues.forEach((value, index) => {
-    // Convert the input string value to a BigInt, interpreting it as a base-10 integer.
-    const uint32Value = BigInt(value);
-
-    // Check if the converted value is within the valid range for a uint32 (0 to 2^32 - 1).
-    if (uint32Value < 0 || uint32Value > 0xffffffff) {
-      throw new Error(`Value at index ${index} is not a valid uint32.`);
+  for (let i = 0; i < values.length; i++) {
+    if (!Number.isInteger(values[i])) {
+      throw new Error("All values must be integers");
     }
+    if (values[i] > 0xffffffff || values[i] < 0) {
+      throw new Error("Values must be uint32 (0 <= value <= 2^32 - 1)");
+    }
+    // Shift the current value to its correct position in the 256-bit field.
+    // Each value is a 32-bit unsigned integer, so we shift it by 32 bits times its index.
+    // This places the first value at the least significant bits and subsequent values
+    // at increasingly higher bit positions.
+    encodedPrice |= BigInt(values[i]) << BigInt(32 * i);
+  }
 
-    // Shift the uint32Value left by a calculated number of bits and combine it with the result using bitwise OR.
-    // This effectively places the value in its correct position within a larger bit field.
-    // The values are encoded in reverse order, so input[0] should be at 192-223.
-    result |= uint32Value << BigInt(32 * (6 - index));
-  });
-
-  return result.toString();
+  return encodedPrice;
 }
-export function parseMultipleQueryPrice(
-  price: string,
-  length: number,
-): string[] {
-  const result: string[] = [];
+export function decodeMultipleQuery(price: string, length: number): number[] {
+  const result: number[] = [];
   const bigIntPrice = BigInt(price);
 
   for (let i = 0; i < length; i++) {
-    const shiftAmount = BigInt(32 * (6 - i)); // Adjusted to start at position 192
-    const mask = BigInt(0xffffffff) << shiftAmount;
-    const value = (bigIntPrice & mask) >> shiftAmount;
-    result.push(value.toString());
+    const value = decodeMultipleQueryPriceAtIndex(bigIntPrice, i);
+    result.push(value);
   }
   return result;
+}
+export function isTooEarly(price: bigint): boolean {
+  return price === MIN_INT256;
+}
+
+export function isUnresolvable(price: bigint): boolean {
+  return price === MAX_INT256;
 }
