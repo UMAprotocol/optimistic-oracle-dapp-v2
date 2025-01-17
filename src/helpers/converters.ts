@@ -677,6 +677,24 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     project: "Unknown",
   };
 
+  if (exists(ancillaryData)) {
+    result.queryTextHex = ancillaryData;
+    result.queryText = safeDecodeHexString(ancillaryData);
+  }
+
+  if (exists(identifier) && exists(result.queryText) && exists(requester)) {
+    const { title, description, umipUrl, umipNumber, project, proposeOptions } =
+      getQueryMetaData(identifier, result.queryText, requester);
+    result.title = title;
+    result.description = description;
+    result.project = project;
+    result.proposeOptions = proposeOptions;
+    result.moreInformation = makeMoreInformationList(
+      request,
+      umipNumber,
+      umipUrl,
+    );
+  }
   if (exists(state)) {
     result.state = state;
   }
@@ -696,13 +714,24 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     } else {
       result.valueText = ethers.utils.formatEther(price);
     }
+    // we need the raw price for multiple values, because we need to parse this into
+    // multiple possible price values
+  } else if (
+    exists(identifier) &&
+    parseIdentifier(identifier) === "MULTIPLE_VALUES"
+  ) {
+    const price = settlementPrice ?? proposedPrice;
+    if (price === null || price === undefined || !result.proposeOptions) {
+      result.valueText = "-";
+    } else {
+      // this is an array of strings now representings scores as uints
+      result.valueText = parseMultipleQueryPrice(
+        price.toString(),
+        result.proposeOptions.length,
+      );
+    }
   } else {
     result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
-  }
-
-  if (exists(ancillaryData)) {
-    result.queryTextHex = ancillaryData;
-    result.queryText = safeDecodeHexString(ancillaryData);
   }
 
   let bytes32Identifier = undefined;
@@ -711,19 +740,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     bytes32Identifier = formatBytes32String(identifier);
   }
 
-  if (exists(identifier) && exists(result.queryText) && exists(requester)) {
-    const { title, description, umipUrl, umipNumber, project, proposeOptions } =
-      getQueryMetaData(identifier, result.queryText, requester);
-    result.title = title;
-    result.description = description;
-    result.project = project;
-    result.proposeOptions = proposeOptions;
-    result.moreInformation = makeMoreInformationList(
-      request,
-      umipNumber,
-      umipUrl,
-    );
-  }
   const { bond, eventBased } = getOOV2SpecificValues(request);
   if (exists(bond)) {
     result.bond = bond;
@@ -1007,5 +1023,46 @@ ${rulesRegex[1]}`;
   if (exists(settlementLogIndex))
     result.settlementLogIndex = settlementLogIndex;
 
+  return result;
+}
+
+// input user values as regular numbers
+export function formatMultipleQueryPrice(inputValues: string[]): string {
+  if (inputValues.length > 7) {
+    throw new Error("Input values array length must not exceed 7.");
+  }
+
+  let result = BigInt(0);
+
+  inputValues.forEach((value, index) => {
+    // Convert the input string value to a BigInt, interpreting it as a base-10 integer.
+    const uint32Value = BigInt(value);
+
+    // Check if the converted value is within the valid range for a uint32 (0 to 2^32 - 1).
+    if (uint32Value < 0 || uint32Value > 0xffffffff) {
+      throw new Error(`Value at index ${index} is not a valid uint32.`);
+    }
+
+    // Shift the uint32Value left by a calculated number of bits and combine it with the result using bitwise OR.
+    // This effectively places the value in its correct position within a larger bit field.
+    // The values are encoded in reverse order, so input[0] should be at 192-223.
+    result |= uint32Value << BigInt(32 * (6 - index));
+  });
+
+  return result.toString();
+}
+export function parseMultipleQueryPrice(
+  price: string,
+  length: number,
+): string[] {
+  const result: string[] = [];
+  const bigIntPrice = BigInt(price);
+
+  for (let i = 0; i < length; i++) {
+    const shiftAmount = BigInt(32 * (6 - i)); // Adjusted to start at position 192
+    const mask = BigInt(0xffffffff) << shiftAmount;
+    const value = (bigIntPrice & mask) >> shiftAmount;
+    result.push(value.toString());
+  }
   return result;
 }

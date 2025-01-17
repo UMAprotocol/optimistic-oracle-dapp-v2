@@ -56,7 +56,9 @@ export function Actions({ query }: Props) {
   const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
-  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
+  const valuesToShow = Array.isArray(valueText)
+    ? valueText
+    : [maybeGetValueTextFromOptions(valueText, proposeOptions)];
 
   function getActionsTitle() {
     if (pageIsSettled) return "Settled as";
@@ -92,7 +94,7 @@ export function Actions({ query }: Props) {
             marginBottom: !pageIsSettled ? "20px" : "0px",
           }}
         >
-          <p className="sm:text-lg font-semibold">{valueToShow}</p>
+          <p className="sm:text-lg font-semibold">{valuesToShow.join(", ")}</p>
         </div>
       )}
       {!pageIsSettled && <Details {...query} />}

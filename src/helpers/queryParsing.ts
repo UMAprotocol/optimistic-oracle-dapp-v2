@@ -1,9 +1,11 @@
+import assert from "assert";
 import { earlyRequestMagicNumber } from "@/constants";
 import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type { DropdownItem, MetaData } from "@/types";
 import { formatEther } from "@/helpers";
 import { chunk } from "lodash";
 import type { ProjectName } from "@shared/constants";
+import * as s from "superstruct";
 
 // hard coded known poly addresses:
 // https://github.com/UMAprotocol/protocol/blob/master/packages/monitor-v2/src/monitor-polymarket/common.ts#L474
@@ -302,10 +304,6 @@ export function getQueryMetaData(
     return tryParseMultipleChoiceQuery(decodedQueryText, projectName);
   }
   if (decodedIdentifier === "MULTIPLE_VALUES") {
-    console.log(
-      decodedIdentifier,
-      tryParseMultipleValuesQuery(decodedQueryText, "Polymarket"),
-    );
     return tryParseMultipleValuesQuery(decodedQueryText, "Polymarket");
   }
 
@@ -341,27 +339,18 @@ export function getQueryMetaData(
   };
 }
 
-type MultipleValuesQuery = {
+const MultipleValuesQuery = s.object({
   // The title of the request
-  title: string;
+  title: s.string(),
   // Description of the request
-  description: string;
+  description: s.string(),
   // Values will be encoded into the settled price in the same order as the provided labels. The oracle UI will display each Label along with an input field. 7 labels maximum.
-  labels: string[];
-};
+  labels: s.array(s.string()),
+});
+type MultipleValuesQuery = s.Infer<typeof MultipleValuesQuery>;
 
-const isMultipleValuesQueryFormat = (
-  input: unknown,
-): input is MultipleValuesQuery => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const $io1 = (input: any): boolean =>
-    "string" === typeof input?.title && //eslint-disable-line
-    "string" === typeof input?.description && //eslint-disable-line
-    Array.isArray(input?.labels) && //eslint-disable-line
-    input.labels.length <= 7 && //eslint-disable-line
-    input.labels.every((label: any) => "string" === typeof label); //eslint-disable-line
-  return "object" === typeof input && null !== input && $io1(input);
-};
+const isMultipleValuesQueryFormat = (q: unknown) =>
+  s.is(q, MultipleValuesQuery);
 
 function decodeMultipleValuesQuery(decodedAncillaryData: string) {
   const endOfObjectIndex = decodedAncillaryData.lastIndexOf("}");
@@ -373,10 +362,16 @@ function decodeMultipleValuesQuery(decodedAncillaryData: string) {
   const json = JSON.parse(maybeJson);
   if (!isMultipleValuesQueryFormat(json))
     throw new Error("Not a valid multiple values request");
+  const query = json as MultipleValuesQuery;
+  assert(
+    query.labels.length <= 7,
+    "MULTIPLE_VALUES only support up to 7 labels",
+  );
+
   return {
-    title: json.title,
-    description: json.description,
-    proposeOptions: json.labels.map((opt: string) => ({
+    title: query.title,
+    description: query.description,
+    proposeOptions: query.labels.map((opt: string) => ({
       label: opt,
       value: 0,
       secondaryLabel: undefined,
@@ -388,13 +383,14 @@ function tryParseMultipleValuesQuery(
   projectName: ProjectName,
 ): MetaData {
   try {
-    return {
+    const result = {
       ...decodeMultipleValuesQuery(decodedQueryText),
       umipUrl:
         "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-183.md",
       umipNumber: "UMIP-183",
       project: projectName,
     };
+    return result;
   } catch (err) {
     let description = `Error decoding description`;
     if (err instanceof Error) {
