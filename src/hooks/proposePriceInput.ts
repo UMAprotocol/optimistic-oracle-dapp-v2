@@ -1,4 +1,4 @@
-import { formatMultipleQueryPrice } from "@/helpers";
+import { encodeMultipleQuery } from "@/helpers";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { useState } from "react";
 
@@ -75,7 +75,7 @@ function useMultiplePriceInput({ proposeOptions }: OracleQueryUI) {
     inputType: INPUT_TYPES.MULTIPLE,
     proposePriceInput,
     value: proposePriceInput,
-    formattedValue: formatMultipleQueryPrice(
+    formattedValue: encodeMultipleQuery(
       Object.values(proposePriceInput).map((val) => val || "0"),
     ),
     inputError,

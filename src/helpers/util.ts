@@ -165,6 +165,18 @@ export function getPageForQuery({ actionType }: OracleQueryUI) {
   }
 }
 
+export function mapMultipleValueOutcomes(
+  valueText: (string | null | undefined)[] | undefined,
+  options: DropdownItem[] | undefined,
+) {
+  if (!options || !valueText) {
+    return;
+  }
+  return options.map(({ label }, i) => {
+    return { label, value: valueText[i] };
+  });
+}
+
 export function maybeGetValueTextFromOptions(
   valueText: string | null | undefined,
   options: DropdownItem[] | undefined,

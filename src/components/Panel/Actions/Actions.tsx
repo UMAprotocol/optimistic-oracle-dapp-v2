@@ -1,6 +1,9 @@
 import { ConnectButton } from "@/components";
 import { connectWallet, settled } from "@/constants";
-import { maybeGetValueTextFromOptions } from "@/helpers";
+import {
+  mapMultipleValueOutcomes,
+  maybeGetValueTextFromOptions,
+} from "@/helpers";
 import {
   usePageContext,
   usePrimaryPanelAction,
@@ -31,7 +34,6 @@ export function Actions({ query }: Props) {
     formattedProposePriceInput: inputProps.formattedValue,
   });
 
-  console.log("inputProps", inputProps);
   const { page } = usePageContext();
 
   const pageIsPropose = page === "propose";
@@ -90,12 +92,32 @@ export function Actions({ query }: Props) {
         <ProposeInput disabled={disableInput} {...inputProps} />
       ) : (
         <div
-          className="w-panel-content-width grid items-center min-h-[44px] mt-4 px-4 rounded bg-white"
+          className="w-panel-content-width grid items-center min-h-[44px] mt-4 p-4 rounded bg-white"
           style={{
             marginBottom: !pageIsSettled ? "20px" : "0px",
           }}
         >
-          <p className="sm:text-lg font-semibold">{valuesToShow.join(", ")}</p>
+          {valuesToShow.length > 1 ? (
+            <div className="flex flex-col gap-6 items-start justify-center w-full relative">
+              {(
+                mapMultipleValueOutcomes(valuesToShow, inputProps.items) ?? []
+              ).map(({ label, value }) => (
+                <>
+                  <label
+                    key={label}
+                    htmlFor={`input-${label}`}
+                    className="flex text-base gap-2 items-center font-normal "
+                  >
+                    {label}
+                    {" - "}
+                    <p className="font-semibold">{value}</p>
+                  </label>
+                </>
+              ))}
+            </div>
+          ) : (
+            <p className="sm:text-lg font-semibold">valuesToShow[0]</p>
+          )}
         </div>
       )}
       {!pageIsSettled && <Details {...query} />}

@@ -51,7 +51,7 @@ export type RequiredRequest = Omit<
   customLiveness: bigint | null | undefined;
 };
 function canConvertToSolidityRequest(
-  request: Request
+  request: Request,
 ): request is RequiredRequest {
   return Boolean(request.currency);
 }
@@ -186,7 +186,7 @@ function getLivenessEnds(customLivenessOrExpirationTime?: string | null) {
 
 function getPriceRequestValueText(
   proposedPrice: bigint | null | undefined,
-  settlementPrice: bigint | null | undefined
+  settlementPrice: bigint | null | undefined,
 ) {
   const price = settlementPrice ?? proposedPrice;
   if (price === null || price === undefined) return null;
@@ -194,13 +194,13 @@ function getPriceRequestValueText(
 }
 
 function isOOV1PriceRequest(
-  request: Request | Assertion
+  request: Request | Assertion,
 ): request is ParsedOOV1GraphEntity {
   return request.oracleType === "Optimistic Oracle V1";
 }
 
 function isOOV2PriceRequest(
-  request: Request | Assertion
+  request: Request | Assertion,
 ): request is ParsedOOV2GraphEntity {
   return request.oracleType === "Optimistic Oracle V2";
 }
@@ -464,7 +464,7 @@ function getOOV2SpecificValues(request: Request) {
 function makeMoreInformationList(
   query: Request | Assertion,
   umipNumber?: string | undefined,
-  umipUrl?: string | undefined
+  umipUrl?: string | undefined,
 ) {
   const moreInformation: MoreInformationItem[] = [];
 
@@ -493,7 +493,7 @@ function makeMoreInformationList(
         title: "Requester",
         text: query.requester,
         href: makeBlockExplorerLink(query.requester, query.chainId, "address"),
-      }
+      },
     );
 
     if (query.requestHash) {
@@ -543,7 +543,7 @@ function makeMoreInformationList(
         href: makeBlockExplorerLink(
           query.settlementRecipient,
           query.chainId,
-          "address"
+          "address",
         ),
       });
     }
@@ -572,7 +572,7 @@ function makeMoreInformationList(
         href: makeBlockExplorerLink(
           query.escalationManager,
           query.chainId,
-          "address"
+          "address",
         ),
       });
     }
@@ -583,7 +583,7 @@ function makeMoreInformationList(
         href: makeBlockExplorerLink(
           query.callbackRecipient,
           query.chainId,
-          "address"
+          "address",
         ),
       });
     }
@@ -622,7 +622,7 @@ function makeMoreInformationList(
         href: makeBlockExplorerLink(
           query.settlementRecipient,
           query.chainId,
-          "address"
+          "address",
         ),
       });
     }
@@ -695,7 +695,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     result.moreInformation = makeMoreInformationList(
       request,
       umipNumber,
-      umipUrl
+      umipUrl,
     );
   }
   if (exists(state)) {
@@ -730,8 +730,8 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
       // this is an array of strings now representings scores as uints
       result.valueText = decodeMultipleQuery(
         price.toString(),
-        result.proposeOptions.length
-      ).toString();
+        result.proposeOptions.length,
+      );
     }
   } else {
     result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
@@ -753,10 +753,10 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
 
   if (exists(proposalExpirationTimestamp)) {
     result.livenessEndsMilliseconds = getLivenessEnds(
-      proposalExpirationTimestamp
+      proposalExpirationTimestamp,
     );
     result.formattedLivenessEndsIn = toTimeFormatted(
-      proposalExpirationTimestamp
+      proposalExpirationTimestamp,
     );
   }
 
@@ -937,7 +937,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
       result.project = "OSnap";
       const spaceName = extractSnapshotSpace(result.queryText);
       const explanationRegex = result.queryText.match(
-        /explanation:"(.*?)",rules:/
+        /explanation:"(.*?)",rules:/,
       );
       const rulesRegex = result.queryText.match(/rules:"(.*?)"/);
       let title = "OSnap Request";
@@ -1032,7 +1032,7 @@ ${rulesRegex[1]}`;
 // input user values as regular numbers
 export function decodeMultipleQueryPriceAtIndex(
   encodedPrice: bigint,
-  index: number
+  index: number,
 ): number {
   if (index < 0 || index > 6) {
     throw new Error("Index out of range");
@@ -1043,7 +1043,7 @@ export function decodeMultipleQueryPriceAtIndex(
   // effectively extracting the 32-bit value at the specified index.
   return Number((encodedPrice >> BigInt(32 * index)) & BigInt(0xffffffff));
 }
-export function encodeMultipleQuery(values: number[]): bigint {
+export function encodeMultipleQuery(values: string[]): string {
   if (values.length > 7) {
     throw new Error("Maximum of 7 values allowed");
   }
@@ -1051,22 +1051,23 @@ export function encodeMultipleQuery(values: number[]): bigint {
   let encodedPrice = BigInt(0);
 
   for (let i = 0; i < values.length; i++) {
-    if (!Number.isInteger(values[i])) {
+    const numValue = Number(values[i]);
+    if (!Number.isInteger(numValue)) {
       throw new Error("All values must be integers");
     }
-    if (values[i] > 0xffffffff || values[i] < 0) {
+    if (numValue > 0xffffffff || numValue < 0) {
       throw new Error("Values must be uint32 (0 <= value <= 2^32 - 1)");
     }
     // Shift the current value to its correct position in the 256-bit field.
     // Each value is a 32-bit unsigned integer, so we shift it by 32 bits times its index.
     // This places the first value at the least significant bits and subsequent values
     // at increasingly higher bit positions.
-    encodedPrice |= BigInt(values[i]) << BigInt(32 * i);
+    encodedPrice |= BigInt(numValue) << BigInt(32 * i);
   }
 
-  return encodedPrice;
+  return encodedPrice.toString();
 }
-export function decodeMultipleQuery(price: string, length: number): number[] {
+export function decodeMultipleQuery(price: string, length: number): string[] {
   const result: number[] = [];
   const bigIntPrice = BigInt(price);
 
@@ -1074,7 +1075,7 @@ export function decodeMultipleQuery(price: string, length: number): number[] {
     const value = decodeMultipleQueryPriceAtIndex(bigIntPrice, i);
     result.push(value);
   }
-  return result;
+  return result.map((x) => x.toString());
 }
 export function isTooEarly(price: bigint): boolean {
   return price === MIN_INT256;
