@@ -1,6 +1,9 @@
 import { ConnectButton } from "@/components";
 import { connectWallet, settled } from "@/constants";
-import { maybeGetValueTextFromOptions } from "@/helpers";
+import {
+  mapMultipleValueOutcomes,
+  maybeGetValueTextFromOptions,
+} from "@/helpers";
 import {
   usePageContext,
   usePrimaryPanelAction,
@@ -14,20 +17,21 @@ import { Details } from "./Details";
 import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
-import { ProposeInput } from "./ProposeInput";
 import { SimulateIfOsnap } from "../TenderlySimulation";
+import { ProposeInput } from "./ProposeInput";
 
 interface Props {
   query: OracleQueryUI;
 }
+
 export function Actions({ query }: Props) {
   const { oracleType, valueText, actionType, proposeOptions, queryText } =
     query;
-  const { proposePriceInput, inputError, ...inputProps } =
-    useProposePriceInput(query);
+  const inputProps = useProposePriceInput(query);
+
   const primaryAction = usePrimaryPanelAction({
     query,
-    proposePriceInput,
+    formattedProposePriceInput: inputProps.formattedValue,
   });
 
   const { page } = usePageContext();
@@ -53,7 +57,10 @@ export function Actions({ query }: Props) {
   const showConnectButton =
     isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
   const disableInput = alreadyProposed || alreadySettled;
-  const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
+  const errors = [
+    inputProps.inputError,
+    ...(primaryAction?.errors || []),
+  ].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
   const valuesToShow = Array.isArray(valueText)
@@ -82,19 +89,35 @@ export function Actions({ query }: Props) {
         <SectionTitle>{actionsTitle}</SectionTitle>
       </SectionTitleWrapper>
       {pageIsPropose ? (
-        <ProposeInput
-          value={proposePriceInput}
-          disabled={disableInput}
-          {...inputProps}
-        />
+        <ProposeInput disabled={disableInput} {...inputProps} />
       ) : (
         <div
-          className="w-panel-content-width grid items-center min-h-[44px] mt-4 px-4 rounded bg-white"
+          className="w-panel-content-width grid items-center min-h-[44px] mt-4 p-4 rounded bg-white"
           style={{
             marginBottom: !pageIsSettled ? "20px" : "0px",
           }}
         >
-          <p className="sm:text-lg font-semibold">{valuesToShow.join(", ")}</p>
+          {valuesToShow.length > 1 ? (
+            <div className="flex flex-col gap-6 items-start justify-center w-full relative">
+              {(
+                mapMultipleValueOutcomes(valuesToShow, inputProps.items) ?? []
+              ).map(({ label, value }) => (
+                <>
+                  <label
+                    key={label}
+                    htmlFor={`input-${label}`}
+                    className="flex text-base gap-2 items-center font-normal "
+                  >
+                    {label}
+                    {" - "}
+                    <p className="font-semibold">{value}</p>
+                  </label>
+                </>
+              ))}
+            </div>
+          ) : (
+            <p className="sm:text-lg font-semibold">valuesToShow[0]</p>
+          )}
         </div>
       )}
       {!pageIsSettled && <Details {...query} />}

@@ -1,6 +1,7 @@
 import { maybeGetValueTextFromOptions } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { TD, Text } from "./style";
+import ExternalLink from "public/assets/icons/external-link.svg";
 
 export function SettledCells({
   oracleType,
@@ -17,7 +18,15 @@ export function SettledCells({
         <Text>{oracleType}</Text>
       </TD>
       <TD>
-        <Text>{valuesToShow.join(", ")}</Text>
+        <Text>
+          {valuesToShow.length > 1 ? (
+            <span>
+              See Outcome <ExternalLink className="inline rounded-none" />{" "}
+            </span>
+          ) : (
+            valuesToShow[0]
+          )}
+        </Text>
       </TD>
     </>
   );

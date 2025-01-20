@@ -731,7 +731,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
       result.valueText = decodeMultipleQuery(
         price.toString(),
         result.proposeOptions.length,
-      ).toString();
+      );
     }
   } else {
     result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
@@ -1043,7 +1043,7 @@ export function decodeMultipleQueryPriceAtIndex(
   // effectively extracting the 32-bit value at the specified index.
   return Number((encodedPrice >> BigInt(32 * index)) & BigInt(0xffffffff));
 }
-export function encodeMultipleQuery(values: number[]): bigint {
+export function encodeMultipleQuery(values: string[]): string {
   if (values.length > 7) {
     throw new Error("Maximum of 7 values allowed");
   }
@@ -1051,22 +1051,23 @@ export function encodeMultipleQuery(values: number[]): bigint {
   let encodedPrice = BigInt(0);
 
   for (let i = 0; i < values.length; i++) {
-    if (!Number.isInteger(values[i])) {
+    const numValue = Number(values[i]);
+    if (!Number.isInteger(numValue)) {
       throw new Error("All values must be integers");
     }
-    if (values[i] > 0xffffffff || values[i] < 0) {
+    if (numValue > 0xffffffff || numValue < 0) {
       throw new Error("Values must be uint32 (0 <= value <= 2^32 - 1)");
     }
     // Shift the current value to its correct position in the 256-bit field.
     // Each value is a 32-bit unsigned integer, so we shift it by 32 bits times its index.
     // This places the first value at the least significant bits and subsequent values
     // at increasingly higher bit positions.
-    encodedPrice |= BigInt(values[i]) << BigInt(32 * i);
+    encodedPrice |= BigInt(numValue) << BigInt(32 * i);
   }
 
-  return encodedPrice;
+  return encodedPrice.toString();
 }
-export function decodeMultipleQuery(price: string, length: number): number[] {
+export function decodeMultipleQuery(price: string, length: number): string[] {
   const result: number[] = [];
   const bigIntPrice = BigInt(price);
 
@@ -1074,7 +1075,7 @@ export function decodeMultipleQuery(price: string, length: number): number[] {
     const value = decodeMultipleQueryPriceAtIndex(bigIntPrice, i);
     result.push(value);
   }
-  return result;
+  return result.map((x) => x.toString());
 }
 export function isTooEarly(price: bigint): boolean {
   return price === MIN_INT256;

@@ -11,6 +11,8 @@ interface Props {
   placeholder?: string;
   maxDecimals?: number;
   allowNegative?: boolean;
+  className?: string;
+  id?: string;
 }
 /**
  * A component for entering decimal values.
@@ -32,6 +34,7 @@ export function DecimalInput({
   placeholder,
   maxDecimals = 18,
   allowNegative = true,
+  id,
 }: Props) {
   const onChange = useHandleDecimalInput({
     onInput,
@@ -42,7 +45,7 @@ export function DecimalInput({
   });
 
   function makeStep() {
-    return `0.${"0".repeat(maxDecimals - 1)}1`;
+    return maxDecimals ? `0.${"0".repeat(maxDecimals - 1)}1` : "1";
   }
 
   return (
@@ -59,6 +62,7 @@ export function DecimalInput({
         minLength={1}
         maxLength={79}
         spellCheck="false"
+        id={id}
       />
     </Wrapper>
   );
@@ -72,7 +76,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   width: 100%;
   height: 44px;
   padding-left: 16px;
