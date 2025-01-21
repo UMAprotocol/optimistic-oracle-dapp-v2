@@ -423,6 +423,6 @@ export type MetaData = {
 
 export type DropdownItem = {
   label: string;
-  value: string | number;
+  value: string | number | undefined;
   secondaryLabel?: string | undefined;
 };

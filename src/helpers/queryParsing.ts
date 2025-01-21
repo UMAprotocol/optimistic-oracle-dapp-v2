@@ -373,7 +373,7 @@ function decodeMultipleValuesQuery(decodedAncillaryData: string) {
     description: query.description,
     proposeOptions: query.labels.map((opt: string) => ({
       label: opt,
-      value: 0,
+      value: undefined,
       secondaryLabel: undefined,
     })),
   };

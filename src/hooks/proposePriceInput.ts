@@ -1,6 +1,6 @@
 import { encodeMultipleQuery } from "@/helpers";
 import type { DropdownItem, OracleQueryUI } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const INPUT_TYPES = {
   SINGLE: "SINGLE",
@@ -27,7 +27,7 @@ function useSinglePriceInput({ proposeOptions }: OracleQueryUI) {
     if (item.value === "custom") {
       setIsCustomInput(true);
     } else {
-      setProposePriceInput(item.value.toString());
+      setProposePriceInput((item.value ?? "").toString());
     }
   }
 
@@ -56,11 +56,20 @@ function useSinglePriceInput({ proposeOptions }: OracleQueryUI) {
 function useMultiplePriceInput({ proposeOptions }: OracleQueryUI) {
   const [proposePriceInput, setProposePriceInput] = useState(
     Object.fromEntries(
-      proposeOptions?.map((o) => [o.label, String(o.value)]) ?? [],
+      proposeOptions?.map((o) => [o.label, (o.value ?? "").toString()]) ?? [],
     ),
   );
 
-  const [inputError, setInputError] = useState("");
+  useEffect(() => {
+    setProposePriceInput(
+      Object.fromEntries(
+        proposeOptions?.map((o) => [o.label, (o.value ?? "").toString()]) ?? [],
+      ),
+    );
+    setInputError("");
+  }, [proposeOptions]);
+
+  const [inputError, setInputError] = useState<string>("");
 
   function onChange(item: DropdownItem) {
     setProposePriceInput((current) => {
@@ -71,17 +80,27 @@ function useMultiplePriceInput({ proposeOptions }: OracleQueryUI) {
     });
   }
 
+  const preEncode = Object.values(proposePriceInput).map((x) =>
+    x !== undefined ? x : "0",
+  );
+  let formattedValue;
+  try {
+    if (!inputError) {
+      formattedValue = encodeMultipleQuery(preEncode);
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      setInputError(err.message);
+    }
+  }
   return {
     inputType: INPUT_TYPES.MULTIPLE,
     proposePriceInput,
     value: proposePriceInput,
-    formattedValue: encodeMultipleQuery(
-      Object.values(proposePriceInput).map((val) => val || "0"),
-    ),
+    formattedValue,
     inputError,
     items: proposeOptions,
     onChange,
-    onInput: setProposePriceInput,
     addErrorMessage: setInputError,
     removeErrorMessage: () => setInputError(""),
   };
