@@ -99,7 +99,9 @@ const Content = styled(RadixTooltip.Content)`
   }
 `;
 
-const TriggerWrapper = styled(RadixTooltip.Trigger)``;
+const TriggerWrapper = styled(RadixTooltip.Trigger)`
+  display: inline-flex;
+`;
 
 const Trigger = styled.span`
   button :is(:disabled) {
