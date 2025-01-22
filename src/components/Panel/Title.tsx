@@ -19,7 +19,7 @@ export function Title({ project, title, isLoading, close }: Props) {
   const buttonClampedWidth = `clamp(${buttonMinWidth}, ${buttonPreferredWidth}, ${buttonMaxWidth})`;
 
   const iconStyles =
-    "min-w-[1.25rem] w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)]";
+    "min-w-[1.25rem] flex items-center justify-center w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)]";
   return (
     <div className="grid grid-cols-[auto,1fr,auto] gap-page-padding min-h-[84px] px-page-padding lg:px-7 py-5 bg-blue-grey-700">
       {isLoading ? (
@@ -29,7 +29,10 @@ export function Title({ project, title, isLoading, close }: Props) {
       ) : (
         <ProjectIcon className={iconStyles} />
       )}
-      <h1 className="max-w-[400px] text-lg text-light" id="panel-title">
+      <h1
+        className="inline-flex items-center max-w-[400px] text-lg text-light"
+        id="panel-title"
+      >
         {isLoading ? (
           <LoadingSkeleton count={2} height={16} />
         ) : (
