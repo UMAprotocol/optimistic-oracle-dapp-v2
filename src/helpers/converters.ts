@@ -41,6 +41,8 @@ import { getQueryMetaData } from "./queryParsing";
 
 import { minInt256, maxInt256 } from "viem";
 
+export { minInt256, maxInt256 };
+
 export type RequiredRequest = Omit<
   Request,
   "currency" | "bond" | "customLiveness"
@@ -244,11 +246,14 @@ function makeProposePriceParams({
   oracleAddress: Address;
   chainId: ChainId;
 }) {
-  return (proposedPrice?: string) => {
+  return (proposedPrice?: string | bigint) => {
     if (!proposedPrice) return;
     if (!bytes32Identifier) return;
     if (!ancillaryData) return;
-    let proposedPriceFormatted = parseEther(proposedPrice).toBigInt();
+    let proposedPriceFormatted =
+      typeof proposedPrice === "string"
+        ? parseEther(proposedPrice).toBigInt()
+        : proposedPrice;
     // multiple values is pre formatted after user inputs the proposed answers and its already in wei
     // this is the exception to all other identifiers which user inputs in decimals and must be converted to wei
     if (parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES") {
@@ -1089,6 +1094,7 @@ export function decodeMultipleQuery(price: string, length: number): string[] {
   }
   return result.map((x) => x.toString());
 }
+
 export function isTooEarly(price: bigint): boolean {
   return price === minInt256;
 }

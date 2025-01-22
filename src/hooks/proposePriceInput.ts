@@ -1,4 +1,4 @@
-import { encodeMultipleQuery } from "@/helpers";
+import { encodeMultipleQuery, maxInt256 } from "@/helpers";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { useEffect, useState } from "react";
 
@@ -59,6 +59,7 @@ function useMultiplePriceInput({ proposeOptions }: OracleQueryUI) {
       proposeOptions?.map((o) => [o.label, (o.value ?? "").toString()]) ?? [],
     ),
   );
+  const [isUnresolvable, setIsUnresolvable] = useState(false);
 
   useEffect(() => {
     setProposePriceInput(
@@ -86,14 +87,19 @@ function useMultiplePriceInput({ proposeOptions }: OracleQueryUI) {
   let formattedValue;
   try {
     if (!inputError) {
-      formattedValue = encodeMultipleQuery(preEncode);
+      formattedValue = isUnresolvable
+        ? maxInt256
+        : encodeMultipleQuery(preEncode);
     }
   } catch (err) {
     if (err instanceof Error) {
       setInputError(err.message);
     }
   }
+
   return {
+    isUnresolvable,
+    setIsUnresolvable,
     inputType: INPUT_TYPES.MULTIPLE,
     proposePriceInput,
     value: proposePriceInput,
