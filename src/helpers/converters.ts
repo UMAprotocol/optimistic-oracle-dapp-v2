@@ -39,8 +39,7 @@ import { erc20ABI } from "wagmi";
 import { formatBytes32String } from "./ethers";
 import { getQueryMetaData } from "./queryParsing";
 
-export const MIN_INT256 = -(BigInt(2) ** BigInt(255));
-export const MAX_INT256 = BigInt(2) ** BigInt(255) - BigInt(1);
+import { minInt256, maxInt256 } from "viem";
 
 export type RequiredRequest = Omit<
   Request,
@@ -1091,9 +1090,9 @@ export function decodeMultipleQuery(price: string, length: number): string[] {
   return result.map((x) => x.toString());
 }
 export function isTooEarly(price: bigint): boolean {
-  return price === MIN_INT256;
+  return price === minInt256;
 }
 
 export function isUnresolvable(price: bigint): boolean {
-  return price === MAX_INT256;
+  return price === maxInt256;
 }
