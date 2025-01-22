@@ -112,7 +112,7 @@ export function Actions({ query }: Props) {
               ))}
             </div>
           ) : (
-            <p className="sm:text-lg font-semibold">valuesToShow[0]</p>
+            <p className="sm:text-lg font-semibold">{valuesToShow[0]}</p>
           )}
         </div>
       )}

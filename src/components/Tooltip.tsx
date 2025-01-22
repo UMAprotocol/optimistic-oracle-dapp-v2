@@ -100,7 +100,7 @@ const Content = styled(RadixTooltip.Content)`
 `;
 
 const TriggerWrapper = styled(RadixTooltip.Trigger)`
-  display: inline-flex;
+  display: inline;
 `;
 
 const Trigger = styled.span`

@@ -10,6 +10,7 @@ import type { Address } from "wagmi";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { isEarlyVote } from "@/constants";
+import { isUnresolvable } from "./validators";
 
 /**
  * Adds an opacity value to an hsl string
@@ -183,7 +184,11 @@ export function maybeGetValueTextFromOptions(
 ) {
   return (
     options?.find(({ value }) => value === valueText)?.label ??
-    (isEarlyVote(valueText) ? "Early Request" : valueText)
+    (isEarlyVote(valueText)
+      ? "Early Request"
+      : isUnresolvable(valueText ?? "")
+      ? "Unresolvable"
+      : valueText)
   );
 }
 

@@ -25,6 +25,7 @@ import {
   alreadySettledV3,
   handleNotifications,
 } from "@/helpers";
+import { isMultipleValuesInputValid, isInputValid } from "@/helpers/validators";
 import { useBalanceAndAllowance } from "@/hooks";
 import type { PriceInputProps } from "@/hooks";
 import type { ActionTitle, OracleQueryUI } from "@/types";
@@ -318,10 +319,22 @@ export function useProposeAction({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [proposePriceTransaction]);
 
-  if (proposePriceParams === undefined) return undefined;
+  if (
+    query?.identifier === "MULTIPLE_VALUES" &&
+    !isMultipleValuesInputValid(
+      proposePriceInput,
+      query.proposeOptions?.length ?? 0,
+    )
+  ) {
+    return {
+      title: propose,
+      disabled: true,
+      disabledReason: 'Either enter all fields, or mark "Unresolvable"',
+    };
+  }
 
   // TODO validate input
-  if (proposePriceInput === undefined || proposePriceInput?.length === 0) {
+  if (!isInputValid(proposePriceInput ?? "")) {
     return {
       title: propose,
       disabled: true,
