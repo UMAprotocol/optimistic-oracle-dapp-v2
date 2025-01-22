@@ -3,6 +3,7 @@ import type { OracleQueryUI } from "@/types";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
 import { TD, Text } from "./style";
+import ExternalLink from "public/assets/icons/external-link.svg";
 
 export function VerifyCells({
   valueText,
@@ -20,7 +21,16 @@ export function VerifyCells({
   return (
     <>
       <TD>
-        <Text>{valuesToShow.join(",")}</Text>
+        <Text>
+          {valuesToShow.length > 1 ? (
+            <span>
+              See Proposal
+              <ExternalLink className="inline rounded-none ml-2" />{" "}
+            </span>
+          ) : (
+            valuesToShow[0]
+          )}
+        </Text>
       </TD>
       <TD>
         <Text>
