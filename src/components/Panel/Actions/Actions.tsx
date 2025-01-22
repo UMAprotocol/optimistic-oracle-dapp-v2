@@ -75,11 +75,7 @@ export function Actions({ query }: Props) {
           Assertion <span>(proposal)</span>
         </>
       );
-    return (
-      <>
-        Request <span>(price)</span>
-      </>
-    );
+    return <>Propose Answer</>;
   }
 
   return (

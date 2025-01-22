@@ -16,8 +16,6 @@ import { VerifyCells } from "./VerifyCells";
  */
 export function Row({ page, row }: { page: PageName; row: OracleQueryUI }) {
   const { openPanel } = usePanelContext();
-
-  console.log(row);
   const innerCells = {
     verify: <VerifyCells {...row} />,
     propose: <ProposeCells query={row} />,

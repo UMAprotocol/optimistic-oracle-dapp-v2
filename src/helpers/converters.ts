@@ -249,6 +249,13 @@ function makeProposePriceParams({
     if (!proposedPrice) return;
     if (!bytes32Identifier) return;
     if (!ancillaryData) return;
+    let proposedPriceFormatted = parseEther(proposedPrice).toBigInt();
+    // multiple values is pre formatted after user inputs the proposed answers and its already in wei
+    // this is the exception to all other identifiers which user inputs in decimals and must be converted to wei
+    if (parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES") {
+      proposedPriceFormatted = BigInt(proposedPrice);
+    }
+
     return {
       address: oracleAddress,
       abi: proposePriceAbi,
@@ -259,7 +266,7 @@ function makeProposePriceParams({
         bytes32Identifier,
         time,
         ancillaryData,
-        parseEther(proposedPrice).toBigInt(),
+        proposedPriceFormatted,
       ] as const,
     };
   };
@@ -286,6 +293,12 @@ function makeProposePriceSkinnyParams({
     if (!proposedPrice) return;
     if (!bytes32Identifier) return;
     if (!ancillaryData) return;
+    let proposedPriceFormatted = parseEther(proposedPrice).toBigInt();
+    // multiple values is pre formatted after user inputs the proposed answers and its already in wei
+    // this is the exception to all other identifiers which user inputs in decimals and must be converted to wei
+    if (parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES") {
+      proposedPriceFormatted = BigInt(proposedPrice);
+    }
     return {
       address: oracleAddress,
       abi: skinnyProposePriceAbi,
@@ -297,7 +310,7 @@ function makeProposePriceSkinnyParams({
         time,
         ancillaryData,
         request,
-        parseEther(proposedPrice).toBigInt(),
+        proposedPriceFormatted,
       ] as const,
     };
   };
