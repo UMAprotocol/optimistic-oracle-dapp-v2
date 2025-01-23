@@ -70,7 +70,7 @@ export function DecimalInput({
 
 const Wrapper = styled.div`
   font: var(--body-md);
-  max-width: var(--panel-content-width);
+  /* max-width: var(--panel-content-width); */
   &[aria-disabled="true"] {
     input {
       border-color: transparent;
