@@ -10,6 +10,7 @@ import type { Address } from "wagmi";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { isEarlyVote } from "@/constants";
+import { isUnresolvable } from "./validators";
 
 /**
  * Adds an opacity value to an hsl string
@@ -172,6 +173,18 @@ export function mapMultipleValueOutcomes(
   if (!options || !valueText) {
     return;
   }
+
+  // if unresolvable, we want to display "Unresolvable" for each label
+  if (
+    Array.isArray(valueText) &&
+    valueText.length === 1 &&
+    isUnresolvable(valueText[0]!)
+  ) {
+    return options.map(({ label }) => {
+      return { label, value: "Unresolvable" };
+    });
+  }
+
   return options.map(({ label }, i) => {
     return { label, value: valueText[i] };
   });
@@ -183,7 +196,11 @@ export function maybeGetValueTextFromOptions(
 ) {
   return (
     options?.find(({ value }) => value === valueText)?.label ??
-    (isEarlyVote(valueText) ? "Early Request" : valueText)
+    (isEarlyVote(valueText)
+      ? "Early Request"
+      : // : isUnresolvable(valueText ?? "")
+        // ? "Unresolvable"
+        valueText)
   );
 }
 

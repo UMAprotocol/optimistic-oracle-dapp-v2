@@ -70,9 +70,11 @@ export function DecimalInput({
 
 const Wrapper = styled.div`
   font: var(--body-md);
-  max-width: var(--panel-content-width);
+  /* max-width: var(--panel-content-width); */
   &[aria-disabled="true"] {
-    opacity: 0.25;
+    input {
+      border-color: transparent;
+    }
   }
 `;
 
@@ -81,8 +83,9 @@ export const Input = styled.input`
   height: 44px;
   padding-left: 16px;
   border: 1px solid var(--blue-grey-500);
-  border-radius: 4px;
+  border-radius: 5px;
   color: var(--dark-text);
+  background-color: white;
 
   :disabled {
     cursor: not-allowed;

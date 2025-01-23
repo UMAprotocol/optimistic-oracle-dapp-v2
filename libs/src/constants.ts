@@ -1,6 +1,10 @@
 import type { OracleType } from "@shared/types";
 import { ethers } from "ethers";
 
+import { minInt256, maxInt256 } from "viem";
+
+export { minInt256, maxInt256 };
+
 const getAddress = ethers.utils.getAddress;
 type ContractType = OracleType | "Erc20";
 type ContractInfo = {

@@ -1,6 +1,7 @@
 import { encodeMultipleQuery } from "@/helpers";
 import type { DropdownItem, OracleQueryUI } from "@/types";
-import { useEffect, useState } from "react";
+import { maxInt256 } from "@libs/constants";
+import { useEffect, useMemo, useState } from "react";
 
 export const INPUT_TYPES = {
   SINGLE: "SINGLE",
@@ -60,6 +61,8 @@ function useMultiplePriceInput({ proposeOptions }: OracleQueryUI) {
     ),
   );
 
+  const [isUnresolvable, setIsUnresolvable] = useState(false);
+
   useEffect(() => {
     setProposePriceInput(
       Object.fromEntries(
@@ -80,20 +83,26 @@ function useMultiplePriceInput({ proposeOptions }: OracleQueryUI) {
     });
   }
 
-  const preEncode = Object.values(proposePriceInput).map((x) =>
-    x !== undefined ? x : "0",
-  );
-  let formattedValue;
-  try {
-    if (!inputError) {
-      formattedValue = encodeMultipleQuery(preEncode);
+  const formattedValue = useMemo(() => {
+    try {
+      if (isUnresolvable) {
+        setInputError("");
+        return maxInt256.toString();
+      } else {
+        setInputError("");
+        return encodeMultipleQuery(Object.values(proposePriceInput));
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setInputError(err.message);
+      }
     }
-  } catch (err) {
-    if (err instanceof Error) {
-      setInputError(err.message);
-    }
-  }
+    return undefined;
+  }, [isUnresolvable, inputError, proposePriceInput]);
+
   return {
+    isUnresolvable,
+    setIsUnresolvable,
     inputType: INPUT_TYPES.MULTIPLE,
     proposePriceInput,
     value: proposePriceInput,

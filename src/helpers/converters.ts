@@ -38,9 +38,7 @@ import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
 import { formatBytes32String } from "./ethers";
 import { getQueryMetaData } from "./queryParsing";
-
-export const MIN_INT256 = -(BigInt(2) ** BigInt(255));
-export const MAX_INT256 = BigInt(2) ** BigInt(255) - BigInt(1);
+import { isUnresolvable } from "./validators";
 
 export type RequiredRequest = Omit<
   Request,
@@ -249,12 +247,13 @@ function makeProposePriceParams({
     if (!proposedPrice) return;
     if (!bytes32Identifier) return;
     if (!ancillaryData) return;
-    let proposedPriceFormatted = parseEther(proposedPrice).toBigInt();
+
     // multiple values is pre formatted after user inputs the proposed answers and its already in wei
     // this is the exception to all other identifiers which user inputs in decimals and must be converted to wei
-    if (parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES") {
-      proposedPriceFormatted = BigInt(proposedPrice);
-    }
+    const proposedPriceFormatted =
+      parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES"
+        ? BigInt(proposedPrice)
+        : parseEther(proposedPrice).toBigInt();
 
     return {
       address: oracleAddress,
@@ -293,12 +292,14 @@ function makeProposePriceSkinnyParams({
     if (!proposedPrice) return;
     if (!bytes32Identifier) return;
     if (!ancillaryData) return;
-    let proposedPriceFormatted = parseEther(proposedPrice).toBigInt();
+
     // multiple values is pre formatted after user inputs the proposed answers and its already in wei
     // this is the exception to all other identifiers which user inputs in decimals and must be converted to wei
-    if (parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES") {
-      proposedPriceFormatted = BigInt(proposedPrice);
-    }
+    const proposedPriceFormatted =
+      parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES"
+        ? BigInt(proposedPrice)
+        : parseEther(proposedPrice).toBigInt();
+
     return {
       address: oracleAddress,
       abi: skinnyProposePriceAbi,
@@ -1064,6 +1065,9 @@ export function encodeMultipleQuery(values: string[]): string {
   let encodedPrice = BigInt(0);
 
   for (let i = 0; i < values.length; i++) {
+    if (values[i] === undefined || values[i] === "") {
+      throw new Error("All values must be defined");
+    }
     const numValue = Number(values[i]);
     if (!Number.isInteger(numValue)) {
       throw new Error("All values must be integers");
@@ -1080,20 +1084,21 @@ export function encodeMultipleQuery(values: string[]): string {
 
   return encodedPrice.toString();
 }
-export function decodeMultipleQuery(price: string, length: number): string[] {
+
+export function decodeMultipleQuery(
+  price: string,
+  length: number,
+): string[] | string {
   const result: number[] = [];
   const bigIntPrice = BigInt(price);
+
+  if (isUnresolvable(price)) {
+    return price;
+  }
 
   for (let i = 0; i < length; i++) {
     const value = decodeMultipleQueryPriceAtIndex(bigIntPrice, i);
     result.push(value);
   }
   return result.map((x) => x.toString());
-}
-export function isTooEarly(price: bigint): boolean {
-  return price === MIN_INT256;
-}
-
-export function isUnresolvable(price: bigint): boolean {
-  return price === MAX_INT256;
 }
