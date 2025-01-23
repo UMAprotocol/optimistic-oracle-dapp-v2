@@ -173,6 +173,18 @@ export function mapMultipleValueOutcomes(
   if (!options || !valueText) {
     return;
   }
+
+  // if unresolvable, we want to display "Unresolvable" for each label
+  if (
+    Array.isArray(valueText) &&
+    valueText.length === 1 &&
+    isUnresolvable(valueText[0]!)
+  ) {
+    return options.map(({ label }) => {
+      return { label, value: "Unresolvable" };
+    });
+  }
+
   return options.map(({ label }, i) => {
     return { label, value: valueText[i] };
   });
@@ -186,9 +198,9 @@ export function maybeGetValueTextFromOptions(
     options?.find(({ value }) => value === valueText)?.label ??
     (isEarlyVote(valueText)
       ? "Early Request"
-      : isUnresolvable(valueText ?? "")
-      ? "Unresolvable"
-      : valueText)
+      : // : isUnresolvable(valueText ?? "")
+        // ? "Unresolvable"
+        valueText)
   );
 }
 

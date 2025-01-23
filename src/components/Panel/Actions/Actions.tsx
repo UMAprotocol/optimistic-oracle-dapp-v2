@@ -64,6 +64,7 @@ export function Actions({ query }: Props) {
   ].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
+
   const valuesToShow = Array.isArray(valueText)
     ? valueText
     : [maybeGetValueTextFromOptions(valueText, proposeOptions)];
@@ -79,6 +80,8 @@ export function Actions({ query }: Props) {
     return <>Propose Answer</>;
   }
 
+  const isMultipleValuesRequest = query.identifier === "MULTIPLE_VALUES";
+
   return (
     <div className="bg-grey-400 px-page-padding lg:px-7 pt-5 pb-6">
       <SectionTitleWrapper>
@@ -89,7 +92,7 @@ export function Actions({ query }: Props) {
         <ProposeInput disabled={disableInput} {...inputProps} />
       ) : (
         <>
-          {valuesToShow.length > 1 ? (
+          {isMultipleValuesRequest ? (
             <div className="flex flex-col gap-2 items-start justify-between w-full mb-2 relative">
               <div
                 className={cn(
