@@ -2,6 +2,7 @@ import { maybeGetValueTextFromOptions } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { TD, Text } from "./style";
 import ExternalLink from "public/assets/icons/external-link.svg";
+import { isUnresolvable } from "@/helpers/validators";
 
 export function SettledCells({
   oracleType,
@@ -23,6 +24,8 @@ export function SettledCells({
             <span>
               See Outcome <ExternalLink className="inline rounded-none" />{" "}
             </span>
+          ) : isUnresolvable(valuesToShow[0] ?? "") ? (
+            "Unresolvable"
           ) : (
             valuesToShow[0]
           )}

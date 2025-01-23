@@ -4,6 +4,7 @@ import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
 import { TD, Text } from "./style";
 import ExternalLink from "public/assets/icons/external-link.svg";
+import { isUnresolvable } from "@/helpers/validators";
 
 export function VerifyCells({
   valueText,
@@ -27,6 +28,8 @@ export function VerifyCells({
               See Proposal
               <ExternalLink className="inline rounded-none ml-2" />{" "}
             </span>
+          ) : isUnresolvable(valuesToShow[0] ?? "") ? (
+            "Unresolvable"
           ) : (
             valuesToShow[0]
           )}
