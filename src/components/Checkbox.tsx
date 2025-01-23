@@ -13,7 +13,6 @@ import styled from "styled-components";
 interface Props {
   checked: CheckboxState;
   itemName: string;
-  count: number;
   onCheckedChange: ({
     checked,
     itemName,
@@ -21,6 +20,8 @@ interface Props {
     checked: CheckboxState;
     itemName: string;
   }) => void;
+  count?: number;
+  className?: string;
 }
 /**
  * A checkbox component that is used in the filters component.
@@ -29,9 +30,16 @@ interface Props {
  * @param count The number of items that match the checkbox item.
  * @param onCheckedChange A callback function that is called when the checkbox is checked or unchecked.
  */
-export function Checkbox({ itemName, checked, count, onCheckedChange }: Props) {
+export function Checkbox({
+  itemName,
+  checked,
+  count,
+  onCheckedChange,
+  className,
+}: Props) {
   return (
     <Wrapper
+      className={className}
       checked={checked}
       onCheckedChange={(checked) => onCheckedChange({ checked, itemName })}
       disabled={count === 0}
@@ -44,7 +52,7 @@ export function Checkbox({ itemName, checked, count, onCheckedChange }: Props) {
         </CheckboxBox>
         <CheckboxItemName>{itemName}</CheckboxItemName>
       </CheckboxNameAndBoxWrapper>
-      <CheckboxItemCount>{count}</CheckboxItemCount>
+      {count !== undefined && <CheckboxItemCount>{count}</CheckboxItemCount>}
     </Wrapper>
   );
 }

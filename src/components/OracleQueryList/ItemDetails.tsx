@@ -27,9 +27,14 @@ export function ItemDetails({
     proposeOptions,
   } = item;
 
-  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
+  const valuesToShow = Array.isArray(valueText)
+    ? valueText
+    : [maybeGetValueTextFromOptions(valueText, proposeOptions)];
+
   const hasBond = bond !== null;
   const hasReward = reward !== null;
+
+  // console.log({ valuesToShow });
 
   const verifyDetails = (
     <ItemDetailsWrapper>
@@ -43,7 +48,9 @@ export function ItemDetails({
       )}
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Proposal</ItemDetailsText>
-        <ItemDetailsText>{valueToShow}</ItemDetailsText>
+        {valuesToShow.map((value, index) => (
+          <ItemDetailsText key={index}>{value}</ItemDetailsText>
+        ))}
       </ItemDetailsInnerWrapper>
       {livenessEndsMilliseconds !== undefined &&
       timeMilliseconds !== undefined ? (
@@ -90,7 +97,7 @@ export function ItemDetails({
     <ItemDetailsWrapper>
       <ItemDetailsInnerWrapper>
         <ItemDetailsText>Settled As</ItemDetailsText>
-        <ItemDetailsText>{valueToShow}</ItemDetailsText>
+        <ItemDetailsText>{valuesToShow.join(",")}</ItemDetailsText>
       </ItemDetailsInnerWrapper>
     </ItemDetailsWrapper>
   );
