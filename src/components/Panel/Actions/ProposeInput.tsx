@@ -59,11 +59,7 @@ function MultipleValuesInput(props: MultipleInputProps) {
   if (!items?.length) return null;
 
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-2 items-start justify-between w-full mb-2 relative",
-      )}
-    >
+    <div className="flex flex-col gap-2 items-start justify-between w-full mb-2 relative">
       <div
         className={cn(
           "flex gap-5 items-start justify-between w-full mb-2 relative",

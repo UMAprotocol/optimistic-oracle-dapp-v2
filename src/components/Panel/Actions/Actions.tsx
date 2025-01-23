@@ -1,6 +1,7 @@
 import { ConnectButton } from "@/components";
 import { connectWallet, settled } from "@/constants";
 import {
+  cn,
   mapMultipleValueOutcomes,
   maybeGetValueTextFromOptions,
 } from "@/helpers";
@@ -87,34 +88,49 @@ export function Actions({ query }: Props) {
       {pageIsPropose ? (
         <ProposeInput disabled={disableInput} {...inputProps} />
       ) : (
-        <div
-          className="w-panel-content-width grid items-center min-h-[44px] mt-4 p-4 rounded bg-white"
-          style={{
-            marginBottom: !pageIsSettled ? "20px" : "0px",
-          }}
-        >
+        <>
           {valuesToShow.length > 1 ? (
-            <div className="flex flex-col gap-6 items-start justify-center w-full relative">
-              {(
-                mapMultipleValueOutcomes(valuesToShow, inputProps.items) ?? []
-              ).map(({ label, value }) => (
-                <>
-                  <label
-                    key={label}
-                    htmlFor={`input-${label}`}
-                    className="flex text-base gap-2 items-center font-normal "
-                  >
-                    {label}
-                    {" - "}
-                    <p className="font-semibold">{value}</p>
-                  </label>
-                </>
-              ))}
+            <div className="flex flex-col gap-2 items-start justify-between w-full mb-2 relative">
+              <div
+                className={cn(
+                  "flex gap-5 items-start justify-between w-full mb-2 relative",
+                  { "flex-col gap-2": valuesToShow?.length > 2 },
+                )}
+              >
+                {(
+                  mapMultipleValueOutcomes(valuesToShow, inputProps.items) ?? []
+                ).map(({ label, value }, i) => (
+                  <>
+                    <label
+                      key={label}
+                      htmlFor={`input-${label}`}
+                      className="flex flex-1 w-full flex-col gap-2 font-normal"
+                    >
+                      {label}
+                      <div className="w-full h-[44px] pl-4 rounded-md bg-white flex items-center">
+                        {value}
+                      </div>
+                    </label>
+                    {i === 0 && valuesToShow?.length === 2 && (
+                      <span className="font-normal text-4xl text-[#A2A1A5] relative top-8">
+                        -
+                      </span>
+                    )}
+                  </>
+                ))}
+              </div>
             </div>
           ) : (
-            <p className="sm:text-lg font-semibold">{valuesToShow[0]}</p>
+            <div
+              className="w-panel-content-width grid items-center min-h-[44px] mt-4 p-4 rounded bg-white"
+              style={{
+                marginBottom: !pageIsSettled ? "20px" : "0px",
+              }}
+            >
+              <p className="sm:text-lg font-semibold">{valuesToShow[0]}</p>
+            </div>
           )}
-        </div>
+        </>
       )}
       {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
@@ -131,3 +147,21 @@ export function Actions({ query }: Props) {
     </div>
   );
 }
+
+// <div className="flex flex-col gap-6 items-start justify-center w-full relative">
+//   {(mapMultipleValueOutcomes(valuesToShow, inputProps.items) ?? []).map(
+//     ({ label, value }) => (
+//       <>
+//         <label
+//           key={label}
+//           htmlFor={`input-${label}`}
+//           className="flex text-base gap-2 items-center font-normal "
+//         >
+//           {label}
+//           {" - "}
+//           <p className="font-semibold">{value}</p>
+//         </label>
+//       </>
+//     )
+//   )}
+// </div>;
