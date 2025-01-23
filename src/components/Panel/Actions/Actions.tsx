@@ -59,7 +59,7 @@ export function Actions({ query }: Props) {
     isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
   const disableInput = alreadyProposed || alreadySettled;
   const errors = [
-    inputProps.inputError,
+    pageIsPropose && inputProps.inputError,
     ...(primaryAction?.errors || []),
   ].filter(Boolean);
   const actionsTitle = getActionsTitle();
