@@ -319,29 +319,6 @@ export function useProposeAction({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [proposePriceTransaction]);
 
-  if (
-    query?.identifier === "MULTIPLE_VALUES" &&
-    !isMultipleValuesInputValid(
-      proposePriceInput,
-      query.proposeOptions?.length ?? 0,
-    )
-  ) {
-    return {
-      title: propose,
-      disabled: true,
-      disabledReason: 'Either enter all fields, or mark "Unresolvable"',
-    };
-  }
-
-  // TODO validate input
-  if (!isInputValid(proposePriceInput ?? "")) {
-    return {
-      title: propose,
-      disabled: true,
-      disabledReason: "Please enter a value to propose.",
-    };
-  }
-
   if (isPrepareProposePriceLoading) {
     return {
       title: propose,
@@ -359,6 +336,28 @@ export function useProposeAction({
 
   // if proposal succeeds, disable button
   if (actionType === "propose") {
+    if (
+      query?.identifier === "MULTIPLE_VALUES" &&
+      !isMultipleValuesInputValid(
+        proposePriceInput,
+        query.proposeOptions?.length ?? 0,
+      )
+    ) {
+      return {
+        title: propose,
+        disabled: true,
+        disabledReason: 'Either enter all fields, or mark "Unresolvable"',
+      };
+    }
+
+    // TODO validate input
+    if (!isInputValid(proposePriceInput ?? "")) {
+      return {
+        title: propose,
+        disabled: true,
+        disabledReason: "Please enter a value to propose.",
+      };
+    }
     if (isSuccess) {
       return {
         title: proposed,

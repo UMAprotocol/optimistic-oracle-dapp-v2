@@ -5,7 +5,6 @@ export function isMultipleValuesInputValid(
   inputValues: string | undefined,
   numOptions: number,
 ): boolean {
-  //   debugger;
   if (!inputValues) false;
   let decodedInputValues;
   try {

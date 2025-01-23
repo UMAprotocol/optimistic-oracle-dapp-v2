@@ -77,7 +77,10 @@ export function Actions({ query }: Props) {
           Assertion <span>(proposal)</span>
         </>
       );
-    return <>Propose Answer</>;
+    if (pageIsPropose) {
+      return <>Propose Answer</>;
+    }
+    return <>Verify Answer</>;
   }
 
   const isMultipleValuesRequest = query.identifier === "MULTIPLE_VALUES";
@@ -93,36 +96,11 @@ export function Actions({ query }: Props) {
       ) : (
         <>
           {isMultipleValuesRequest ? (
-            <div className="flex flex-col gap-2 items-start justify-between w-full mb-2 relative">
-              <div
-                className={cn(
-                  "flex gap-5 items-start justify-between w-full mb-2 relative",
-                  { "flex-col gap-2": valuesToShow?.length > 2 },
-                )}
-              >
-                {(
-                  mapMultipleValueOutcomes(valuesToShow, inputProps.items) ?? []
-                ).map(({ label, value }, i) => (
-                  <>
-                    <label
-                      key={label}
-                      htmlFor={`input-${label}`}
-                      className="flex flex-1 w-full flex-col gap-2 font-normal"
-                    >
-                      {label}
-                      <div className="w-full h-[44px] pl-4 rounded-md bg-white flex items-center">
-                        {value}
-                      </div>
-                    </label>
-                    {i === 0 && valuesToShow?.length === 2 && (
-                      <span className="font-normal text-4xl text-[#A2A1A5] relative top-8">
-                        -
-                      </span>
-                    )}
-                  </>
-                ))}
-              </div>
-            </div>
+            <MultipleValues
+              className={cn(!pageIsSettled ? "mb-5" : "mb-0")}
+              valuesToShow={valuesToShow}
+              query={query}
+            />
           ) : (
             <div
               className="w-panel-content-width grid items-center min-h-[44px] mt-4 p-4 rounded bg-white"
@@ -151,20 +129,63 @@ export function Actions({ query }: Props) {
   );
 }
 
-// <div className="flex flex-col gap-6 items-start justify-center w-full relative">
-//   {(mapMultipleValueOutcomes(valuesToShow, inputProps.items) ?? []).map(
-//     ({ label, value }) => (
-//       <>
-//         <label
-//           key={label}
-//           htmlFor={`input-${label}`}
-//           className="flex text-base gap-2 items-center font-normal "
-//         >
-//           {label}
-//           {" - "}
-//           <p className="font-semibold">{value}</p>
-//         </label>
-//       </>
-//     )
-//   )}
-// </div>;
+function MultipleValues({
+  query,
+  valuesToShow,
+  className,
+}: {
+  query: OracleQueryUI;
+  valuesToShow: (string | null | undefined)[];
+  className?: string;
+}) {
+  if (!query.proposeOptions || !query.proposeOptions.length) {
+    return (
+      <div
+        className={cn(
+          "w-panel-content-width grid items-center min-h-[44px] mt-4 p-4 rounded bg-white mb-5",
+          className,
+        )}
+      >
+        <p className="sm:text-lg font-semibold">Unresolvable</p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-2 items-start justify-between w-full mb-2 relative",
+        className,
+      )}
+    >
+      <div
+        className={cn(
+          "flex gap-5 items-start justify-between w-full mb-2 relative",
+          { "flex-col gap-2": valuesToShow?.length > 2 },
+        )}
+      >
+        {(
+          mapMultipleValueOutcomes(valuesToShow, query.proposeOptions) ?? []
+        ).map(({ label, value }, i) => (
+          <>
+            <label
+              key={label}
+              htmlFor={`input-${label}`}
+              className="flex flex-1 w-full flex-col gap-2 font-normal"
+            >
+              {label}
+              <div className="w-full h-[44px] pl-4 rounded-md bg-white flex items-center">
+                {value}
+              </div>
+            </label>
+            {i === 0 && valuesToShow?.length === 2 && (
+              <span className="font-normal text-4xl text-[#A2A1A5] relative top-8">
+                -
+              </span>
+            )}
+          </>
+        ))}
+      </div>
+    </div>
+  );
+}
