@@ -56,7 +56,14 @@ function ProposeInputSingle({
 function MultipleValuesInput(props: MultipleInputProps) {
   const items = Object.entries(props?.proposePriceInput);
 
-  if (!items?.length) return null;
+  if (!items?.length)
+    return (
+      <StyledCheckbox
+        checked={props.isUnresolvable}
+        itemName="Unresolvable"
+        onCheckedChange={() => props.setIsUnresolvable(!props.isUnresolvable)}
+      />
+    );
 
   return (
     <div className="flex flex-col gap-2 items-start justify-between w-full mb-2 relative">
