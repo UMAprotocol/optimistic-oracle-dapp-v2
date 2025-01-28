@@ -318,7 +318,7 @@ export const ChainId = ss.enums([
 ]);
 const SubgraphConfig = ss.object({
   source: ss.literal("gql"),
-  url: ss.string(),
+  urls: ss.array(ss.string()),
   type: ss.enums([
     "Optimistic Oracle V1",
     "Optimistic Oracle V2",
@@ -371,10 +371,11 @@ function parseEnv(env: Env): Config {
     if (!value) continue;
     const [item, version, chainId] = key.split("_").slice(-3);
     if (item === "SUBGRAPH") {
+      const urls = value.split(",").map((x) => x.trim());
       if (version === "SKINNY") {
         const subgraph = {
           source: "gql",
-          url: value,
+          urls,
           type: "Skinny Optimistic Oracle",
           chainId: parseInt(chainId),
           address: getContractAddress({
@@ -388,7 +389,7 @@ function parseEnv(env: Env): Config {
       } else {
         const subgraph = {
           source: "gql",
-          url: value,
+          urls,
           type: `Optimistic Oracle ${version}`,
           chainId: parseInt(chainId),
           address: getContractAddress({

@@ -5,7 +5,7 @@ import type { Handlers, Service, ServiceFactory } from "../../../types";
 import { getAssertions } from "./queries";
 
 export type Config = {
-  url: string;
+  urls: string[];
   chainId: ChainId;
   address: string;
 };
@@ -13,11 +13,20 @@ export type Config = {
 export const Factory =
   (config: Config): ServiceFactory =>
   (handlers: Handlers): Service => {
-    async function fetch({ url, chainId, address }: Config) {
-      const requests = await getAssertions(url, chainId);
-      return requests.map((request) =>
-        parseAssertionGraphEntity(request, chainId, address as Address),
-      );
+    async function fetch({ urls, chainId, address }: Config) {
+      let err;
+      for (const url of urls) {
+        try {
+          const requests = await getAssertions(url, chainId);
+          return requests.map((request) =>
+            parseAssertionGraphEntity(request, chainId, address as Address),
+          );
+        } catch (error) {
+          err = error;
+          console.warn(`Failed to fetch from ${url}:`, error);
+        }
+      }
+      throw err;
     }
     async function tick() {
       if (handlers.assertions) {
