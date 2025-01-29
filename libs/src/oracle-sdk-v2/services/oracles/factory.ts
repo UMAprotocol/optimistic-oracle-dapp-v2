@@ -7,7 +7,7 @@ import { gql as gql3 } from "../oraclev3";
 
 export type GqlConfig = {
   source: "gql";
-  url: string;
+  urls: string[];
   chainId: ChainId;
   type: OracleType;
   address: string;
