@@ -1,24 +1,39 @@
-import { DecimalInput, RadioDropdown } from "@/components";
-import type { DropdownItem } from "@/types";
+import { Checkbox, DecimalInput, RadioDropdown } from "@/components";
+import { cn } from "@/helpers";
+import type {
+  SingleInputProps,
+  MultipleInputProps,
+} from "@/hooks/proposePriceInput";
+import { INPUT_TYPES } from "@/hooks/proposePriceInput";
 import Close from "public/assets/icons/close.svg";
+import styled from "styled-components";
 
-interface Props {
-  value: string;
+type CommonProps = {
   disabled: boolean;
-  items: DropdownItem[] | undefined;
-  selected: DropdownItem | undefined;
-  isCustomInput: boolean;
-  onInput: (value: string) => void;
-  onSelect: (item: DropdownItem) => void;
-  addErrorMessage: (value: string) => void;
-  removeErrorMessage: () => void;
-  exitCustomInput: () => void;
+};
+
+type PriceInputProps =
+  | (SingleInputProps & CommonProps)
+  | (MultipleInputProps & CommonProps);
+
+export function ProposeInput(props: PriceInputProps) {
+  return (
+    <div className="flex flex-col w-full gap-2 mb-2">
+      {props.inputType === INPUT_TYPES.SINGLE ? (
+        <ProposeInputSingle {...props} />
+      ) : (
+        <MultipleValuesInput {...props} />
+      )}
+    </div>
+  );
 }
-export function ProposeInput({
+
+function ProposeInputSingle({
   isCustomInput,
   exitCustomInput,
+  inputType,
   ...props
-}: Props) {
+}: SingleInputProps & CommonProps) {
   const isDropdown = !isCustomInput && !!props.items && props.items.length > 0;
 
   return (
@@ -37,3 +52,65 @@ export function ProposeInput({
     </div>
   );
 }
+
+function MultipleValuesInput(props: MultipleInputProps) {
+  const items = Object.entries(props?.proposePriceInput);
+
+  if (!items?.length)
+    return (
+      <StyledCheckbox
+        checked={props.isUnresolvable}
+        itemName="Unresolvable"
+        onCheckedChange={() => props.setIsUnresolvable(!props.isUnresolvable)}
+      />
+    );
+
+  return (
+    <div className="flex flex-col gap-2 items-start justify-between w-full mb-2 relative">
+      <div
+        className={cn(
+          "flex gap-5 items-start justify-between w-full mb-2 relative",
+          { "flex-col gap-2": items?.length > 2 },
+        )}
+      >
+        {items.map(([label, value], i) => (
+          <>
+            <label
+              key={label}
+              htmlFor={`input-${label}`}
+              className="flex flex-1 w-full flex-col gap-2 font-normal"
+            >
+              {label}
+              <DecimalInput
+                disabled={props.isUnresolvable}
+                id={`input-${label}`}
+                placeholder={
+                  props.isUnresolvable ? "Unresolvable" : "Enter score"
+                }
+                maxDecimals={0}
+                value={props.isUnresolvable ? "" : value}
+                onInput={(_val) => props.onChange({ label, value: _val })}
+                addErrorMessage={props.addErrorMessage}
+                removeErrorMessage={props.removeErrorMessage}
+              />
+            </label>
+            {i === 0 && items?.length === 2 && (
+              <span className="font-normal text-4xl text-[#A2A1A5] relative top-8">
+                -
+              </span>
+            )}
+          </>
+        ))}
+      </div>
+      <StyledCheckbox
+        checked={props.isUnresolvable}
+        itemName="Unresolvable"
+        onCheckedChange={() => props.setIsUnresolvable(!props.isUnresolvable)}
+      />
+    </div>
+  );
+}
+
+const StyledCheckbox = styled(Checkbox)`
+  padding-left: 0;
+`;
