@@ -38,6 +38,8 @@ import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
 import { formatBytes32String } from "./ethers";
 import { getQueryMetaData } from "./queryParsing";
+import type { Infer } from "superstruct";
+import { object, string, validate } from "superstruct";
 
 export type RequiredRequest = Omit<
   Request,
@@ -105,6 +107,32 @@ export function safeDecodeHexString(hexString: string) {
     return "Unable to decode hex string";
   }
 }
+
+const OracleDetailsSchema = object({
+  title: string(),
+  description: string(),
+});
+
+type OracleDetailsSchemaT = Infer<typeof OracleDetailsSchema>;
+
+function maybeExtractJsonFields(
+  maybeJson: string,
+): OracleDetailsSchemaT | undefined {
+  try {
+    const [error, data] = validate(JSON.parse(maybeJson), OracleDetailsSchema);
+
+    return error
+      ? undefined
+      : {
+          title: data.title,
+          description: data.description,
+        };
+  } catch (e) {
+    // not json
+    return undefined;
+  }
+}
+
 export function toDate(timestamp: number | string) {
   return new Date(toTimeMilliseconds(timestamp));
 }
@@ -912,8 +940,14 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   if (exists(claim)) {
     result.queryTextHex = claim;
     result.queryText = safeDecodeHexString(claim);
-    result.title = result.queryText;
-    result.description = result.queryText;
+    const maybeJson = maybeExtractJsonFields(result.queryText);
+    if (maybeJson) {
+      result.title = maybeJson.title;
+      result.description = maybeJson.description;
+    } else {
+      result.title = result.queryText;
+      result.description = result.queryText;
+    }
     if (isOptimisticGovernor(result.queryText)) {
       result.project = "OSnap";
       const spaceName = extractSnapshotSpace(result.queryText);
