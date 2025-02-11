@@ -213,7 +213,6 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
         dispatch({ type: "assertions", data: assertions }),
       errors: setErrors,
     });
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -241,7 +240,11 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
       // this error is coming from ether provider queries, this would mean fallback is broken
       if (serviceConfig?.source !== "gql") {
         addErrorMessage({
-          text: "Currently unable to fetch all data, check back later",
+          text: "Oracle data is not loading as expected. If issues persist, verify requests with our CLI Tool",
+          link: {
+            text: "Oracle CLI Tool",
+            href: "https://github.com/UMAprotocol/oo-dispute-cli",
+          },
         });
         return;
       }
