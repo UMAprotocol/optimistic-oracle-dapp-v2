@@ -1,7 +1,13 @@
 import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { config } from "@/constants";
 
-import { polygonAmoy, blast, blastSepolia, storyOdyssey } from "./customChains";
+import {
+  polygonAmoy,
+  blast,
+  blastSepolia,
+  storyOdyssey,
+  story,
+} from "./customChains";
 
 import {
   arbitrum,
@@ -37,6 +43,7 @@ export const chains = [
   blast,
   blastSepolia,
   storyOdyssey,
+  story,
 ];
 
 export const walletsAndConnectors = getDefaultWallets({

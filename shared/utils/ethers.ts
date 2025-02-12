@@ -1,6 +1,8 @@
+import { chains } from "@/constants";
 import { parseFixed } from "@ethersproject/bignumber";
 import type { ChainId } from "@shared/types";
 import { BigNumber, ethers } from "ethers";
+import type { Chain } from "viem";
 
 // Blacklisted price identifiers that will not automatically display on voter clients.
 export const IDENTIFIER_BLACKLIST = { SOME_IDENTIFIER: ["1596666977"] };
@@ -102,82 +104,16 @@ export function bigNumberFromFloatString(value: string | undefined) {
   return BigNumber.from(parseEther(truncated));
 }
 
-function getBlockExplorerUrlForChain(chainId: ChainId) {
-  switch (chainId) {
-    case 0:
-      return;
-    case 1:
-      return "https://etherscan.io";
-    case 5:
-      return "https://goerli.etherscan.io";
-    case 10:
-      return "https://optimistic.etherscan.io";
-    case 100:
-      return "https://gnosisscan.io";
-    case 137:
-      return "https://polygonscan.com";
-    case 288:
-      return "https://bobascan.com";
-    case 416:
-      return "https://explorer.sx.technology";
-    case 1116:
-      return "https://scan.coredao.org";
-    case 8453:
-      return "https://basescan.org";
-    case 43114:
-      return "https://snowtrace.io";
-    case 42161:
-      return "https://arbiscan.io";
-    case 80001:
-      return "https://mumbai.polygonscan.com";
-    case 80002:
-      return "https://www.oklink.com/amoy";
-    case 81457:
-      return "https://blastscan.io";
-    case 11155111:
-      return "https://sepolia.etherscan.io";
-    case 168587773:
-      return "https://sepolia.blastscan.io/";
-    case 1516:
-      return "https://odyssey-testnet-explorer.storyscan.xyz";
-  }
+export function getChainInfo(chainId: ChainId): Chain | undefined {
+  return chains.find((chain) => chain.id === chainId);
+}
+
+function getBlockExplorerUrlForChain(chainId: ChainId): string | undefined {
+  return getChainInfo(chainId)?.blockExplorers?.default.url;
 }
 
 export function getBlockExplorerNameForChain(chainId: ChainId) {
-  switch (chainId) {
-    case 0:
-      return;
-    case 1:
-    case 5:
-    case 11155111:
-      return "Etherscan";
-    case 10:
-      return "Etherscan";
-    case 100:
-      return "Gnosisscan";
-    case 137:
-    case 80001:
-      return "Polygonscan";
-    case 288:
-      return "Bobascan";
-    case 416:
-      return "SX Explorer";
-    case 1116:
-      return "Core Scan";
-    case 8453:
-      return "Base Scan";
-    case 43114:
-      return "Snowtrace";
-    case 42161:
-      return "Arbiscan";
-    case 81457:
-    case 168587773:
-      return "Blastscan";
-    case 1516:
-      return "Storyscan";
-    default:
-      return "Block Explorer";
-  }
+  return getChainInfo(chainId)?.blockExplorers?.default.name;
 }
 
 export function makeBlockExplorerLink(

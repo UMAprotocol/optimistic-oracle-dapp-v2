@@ -292,6 +292,22 @@ export const ContractInfoList: ContractInfoList = [
     address: getAddress("0x3CA11702f7c0F28e0b4e03C31F7492969862C569"),
     deployBlock: 298453,
   },
+  // story mainnet
+  {
+    type: "Optimistic Oracle V1",
+    chainId: 1514,
+    address: getAddress("0x6999526e507Cc3b03b180BbE05E1Ff938259A874"),
+  },
+  {
+    type: "Optimistic Oracle V2",
+    chainId: 1514,
+    address: getAddress("0xd85630E361cEbBC4c7f13e6eEd3587050fB81B86"),
+  },
+  {
+    type: "Optimistic Oracle V3",
+    chainId: 1514,
+    address: getAddress("0x8EF424F90C6BC1b98153A09c0Cac5072545793e8"),
+  },
 ];
 export function getContractInfo(params: {
   chainId: number;
