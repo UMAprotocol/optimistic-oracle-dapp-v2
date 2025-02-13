@@ -2,6 +2,7 @@ import { hasProperty } from "@/helpers";
 import type { ProjectName } from "@shared/constants";
 import { chainsById } from "@shared/constants";
 import type { ChainId } from "@shared/types";
+// chains
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
 import Avalanche from "public/assets/icons/chains/avax.svg";
 import Boba from "public/assets/icons/chains/boba.svg";
@@ -10,11 +11,15 @@ import Gnosis from "public/assets/icons/chains/gnosis.svg";
 import Optimism from "public/assets/icons/chains/optimism.svg";
 import Polygon from "public/assets/icons/chains/polygon.svg";
 import SX from "public/assets/icons/chains/sx.svg";
+import Story from "public/assets/icons/chains/story.svg";
+// currencies
 import DAI from "public/assets/icons/currencies/dai.svg";
 import ETH from "public/assets/icons/currencies/eth.svg";
 import UMA from "public/assets/icons/currencies/uma.svg";
 import USDC from "public/assets/icons/currencies/usdc.svg";
 import USDB from "public/assets/icons/currencies/usdb.svg";
+import IP from "public/assets/icons/currencies/ip.svg";
+// projects
 import Across from "public/assets/icons/projects/across.svg";
 import Cozy from "public/assets/icons/projects/cozy.svg";
 import OSnap from "public/assets/icons/projects/osnap.svg";
@@ -48,6 +53,7 @@ export const currencyIcons = {
   DAI,
   WETH: ETH,
   USDB,
+  IP,
 };
 
 export const chainIcons = {
@@ -62,6 +68,7 @@ export const chainIcons = {
   SX,
   Avalanche,
   Arbitrum,
+  Story,
 };
 
 export function getProjectIcon(project: ProjectName | null | undefined) {
