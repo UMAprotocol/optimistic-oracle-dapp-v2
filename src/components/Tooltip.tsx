@@ -99,9 +99,14 @@ const Content = styled(RadixTooltip.Content)`
   }
 `;
 
-const TriggerWrapper = styled(RadixTooltip.Trigger)``;
+const TriggerWrapper = styled(RadixTooltip.Trigger)`
+  display: inline;
+`;
 
 const Trigger = styled.span`
+  display: grid;
+  place-items: center;
+
   button :is(:disabled) {
     pointer-events: none;
   }

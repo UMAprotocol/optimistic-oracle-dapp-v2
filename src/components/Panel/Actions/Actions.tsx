@@ -1,6 +1,10 @@
 import { ConnectButton } from "@/components";
 import { connectWallet, settled } from "@/constants";
-import { maybeGetValueTextFromOptions } from "@/helpers";
+import {
+  cn,
+  mapMultipleValueOutcomes,
+  maybeGetValueTextFromOptions,
+} from "@/helpers";
 import {
   usePageContext,
   usePrimaryPanelAction,
@@ -14,20 +18,21 @@ import { Details } from "./Details";
 import { Errors } from "./Errors";
 import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
-import { ProposeInput } from "./ProposeInput";
 import { SimulateIfOsnap } from "../TenderlySimulation";
+import { ProposeInput } from "./ProposeInput";
 
 interface Props {
   query: OracleQueryUI;
 }
+
 export function Actions({ query }: Props) {
   const { oracleType, valueText, actionType, proposeOptions, queryText } =
     query;
-  const { proposePriceInput, inputError, ...inputProps } =
-    useProposePriceInput(query);
+  const inputProps = useProposePriceInput(query);
+
   const primaryAction = usePrimaryPanelAction({
     query,
-    proposePriceInput,
+    formattedProposePriceInput: inputProps.formattedValue,
   });
 
   const { page } = usePageContext();
@@ -53,10 +58,16 @@ export function Actions({ query }: Props) {
   const showConnectButton =
     isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
   const disableInput = alreadyProposed || alreadySettled;
-  const errors = [inputError, ...(primaryAction?.errors || [])].filter(Boolean);
+  const errors = [
+    pageIsPropose && inputProps.inputError,
+    ...(primaryAction?.errors || []),
+  ].filter(Boolean);
   const actionsTitle = getActionsTitle();
   const actionsIcon = pageIsSettled ? <Settled /> : <Pencil />;
-  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
+
+  const valuesToShow = Array.isArray(valueText)
+    ? valueText
+    : [maybeGetValueTextFromOptions(valueText, proposeOptions)];
 
   function getActionsTitle() {
     if (pageIsSettled) return "Settled as";
@@ -66,12 +77,13 @@ export function Actions({ query }: Props) {
           Assertion <span>(proposal)</span>
         </>
       );
-    return (
-      <>
-        Request <span>(price)</span>
-      </>
-    );
+    if (pageIsPropose) {
+      return <>Propose Answer</>;
+    }
+    return <>Verify Answer</>;
   }
+
+  const isMultipleValuesRequest = query.identifier === "MULTIPLE_VALUES";
 
   return (
     <div className="bg-grey-400 px-page-padding lg:px-7 pt-5 pb-6">
@@ -80,20 +92,26 @@ export function Actions({ query }: Props) {
         <SectionTitle>{actionsTitle}</SectionTitle>
       </SectionTitleWrapper>
       {pageIsPropose ? (
-        <ProposeInput
-          value={proposePriceInput}
-          disabled={disableInput}
-          {...inputProps}
-        />
+        <ProposeInput disabled={disableInput} {...inputProps} />
       ) : (
-        <div
-          className="w-panel-content-width grid items-center min-h-[44px] mt-4 px-4 rounded bg-white"
-          style={{
-            marginBottom: !pageIsSettled ? "20px" : "0px",
-          }}
-        >
-          <p className="sm:text-lg font-semibold">{valueToShow}</p>
-        </div>
+        <>
+          {isMultipleValuesRequest ? (
+            <MultipleValues
+              className={cn(!pageIsSettled ? "mb-5" : "mb-0")}
+              valuesToShow={valuesToShow}
+              query={query}
+            />
+          ) : (
+            <div
+              className="w-panel-content-width grid items-center min-h-[44px] mt-4 p-4 rounded bg-white"
+              style={{
+                marginBottom: !pageIsSettled ? "20px" : "0px",
+              }}
+            >
+              <p className="sm:text-lg font-semibold">{valuesToShow[0]}</p>
+            </div>
+          )}
+        </>
       )}
       {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
@@ -107,6 +125,67 @@ export function Actions({ query }: Props) {
         alreadySettled={alreadySettled}
       />
       <Errors errors={errors} />
+    </div>
+  );
+}
+
+function MultipleValues({
+  query,
+  valuesToShow,
+  className,
+}: {
+  query: OracleQueryUI;
+  valuesToShow: (string | null | undefined)[];
+  className?: string;
+}) {
+  if (!query.proposeOptions || !query.proposeOptions.length) {
+    return (
+      <div
+        className={cn(
+          "w-panel-content-width grid items-center min-h-[44px] mt-4 p-4 rounded bg-white mb-5",
+          className,
+        )}
+      >
+        <p className="sm:text-lg font-semibold">Unresolvable</p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-2 items-start justify-between w-full mb-2 relative",
+        className,
+      )}
+    >
+      <div
+        className={cn(
+          "flex gap-5 items-start justify-between w-full mb-2 relative",
+          { "flex-col gap-2": valuesToShow?.length > 2 },
+        )}
+      >
+        {(
+          mapMultipleValueOutcomes(valuesToShow, query.proposeOptions) ?? []
+        ).map(({ label, value }, i) => (
+          <>
+            <label
+              key={label}
+              htmlFor={`input-${label}`}
+              className="flex flex-1 w-full flex-col gap-2 font-normal"
+            >
+              {label}
+              <div className="w-full h-[44px] pl-4 rounded-md bg-white flex items-center">
+                {value}
+              </div>
+            </label>
+            {i === 0 && valuesToShow?.length === 2 && (
+              <span className="font-normal text-4xl text-[#A2A1A5] relative top-8">
+                -
+              </span>
+            )}
+          </>
+        ))}
+      </div>
     </div>
   );
 }

@@ -38,6 +38,7 @@ import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
 import { formatBytes32String } from "./ethers";
 import { getQueryMetaData } from "./queryParsing";
+import { isUnresolvable } from "./validators";
 import type { Infer } from "superstruct";
 import { object, string, validate } from "superstruct";
 
@@ -274,6 +275,14 @@ function makeProposePriceParams({
     if (!proposedPrice) return;
     if (!bytes32Identifier) return;
     if (!ancillaryData) return;
+
+    // multiple values is pre formatted after user inputs the proposed answers and its already in wei
+    // this is the exception to all other identifiers which user inputs in decimals and must be converted to wei
+    const proposedPriceFormatted =
+      parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES"
+        ? BigInt(proposedPrice)
+        : parseEther(proposedPrice).toBigInt();
+
     return {
       address: oracleAddress,
       abi: proposePriceAbi,
@@ -284,7 +293,7 @@ function makeProposePriceParams({
         bytes32Identifier,
         time,
         ancillaryData,
-        parseEther(proposedPrice).toBigInt(),
+        proposedPriceFormatted,
       ] as const,
     };
   };
@@ -311,6 +320,14 @@ function makeProposePriceSkinnyParams({
     if (!proposedPrice) return;
     if (!bytes32Identifier) return;
     if (!ancillaryData) return;
+
+    // multiple values is pre formatted after user inputs the proposed answers and its already in wei
+    // this is the exception to all other identifiers which user inputs in decimals and must be converted to wei
+    const proposedPriceFormatted =
+      parseIdentifier(bytes32Identifier) === "MULTIPLE_VALUES"
+        ? BigInt(proposedPrice)
+        : parseEther(proposedPrice).toBigInt();
+
     return {
       address: oracleAddress,
       abi: skinnyProposePriceAbi,
@@ -322,7 +339,7 @@ function makeProposePriceSkinnyParams({
         time,
         ancillaryData,
         request,
-        parseEther(proposedPrice).toBigInt(),
+        proposedPriceFormatted,
       ] as const,
     };
   };
@@ -705,6 +722,24 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     project: "Unknown",
   };
 
+  if (exists(ancillaryData)) {
+    result.queryTextHex = ancillaryData;
+    result.queryText = safeDecodeHexString(ancillaryData);
+  }
+
+  if (exists(identifier) && exists(result.queryText) && exists(requester)) {
+    const { title, description, umipUrl, umipNumber, project, proposeOptions } =
+      getQueryMetaData(identifier, result.queryText, requester);
+    result.title = title;
+    result.description = description;
+    result.project = project;
+    result.proposeOptions = proposeOptions;
+    result.moreInformation = makeMoreInformationList(
+      request,
+      umipNumber,
+      umipUrl,
+    );
+  }
   if (exists(state)) {
     result.state = state;
   }
@@ -724,13 +759,24 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     } else {
       result.valueText = ethers.utils.formatEther(price);
     }
+    // we need the raw price for multiple values, because we need to parse this into
+    // multiple possible price values
+  } else if (
+    exists(identifier) &&
+    parseIdentifier(identifier) === "MULTIPLE_VALUES"
+  ) {
+    const price = settlementPrice ?? proposedPrice;
+    if (price === null || price === undefined || !result.proposeOptions) {
+      result.valueText = "-";
+    } else {
+      // this is an array of strings now representings scores as uints
+      result.valueText = decodeMultipleQuery(
+        price.toString(),
+        result.proposeOptions.length,
+      );
+    }
   } else {
     result.valueText = getPriceRequestValueText(proposedPrice, settlementPrice);
-  }
-
-  if (exists(ancillaryData)) {
-    result.queryTextHex = ancillaryData;
-    result.queryText = safeDecodeHexString(ancillaryData);
   }
 
   let bytes32Identifier = undefined;
@@ -739,19 +785,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     bytes32Identifier = formatBytes32String(identifier);
   }
 
-  if (exists(identifier) && exists(result.queryText) && exists(requester)) {
-    const { title, description, umipUrl, umipNumber, project, proposeOptions } =
-      getQueryMetaData(identifier, result.queryText, requester);
-    result.title = title;
-    result.description = description;
-    result.project = project;
-    result.proposeOptions = proposeOptions;
-    result.moreInformation = makeMoreInformationList(
-      request,
-      umipNumber,
-      umipUrl,
-    );
-  }
   const { bond, eventBased } = getOOV2SpecificValues(request);
   if (exists(bond)) {
     result.bond = bond;
@@ -1042,4 +1075,64 @@ ${rulesRegex[1]}`;
     result.settlementLogIndex = settlementLogIndex;
 
   return result;
+}
+
+// input user values as regular numbers
+export function decodeMultipleQueryPriceAtIndex(
+  encodedPrice: bigint,
+  index: number,
+): number {
+  if (index < 0 || index > 6) {
+    throw new Error("Index out of range");
+  }
+  // Shift the bits of encodedPrice to the right by (32 * index) positions.
+  // This operation effectively moves the desired 32-bit segment to the least significant position.
+  // The bitwise AND operation with 0xffffffff ensures that only the least significant 32 bits are retained,
+  // effectively extracting the 32-bit value at the specified index.
+  return Number((encodedPrice >> BigInt(32 * index)) & BigInt(0xffffffff));
+}
+export function encodeMultipleQuery(values: string[]): string {
+  if (values.length > 7) {
+    throw new Error("Maximum of 7 values allowed");
+  }
+
+  let encodedPrice = BigInt(0);
+
+  for (let i = 0; i < values.length; i++) {
+    if (values[i] === undefined || values[i] === "") {
+      throw new Error("All values must be defined");
+    }
+    const numValue = Number(values[i]);
+    if (!Number.isInteger(numValue)) {
+      throw new Error("All values must be integers");
+    }
+    if (numValue > 0xffffffff || numValue < 0) {
+      throw new Error("Values must be uint32 (0 <= value <= 2^32 - 1)");
+    }
+    // Shift the current value to its correct position in the 256-bit field.
+    // Each value is a 32-bit unsigned integer, so we shift it by 32 bits times its index.
+    // This places the first value at the least significant bits and subsequent values
+    // at increasingly higher bit positions.
+    encodedPrice |= BigInt(numValue) << BigInt(32 * i);
+  }
+
+  return encodedPrice.toString();
+}
+
+export function decodeMultipleQuery(
+  price: string,
+  length: number,
+): string[] | string {
+  const result: number[] = [];
+  const bigIntPrice = BigInt(price);
+
+  if (isUnresolvable(price)) {
+    return price;
+  }
+
+  for (let i = 0; i < length; i++) {
+    const value = decodeMultipleQueryPriceAtIndex(bigIntPrice, i);
+    result.push(value);
+  }
+  return result.map((x) => x.toString());
 }

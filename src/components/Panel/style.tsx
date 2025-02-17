@@ -24,10 +24,10 @@ export const SectionTitleWrapper = ({
   children,
 }: {
   children: React.ReactNode;
-}) => <div className="flex gap-3 mb-4">{children}</div>;
+}) => <div className="flex gap-3 mb-4 items-center">{children}</div>;
 
 export const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="text-lg font-bold [&>span]:font-normal">{children}</h2>
+  <h2 className="text-lg font-medium [&>span]:font-normal">{children}</h2>
 );
 
 export const SectionSubTitle = ({
@@ -37,7 +37,7 @@ export const SectionSubTitle = ({
 }) => <h3 className="font-semibold mt-4">{children}</h3>;
 
 export const ErrorWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="w-panel-content-width min-h-[48px] flex items-center gap-4 mt-5 px-4 bg-red-500/5 border-2 border-red-500 rounded-sm">
+  <div className="w-full min-h-[48px] flex items-center gap-4 mt-5 px-4 bg-red-500/5 border-2 border-red-500 rounded-sm">
     {children}
   </div>
 );

@@ -25,7 +25,9 @@ import {
   alreadySettledV3,
   handleNotifications,
 } from "@/helpers";
+import { isMultipleValuesInputValid, isInputValid } from "@/helpers/validators";
 import { useBalanceAndAllowance } from "@/hooks";
+import type { PriceInputProps } from "@/hooks";
 import type { ActionTitle, OracleQueryUI } from "@/types";
 import React, { useEffect } from "react";
 import {
@@ -47,12 +49,13 @@ export type ActionState = Partial<{
   title: ActionTitle;
   errors: (string | null | undefined)[];
 }>;
+
 export function usePrimaryPanelAction({
   query,
-  proposePriceInput,
+  formattedProposePriceInput,
 }: {
   query?: OracleQueryUI;
-  proposePriceInput?: string;
+  formattedProposePriceInput?: PriceInputProps["formattedValue"];
 }): ActionState | undefined {
   // these are in order of importance
   const accountAction = useAccountAction({ query });
@@ -62,7 +65,7 @@ export function usePrimaryPanelAction({
 
   const proposeAction = useProposeAction({
     query,
-    proposePriceInput,
+    proposePriceInput: formattedProposePriceInput,
     prepare: bondAmountApproved,
   });
   const disputeAction = useDisputeAction({
@@ -316,17 +319,6 @@ export function useProposeAction({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [proposePriceTransaction]);
 
-  if (proposePriceParams === undefined) return undefined;
-
-  // TODO validate input
-  if (proposePriceInput === undefined || proposePriceInput?.length === 0) {
-    return {
-      title: propose,
-      disabled: true,
-      disabledReason: "Please enter a value to propose.",
-    };
-  }
-
   if (isPrepareProposePriceLoading) {
     return {
       title: propose,
@@ -344,6 +336,28 @@ export function useProposeAction({
 
   // if proposal succeeds, disable button
   if (actionType === "propose") {
+    if (
+      query?.identifier === "MULTIPLE_VALUES" &&
+      !isMultipleValuesInputValid(
+        proposePriceInput,
+        query.proposeOptions?.length ?? 0,
+      )
+    ) {
+      return {
+        title: propose,
+        disabled: true,
+        disabledReason: 'Either enter all fields, or mark "Unresolvable"',
+      };
+    }
+
+    // TODO validate input
+    if (!isInputValid(proposePriceInput ?? "")) {
+      return {
+        title: propose,
+        disabled: true,
+        disabledReason: "Please enter a value to propose.",
+      };
+    }
     if (isSuccess) {
       return {
         title: proposed,

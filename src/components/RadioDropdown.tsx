@@ -34,7 +34,7 @@ export function RadioDropdown({ items, selected, onSelect, disabled }: Props) {
           {items.map((item) => (
             <_RadioItem
               key={item.value}
-              value={item.value.toString()}
+              value={(item.value ?? "").toString()}
               onSelect={() => onSelect(item)}
             >
               {item.label}

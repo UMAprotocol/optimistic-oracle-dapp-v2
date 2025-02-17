@@ -1,9 +1,11 @@
+import assert from "assert";
 import { earlyRequestMagicNumber } from "@/constants";
 import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type { DropdownItem, MetaData } from "@/types";
 import { formatEther } from "@/helpers";
 import { chunk } from "lodash";
 import type { ProjectName } from "@shared/constants";
+import * as s from "superstruct";
 
 // hard coded known poly addresses:
 // https://github.com/UMAprotocol/protocol/blob/master/packages/monitor-v2/src/monitor-polymarket/common.ts#L474
@@ -301,6 +303,9 @@ export function getQueryMetaData(
 
     return tryParseMultipleChoiceQuery(decodedQueryText, projectName);
   }
+  if (decodedIdentifier === "MULTIPLE_VALUES") {
+    return tryParseMultipleValuesQuery(decodedQueryText, "Polymarket");
+  }
 
   const identifierDetails = approvedIdentifiers[decodedIdentifier];
   const isApprovedIdentifier = Boolean(identifierDetails);
@@ -334,6 +339,75 @@ export function getQueryMetaData(
   };
 }
 
+const MultipleValuesQuery = s.object({
+  // The title of the request
+  title: s.string(),
+  // Description of the request
+  description: s.string(),
+  // Values will be encoded into the settled price in the same order as the provided labels. The oracle UI will display each Label along with an input field. 7 labels maximum.
+  labels: s.array(s.string()),
+});
+type MultipleValuesQuery = s.Infer<typeof MultipleValuesQuery>;
+
+const isMultipleValuesQueryFormat = (q: unknown) =>
+  s.is(q, MultipleValuesQuery);
+
+function decodeMultipleValuesQuery(decodedAncillaryData: string) {
+  const endOfObjectIndex = decodedAncillaryData.lastIndexOf("}");
+  const maybeJson =
+    endOfObjectIndex > 0
+      ? decodedAncillaryData.slice(0, endOfObjectIndex + 1)
+      : decodedAncillaryData;
+
+  const json = JSON.parse(maybeJson);
+  if (!isMultipleValuesQueryFormat(json))
+    throw new Error("Not a valid multiple values request");
+  const query = json as MultipleValuesQuery;
+  assert(
+    query.labels.length <= 7,
+    "MULTIPLE_VALUES only support up to 7 labels",
+  );
+
+  return {
+    title: query.title,
+    description: query.description,
+    proposeOptions: query.labels.map((opt: string) => ({
+      label: opt,
+      value: undefined,
+      secondaryLabel: undefined,
+    })),
+  };
+}
+function tryParseMultipleValuesQuery(
+  decodedQueryText: string,
+  projectName: ProjectName,
+): MetaData {
+  try {
+    const result = {
+      ...decodeMultipleValuesQuery(decodedQueryText),
+      umipUrl:
+        "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-183.md",
+      umipNumber: "UMIP-183",
+      project: projectName,
+    };
+    return result;
+  } catch (err) {
+    let description = `Error decoding description`;
+    if (err instanceof Error) {
+      description += `: ${err.message}`;
+    }
+    console.error(`Error parsing MULTIPLE_VALUES`, decodedQueryText, err);
+    return {
+      title: `MULTIPLE_VALUES`,
+      description,
+      umipUrl:
+        "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-183.md",
+      umipNumber: "UMIP-183",
+      project: projectName,
+      proposeOptions: [],
+    };
+  }
+}
 type MultipleChoiceQuery = {
   // Require a title string
   title: string;
@@ -391,7 +465,7 @@ function tryParseMultipleChoiceQuery(
       umipUrl:
         "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-181.md",
       umipNumber: "UMIP-181",
-      project: "Unknown",
+      project: projectName,
       proposeOptions: makeMultipleChoiceOptions(
         makeMultipleChoiceYesOrNoOptions(),
       ),

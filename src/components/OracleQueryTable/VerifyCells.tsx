@@ -3,6 +3,8 @@ import type { OracleQueryUI } from "@/types";
 import { Currency } from "../Currency";
 import { LivenessProgressBar } from "../LivenessProgressBar";
 import { TD, Text } from "./style";
+import ExternalLink from "public/assets/icons/external-link.svg";
+import { isUnresolvable } from "@/helpers/validators";
 
 export function VerifyCells({
   valueText,
@@ -14,11 +16,24 @@ export function VerifyCells({
   chainId,
   tokenAddress,
 }: OracleQueryUI) {
-  const valueToShow = maybeGetValueTextFromOptions(valueText, proposeOptions);
+  const valuesToShow = Array.isArray(valueText)
+    ? valueText
+    : [maybeGetValueTextFromOptions(valueText, proposeOptions)];
   return (
     <>
       <TD>
-        <Text>{valueToShow}</Text>
+        <Text>
+          {valuesToShow.length > 1 ? (
+            <span>
+              See Proposal
+              <ExternalLink className="inline rounded-none ml-2" />{" "}
+            </span>
+          ) : isUnresolvable(valuesToShow[0] ?? "") ? (
+            "Unresolvable"
+          ) : (
+            valuesToShow[0]
+          )}
+        </Text>
       </TD>
       <TD>
         <Text>
