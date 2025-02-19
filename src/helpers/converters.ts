@@ -37,7 +37,7 @@ import { upperCase } from "lodash";
 import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
 import { formatBytes32String } from "./ethers";
-import { getQueryMetaData } from "./queryParsing";
+import { getQueryMetaData, parseAncillaryJson } from "./queryParsing";
 import { isUnresolvable } from "./validators";
 import type { Infer } from "superstruct";
 import { object, string, validate } from "superstruct";
@@ -117,10 +117,11 @@ const OracleDetailsSchema = object({
 type OracleDetailsSchemaT = Infer<typeof OracleDetailsSchema>;
 
 function maybeExtractJsonFields(
-  maybeJson: string,
+  decodedAncillaryData: string,
 ): OracleDetailsSchemaT | undefined {
   try {
-    const [error, data] = validate(JSON.parse(maybeJson), OracleDetailsSchema);
+    const maybeJson = parseAncillaryJson(decodedAncillaryData);
+    const [error, data] = validate(maybeJson, OracleDetailsSchema);
 
     return error
       ? undefined
