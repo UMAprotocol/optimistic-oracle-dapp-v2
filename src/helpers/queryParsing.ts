@@ -353,13 +353,8 @@ const isMultipleValuesQueryFormat = (q: unknown) =>
   s.is(q, MultipleValuesQuery);
 
 function decodeMultipleValuesQuery(decodedAncillaryData: string) {
-  const endOfObjectIndex = decodedAncillaryData.lastIndexOf("}");
-  const maybeJson =
-    endOfObjectIndex > 0
-      ? decodedAncillaryData.slice(0, endOfObjectIndex + 1)
-      : decodedAncillaryData;
+  const json = parseAncillaryJson(decodedAncillaryData);
 
-  const json = JSON.parse(maybeJson);
   if (!isMultipleValuesQueryFormat(json))
     throw new Error("Not a valid multiple values request");
   const query = json as MultipleValuesQuery;
@@ -378,6 +373,7 @@ function decodeMultipleValuesQuery(decodedAncillaryData: string) {
     })),
   };
 }
+
 function tryParseMultipleValuesQuery(
   decodedQueryText: string,
   projectName: ProjectName,
@@ -905,4 +901,120 @@ export function maybeMakePolybetOptions(
       },
     ];
   }
+}
+
+function extractJSONObject(input: string): string | undefined {
+  const start = input.indexOf("{");
+  const end = input.lastIndexOf("}");
+
+  if (start < 0 || end < 0) {
+    return;
+  }
+
+  return input.substring(start, end + 1);
+}
+
+/**
+ * Sanitizes a JSON string by scanning through it and, when inside a string literal,
+ * escaping any inner double quotes that appear unescaped.
+ *
+ * This heuristic looks ahead when a double quote is encountered in a string:
+ * if the next non‐whitespace character is a common JSON delimiter (comma, colon,
+ * closing brace or bracket) then it’s assumed to be the proper ending quote.
+ * Otherwise it’s assumed to be an inner quote that needs escaping.
+ */
+function sanitizeJSONString(json: string): string {
+  let result = "";
+  let inString = false;
+  let escape = false;
+  let stringBuffer = "";
+
+  for (let i = 0; i < json.length; i++) {
+    const char = json[i];
+
+    if (!inString) {
+      if (char === '"') {
+        inString = true;
+        stringBuffer = "";
+        result += char; // add opening quote
+      } else {
+        result += char;
+      }
+    } else {
+      if (escape) {
+        // current character is escaped, just add it to the buffer
+        stringBuffer += char;
+        escape = false;
+      } else {
+        if (char === "\\") {
+          stringBuffer += char;
+          escape = true;
+        } else if (char === '"') {
+          // We’ve hit a double quote inside a string.
+          // Look ahead to decide if this should really terminate the string.
+          let j = i + 1;
+          while (j < json.length && /\s/.test(json[j])) {
+            j++;
+          }
+          const nextChar = json[j];
+
+          if (
+            nextChar === "," ||
+            nextChar === "}" ||
+            nextChar === "]" ||
+            j === json.length ||
+            nextChar === ":"
+          ) {
+            // Looks like a proper closing quote.
+            // But first, sanitize any inner unescaped quotes inside the buffered content.
+            // (This regex finds any " not preceded by a backslash.)
+            const sanitizedBuffer = stringBuffer.replace(/(?<!\\)"/g, '\\"');
+            result += sanitizedBuffer + '"';
+            inString = false;
+          } else {
+            // Otherwise, assume this quote was meant to be part of the string.
+            // Append an escaped quote to the buffer.
+            stringBuffer += '\\"';
+          }
+        } else {
+          stringBuffer += char;
+        }
+      }
+    }
+  }
+  // If we ended while still in a string, append the (sanitized) buffer.
+  if (inString) {
+    const sanitizedBuffer = stringBuffer.replace(/(?<!\\)"/g, '\\"');
+    result += sanitizedBuffer;
+  }
+  return result;
+}
+
+export function parseAncillaryJson(
+  input: string,
+): Record<string, unknown> | undefined {
+  const jsonSubstring = extractJSONObject(input);
+  if (!jsonSubstring) {
+    // not valid json
+    return;
+  }
+
+  const sanitizedJSON = sanitizeJSONString(jsonSubstring);
+
+  try {
+    const parsed = JSON.parse(sanitizedJSON);
+    return parsed as Record<string, unknown>;
+  } catch (error) {
+    console.error("Failed to parse JSON after sanitation", error);
+    return;
+  }
+}
+
+export function extractFieldFromJson<T = string>(
+  decodedAncillaryData: string,
+  key: string,
+): T | undefined {
+  const json = parseAncillaryJson(decodedAncillaryData);
+  const value = json?.[key];
+  return value ? (value as T) : undefined;
 }
