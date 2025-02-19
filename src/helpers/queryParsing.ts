@@ -1005,7 +1005,8 @@ export function parseAncillaryJson(
     const parsed = JSON.parse(sanitizedJSON);
     return parsed as Record<string, unknown>;
   } catch (error) {
-    throw new Error("Failed to parse JSON after sanitation", { cause: error });
+    console.error("Failed to parse JSON after sanitation", error);
+    return;
   }
 }
 
