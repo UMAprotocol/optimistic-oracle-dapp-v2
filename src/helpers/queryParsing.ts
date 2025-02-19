@@ -903,45 +903,15 @@ export function maybeMakePolybetOptions(
   }
 }
 
-/**
- * Attempts to extract the first JSON object (delimited by balanced curly braces)
- * from an arbitrary string. This function is aware of quoted strings.
- */
-function extractJSONObject(input: string): string | null {
+function extractJSONObject(input: string): string | undefined {
   const start = input.indexOf("{");
-  if (start === -1) return null;
+  const end = input.lastIndexOf("}");
 
-  let braceCount = 0;
-  let inString = false;
-  let escape = false;
-
-  // Scan starting from the first '{'
-  for (let i = start; i < input.length; i++) {
-    const char = input[i];
-
-    if (inString) {
-      if (escape) {
-        escape = false;
-      } else if (char === "\\") {
-        escape = true;
-      } else if (char === '"') {
-        inString = false;
-      }
-    } else {
-      if (char === '"') {
-        inString = true;
-      } else if (char === "{") {
-        braceCount++;
-      } else if (char === "}") {
-        braceCount--;
-        if (braceCount === 0) {
-          // Found the matching closing brace.
-          return input.substring(start, i + 1);
-        }
-      }
-    }
+  if (start < 0 || end < 0) {
+    return;
   }
-  return null;
+
+  return input.substring(start, end + 1);
 }
 
 /**
@@ -1020,19 +990,15 @@ function sanitizeJSONString(json: string): string {
   return result;
 }
 
-/**
- * Attempts to find a JSON object within an arbitrary string, sanitize it,
- * parse it using JSON.parse and return it as a Record<string, unknown>.
- *
- * @throws if no JSON object is found or if parsing fails.
- */
-export function parseAncillaryJson(input: string): Record<string, unknown> {
+export function parseAncillaryJson(
+  input: string,
+): Record<string, unknown> | undefined {
   const jsonSubstring = extractJSONObject(input);
   if (!jsonSubstring) {
-    throw new Error("No JSON object found in input string.");
+    // not valid json
+    return;
   }
 
-  // Sanitize the extracted JSON substring to fix common escaping errors.
   const sanitizedJSON = sanitizeJSONString(jsonSubstring);
 
   try {
