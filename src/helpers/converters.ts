@@ -37,10 +37,8 @@ import { upperCase } from "lodash";
 import type { Address } from "wagmi";
 import { erc20ABI } from "wagmi";
 import { formatBytes32String } from "./ethers";
-import { getQueryMetaData, parseAncillaryJson } from "./queryParsing";
+import { extractFieldFromJson, getQueryMetaData } from "./queryParsing";
 import { isUnresolvable } from "./validators";
-import type { Infer } from "superstruct";
-import { object, string, validate } from "superstruct";
 
 export type RequiredRequest = Omit<
   Request,
@@ -106,32 +104,6 @@ export function safeDecodeHexString(hexString: string) {
     return decodeHexString(hexString);
   } catch (e) {
     return "Unable to decode hex string";
-  }
-}
-
-const OracleDetailsSchema = object({
-  title: string(),
-  description: string(),
-});
-
-type OracleDetailsSchemaT = Infer<typeof OracleDetailsSchema>;
-
-function maybeExtractJsonFields(
-  decodedAncillaryData: string,
-): OracleDetailsSchemaT | undefined {
-  try {
-    const maybeJson = parseAncillaryJson(decodedAncillaryData);
-    const [error, data] = validate(maybeJson, OracleDetailsSchema);
-
-    return error
-      ? undefined
-      : {
-          title: data.title,
-          description: data.description,
-        };
-  } catch (e) {
-    // not json
-    return undefined;
   }
 }
 
@@ -974,14 +946,12 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
   if (exists(claim)) {
     result.queryTextHex = claim;
     result.queryText = safeDecodeHexString(claim);
-    const maybeJson = maybeExtractJsonFields(result.queryText);
-    if (maybeJson) {
-      result.title = maybeJson.title;
-      result.description = maybeJson.description;
-    } else {
-      result.title = result.queryText;
-      result.description = result.queryText;
-    }
+
+    result.title =
+      extractFieldFromJson(result.queryText, "title") ?? result.queryText;
+    result.description =
+      extractFieldFromJson(result.queryText, "description") ?? result.queryText;
+
     if (isOptimisticGovernor(result.queryText)) {
       result.project = "OSnap";
       const spaceName = extractSnapshotSpace(result.queryText);
