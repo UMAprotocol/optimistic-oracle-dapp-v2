@@ -43,6 +43,7 @@ export const chainsById = {
   288: "Boba",
   416: "SX",
   1116: "Core",
+  1514: "Story",
   1516: "Story Odyssey",
   8453: "Base",
   84532: "Base Sepolia",

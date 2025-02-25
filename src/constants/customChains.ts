@@ -113,3 +113,32 @@ export const storyOdyssey = defineChain({
   },
   testnet: true,
 });
+
+export const story = defineChain({
+  id: 1514,
+  name: "Story",
+  network: "story",
+  nativeCurrency: {
+    decimals: 18,
+    name: "IP",
+    symbol: "IP",
+  },
+  rpcUrls: {
+    default: { http: ["https://mainnet.storyrpc.io"] },
+    public: { http: ["https://mainnet.storyrpc.io"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Story explorer",
+      url: "https://storyscan.xyz",
+      apiUrl: "https://storyscan.xyz/api/v2",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      blockCreated: 1000, // TODO: confirm deploy block
+    },
+  },
+  testnet: false,
+});
