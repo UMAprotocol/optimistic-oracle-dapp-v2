@@ -47,6 +47,7 @@ export const projectIcons: Record<
   "Infinite Games": InfiniteGames,
 };
 
+// symbol => icon
 export const currencyIcons = {
   USDC,
   UMA,
@@ -54,6 +55,7 @@ export const currencyIcons = {
   WETH: ETH,
   USDB,
   IP,
+  WIP: IP,
 };
 
 export const chainIcons = {

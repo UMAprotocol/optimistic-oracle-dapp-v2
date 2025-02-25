@@ -124,13 +124,14 @@ export const story = defineChain({
     symbol: "IP",
   },
   rpcUrls: {
-    default: { http: ["http://mainnet.storyrpc.io/"] },
-    public: { http: ["http://mainnet.storyrpc.io/"] },
+    default: { http: ["https://mainnet.storyrpc.io"] },
+    public: { http: ["https://mainnet.storyrpc.io"] },
   },
   blockExplorers: {
     default: {
-      name: "Storyscan",
-      url: "https://dev-mainnet.storyscan.xyz",
+      name: "Story explorer",
+      url: "https://storyscan.xyz",
+      apiUrl: "https://storyscan.xyz/api/v2",
     },
   },
   contracts: {
