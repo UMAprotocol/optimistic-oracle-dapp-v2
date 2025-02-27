@@ -32,6 +32,7 @@ import unionWith from "lodash/unionWith";
 import type { ReactNode } from "react";
 import { createContext, useEffect, useReducer, useState } from "react";
 
+const maxSettledRequests = Number(config.maxSettledRequests);
 //TODO: hate this approach, will need to refactor in future, current services interface does not make it easy to define custom functions
 // this will be moved somewhere else in future pr.
 type EthersServicesList = [
@@ -153,10 +154,14 @@ function DataReducerFactory<Input extends Request | Assertion>(
       return result;
     }, init);
 
+    const sorted = sortQueries(queries);
     return {
       ...state,
       all: { ...all },
-      ...sortQueries(queries),
+      verify: sorted.verify,
+      propose: sorted.propose,
+      // limit settled length. this is adjustable through env but defaults to 5k if not specified
+      settled: sorted.settled.slice(0, maxSettledRequests),
     };
   };
 }

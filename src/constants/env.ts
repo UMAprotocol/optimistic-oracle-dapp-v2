@@ -140,6 +140,7 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_V2_8453: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V3_8453: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_8453: ss.optional(ss.string()),
+  NEXT_PUBLIC_MAX_SETTLED_REQUESTS: ss.optional(ss.string()),
 });
 export type Env = ss.Infer<typeof Env>;
 
@@ -308,6 +309,8 @@ const env = ss.create(
     NEXT_PUBLIC_SUBGRAPH_V3_8453: process.env.NEXT_PUBLIC_SUBGRAPH_V3_8453,
     NEXT_PUBLIC_SUBGRAPH_SKINNY_8453:
       process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_8453,
+    NEXT_PUBLIC_MAX_SETTLED_REQUESTS:
+      process.env.NEXT_PUBLIC_MAX_SETTLED_REQUESTS,
   },
   Env,
 );
@@ -359,6 +362,7 @@ const Config = ss.object({
   defaultLiveness: ss.string(),
   subgraphs: SubgraphConfigs,
   providers: ProviderConfigs,
+  maxSettledRequests: ss.string(),
 });
 export type Config = ss.Infer<typeof Config>;
 
@@ -447,6 +451,7 @@ function parseEnv(env: Env): Config {
     defaultLiveness: env.NEXT_PUBLIC_DEFAULT_LIVENESS ?? "7600",
     subgraphs,
     providers,
+    maxSettledRequests: env.NEXT_PUBLIC_MAX_SETTLED_REQUESTS ?? "5000",
   };
 }
 

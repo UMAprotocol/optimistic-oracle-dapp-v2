@@ -47,7 +47,7 @@ export function Title({ page }: { page: PageName }) {
       <TextWrapper>
         <TitleText>{pageTitle}</TitleText>
         {page === "settled" && (
-          <SubTitle>Historical UMA oracle requests</SubTitle>
+          <SubTitle>Recently settled UMA oracle requests</SubTitle>
         )}
       </TextWrapper>
     </Wrapper>
