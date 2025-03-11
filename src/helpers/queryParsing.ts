@@ -31,6 +31,13 @@ export function isPolymarketRequester(address: string): boolean {
   return polymarketRequesters.includes(address.toLowerCase());
 }
 
+const prognozeRequesters = [
+  "0x437d2Ed00C7D6d6C8401c7b810b51b422593c22B".toLowerCase(),
+];
+export function isPrognozeRequester(address: string): boolean {
+  return prognozeRequesters.includes(address.toLowerCase());
+}
+
 // Predict.Fun Adapters
 const predictFunBinaryOutcomeAdapter =
   "0x0C1331E4a4bBD59B7aae2902290506bf8fbE3e6c";
@@ -299,10 +306,12 @@ export function getQueryMetaData(
   }
 
   if (decodedIdentifier === "MULTIPLE_CHOICE_QUERY") {
-    const projectName = checkIfIsInfiniteGames(decodedIdentifier, requester)
-      ? "Infinite Games"
-      : "Unknown";
-
+    let projectName: ProjectName = "Unknown";
+    if (isPrognozeRequester(requester)) {
+      projectName = "Prognoze";
+    } else if (checkIfIsInfiniteGames(decodedIdentifier, requester)) {
+      projectName = "Infinite Games";
+    }
     return tryParseMultipleChoiceQuery(decodedQueryText, projectName);
   }
   if (decodedIdentifier === "MULTIPLE_VALUES") {

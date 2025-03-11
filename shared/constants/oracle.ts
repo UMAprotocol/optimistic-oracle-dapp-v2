@@ -19,6 +19,7 @@ export const projects = [
   "Rated",
   "Predict.Fun",
   "Infinite Games",
+  "Prognoze",
 ] as const;
 
 export type ProjectName = (typeof projects)[number];
