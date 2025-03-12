@@ -30,6 +30,7 @@ import Rated from "public/assets/icons/projects/rated.svg";
 import Unknown from "public/assets/icons/projects/unknown.svg";
 import PredictFun from "public/assets/icons/projects/predict-fun.svg";
 import InfiniteGames from "public/assets/icons/projects/infinite-games.svg";
+import Prognoze from "public/assets/icons/projects/prognoze.svg";
 
 export const projectIcons: Record<
   ProjectName,
@@ -45,6 +46,7 @@ export const projectIcons: Record<
   Rated,
   "Predict.Fun": PredictFun,
   "Infinite Games": InfiniteGames,
+  Prognoze,
 };
 
 // symbol => icon
