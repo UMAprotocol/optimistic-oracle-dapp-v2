@@ -17,7 +17,7 @@ const polymarketCtfAdapterAddressV2 =
   "0x2f5e3684cb1f318ec51b00edba38d79ac2c0aa9d";
 const polymarketCtfExchangeAddress =
   "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E";
-const polymarketSportsAddress = "0xbec046Ae23FEE91643a45b03f12c6afDb2628d9c";
+const polymarketSportsAddress = "0xb21182d0494521Cf45DbbeEbb5A3ACAAb6d22093";
 
 export const polymarketRequesters = [
   polymarketBinaryAdapterAddress.toLowerCase(),
