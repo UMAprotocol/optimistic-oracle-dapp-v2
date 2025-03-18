@@ -9,8 +9,10 @@ import styled from "styled-components";
 import { ConnectButton } from "./ConnectButton";
 import { MobileMenu } from "./MobileMenu";
 import { Nav } from "./Nav";
+import { ProposalModal } from "../Modals/ProposalModal";
 
 export function NavBar() {
+  const [openModal, setOpenModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   function openMobileMenu() {
@@ -27,6 +29,12 @@ export function NavBar() {
         <LogoIcon />
         <HomeButtonText>ORACLE</HomeButtonText>
       </HomeButton>
+      <button onClick={() => setOpenModal(true)}>OPEN ME</button>
+      <ProposalModal
+        onContinue={() => console.log("continue")}
+        onOpenChange={(open) => setOpenModal(open)}
+        open={openModal}
+      />
       <NavWrapper>
         <Nav />
       </NavWrapper>
