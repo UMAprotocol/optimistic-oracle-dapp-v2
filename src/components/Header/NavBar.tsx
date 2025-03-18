@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { ConnectButton } from "./ConnectButton";
 import { MobileMenu } from "./MobileMenu";
 import { Nav } from "./Nav";
+import { Modal } from "../Modal";
 
 export function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,6 +28,7 @@ export function NavBar() {
         <LogoIcon />
         <HomeButtonText>ORACLE</HomeButtonText>
       </HomeButton>
+      <Modal />
       <NavWrapper>
         <Nav />
       </NavWrapper>

@@ -1,3 +1,4 @@
+import { cn } from "@/helpers";
 import Close from "public/assets/icons/close.svg";
 import type { CSSProperties } from "react";
 import styled from "styled-components";
@@ -7,6 +8,7 @@ interface Props {
   size?: CSSProperties["width"];
   variant?: "light" | "dark";
   ariaLabel?: string;
+  className?: string;
 }
 /**
  * A close button component — shows an X icon.
@@ -19,6 +21,7 @@ export function CloseButton({
   size = 14,
   variant = "light",
   ariaLabel = "close",
+  className,
 }: Props) {
   const style = {
     "--size": typeof size === "number" ? `${size}px` : size,
@@ -26,7 +29,12 @@ export function CloseButton({
   } as CSSProperties;
 
   return (
-    <Button onClick={onClick} style={style} aria-label={ariaLabel}>
+    <Button
+      className={cn(className)}
+      onClick={onClick}
+      style={style}
+      aria-label={ariaLabel}
+    >
       <CloseIcon />
     </Button>
   );
