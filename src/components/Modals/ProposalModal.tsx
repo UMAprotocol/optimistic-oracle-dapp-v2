@@ -7,19 +7,25 @@ import { TriangleAlert } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 
 export type ProposalModalProps = Omit<ModalProps, "children"> & {
-  onContinue: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onContinue: (() => void) | (() => Promise<any>) | undefined;
   className?: string;
 };
+
+export const earlyProposalKey = "show-early-proposal-warning";
 
 export function ProposalModal({
   className,
   onContinue,
+  onOpenChange,
   ...props
 }: ProposalModalProps) {
-  const [showWarning, setShowWarning] = useLocalStorage(
-    "show-early-proposal-warning",
-    true,
-  );
+  const [showWarning, setShowWarning] = useLocalStorage(earlyProposalKey, true);
+
+  function handleContinue() {
+    onOpenChange?.(false);
+    void onContinue?.();
+  }
 
   return (
     <Modal {...props}>
@@ -58,12 +64,12 @@ export function ProposalModal({
         </label>
 
         <div className="flex-col mt-2 flex sm:flex-row w-full justify-between gap-2">
-          <Button width="100%" onClick={onContinue} variant="primary">
+          <Button width="100%" onClick={handleContinue} variant="primary">
             Continue and sign
           </Button>
           <Button
             width="100%"
-            onClick={() => props.onOpenChange?.(false)}
+            onClick={() => onOpenChange?.(false)}
             variant="secondary"
           >
             Cancel

@@ -1,8 +1,15 @@
+"use client";
 import { Button } from "@/components/Button";
+import {
+  earlyProposalKey,
+  ProposalModal,
+} from "@/components/Modals/ProposalModal";
 import { Tooltip } from "@/components/Tooltip";
+import { propose } from "@/constants";
 import { capitalizeFirstLetter } from "@/helpers";
 import type { ActionState } from "@/hooks";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 export function PrimaryActionButton({
   action,
@@ -10,18 +17,36 @@ export function PrimaryActionButton({
   disabled,
   disabledReason,
 }: ActionState) {
+  const [showWarning] = useLocalStorage(earlyProposalKey, true);
+  const [showWarningModal, setShowWarningModal] = useState(false);
+
+  function handleAction() {
+    // make this more generic if we plan on showing warnings/confirmation for other actions
+    if (title !== propose || !showWarning) {
+      action?.();
+    } else {
+      setShowWarningModal(true);
+    }
+  }
+
   return (
     <div>
       <InnerWrapper disabled={disabled} disabledReason={disabledReason}>
         <Button
           variant="primary"
-          onClick={action}
+          onClick={handleAction}
           disabled={disabled}
           width="100%"
         >
           {capitalizeFirstLetter(title)}
         </Button>
       </InnerWrapper>
+
+      <ProposalModal
+        onOpenChange={setShowWarningModal}
+        open={showWarningModal}
+        onContinue={action}
+      />
     </div>
   );
 }
