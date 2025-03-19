@@ -38,7 +38,7 @@ export function ProposalModal({
         <p>
           Proposals that are made even seconds before results are final can be
           disputed and resolved TOO EARLY which results in the proposer losing
-          their bond. 82% of successful disputes are resolved TOO EARLY. Read
+          their bond. 82% of unsuccessful proposals are resolved TOO EARLY. Read
           more{" "}
           <a
             href="https://blog.uma.xyz/articles/what-is-p4"
