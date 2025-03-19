@@ -17,13 +17,12 @@ export const earlyProposalKey = "show-early-proposal-warning";
 export function ProposalModal({
   className,
   onContinue,
-  onOpenChange,
   ...props
 }: ProposalModalProps) {
   const [showWarning, setShowWarning] = useLocalStorage(earlyProposalKey, true);
 
   function handleContinue() {
-    onOpenChange?.(false);
+    props.onOpenChange?.(false);
     void onContinue?.();
   }
 
@@ -69,7 +68,7 @@ export function ProposalModal({
           </Button>
           <Button
             width="100%"
-            onClick={() => onOpenChange?.(false)}
+            onClick={() => props.onOpenChange?.(false)}
             variant="secondary"
           >
             Cancel
