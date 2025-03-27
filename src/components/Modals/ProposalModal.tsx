@@ -31,24 +31,29 @@ export function ProposalModal({
       <div className="flex flex-col w-full gap-4">
         <div className="flex justify-start gap-2 pr-4">
           <TriangleAlert className="text-red-500 shrink-0" />
-          <span className="font-bold">
-            Are you sure this proposal is not Too Early?
-          </span>
+          <span className="font-bold">Is This Proposal Too Early?</span>
         </div>
         <p>
-          Proposals that are made even seconds before results are final can be
-          disputed and resolved TOO EARLY which results in the proposer losing
-          their bond. 82% of unsuccessful proposals are resolved TOO EARLY. Read
-          more{" "}
+          Proposals made even seconds before results are final can be disputed
+          and resolved as being too early (P4). If this happens, you will lose
+          your bond.{" "}
+          <strong>
+            Please review the resolution criteria before proposing.
+          </strong>
+        </p>
+
+        <p className="py-1">
           <a
             href="https://blog.uma.xyz/articles/what-is-p4"
             target="_blank"
             rel="noreferrer"
             className="text-red-600 underline hover:no-underline "
           >
-            here.
-          </a>
+            Learn more
+          </a>{" "}
+          about timing your proposals correctly.
         </p>
+
         <label
           className="flex py-1 gap-2 items-center cursor-pointer"
           htmlFor="show-early-proposal-checkbox"
