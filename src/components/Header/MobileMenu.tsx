@@ -53,16 +53,20 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
         </NavItems>
       </Nav>
       <SocialLinksWrapper>
-        {socialLinks.map(({ href, label }) => (
-          <SocialLink
-            href={href}
-            target="_blank"
-            key={href}
-            aria-label={`${label} link`}
-          >
-            {React.createElement(socialIcons[label])}
-          </SocialLink>
-        ))}
+        {socialLinks.map(({ href, label }) => {
+          const Icon = socialIcons[label];
+          return (
+            <SocialLink
+              href={href}
+              target="_blank"
+              key={href}
+              aria-label={`${label} link`}
+              className="group text-text hover:text-red-600"
+            >
+              <Icon className="text-inherit" />
+            </SocialLink>
+          );
+        })}
       </SocialLinksWrapper>
       <PoweredByUmaWrapper>
         <PoweredByUmaText>
