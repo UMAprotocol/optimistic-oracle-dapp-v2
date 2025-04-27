@@ -1,18 +1,15 @@
 import { CloseButton, PanelBase } from "@/components";
-import { navLinks, socialLinks } from "@/constants";
+import { navLinks, socialIcons, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import ExternalLink from "public/assets/icons/external-link.svg";
-import Discord from "public/assets/icons/social/discord.svg";
-import Discourse from "public/assets/icons/social/discourse.svg";
-import Github from "public/assets/icons/social/github.svg";
-import Medium from "public/assets/icons/social/medium.svg";
-import Twitter from "public/assets/icons/social/twitter.svg";
+
 import Logo from "public/assets/logo.svg";
 import type { CSSProperties } from "react";
 import styled from "styled-components";
 import { MobileMenuConnectButton } from "./MobileMenuConnectButton";
+import React from "react";
 
 interface Props {
   panelOpen: boolean;
@@ -21,14 +18,6 @@ interface Props {
 export function MobileMenu({ panelOpen, closePanel }: Props) {
   const pathname = usePathname()!;
   const searchParams = useSearchParams();
-
-  const socialIcons = {
-    Discord: <DiscordIcon />,
-    Discourse: <DiscourseIcon />,
-    Github: <GithubIcon />,
-    Medium: <MediumIcon />,
-    Twitter: <TwitterIcon />,
-  };
 
   return (
     <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
@@ -64,16 +53,20 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
         </NavItems>
       </Nav>
       <SocialLinksWrapper>
-        {socialLinks.map(({ href, label }) => (
-          <SocialLink
-            href={href}
-            target="_blank"
-            key={href}
-            aria-label={`${label} link`}
-          >
-            {socialIcons[label]}
-          </SocialLink>
-        ))}
+        {socialLinks.map(({ href, label }) => {
+          const Icon = socialIcons[label];
+          return (
+            <SocialLink
+              href={href}
+              target="_blank"
+              key={href}
+              aria-label={`${label} link`}
+              className="group text-text hover:text-red-600"
+            >
+              <Icon className="text-inherit" />
+            </SocialLink>
+          );
+        })}
       </SocialLinksWrapper>
       <PoweredByUmaWrapper>
         <PoweredByUmaText>
@@ -163,13 +156,3 @@ const LogoIcon = styled(Logo)`
     fill: var(--red-500);
   }
 `;
-
-const DiscordIcon = styled(Discord)``;
-
-const DiscourseIcon = styled(Discourse)``;
-
-const GithubIcon = styled(Github)``;
-
-const MediumIcon = styled(Medium)``;
-
-const TwitterIcon = styled(Twitter)``;

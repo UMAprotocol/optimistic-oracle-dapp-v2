@@ -31,6 +31,12 @@ import Unknown from "public/assets/icons/projects/unknown.svg";
 import PredictFun from "public/assets/icons/projects/predict-fun.svg";
 import InfiniteGames from "public/assets/icons/projects/infinite-games.svg";
 import Prognoze from "public/assets/icons/projects/prognoze.svg";
+// Social Icons
+import Discord from "public/assets/icons/social/discord.svg";
+import Discourse from "public/assets/icons/social/discourse.svg";
+import Github from "public/assets/icons/social/github.svg";
+import Medium from "public/assets/icons/social/medium.svg";
+import Twitter from "public/assets/icons/social/twitter.svg";
 
 export const projectIcons: Record<
   ProjectName,
@@ -75,6 +81,14 @@ export const chainIcons = {
   Story,
 };
 
+export const socialIcons = {
+  Discord,
+  Discourse,
+  Github,
+  Medium,
+  Twitter,
+} as const;
+
 export function getProjectIcon(project: ProjectName | null | undefined) {
   if (!project || !hasProperty(project, projectIcons))
     return projectIcons.Unknown;
@@ -91,4 +105,9 @@ export function getChainIcon(chainId: ChainId | undefined) {
   const chain = chainsById[chainId];
   if (!chain || !hasProperty(chain, chainIcons)) return;
   return chainIcons[chain];
+}
+
+export function getSocialIcon(name?: keyof typeof socialIcons) {
+  if (!name) return;
+  return socialIcons[name];
 }
