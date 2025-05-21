@@ -1,5 +1,4 @@
 import { hasProperty } from "@/helpers";
-import type { ProjectName } from "@shared/constants";
 import { chainsById } from "@shared/constants";
 import type { ChainId } from "@shared/types";
 // chains
@@ -37,6 +36,7 @@ import Discourse from "public/assets/icons/social/discourse.svg";
 import Github from "public/assets/icons/social/github.svg";
 import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
+import type { ProjectName } from "@/helpers/projects";
 
 export const projectIcons: Record<
   ProjectName,

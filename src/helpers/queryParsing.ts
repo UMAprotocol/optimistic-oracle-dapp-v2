@@ -4,8 +4,9 @@ import approvedIdentifiers from "@/data/approvedIdentifiersTable";
 import type { DropdownItem, MetaData } from "@/types";
 import { formatEther } from "@/helpers";
 import { chunk } from "lodash";
-import type { ProjectName } from "@shared/constants";
 import * as s from "superstruct";
+import type { ProjectName } from "./projects";
+import { projects, validateProject } from "./projects";
 
 // hard coded known poly addresses:
 // https://github.com/UMAprotocol/protocol/blob/master/packages/monitor-v2/src/monitor-polymarket/common.ts#L474
@@ -183,150 +184,179 @@ export function checkIfIsPolybet(
 
 export function getQueryMetaData(
   decodedIdentifier: string,
-  decodedQueryText: string,
+  decodedAncillaryData: string,
   requester: string,
 ): MetaData {
-  const isAcross = decodedIdentifier === "ACROSS-V2";
-  if (isAcross) {
-    const title = "Across V2 Request";
-    const description = `Across is an optimistic insured bridge that relies on a decentralized group of relayers to fulfill user deposit requests from EVM to EVM networks. Relayer funds are insured by liquidity providers in a single pool on Ethereum and refunds are processed via the UMA Optimistic Oracle. [Learn more.](https://docs.across.to/)`;
-    const umipUrl =
-      "https://github.com/UMAprotocol/UMIPs/blob/448375e1b9d2bd24dfd0627805ef6a7c2d72f74f/UMIPs/umip-157.md";
-    const umipNumber = "umip-157";
+  // Find matching project by checking against the validateProject function
+  const projectEntry = Object.values(projects).find((project) => {
+    return validateProject(project, {
+      requester,
+      decodedIdentifier,
+      decodedAncillaryData,
+    });
+  });
 
-    return {
-      title,
-      description,
-      umipUrl,
-      umipNumber,
-      proposeOptions: makeSimpleYesOrNoOptions(),
-      project: "Across",
-    };
-  }
+  const project = projectEntry ?? undefined;
+  const projectName = project?.name ?? "Unknown";
 
-  const isPolymarket = checkIfIsPolymarket(
-    decodedIdentifier,
-    decodedQueryText,
-    requester,
-  );
-  if (isPolymarket) {
-    const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
-    const ancillaryDataDescription =
-      getDescriptionFromAncillaryData(decodedQueryText);
-    const title = ancillaryDataTitle ?? decodedIdentifier;
-    const description =
-      ancillaryDataDescription ?? "No description was found for this request.";
-    const umipNumber = "umip-107";
-    const umipUrl =
-      "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
+  // If we found a matching project, generate metadata for it
+  if (project) {
+    // Generate project-specific metadata
+    if (project.name === "Across") {
+      const title = "Across V2 Request";
+      const description = `Across is an optimistic insured bridge that relies on a decentralized group of relayers to fulfill user deposit requests from EVM to EVM networks. Relayer funds are insured by liquidity providers in a single pool on Ethereum and refunds are processed via the UMA Optimistic Oracle. [Learn more.](https://docs.across.to/)`;
+      const umipUrl =
+        "https://github.com/UMAprotocol/UMIPs/blob/448375e1b9d2bd24dfd0627805ef6a7c2d72f74f/UMIPs/umip-157.md";
+      const umipNumber = "umip-157";
 
-    return {
-      title,
-      description,
-      umipUrl,
-      umipNumber,
-      proposeOptions: maybeMakePolymarketOptions(decodedQueryText),
-      project: "Polymarket",
-    };
-  }
-
-  const isPredictFun = checkIfIsPredictFun(
-    decodedIdentifier,
-    decodedQueryText,
-    requester,
-  );
-  if (isPredictFun) {
-    const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
-    const ancillaryDataDescription =
-      getDescriptionFromAncillaryData(decodedQueryText);
-    const title = ancillaryDataTitle ?? decodedIdentifier;
-    const description =
-      ancillaryDataDescription ?? "No description was found for this request.";
-    const umipNumber = "umip-107";
-    const umipUrl =
-      "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
-
-    return {
-      title,
-      description,
-      umipUrl,
-      umipNumber,
-      proposeOptions: maybeMakePolymarketOptions(decodedQueryText),
-      project: "Predict.Fun",
-    };
-  }
-
-  const isPolybet = checkIfIsPolybet(
-    decodedIdentifier,
-    decodedQueryText,
-    requester,
-  );
-  if (isPolybet) {
-    const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
-    const ancillaryDataDescription =
-      getDescriptionFromAncillaryData(decodedQueryText);
-    const title =
-      ancillaryDataTitle ??
-      polybetGetTitleIfNoTitleIdentifier(decodedQueryText);
-    const description = ancillaryDataDescription ?? decodedQueryText;
-    const umipNumber = "umip-107";
-    const umipUrl =
-      "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
-
-    return {
-      title,
-      description,
-      umipUrl,
-      umipNumber,
-      proposeOptions: maybeMakePolybetOptions(decodedQueryText),
-      project: "PolyBet",
-    };
-  }
-
-  const isCozy = checkIfIsCozy(decodedQueryText);
-  if (isCozy) {
-    const ancillaryDataTitle = getTitleFromAncillaryData(decodedQueryText);
-    const ancillaryDataDescription =
-      getDescriptionFromAncillaryData(decodedQueryText);
-    const title = ancillaryDataTitle ?? decodedIdentifier;
-    const description =
-      ancillaryDataDescription ?? "No description was found for this request.";
-    const umipNumber = "umip-107";
-    const umipUrl =
-      "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
-
-    return {
-      title,
-      description,
-      umipUrl,
-      umipNumber,
-      proposeOptions: makeSimpleYesOrNoOptions(),
-      project: "Cozy Finance",
-    };
-  }
-
-  if (decodedIdentifier === "MULTIPLE_CHOICE_QUERY") {
-    let projectName: ProjectName = "Unknown";
-    if (isPrognozeRequester(requester)) {
-      projectName = "Prognoze";
-    } else if (checkIfIsInfiniteGames(decodedIdentifier, requester)) {
-      projectName = "Infinite Games";
+      return {
+        title,
+        description,
+        umipUrl,
+        umipNumber,
+        proposeOptions: makeSimpleYesOrNoOptions(),
+        project: project.name,
+      };
     }
-    return tryParseMultipleChoiceQuery(decodedQueryText, projectName);
+
+    if (project.name === "Polymarket") {
+      const ancillaryDataTitle =
+        getTitleFromAncillaryData(decodedAncillaryData);
+      const ancillaryDataDescription =
+        getDescriptionFromAncillaryData(decodedAncillaryData);
+      const title = ancillaryDataTitle ?? decodedIdentifier;
+      const description =
+        ancillaryDataDescription ??
+        "No description was found for this request.";
+      const umipNumber = "umip-107";
+      const umipUrl =
+        "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
+
+      return {
+        title,
+        description,
+        umipUrl,
+        umipNumber,
+        proposeOptions:
+          decodedIdentifier === "MULTIPLE_VALUES"
+            ? tryParseMultipleValuesQuery(decodedAncillaryData, project.name)
+                .proposeOptions
+            : maybeMakePolymarketOptions(decodedAncillaryData),
+        project: project.name,
+      };
+    }
+
+    if (project.name === "Predict.Fun") {
+      const ancillaryDataTitle =
+        getTitleFromAncillaryData(decodedAncillaryData);
+      const ancillaryDataDescription =
+        getDescriptionFromAncillaryData(decodedAncillaryData);
+      const title = ancillaryDataTitle ?? decodedIdentifier;
+      const description =
+        ancillaryDataDescription ??
+        "No description was found for this request.";
+      const umipNumber = "umip-107";
+      const umipUrl =
+        "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
+
+      return {
+        title,
+        description,
+        umipUrl,
+        umipNumber,
+        proposeOptions: maybeMakePolymarketOptions(decodedAncillaryData),
+        project: project.name,
+      };
+    }
+
+    if (project.name === "PolyBet") {
+      const ancillaryDataTitle =
+        getTitleFromAncillaryData(decodedAncillaryData);
+      const ancillaryDataDescription =
+        getDescriptionFromAncillaryData(decodedAncillaryData);
+      const title =
+        ancillaryDataTitle ??
+        polybetGetTitleIfNoTitleIdentifier(decodedAncillaryData);
+      const description = ancillaryDataDescription ?? decodedAncillaryData;
+      const umipNumber = "umip-107";
+      const umipUrl =
+        "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
+
+      return {
+        title,
+        description,
+        umipUrl,
+        umipNumber,
+        proposeOptions: maybeMakePolybetOptions(decodedAncillaryData),
+        project: project.name,
+      };
+    }
+
+    if (project.name === "Cozy Finance") {
+      const ancillaryDataTitle =
+        getTitleFromAncillaryData(decodedAncillaryData);
+      const ancillaryDataDescription =
+        getDescriptionFromAncillaryData(decodedAncillaryData);
+      const title = ancillaryDataTitle ?? decodedIdentifier;
+      const description =
+        ancillaryDataDescription ??
+        "No description was found for this request.";
+      const umipNumber = "umip-107";
+      const umipUrl =
+        "https://github.com/UMAprotocol/UMIPs/blob/master/UMIPs/umip-107.md";
+
+      return {
+        title,
+        description,
+        umipUrl,
+        umipNumber,
+        proposeOptions: makeSimpleYesOrNoOptions(),
+        project: project.name,
+      };
+    }
+
+    if (project.name === "Sherlock") {
+      const identifierDetails = approvedIdentifiers[decodedIdentifier];
+      const title = "Sherlock Claim";
+      const description = identifierDetails.summary;
+      const umipUrl = identifierDetails.umipLink.url;
+      const umipNumber = identifierDetails.umipLink.number;
+
+      return {
+        title,
+        description,
+        umipUrl,
+        umipNumber,
+        proposeOptions: isYesOrNo(decodedIdentifier)
+          ? makeSimpleYesOrNoOptions()
+          : undefined,
+        project: project.name,
+      };
+    }
+
+    if (project.name === "Prognoze" || project.name === "Infinite Games") {
+      return tryParseMultipleChoiceQuery(decodedAncillaryData, project.name);
+    }
   }
+
+  // If no specific project matched or we need identifier-based fallback
+  // Check for specific identifiers and create appropriate options
+  if (decodedIdentifier === "MULTIPLE_CHOICE_QUERY") {
+    return tryParseMultipleChoiceQuery(decodedAncillaryData, projectName);
+  }
+
   if (decodedIdentifier === "MULTIPLE_VALUES") {
-    return tryParseMultipleValuesQuery(decodedQueryText, "Polymarket");
+    return tryParseMultipleValuesQuery(decodedAncillaryData, projectName);
   }
 
   const identifierDetails = approvedIdentifiers[decodedIdentifier];
   const isApprovedIdentifier = Boolean(identifierDetails);
   if (isApprovedIdentifier) {
-    const isSherlock = decodedIdentifier === "SHERLOCK_CLAIM";
-    const title = isSherlock ? "Sherlock Claim" : identifierDetails.identifier;
+    const title = identifierDetails.identifier;
     const description = identifierDetails.summary;
     const umipUrl = identifierDetails.umipLink.url;
     const umipNumber = identifierDetails.umipLink.number;
-    const project = isSherlock ? "Sherlock" : "Unknown";
+
     return {
       title,
       description,
@@ -335,18 +365,18 @@ export function getQueryMetaData(
       proposeOptions: isYesOrNo(decodedIdentifier)
         ? makeSimpleYesOrNoOptions()
         : undefined,
-      project,
+      project: projectName,
     };
   }
 
-  // if all checks fail, return with generic values generated from the data we have
+  // Default fallback with generic values if nothing matched
   return {
     title: decodedIdentifier,
     description: "No description found for this request.",
     umipUrl: undefined,
     umipNumber: undefined,
     proposeOptions: undefined,
-    project: "Unknown",
+    project: projectName,
   };
 }
 
@@ -917,3 +947,12 @@ export function maybeMakePolybetOptions(
     ];
   }
 }
+
+export {
+  makeSimpleYesOrNoOptions,
+  getTitleFromAncillaryData,
+  getDescriptionFromAncillaryData,
+  polybetGetTitleIfNoTitleIdentifier,
+  tryParseMultipleChoiceQuery,
+  tryParseMultipleValuesQuery,
+};
