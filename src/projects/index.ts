@@ -102,6 +102,14 @@ export const projects = {
     name: "MetaMarket",
     requesters: ["0x46500F8BfF8B8DEE2DA41e8960681C792270e10c"],
     identifiers: ["YES_OR_NO_QUERY"],
+    makeProposeOptions(decodedAncillaryData, decodedIdentifier) {
+      switch (decodedIdentifier) {
+        case "YES_OR_NO_QUERY":
+          return maybeMakePolymarketOptions(decodedAncillaryData);
+        default:
+          undefined;
+      }
+    },
   },
   oSnap: {
     name: "OSnap",
