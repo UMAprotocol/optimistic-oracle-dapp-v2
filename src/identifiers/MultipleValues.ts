@@ -4,7 +4,7 @@ import { Identifier } from "./abstract";
 import type { MetaData } from "./abstract";
 import type { DropdownItem } from "@/types/ui";
 
-const MultipleValuesQuery = s.object({
+const MultipleValuesQuery = s.type({
   // The title of the request
   title: s.string(),
   // Description of the request
@@ -12,6 +12,7 @@ const MultipleValuesQuery = s.object({
   // Values will be encoded into the settled price in the same order as the provided labels. The oracle UI will display each Label along with an input field. 7 labels maximum.
   labels: s.array(s.string()),
 });
+
 type MultipleValuesData = s.Infer<typeof MultipleValuesQuery>;
 
 export class MultipleValues extends Identifier {
@@ -60,7 +61,7 @@ export class MultipleValues extends Identifier {
       const json = JSON.parse(maybeJson);
 
       // Check if the JSON has the expected format
-      if (!json || !this.isMultipleChoiceQuery(json)) {
+      if (!json || !this.isMultipleValuesQuery(json)) {
         throw new Error(
           "Invalid MULTIPLE_VALUES request. Labels Array malformed",
         );
@@ -84,7 +85,7 @@ export class MultipleValues extends Identifier {
     }
   }
 
-  private isMultipleChoiceQuery(
+  private isMultipleValuesQuery(
     decodedAncillaryData: unknown,
   ): decodedAncillaryData is MultipleValuesData {
     return s.is(decodedAncillaryData, MultipleValuesQuery);

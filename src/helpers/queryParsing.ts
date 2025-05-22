@@ -118,7 +118,7 @@ export function getTitleAndDescriptionFromTokens(
   }
 }
 
-const OracleDetailsSchema = s.object({
+const OracleDetailsSchema = s.type({
   title: s.string(),
   description: s.string(),
 });
@@ -126,13 +126,18 @@ const OracleDetailsSchema = s.object({
 type OracleDetailsSchemaT = s.Infer<typeof OracleDetailsSchema>;
 
 export function getTitleAndDescriptionFromJson(
-  maybeJson: string,
+  decodedAncillaryData: string,
 ): OracleDetailsSchemaT | undefined {
   try {
-    const [error, data] = s.validate(
-      JSON.parse(maybeJson),
-      OracleDetailsSchema,
-    );
+    const endOfObjectIndex = decodedAncillaryData.lastIndexOf("}");
+    const maybeJson =
+      endOfObjectIndex > 0
+        ? decodedAncillaryData.slice(0, endOfObjectIndex + 1)
+        : decodedAncillaryData;
+
+    const json = JSON.parse(maybeJson);
+
+    const [error, data] = s.validate(json, OracleDetailsSchema);
 
     return error
       ? undefined
