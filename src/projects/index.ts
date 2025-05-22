@@ -1,8 +1,16 @@
+import type { DropdownItem } from "@/types";
 import type { Address } from "wagmi";
+import { maybeMakePolymarketOptions } from "./polymarket";
+import { maybeMakePolybetOptions } from "./polybet";
 
 export type Project = {
   name: string;
+  makeProposeOptions?: (
+    decodedAncillaryData: string,
+    decodedIdentifier: string,
+  ) => DropdownItem[] | undefined;
   identifiers?: readonly string[]; // if listed then a request's identifier must be in this list for a match
+  privateIdentifiers?: readonly string[]; // identifiers that are specific to this project; if a request uses one of these, it's always this project
   requesters?: readonly Address[];
   requiredTokens?: readonly string[]; // Tokens that must appear in ancillary data
 };
@@ -17,6 +25,15 @@ export function validateProject(
   }>,
 ): boolean {
   const { requester, decodedIdentifier, decodedAncillaryData } = params;
+
+  // First check if this identifier is in the project's privateIdentifiers list
+  if (
+    project.privateIdentifiers?.length &&
+    decodedIdentifier &&
+    project.privateIdentifiers.includes(decodedIdentifier)
+  ) {
+    return true;
+  }
 
   // can't validate
   if (!requester && !decodedIdentifier && !decodedAncillaryData) {
@@ -67,7 +84,7 @@ export function validateProject(
 export const projects = {
   across: {
     name: "Across",
-    identifiers: ["ACROSS-V2"],
+    privateIdentifiers: ["ACROSS-V2"],
   },
   cozyFinance: {
     name: "Cozy Finance",
@@ -81,6 +98,11 @@ export const projects = {
     ],
     identifiers: ["MULTIPLE_CHOICE_QUERY"],
   },
+  metaMarket: {
+    name: "MetaMarket",
+    requesters: ["0x46500F8BfF8B8DEE2DA41e8960681C792270e10c"],
+    identifiers: ["YES_OR_NO_QUERY"],
+  },
   oSnap: {
     name: "OSnap",
     identifiers: ["MULTIPLE_CHOICE_QUERY"],
@@ -93,17 +115,34 @@ export const projects = {
       "0xef888bc2bbe8e4858373cdd5edbff663aa194105",
     ],
     requiredTokens: ["res_data:"],
+    makeProposeOptions(decodedAncillaryData, decodedIdentifier) {
+      switch (decodedIdentifier) {
+        case "YES_OR_NO_QUERY":
+          return maybeMakePolybetOptions(decodedAncillaryData);
+        default:
+          undefined;
+      }
+    },
   },
   polymarket: {
     name: "Polymarket",
     identifiers: ["YES_OR_NO_QUERY", "MULTIPLE_VALUES"],
+    // https://github.com/UMAprotocol/protocol/blob/master/packages/monitor-v2/src/monitor-polymarket/common.ts#L474
     requesters: [
-      "0xcb1822859cef82cd2eb4e6276c7916e692995130",
-      "0x6a9d222616c90fca5754cd1333cfd9b7fb6a4f74",
-      "0x2f5e3684cb1f318ec51b00edba38d79ac2c0aa9d",
-      "0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e",
-      "0xb21182d0494521cf45dbbeebb5a3acaab6d22093",
+      "0xcb1822859cef82cd2eb4e6276c7916e692995130", // Polymarket Binary Adapter Address
+      "0x6a9d222616c90fca5754cd1333cfd9b7fb6a4f74", // Polymarket CTF Adapter Address
+      "0x2f5e3684cb1f318ec51b00edba38d79ac2c0aa9d", // Polymarket CTF Adapter Address V2
+      "0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e", // Polymarket CTF Exchange Address
+      "0xb21182d0494521cf45dbbeebb5a3acaab6d22093", // Polymarket Sports Address
     ],
+    makeProposeOptions(decodedAncillaryData, decodedIdentifier) {
+      switch (decodedIdentifier) {
+        case "YES_OR_NO_QUERY":
+          return maybeMakePolymarketOptions(decodedAncillaryData);
+        default:
+          undefined;
+      }
+    },
   },
   predictFun: {
     name: "Predict.Fun",
@@ -121,11 +160,11 @@ export const projects = {
   },
   rated: {
     name: "Rated",
-    identifiers: ["ROPU_ETHx"],
+    privateIdentifiers: ["ROPU_ETHx"],
   },
   sherlock: {
     name: "Sherlock",
-    identifiers: ["SHERLOCK_CLAIM"],
+    privateIdentifiers: ["SHERLOCK_CLAIM"],
   },
   unknown: {
     name: "Unknown",

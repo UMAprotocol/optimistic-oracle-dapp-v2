@@ -1,5 +1,5 @@
 import type { actionTitles, filterNames } from "@/constants";
-import type { ProjectName } from "@/helpers/projects";
+import type { ProjectName } from "@/projects";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type {
   disputeAssertionAbi,
@@ -402,7 +402,7 @@ export type SettledEvent = {
 };
 
 export type UmipLink = {
-  number: string;
+  number: `UMIP-${number}`;
   url: string;
 };
 

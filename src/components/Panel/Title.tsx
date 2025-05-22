@@ -2,7 +2,7 @@ import { getProjectIcon } from "@/constants";
 import { CloseButton } from "../CloseButton";
 import { LoadingSkeleton } from "../LoadingSkeleton";
 import { TruncatedTitle } from "../TruncatedTitle";
-import type { ProjectName } from "@/helpers/projects";
+import type { ProjectName } from "@/projects";
 
 type Props = {
   title?: string;

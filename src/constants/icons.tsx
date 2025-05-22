@@ -36,7 +36,7 @@ import Discourse from "public/assets/icons/social/discourse.svg";
 import Github from "public/assets/icons/social/github.svg";
 import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
-import type { ProjectName } from "@/helpers/projects";
+import type { ProjectName } from "@/projects";
 
 export const projectIcons: Record<
   ProjectName,
@@ -53,6 +53,7 @@ export const projectIcons: Record<
   "Predict.Fun": PredictFun,
   "Infinite Games": InfiniteGames,
   Prognoze,
+  MetaMarket: Unknown, // TODO add metaMarket logo
 };
 
 // symbol => icon
