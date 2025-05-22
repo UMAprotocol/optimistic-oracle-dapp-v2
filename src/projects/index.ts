@@ -152,6 +152,14 @@ export const projects = {
     ],
     identifiers: ["YES_OR_NO_QUERY"],
     requiredTokens: ["res_data:", "q: title:"],
+    makeProposeOptions(decodedAncillaryData, decodedIdentifier) {
+      switch (decodedIdentifier) {
+        case "YES_OR_NO_QUERY":
+          return maybeMakePolymarketOptions(decodedAncillaryData);
+        default:
+          undefined;
+      }
+    },
   },
   prognoze: {
     name: "Prognoze",

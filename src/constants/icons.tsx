@@ -30,6 +30,7 @@ import Unknown from "public/assets/icons/projects/unknown.svg";
 import PredictFun from "public/assets/icons/projects/predict-fun.svg";
 import InfiniteGames from "public/assets/icons/projects/infinite-games.svg";
 import Prognoze from "public/assets/icons/projects/prognoze.svg";
+import MetaMarket from "public/assets/icons/projects/meta-market.svg";
 // Social Icons
 import Discord from "public/assets/icons/social/discord.svg";
 import Discourse from "public/assets/icons/social/discourse.svg";
@@ -53,7 +54,7 @@ export const projectIcons: Record<
   "Predict.Fun": PredictFun,
   "Infinite Games": InfiniteGames,
   Prognoze,
-  MetaMarket: Unknown, // TODO add metaMarket logo
+  MetaMarket,
 };
 
 // symbol => icon
