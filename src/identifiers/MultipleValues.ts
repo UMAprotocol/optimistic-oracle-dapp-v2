@@ -1,4 +1,4 @@
-import { getTitleAndDescriptionFromTokens } from "../helpers/queryParsing";
+import { getTitleAndDescriptionFromJson } from "../helpers/queryParsing";
 import * as s from "superstruct";
 import { Identifier } from "./abstract";
 import type { MetaData } from "./abstract";
@@ -23,12 +23,11 @@ export class MultipleValues extends Identifier {
   }
 
   getMetaData(decodedAncillaryData: string): MetaData {
-    const { title, description } =
-      getTitleAndDescriptionFromTokens(decodedAncillaryData);
+    const metaData = getTitleAndDescriptionFromJson(decodedAncillaryData);
 
     return {
-      title: title ?? this.name,
-      description: description ?? decodedAncillaryData,
+      title: metaData?.title ?? this.name,
+      description: metaData?.description ?? decodedAncillaryData,
       umipUrl: this.umipUrl,
       umipNumber: this.umipNumber,
     };

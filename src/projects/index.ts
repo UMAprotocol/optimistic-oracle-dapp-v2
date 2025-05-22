@@ -114,6 +114,7 @@ export const projects = {
   oSnap: {
     name: "OSnap",
     identifiers: ["MULTIPLE_CHOICE_QUERY"],
+    requiredTokens: ["rules:", "explanation:"],
   },
   polyBet: {
     name: "PolyBet",
