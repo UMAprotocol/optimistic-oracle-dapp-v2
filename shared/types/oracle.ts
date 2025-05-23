@@ -3,7 +3,6 @@ import type {
   chainsById,
   expiryTypes,
   oracleTypes,
-  projects,
   requestStates,
 } from "@shared/constants";
 import type { Address } from "wagmi";
@@ -62,10 +61,6 @@ export type ChainName = ChainNames[number];
 export type ExpiryTypes = typeof expiryTypes;
 
 export type ExpiryType = ExpiryTypes[number];
-
-export type Projects = typeof projects;
-
-export type Project = Projects[number];
 
 export type PageName = "verify" | "propose" | "settled";
 

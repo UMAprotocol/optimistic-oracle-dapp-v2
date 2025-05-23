@@ -75,7 +75,7 @@ function parseMarkdownUmipLink(umipLink: string): UmipLink {
     umipLink.indexOf(")"),
   );
 
-  return { number, url };
+  return { number, url } as UmipLink;
 }
 
 async function downloadFile(url: string, targetFile: fs.PathLike) {
