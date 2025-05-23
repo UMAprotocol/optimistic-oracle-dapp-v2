@@ -12,7 +12,9 @@ export type Project = {
   identifiers?: readonly string[]; // if listed then a request's identifier must be in this list for a match
   privateIdentifiers?: readonly string[]; // identifiers that are specific to this project; if a request uses one of these, it's always this project
   requesters?: readonly Address[];
-  requiredTokens?: readonly string[]; // Tokens that must appear in ancillary data
+  requiredTokens?: {
+    [identifier: string]: readonly string[]; // Map of identifier to required tokens for that identifier
+  };
 };
 
 // Central validation function to check if a request matches a project
@@ -66,13 +68,15 @@ export function validateProject(
     if (!matchesIdentifier) return false;
   }
 
-  // Check if required tokens are present in ancillary data
+  // Check if required tokens for this identifier are present in ancillary data
   if (
     project.requiredTokens &&
-    project.requiredTokens.length > 0 &&
-    decodedAncillaryData
+    decodedIdentifier &&
+    decodedAncillaryData &&
+    project.requiredTokens[decodedIdentifier]
   ) {
-    const hasAllRequiredTokens = project.requiredTokens.every((token) =>
+    const tokensForIdentifier = project.requiredTokens[decodedIdentifier];
+    const hasAllRequiredTokens = tokensForIdentifier.every((token) =>
       decodedAncillaryData.includes(token),
     );
     if (!hasAllRequiredTokens) return false;
@@ -88,7 +92,10 @@ export const projects = {
   },
   cozyFinance: {
     name: "Cozy Finance",
-    requiredTokens: ["This will revert if a non-YES answer is proposed."],
+    identifiers: ["YES_OR_NO_QUERY"],
+    requiredTokens: {
+      YES_OR_NO_QUERY: ["This will revert if a non-YES answer is proposed."],
+    },
   },
   infiniteGames: {
     name: "Infinite Games",
@@ -114,7 +121,9 @@ export const projects = {
   oSnap: {
     name: "OSnap",
     identifiers: ["MULTIPLE_CHOICE_QUERY"],
-    requiredTokens: ["rules:", "explanation:"],
+    requiredTokens: {
+      MULTIPLE_CHOICE_QUERY: ["rules:", "explanation:"],
+    },
   },
   polyBet: {
     name: "PolyBet",
@@ -123,7 +132,9 @@ export const projects = {
       "0x7dbb803aeb717ae9b0420c30669e128d6aa2e304",
       "0xef888bc2bbe8e4858373cdd5edbff663aa194105",
     ],
-    requiredTokens: ["res_data:"],
+    requiredTokens: {
+      YES_OR_NO_QUERY: ["res_data:"],
+    },
     makeProposeOptions(decodedAncillaryData, decodedIdentifier) {
       switch (decodedIdentifier) {
         case "YES_OR_NO_QUERY":
@@ -136,7 +147,6 @@ export const projects = {
   polymarket: {
     name: "Polymarket",
     identifiers: ["YES_OR_NO_QUERY", "MULTIPLE_VALUES"],
-    // https://github.com/UMAprotocol/protocol/blob/master/packages/monitor-v2/src/monitor-polymarket/common.ts#L474
     requesters: [
       "0xcb1822859cef82cd2eb4e6276c7916e692995130", // Polymarket Binary Adapter Address
       "0x6a9d222616c90fca5754cd1333cfd9b7fb6a4f74", // Polymarket CTF Adapter Address
@@ -144,6 +154,9 @@ export const projects = {
       "0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e", // Polymarket CTF Exchange Address
       "0xb21182d0494521cf45dbbeebb5a3acaab6d22093", // Polymarket Sports Address
     ],
+    requiredTokens: {
+      YES_OR_NO_QUERY: ["q: title:", "res_data:"],
+    },
     makeProposeOptions(decodedAncillaryData, decodedIdentifier) {
       switch (decodedIdentifier) {
         case "YES_OR_NO_QUERY":
@@ -160,7 +173,9 @@ export const projects = {
       "0xb0c308abec5d321a7b6a8e3ce43a368276178f7a",
     ],
     identifiers: ["YES_OR_NO_QUERY"],
-    requiredTokens: ["res_data:", "q: title:"],
+    requiredTokens: {
+      YES_OR_NO_QUERY: ["res_data:", "q: title:"],
+    },
     makeProposeOptions(decodedAncillaryData, decodedIdentifier) {
       switch (decodedIdentifier) {
         case "YES_OR_NO_QUERY":
