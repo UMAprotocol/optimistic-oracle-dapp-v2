@@ -1,6 +1,9 @@
 import type { DropdownItem } from "@/types";
 import type { Address } from "wagmi";
-import { maybeMakePolymarketOptions } from "./polymarket";
+import {
+  getInitializerAddress,
+  maybeMakePolymarketOptions,
+} from "./polymarket";
 import { maybeMakePolybetOptions } from "./polybet";
 
 export type Project = {
@@ -12,6 +15,7 @@ export type Project = {
   identifiers?: readonly string[]; // if listed then a request's identifier must be in this list for a match
   privateIdentifiers?: readonly string[]; // identifiers that are specific to this project; if a request uses one of these, it's always this project
   requesters?: readonly Address[];
+  initializers?: readonly Address[]; // if listed then a requests's initializer address must be in this list
   requiredTokens?: {
     [identifier: string]: readonly string[]; // Map of identifier to required tokens for that identifier
   };
@@ -54,6 +58,15 @@ export function validateProject(
   if (project?.requesters?.length && requester) {
     const matchesRequester = project.requesters.some(
       (addr) => addr.toLowerCase() === requester.toLowerCase(),
+    );
+    if (!matchesRequester) return false;
+  }
+
+  // Check if initializer matches (if defined)
+  const initializer = getInitializerAddress(decodedAncillaryData);
+  if (project?.initializers?.length && initializer) {
+    const matchesRequester = project.initializers.some(
+      (addr) => addr.toLowerCase() === initializer.toLowerCase(),
     );
     if (!matchesRequester) return false;
   }
@@ -147,6 +160,18 @@ export const projects = {
   polymarket: {
     name: "Polymarket",
     identifiers: ["YES_OR_NO_QUERY", "MULTIPLE_VALUES"],
+    initializers: [
+      "0x91430CaD2d3975766499717fA0D66A78D814E5c5",
+      "0xCD2CCA82e43Ca9E21d48564bB18897273Ada4a69",
+      "0x3162A9c12624DD2D4491fEA90FEb7AbBB481D7FC",
+      "0x70A66740774e7CA5739a454C60d72f2b0B7a0570",
+      "0x4ae84763ae13F0381CA6dA06B804EF9E64CE6B59",
+      "0xE4D717ae9467Be8ED8bD84A0e03a279e7150d459",
+      "0x91190A80eE09B55200f1622012eAf494Cc25a6a3",
+      "0x8A667535eB42F942186C30E70c72483612E0854b",
+      "0x084EA0bAC17aD8a23A84F596b4adcA432aa118A3",
+      "0x9E2ad3FB89B6357b601932B673f77B371ff91871",
+    ],
     requesters: [
       "0xcb1822859cef82cd2eb4e6276c7916e692995130", // Polymarket Binary Adapter Address
       "0x6a9d222616c90fca5754cd1333cfd9b7fb6a4f74", // Polymarket CTF Adapter Address

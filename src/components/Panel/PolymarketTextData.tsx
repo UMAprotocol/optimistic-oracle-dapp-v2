@@ -4,6 +4,7 @@ import { useContractRead, type Address } from "wagmi";
 import { polymarketBulletinAbi } from "@shared/constants/abi";
 import { utils } from "ethers";
 import { isWagmiAddress, toUtcTimeFormatted } from "@/helpers";
+import { getInitializerAddress } from "@/projects/polymarket";
 
 interface Props {
   description: string | undefined;
@@ -28,12 +29,7 @@ export function useGetUpdates(props: {
 }) {
   const { queryTextHex, description, address } = props;
   const questionId = queryTextHex ? utils.keccak256(queryTextHex) : undefined;
-  const matchOwnerAddress = description
-    ? description.match(/initializer:([a-fA-F0-9]{40})/)
-    : undefined;
-  const ownerAddress = matchOwnerAddress
-    ? "0x" + matchOwnerAddress[1]
-    : undefined;
+  const ownerAddress = getInitializerAddress(description);
 
   return useContractRead({
     address,
@@ -41,7 +37,7 @@ export function useGetUpdates(props: {
     functionName: "getUpdates",
     // bulletin contractr on polygon
     chainId: 137,
-    args: [questionId as Address, ownerAddress! as Address],
+    args: [questionId as Address, ownerAddress!],
     enabled: !!address && !!questionId && !!ownerAddress,
   });
 }

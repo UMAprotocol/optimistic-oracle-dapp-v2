@@ -1,6 +1,8 @@
 import { earlyRequestMagicNumber } from "@/constants";
 import type { DropdownItem } from "@/types";
 import { chunk } from "lodash";
+import { toHex } from "viem";
+import type { Address } from "wagmi";
 
 // it will only parse 3 proposeOptions, omitting p4, which is assumed to be "too early".
 function dynamicPolymarketOptions(
@@ -39,6 +41,17 @@ function dynamicPolymarketOptions(
         secondaryLabel: pValue,
       };
     });
+}
+
+export function getInitializerAddress(
+  decodedAncillaryData: string | undefined,
+): Address | undefined {
+  const matchOwnerAddress = decodedAncillaryData
+    ? decodedAncillaryData.match(/initializer:([a-fA-F0-9]{40})/)
+    : undefined;
+  if (matchOwnerAddress) {
+    return toHex(matchOwnerAddress[1]);
+  }
 }
 /** Polymarket yes or no queries follow a semi-predictable pattern.
  * If both the res data and the correspondence to the res data are present,
