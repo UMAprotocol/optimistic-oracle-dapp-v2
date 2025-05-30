@@ -1,7 +1,9 @@
 import type { IdentifierDetails } from "@/types";
 import approvedIdentifiersTable from "./approvedIdentifiersTable.json";
 
-const approvedIdentifiers: Record<string, IdentifierDetails> =
-  approvedIdentifiersTable;
+const approvedIdentifiers = approvedIdentifiersTable as Record<
+  string,
+  IdentifierDetails
+>;
 
 export default approvedIdentifiers;

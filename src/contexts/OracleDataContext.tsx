@@ -8,7 +8,6 @@ import {
   requestToOracleQuery,
   sortQueries,
 } from "@/helpers";
-import { isPrognozeRequester } from "@/helpers/queryParsing";
 import { useErrorContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import type { ServiceFactories, ServiceFactory } from "@libs/oracle-sdk-v2";
@@ -138,12 +137,6 @@ function DataReducerFactory<Input extends Request | Assertion>(
     const { all = {} } = state;
     updates.forEach((update) => {
       const queryUpdate = converter(update);
-
-      // Filter out Prognoze requests
-      if ("requester" in update && isPrognozeRequester(update.requester)) {
-        return;
-      }
-
       all[update.id] = mergeData(all[update.id], queryUpdate);
     });
     const init: {
