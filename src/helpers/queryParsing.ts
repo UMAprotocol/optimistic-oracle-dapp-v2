@@ -1,8 +1,23 @@
 import type { DropdownItem } from "@/types";
 import * as s from "superstruct";
-import type { ProjectName, Project } from "@/projects";
-import { projects, validateProject } from "@/projects";
+import type { ProjectName } from "@/projects";
+import { projects } from "@/projects";
 import { identifiers } from "@/identifiers";
+import type { Address } from "wagmi";
+
+/**
+ * Extract initializer address from decoded ancillary data
+ */
+export function getInitializerAddress(
+  decodedAncillaryData: string | undefined,
+): Address | undefined {
+  const matchOwnerAddress = decodedAncillaryData
+    ? decodedAncillaryData.match(/initializer:([a-fA-F0-9]{40})/)
+    : undefined;
+  if (matchOwnerAddress) {
+    return ("0x" + matchOwnerAddress?.[1]) as Address;
+  }
+}
 
 // Define MetaData type here for this file
 export type MetaData = {
@@ -15,9 +30,7 @@ export type MetaData = {
 };
 
 export function isOptimisticGovernor(decodedAncillaryData: string) {
-  return validateProject(projects.oSnap, {
-    decodedAncillaryData,
-  });
+  return projects.oSnap.validate({ decodedAncillaryData });
 }
 
 export function getQueryMetaData(
@@ -25,9 +38,9 @@ export function getQueryMetaData(
   decodedAncillaryData: string,
   requester: string,
 ): MetaData {
-  // Step 1: Find the matching project
+  // Find the matching project
   const project = Object.values(projects).find((project) => {
-    return validateProject(project, {
+    return project.validate({
       requester,
       decodedIdentifier,
       decodedAncillaryData,
@@ -37,18 +50,17 @@ export function getQueryMetaData(
   // Get project name, defaulting to "Unknown" if not found
   const projectName = project?.name || "Unknown";
 
-  //  Use the identifier system to get metadata
+  // Find the matching identifier
   const identifier = identifiers.getIdentifierByName(decodedIdentifier);
 
-  // Get metadata from the identifier
+  // Use the identifier system to get metadata
   const metadata = identifier.getMetaData(decodedAncillaryData);
 
   // Try to get project-specific options first, then for identifier
   const proposeOptions =
-    (project as Project)?.makeProposeOptions?.(
-      decodedAncillaryData,
-      decodedIdentifier,
-    ) ?? identifier.makeProposeOptions(decodedAncillaryData);
+    (project && "makeProposeOptions" in project
+      ? project.makeProposeOptions(decodedAncillaryData, decodedIdentifier)
+      : undefined) ?? identifier.makeProposeOptions(decodedAncillaryData);
 
   return {
     ...metadata,
@@ -56,15 +68,6 @@ export function getQueryMetaData(
     project: projectName,
   };
 }
-//this is for the markets already created without title identifier
-// ! we don't want to support malformed requests
-// export function polybetGetTitleIfNoTitleIdentifier(
-//   decodedAncillaryData: string
-// ) {
-//   const questionIndex = decodedAncillaryData.indexOf("?");
-//   const substring = decodedAncillaryData.substring(0, questionIndex + 1);
-//   return substring;
-// }
 
 export function getTitleAndDescriptionFromTokens(
   decodedAncillaryData: string,

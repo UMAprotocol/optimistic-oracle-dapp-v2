@@ -17,6 +17,7 @@ export function isAddress(
   if (!maybeAddress) return false;
   return "0x" == maybeAddress.slice(0, 2);
 }
+
 export function assertAddress(maybeAddress: string): Address {
   if (!isAddress(maybeAddress))
     throw new Error(`${maybeAddress} is not a valid address.`);

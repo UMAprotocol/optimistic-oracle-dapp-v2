@@ -4,7 +4,7 @@ import { useContractRead, type Address } from "wagmi";
 import { polymarketBulletinAbi } from "@shared/constants/abi";
 import { utils } from "ethers";
 import { isWagmiAddress, toUtcTimeFormatted } from "@/helpers";
-import { getInitializerAddress } from "@/projects/polymarket";
+import { getInitializerAddress } from "@/helpers/queryParsing";
 
 interface Props {
   description: string | undefined;
