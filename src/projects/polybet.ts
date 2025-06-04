@@ -3,6 +3,34 @@ import type { DropdownItem } from "@/types";
 import { chunk } from "lodash";
 import { Project } from "./abstract";
 
+export class PolyBetProject extends Project<"PolyBet"> {
+  constructor() {
+    super({
+      name: "PolyBet",
+      identifiers: ["YES_OR_NO_QUERY"],
+      requesters: [
+        "0x7dbb803aeb717ae9b0420c30669e128d6aa2e304",
+        "0xef888bc2bbe8e4858373cdd5edbff663aa194105",
+      ],
+      requiredTokens: {
+        YES_OR_NO_QUERY: ["res_data:"],
+      },
+    });
+  }
+
+  makeProposeOptions(
+    decodedAncillaryData: string,
+    decodedIdentifier: string,
+  ): DropdownItem[] | undefined {
+    switch (decodedIdentifier) {
+      case "YES_OR_NO_QUERY":
+        return maybeMakePolybetOptions(decodedAncillaryData);
+      default:
+        return undefined;
+    }
+  }
+}
+
 // it will only parse 3 proposeOptions, omitting p4, which is assumed to be "too early".
 function dynamicPolybetOptions(decodedAncillaryData: string): DropdownItem[] {
   const resData = decodedAncillaryData.match(
@@ -151,33 +179,5 @@ export function maybeMakePolybetOptions(
         value: "custom",
       },
     ];
-  }
-}
-
-export class PolyBetProject extends Project<"PolyBet"> {
-  constructor() {
-    super({
-      name: "PolyBet",
-      identifiers: ["YES_OR_NO_QUERY"],
-      requesters: [
-        "0x7dbb803aeb717ae9b0420c30669e128d6aa2e304",
-        "0xef888bc2bbe8e4858373cdd5edbff663aa194105",
-      ],
-      requiredTokens: {
-        YES_OR_NO_QUERY: ["res_data:"],
-      },
-    });
-  }
-
-  makeProposeOptions(
-    decodedAncillaryData: string,
-    decodedIdentifier: string,
-  ): DropdownItem[] | undefined {
-    switch (decodedIdentifier) {
-      case "YES_OR_NO_QUERY":
-        return maybeMakePolybetOptions(decodedAncillaryData);
-      default:
-        return undefined;
-    }
   }
 }
