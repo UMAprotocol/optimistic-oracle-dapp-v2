@@ -9,6 +9,7 @@ import {
   sortQueries,
 } from "@/helpers";
 import { useErrorContext } from "@/hooks";
+import { projects } from "@/projects";
 import type { OracleQueryUI } from "@/types";
 import type { ServiceFactories, ServiceFactory } from "@libs/oracle-sdk-v2";
 import { Client } from "@libs/oracle-sdk-v2";
@@ -137,6 +138,15 @@ function DataReducerFactory<Input extends Request | Assertion>(
     const { all = {} } = state;
     updates.forEach((update) => {
       const queryUpdate = converter(update);
+      // TODO: do this when matching with project. Currently logic for converting requests and assertions is separate.
+      // We should extract metadata for project and identifier in one place.
+      const project = Object.values(projects).find(
+        (p) => p.name === queryUpdate.project,
+      );
+      if (project?.hideRequests) {
+        return; // remove request from context
+      }
+
       all[update.id] = mergeData(all[update.id], queryUpdate);
     });
     const init: {

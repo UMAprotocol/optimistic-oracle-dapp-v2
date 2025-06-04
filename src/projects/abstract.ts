@@ -3,6 +3,7 @@ import type { Address } from "wagmi";
 
 export abstract class Project<T extends string> {
   name: T;
+  hideRequests: boolean; // to hide requests from oracle dapp entirely, set this to true
   identifiers?: string[];
   privateIdentifiers?: string[]; // identifiers that are specific to this projectstring, if a request uses one of these, it's always this project
   requesters?: Address[];
@@ -13,6 +14,7 @@ export abstract class Project<T extends string> {
 
   constructor(params: {
     name: T;
+    hideRequests?: boolean;
     identifiers?: string[];
     privateIdentifiers?: string[]; // identifiers that are specific to this projectstring, if a request uses one of these, it's always this project
     requesters?: Address[];
@@ -22,6 +24,7 @@ export abstract class Project<T extends string> {
     };
   }) {
     this.name = params.name;
+    this.hideRequests = params?.hideRequests ?? false;
     this.identifiers = params?.identifiers;
     this.privateIdentifiers = params?.privateIdentifiers;
     this.requesters = params?.requesters;
@@ -90,6 +93,20 @@ export abstract class Project<T extends string> {
       this.privateIdentifiers?.length &&
         decodedIdentifier &&
         this.privateIdentifiers.includes(decodedIdentifier),
+    );
+  }
+
+  isRequester(requester: string): boolean {
+    if (!requester || !this.requesters?.length) return false;
+    return this.requesters.some(
+      (addr) => addr.toLowerCase() === requester.toLowerCase(),
+    );
+  }
+
+  isInitializer(initializer: string): boolean {
+    if (!initializer || !this.initializers?.length) return false;
+    return this.initializers.some(
+      (addr) => addr.toLowerCase() === initializer.toLowerCase(),
     );
   }
 
