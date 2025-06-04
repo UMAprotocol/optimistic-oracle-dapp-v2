@@ -1,5 +1,4 @@
 import { hasProperty } from "@/helpers";
-import type { ProjectName } from "@shared/constants";
 import { chainsById } from "@shared/constants";
 import type { ChainId } from "@shared/types";
 // chains
@@ -31,12 +30,14 @@ import Unknown from "public/assets/icons/projects/unknown.svg";
 import PredictFun from "public/assets/icons/projects/predict-fun.svg";
 import InfiniteGames from "public/assets/icons/projects/infinite-games.svg";
 import Prognoze from "public/assets/icons/projects/prognoze.svg";
+import MetaMarket from "public/assets/icons/projects/meta-market.svg";
 // Social Icons
 import Discord from "public/assets/icons/social/discord.svg";
 import Discourse from "public/assets/icons/social/discourse.svg";
 import Github from "public/assets/icons/social/github.svg";
 import Medium from "public/assets/icons/social/medium.svg";
 import Twitter from "public/assets/icons/social/twitter.svg";
+import type { ProjectName } from "@/projects";
 
 export const projectIcons: Record<
   ProjectName,
@@ -53,6 +54,7 @@ export const projectIcons: Record<
   "Predict.Fun": PredictFun,
   "Infinite Games": InfiniteGames,
   Prognoze,
+  MetaMarket,
 };
 
 // symbol => icon

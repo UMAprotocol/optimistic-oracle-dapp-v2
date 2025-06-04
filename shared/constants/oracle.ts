@@ -8,22 +8,6 @@ export const oracleTypes = [
 
 export const expiryTypes = ["Event-based", "Time-based"] as const;
 
-export const projects = [
-  "Unknown",
-  "Polymarket",
-  "PolyBet",
-  "Cozy Finance",
-  "Across",
-  "Sherlock",
-  "OSnap",
-  "Rated",
-  "Predict.Fun",
-  "Infinite Games",
-  "Prognoze",
-] as const;
-
-export type ProjectName = (typeof projects)[number];
-
 export const requestStates = [
   "Invalid",
   "Requested",

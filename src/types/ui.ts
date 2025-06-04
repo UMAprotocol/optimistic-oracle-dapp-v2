@@ -1,4 +1,5 @@
 import type { actionTitles, filterNames } from "@/constants";
+import type { ProjectName } from "@/projects";
 import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import type {
   disputeAssertionAbi,
@@ -16,7 +17,6 @@ import type {
   ErrorMessage,
   ExpiryType,
   OracleType,
-  Project,
 } from "@shared/types";
 import type { ReactNode } from "react";
 import type { Address, erc20ABI } from "wagmi";
@@ -63,7 +63,7 @@ export type OracleQueryUI = {
   chainName: ChainName;
   oracleType: OracleType;
   oracleAddress: Address;
-  project: Project;
+  project: ProjectName;
   proposeOptions?: DropdownItem[] | undefined;
   title?: string;
   description?: string;
@@ -402,7 +402,7 @@ export type SettledEvent = {
 };
 
 export type UmipLink = {
-  number: string;
+  number: `UMIP-${number}`;
   url: string;
 };
 
@@ -417,7 +417,7 @@ export type MetaData = {
   description: string;
   umipUrl: string | undefined;
   umipNumber: string | undefined;
-  project: Project;
+  project: ProjectName;
   proposeOptions: DropdownItem[] | undefined;
 };
 
