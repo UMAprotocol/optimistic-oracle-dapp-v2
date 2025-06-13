@@ -4,6 +4,21 @@ import type { ProjectName } from "@/projects";
 import { projects } from "@/projects";
 import { identifiers } from "@/identifiers";
 import type { Address } from "wagmi";
+import { getAddress } from "viem";
+
+/**
+ * Extract ip ID from decoded description
+ */
+export function getIpId(
+  decodedDescription: string | undefined,
+): Address | undefined {
+  const matchOwnerAddress = decodedDescription
+    ? decodedDescription.match(/ipId address ([a-fA-F0-9]{40})/)
+    : undefined;
+  if (matchOwnerAddress) {
+    return getAddress(("0x" + matchOwnerAddress?.[1]) as Address);
+  }
+}
 
 /**
  * Extract initializer address from decoded ancillary data
