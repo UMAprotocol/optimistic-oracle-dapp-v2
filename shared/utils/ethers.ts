@@ -113,7 +113,9 @@ function getBlockExplorerUrlForChain(chainId: ChainId): string | undefined {
 }
 
 export function getBlockExplorerNameForChain(chainId: ChainId) {
-  return getChainInfo(chainId)?.blockExplorers?.default.name;
+  return (
+    getChainInfo(chainId)?.blockExplorers?.default.name ?? "Block Explorer"
+  );
 }
 
 export function makeBlockExplorerLink(
