@@ -192,7 +192,7 @@ function getPriceRequestValueText(
 ) {
   const price = settlementPrice ?? proposedPrice;
   if (price === null || price === undefined) return null;
-  return formatNumberForDisplay(price, { isFormatEther: true, strict: true });
+  return formatNumberForDisplay(price, { isFormatEther: true });
 }
 
 function isOOV1PriceRequest(
