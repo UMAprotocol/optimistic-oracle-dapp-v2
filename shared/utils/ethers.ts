@@ -64,15 +64,26 @@ export const commify = ethers.utils.commify;
  * @param number - the number to format
  * @param options.decimals - the number of decimals to truncate to, defaults to 2
  * @param options.isFormatEther - whether to format the number as ether, defaults to false
+ * @param options.strict - whether to return the full number without truncation, defaults to false
  * @returns the formatted number
  */
 export function formatNumberForDisplay(
   number: bigint | string | undefined,
-  options?: { decimals?: number; isFormatEther?: boolean },
+  options?: { decimals?: number; isFormatEther?: boolean; strict?: boolean },
 ) {
   if (!number) return "0";
-  const { decimals = 2, isFormatEther = false } = options || {};
-  const _number = isFormatEther ? formatEther(number) : number.toString();
+  const { decimals = 2, isFormatEther = false, strict = false } = options || {};
+
+  // Convert BigInt to string with proper scaling
+  const _number = isFormatEther
+    ? formatEther(number.toString())
+    : number.toString();
+
+  // If strict mode is enabled, return the full number without any truncation
+  if (strict) {
+    return commify(_number);
+  }
+
   return truncateDecimals(commify(_number), decimals);
 }
 
