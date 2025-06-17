@@ -34,6 +34,15 @@ export class YesOrNoQuery extends Identifier {
     return [
       { label: "Yes", value: "1", secondaryLabel: "1" },
       { label: "No", value: "0", secondaryLabel: "0" },
+      {
+        label: "Custom",
+        value: "custom",
+      },
+      {
+        label: "Unknown",
+        value: "0.5",
+        secondaryLabel: "50/50",
+      },
     ];
   }
 
