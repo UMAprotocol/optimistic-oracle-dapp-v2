@@ -7,6 +7,7 @@ import { AcrossV2 } from "./AcrossV2";
 import { MultipleChoiceQuery } from "./MultipleChoiceQuery";
 import { MultipleValues } from "./MultipleValues";
 import { RopuEthx } from "./RopuEthx";
+import { Numerical } from "./Numerical";
 
 // Default identifier for handling approved identifiers without specific implementations
 export class ApprovedIdentifier extends Identifier {
@@ -58,6 +59,10 @@ export class ApprovedIdentifier extends Identifier {
     return [
       { label: "Yes", value: "1", secondaryLabel: "1" },
       { label: "No", value: "0", secondaryLabel: "0" },
+      {
+        label: "Custom",
+        value: "custom",
+      },
     ];
   }
 
@@ -97,6 +102,10 @@ export class UnknownIdentifier extends Identifier {
     return [
       { label: "Yes", value: "1", secondaryLabel: "1" },
       { label: "No", value: "0", secondaryLabel: "0" },
+      {
+        label: "Custom",
+        value: "custom",
+      },
     ];
   }
 
@@ -108,7 +117,6 @@ export class UnknownIdentifier extends Identifier {
 class IdentifierRegistry {
   private static instance: IdentifierRegistry;
   private identifiers: Map<string, Identifier>;
-  //   private approvedIdentifiers: Record<string, IdentifierDetails>;
 
   private constructor() {
     this.identifiers = new Map();
@@ -122,6 +130,7 @@ class IdentifierRegistry {
       new MultipleValues(),
       new RopuEthx(),
       new AcrossV2(),
+      new Numerical(),
       // Add more here
     ];
 
