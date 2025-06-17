@@ -8,6 +8,7 @@ import { MultipleChoiceQuery } from "./MultipleChoiceQuery";
 import { MultipleValues } from "./MultipleValues";
 import { RopuEthx } from "./RopuEthx";
 import { Numerical } from "./Numerical";
+import { getTitleAndDescriptionFromTokens } from "@/helpers/queryParsing";
 
 // Default identifier for handling approved identifiers without specific implementations
 export class ApprovedIdentifier extends Identifier {
@@ -82,9 +83,12 @@ export class UnknownIdentifier extends Identifier {
   }
 
   getMetaData(_decodedAncillaryData: string): MetaData {
+    const { title, description } = getTitleAndDescriptionFromTokens(
+      _decodedAncillaryData,
+    );
     return {
-      title: this.name,
-      description: "No description found for this request.",
+      title: title ?? this.name,
+      description: description ?? _decodedAncillaryData,
       umipUrl: this.umipUrl,
       umipNumber: this.umipNumber,
     };
