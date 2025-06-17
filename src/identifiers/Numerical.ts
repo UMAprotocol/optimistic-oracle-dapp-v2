@@ -1,23 +1,30 @@
-import type { DropdownItem } from "@/types/ui";
-import { Identifier } from "./abstract";
+import type { DropdownItem } from "@/types";
 import type { MetaData } from "./abstract";
+import { Identifier } from "./abstract";
 import { getTitleAndDescriptionFromTokens } from "@/helpers/queryParsing";
 
-export class YesOrNoQuery extends Identifier {
+export class Numerical extends Identifier {
   constructor() {
     super({
-      name: "YES_OR_NO_QUERY",
-      umipNumber: 107,
+      name: "NUMERICAL",
+      umipNumber: 165,
     });
   }
 
   getMetaData(decodedAncillaryData: string): MetaData {
+    // According to the NUMERICAL identifier spec, the title should be inserted after "q:".
+    // However, some integrators follow the YES_OR_NO_QUERY standard which uses "title:" and "description:".
+    // Therefore, we check for both formats.
     const { title, description } =
       getTitleAndDescriptionFromTokens(decodedAncillaryData);
+    const { title: titleFromQ } = getTitleAndDescriptionFromTokens(
+      decodedAncillaryData,
+      "q:",
+    );
 
     return {
-      title: title ?? this.name,
-      description: description ?? decodedAncillaryData,
+      title: title ?? titleFromQ ?? this.name,
+      description: description ?? title ?? decodedAncillaryData,
       umipUrl: this.umipUrl,
       umipNumber: this.umipNumber,
     };
@@ -32,22 +39,15 @@ export class YesOrNoQuery extends Identifier {
 
   makeDefaultProposeOptions(): DropdownItem[] {
     return [
-      { label: "Yes", value: "1", secondaryLabel: "1" },
-      { label: "No", value: "0", secondaryLabel: "0" },
+      { label: "Unresolvable", value: "0.5", secondaryLabel: "Unresolvable" },
       {
         label: "Custom",
         value: "custom",
-      },
-      {
-        label: "Unknown",
-        value: "0.5",
-        secondaryLabel: "50/50",
       },
     ];
   }
 
   makeProposeOptions(): DropdownItem[] {
-    // For YES_OR_NO_QUERY, the default options are always used
     return this.makeDefaultProposeOptions();
   }
 }
