@@ -53,9 +53,11 @@ export type ActionState = Partial<{
 export function usePrimaryPanelAction({
   query,
   formattedProposePriceInput,
+  disabled,
 }: {
   query?: OracleQueryUI;
   formattedProposePriceInput?: PriceInputProps["formattedValue"];
+  disabled?: boolean;
 }): ActionState | undefined {
   // these are in order of importance
   const accountAction = useAccountAction({ query });
@@ -66,18 +68,24 @@ export function usePrimaryPanelAction({
   const proposeAction = useProposeAction({
     query,
     proposePriceInput: formattedProposePriceInput,
-    prepare: bondAmountApproved,
+    prepare: Boolean(!disabled && bondAmountApproved),
   });
   const disputeAction = useDisputeAction({
     query,
-    prepare: bondAmountApproved,
+    prepare: Boolean(!disabled && bondAmountApproved),
   });
   const disputeAssertionAction = useDisputeAssertionAction({
     query,
-    prepare: bondAmountApproved,
+    prepare: Boolean(!disabled && bondAmountApproved),
   });
-  const settlePriceAction = useSettlePriceAction({ query });
-  const settleAssertionAction = useSettleAssertionAction({ query });
+  const settlePriceAction = useSettlePriceAction({
+    query,
+    prepare: Boolean(!disabled),
+  });
+  const settleAssertionAction = useSettleAssertionAction({
+    query,
+    prepare: Boolean(!disabled),
+  });
 
   return (
     accountAction ||
@@ -577,8 +585,10 @@ export function useDisputeAssertionAction({
 
 export function useSettlePriceAction({
   query,
+  prepare = true,
 }: {
   query?: OracleQueryUI;
+  prepare?: boolean;
 }): ActionState | undefined {
   const { settlePriceParams, chainId, actionType } = query ?? {};
   const {
@@ -589,7 +599,7 @@ export function useSettlePriceAction({
   } = usePrepareContractWrite({
     ...settlePriceParams,
     scopeKey: query?.id,
-    enabled: !!query?.id && actionType === "settle",
+    enabled: Boolean(prepare && !!query?.id && actionType === "settle"),
   });
   const {
     write: settlePrice,
@@ -673,8 +683,10 @@ export function useSettlePriceAction({
 }
 export function useSettleAssertionAction({
   query,
+  prepare = true,
 }: {
   query?: OracleQueryUI;
+  prepare?: boolean;
 }): ActionState | undefined {
   const { settleAssertionParams, chainId, actionType } = query ?? {};
   const {
@@ -685,7 +697,7 @@ export function useSettleAssertionAction({
   } = usePrepareContractWrite({
     ...settleAssertionParams,
     scopeKey: query?.id,
-    enabled: !!query?.id && actionType === "settle",
+    enabled: Boolean(prepare && !!query?.id && actionType === "settle"),
   });
   const {
     write: settleAssertion,

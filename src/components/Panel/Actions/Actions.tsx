@@ -29,34 +29,35 @@ interface Props {
 }
 
 export function Actions({ query }: Props) {
+  const { page } = usePageContext();
   const { oracleType, valueText, actionType, proposeOptions, queryText } =
     query;
+  const pageIsPropose = page === "propose";
+  const pageIsSettled = page === "settled";
+  const pageIsVerify = page === "verify";
+  const actionIsDispute = actionType === "dispute";
+  const actionIsSettle = actionType === "settle";
   const inputProps = useProposePriceInput(query);
+  const redirectDisputeLink = [story.id, storyOdyssey.id].includes(
+    query.chainId,
+  )
+    ? makeStoryDisputeLink(query.description)
+    : undefined;
+
+  const showStoryRedirect = Boolean(actionIsDispute && !!redirectDisputeLink);
 
   const primaryAction = usePrimaryPanelAction({
     query,
     formattedProposePriceInput: inputProps.formattedValue,
+    disabled: showStoryRedirect, // disable preflight checks if redirecting to external UI
   });
-
-  const { page } = usePageContext();
-
-  const pageIsPropose = page === "propose";
-  const pageIsSettled = page === "settled";
-  const pageIsVerify = page === "verify";
   const hasAction = primaryAction !== undefined;
   const noAction = !hasAction;
-  const actionIsDispute = actionType === "dispute";
-  const actionIsSettle = actionType === "settle";
+
   const actionIsSettled = primaryAction?.title === settled;
   const alreadyProposed = pageIsPropose && (actionIsDispute || actionIsSettle);
   const alreadySettled = !pageIsSettled && (noAction || actionIsSettled);
   const isConnectWallet = primaryAction?.title === connectWallet;
-  const isStory = [story.id, storyOdyssey.id].includes(query.chainId);
-  const redirectDisputeLink = isStory
-    ? makeStoryDisputeLink(query.description)
-    : undefined;
-
-  const showStoryRedirect = actionIsDispute && redirectDisputeLink;
 
   const showPrimaryActionButton =
     !pageIsSettled &&
