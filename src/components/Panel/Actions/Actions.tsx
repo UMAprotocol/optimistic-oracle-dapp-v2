@@ -56,19 +56,21 @@ export function Actions({ query }: Props) {
     ? makeStoryDisputeLink(query.description)
     : undefined;
 
+  const showStoryRedirect = actionIsDispute && redirectDisputeLink;
+
   const showPrimaryActionButton =
     !pageIsSettled &&
     hasAction &&
     !primaryAction.hidden &&
     !alreadyProposed &&
     !alreadySettled &&
-    !redirectDisputeLink;
+    !showStoryRedirect;
   const showConnectButton =
     isConnectWallet &&
     !pageIsSettled &&
     !alreadyProposed &&
     !alreadySettled &&
-    !redirectDisputeLink;
+    !showStoryRedirect;
   const disableInput = alreadyProposed || alreadySettled;
   const errors = [
     pageIsPropose && inputProps.inputError,
@@ -127,7 +129,7 @@ export function Actions({ query }: Props) {
       )}
       {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
-      {redirectDisputeLink ? (
+      {showStoryRedirect ? (
         <Button
           width="100%"
           variant="primary"
