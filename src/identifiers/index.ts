@@ -7,6 +7,8 @@ import { AcrossV2 } from "./AcrossV2";
 import { MultipleChoiceQuery } from "./MultipleChoiceQuery";
 import { MultipleValues } from "./MultipleValues";
 import { RopuEthx } from "./RopuEthx";
+import { Numerical } from "./Numerical";
+import { getTitleAndDescriptionFromTokens } from "@/helpers/queryParsing";
 
 // Default identifier for handling approved identifiers without specific implementations
 export class ApprovedIdentifier extends Identifier {
@@ -58,6 +60,10 @@ export class ApprovedIdentifier extends Identifier {
     return [
       { label: "Yes", value: "1", secondaryLabel: "1" },
       { label: "No", value: "0", secondaryLabel: "0" },
+      {
+        label: "Custom",
+        value: "custom",
+      },
     ];
   }
 
@@ -77,9 +83,12 @@ export class UnknownIdentifier extends Identifier {
   }
 
   getMetaData(_decodedAncillaryData: string): MetaData {
+    const { title, description } = getTitleAndDescriptionFromTokens(
+      _decodedAncillaryData,
+    );
     return {
-      title: this.name,
-      description: "No description found for this request.",
+      title: title ?? this.name,
+      description: description ?? _decodedAncillaryData,
       umipUrl: this.umipUrl,
       umipNumber: this.umipNumber,
     };
@@ -97,6 +106,10 @@ export class UnknownIdentifier extends Identifier {
     return [
       { label: "Yes", value: "1", secondaryLabel: "1" },
       { label: "No", value: "0", secondaryLabel: "0" },
+      {
+        label: "Custom",
+        value: "custom",
+      },
     ];
   }
 
@@ -108,7 +121,6 @@ export class UnknownIdentifier extends Identifier {
 class IdentifierRegistry {
   private static instance: IdentifierRegistry;
   private identifiers: Map<string, Identifier>;
-  //   private approvedIdentifiers: Record<string, IdentifierDetails>;
 
   private constructor() {
     this.identifiers = new Map();
@@ -122,6 +134,7 @@ class IdentifierRegistry {
       new MultipleValues(),
       new RopuEthx(),
       new AcrossV2(),
+      new Numerical(),
       // Add more here
     ];
 

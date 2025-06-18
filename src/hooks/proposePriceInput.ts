@@ -27,6 +27,7 @@ function useSinglePriceInput({ proposeOptions }: OracleQueryUI) {
   function onSelect(item: DropdownItem) {
     if (item.value === "custom") {
       setIsCustomInput(true);
+      setProposePriceInput("");
     } else {
       setProposePriceInput((item.value ?? "").toString());
     }
