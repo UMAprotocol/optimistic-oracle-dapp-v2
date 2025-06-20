@@ -1,4 +1,4 @@
-import { ConnectButton } from "@/components";
+import { Button, ConnectButton } from "@/components";
 import { connectWallet, settled } from "@/constants";
 import {
   cn,
@@ -20,30 +20,40 @@ import { Message } from "./Message";
 import { PrimaryActionButton } from "./PrimaryActionButton";
 import { SimulateIfOsnap } from "../TenderlySimulation";
 import { ProposeInput } from "./ProposeInput";
+import { story, storyOdyssey } from "@/constants/customChains";
+import { getIpId } from "@/helpers/queryParsing";
+import { ExternalLinkIcon } from "lucide-react";
 
 interface Props {
   query: OracleQueryUI;
 }
 
 export function Actions({ query }: Props) {
+  const { page } = usePageContext();
   const { oracleType, valueText, actionType, proposeOptions, queryText } =
     query;
+  const pageIsPropose = page === "propose";
+  const pageIsSettled = page === "settled";
+  const pageIsVerify = page === "verify";
+  const actionIsDispute = actionType === "dispute";
+  const actionIsSettle = actionType === "settle";
   const inputProps = useProposePriceInput(query);
+  const redirectDisputeLink = [story.id, storyOdyssey.id].includes(
+    query.chainId,
+  )
+    ? makeStoryDisputeLink(query.description)
+    : undefined;
+
+  const showStoryRedirect = Boolean(actionIsDispute && !!redirectDisputeLink);
 
   const primaryAction = usePrimaryPanelAction({
     query,
     formattedProposePriceInput: inputProps.formattedValue,
+    disabled: showStoryRedirect, // disable preflight checks if redirecting to external UI
   });
-
-  const { page } = usePageContext();
-
-  const pageIsPropose = page === "propose";
-  const pageIsSettled = page === "settled";
-  const pageIsVerify = page === "verify";
   const hasAction = primaryAction !== undefined;
   const noAction = !hasAction;
-  const actionIsDispute = actionType === "dispute";
-  const actionIsSettle = actionType === "settle";
+
   const actionIsSettled = primaryAction?.title === settled;
   const alreadyProposed = pageIsPropose && (actionIsDispute || actionIsSettle);
   const alreadySettled = !pageIsSettled && (noAction || actionIsSettled);
@@ -54,9 +64,14 @@ export function Actions({ query }: Props) {
     hasAction &&
     !primaryAction.hidden &&
     !alreadyProposed &&
-    !alreadySettled;
+    !alreadySettled &&
+    !showStoryRedirect;
   const showConnectButton =
-    isConnectWallet && !pageIsSettled && !alreadyProposed && !alreadySettled;
+    isConnectWallet &&
+    !pageIsSettled &&
+    !alreadyProposed &&
+    !alreadySettled &&
+    !showStoryRedirect;
   const disableInput = alreadyProposed || alreadySettled;
   const errors = [
     pageIsPropose && inputProps.inputError,
@@ -115,6 +130,20 @@ export function Actions({ query }: Props) {
       )}
       {!pageIsSettled && <Details {...query} />}
       {showPrimaryActionButton && <PrimaryActionButton {...primaryAction} />}
+      {showStoryRedirect ? (
+        <Button
+          width="100%"
+          variant="primary"
+          type="link"
+          href={redirectDisputeLink}
+        >
+          <span className="justify-center inline-flex items-center gap-2 w-full">
+            {" "}
+            Dispute on Story Portal{" "}
+            <ExternalLinkIcon className="w-[1em] h-[1em] inline-flex" />
+          </span>
+        </Button>
+      ) : null}
       {showConnectButton && <ConnectButton />}
       {pageIsVerify && <SimulateIfOsnap queryText={queryText} />}
 
@@ -188,4 +217,13 @@ function MultipleValues({
       </div>
     </div>
   );
+}
+
+function makeStoryDisputeLink(
+  decodedDescription: OracleQueryUI["description"],
+): string | undefined {
+  if (!decodedDescription) return;
+  const ipId = getIpId(decodedDescription);
+  if (!ipId) return;
+  return `https://portal.story.foundation/assets/${ipId}`;
 }

@@ -39,7 +39,7 @@ interface Props {
   /**
    * use type = "submit" for when used with a <form>
    */
-  type?: "submit" | "button";
+  type?: "submit" | "button" | "link";
 }
 export function Button({
   variant = "tertiary",
