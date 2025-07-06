@@ -21,7 +21,7 @@ export function Title({ project, title, isLoading, close }: Props) {
   const iconStyles =
     "min-w-[1.25rem] flex items-center justify-center w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)]";
   return (
-    <div className="grid grid-cols-[auto,1fr,auto] gap-page-padding min-h-[84px] px-page-padding lg:px-7 py-5 bg-blue-grey-700">
+    <div className="grid grid-cols-[auto,1fr,auto] content-center gap-page-padding min-h-[84px] px-page-padding lg:px-7 py-5 bg-blue-grey-700">
       {isLoading ? (
         <div className={iconStyles}>
           <LoadingSkeleton width="100%" height="100%" borderRadius="50%" />
