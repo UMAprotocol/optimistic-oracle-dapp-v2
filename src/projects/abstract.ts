@@ -96,14 +96,14 @@ export abstract class Project<T extends string> {
     );
   }
 
-  isRequester(requester: string): boolean {
+  isRequester(requester: string | undefined): boolean {
     if (!requester || !this.requesters?.length) return false;
     return this.requesters.some(
       (addr) => addr.toLowerCase() === requester.toLowerCase(),
     );
   }
 
-  isInitializer(initializer: string): boolean {
+  isInitializer(initializer: string | undefined): boolean {
     if (!initializer || !this.initializers?.length) return false;
     return this.initializers.some(
       (addr) => addr.toLowerCase() === initializer.toLowerCase(),
@@ -120,7 +120,7 @@ export abstract class Project<T extends string> {
     const { requester, decodedIdentifier, decodedAncillaryData } = params;
 
     // If no parameters provided, we can't validate
-    if (!requester && !decodedIdentifier && !decodedAncillaryData) {
+    if (!requester || !decodedIdentifier || !decodedAncillaryData) {
       return false;
     }
 
@@ -129,13 +129,18 @@ export abstract class Project<T extends string> {
       return true;
     }
 
-    // Can't validate
+    // if from project-controlled EOA, match immediately
+    if (this.isInitializer(getInitializerAddress(decodedAncillaryData))) {
+      return true;
+    }
+
     if (
       !this.requesters?.length &&
       !this.requiredTokens &&
       !this.identifiers?.length &&
       !this.initializers?.length
     ) {
+      // Can't validate
       return false;
     }
 
