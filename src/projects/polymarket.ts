@@ -27,6 +27,7 @@ export class PolymarketProject extends Project<"Polymarket"> {
         "0x2f5e3684cb1f318ec51b00edba38d79ac2c0aa9d", // Polymarket CTF Adapter Address V2
         "0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e", // Polymarket CTF Exchange Address
         "0xb21182d0494521cf45dbbeebb5a3acaab6d22093", // Polymarket Sports Address
+        "0x157ce2d672854c848c9b79c49a8cc6cc89176a49", // Polymarket CTF Adapter Address V3
       ],
       requiredTokens: {
         YES_OR_NO_QUERY: ["q: title:", "res_data:"],
