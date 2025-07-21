@@ -75,43 +75,113 @@ async function* fetchAllRequestsIncremental(
     }
   }
 }
+
+async function getResults(
+  fromTime: number,
+  toTime: number,
+  maxSplits: number,
+  remainingConcurrentRequests: { num: number },
+  oracleType: OracleType,
+  queryName: string,
+  url: string,
+): Promise<OOV1GraphEntity[] | OOV2GraphEntity[]> {
+  const numSplits = Math.min(maxSplits, remainingConcurrentRequests.num);
+  remainingConcurrentRequests.num -= numSplits;
+  const size = (toTime - fromTime) / numSplits;
+
+  const outputs = await Promise.all(
+    Array.from({ length: numSplits }, (_, i) => [
+      fromTime + i * size,
+      fromTime + (i + 1) * size,
+    ]).map(async ([fromTime, toTime]) => {
+      const requests = (
+        await fetchPriceRequests(
+          url,
+          makeTimeBasedQuery(queryName, oracleType, 1000, toTime),
+        )
+      ).filter((request) => Number(request.time) >= fromTime);
+      remainingConcurrentRequests.num += 1;
+      if (requests.length < 1000) {
+        return requests;
+      } else {
+        const newToTime = Number(requests[requests.length - 1].time);
+        const newMaxSplits = Math.max(
+          Math.ceil((toTime - fromTime) / newToTime - fromTime) - 1,
+          1,
+        );
+        return [
+          ...requests,
+          ...(await getResults(
+            fromTime,
+            newToTime,
+            newMaxSplits,
+            remainingConcurrentRequests,
+            oracleType,
+            queryName,
+            url,
+          )),
+        ];
+      }
+    }),
+  );
+  return outputs.flat();
+}
+
+const maxConcurrentRequests = 50;
+
 async function fetchAllRequests(
   url: string,
   queryName: string,
   oracleType: OracleType,
 ) {
-  const result: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
-  let skip = 0;
-  const first = 1000;
-  let requests = await fetchPriceRequests(
+  return await getResults(
+    1577836800,
+    Math.round(Date.now() / 1000),
+    maxConcurrentRequests,
+    { num: maxConcurrentRequests },
+    oracleType,
+    queryName,
     url,
-    makeQuery(queryName, oracleType, first, skip),
   );
-
-  // thegraph wont allow skip > 5000,
-  while (requests.length > 0 && skip < 5000) {
-    result.push(...requests);
-    skip += first;
-    requests = await fetchPriceRequests(
-      url,
-      makeQuery(queryName, oracleType, first, skip),
-    );
-  }
-
-  // have to use time based logic after we run out of skip size
-  while (requests.length === first) {
-    result.push(...requests);
-    const lastTime = requests[requests.length - 1].time;
-    requests = await fetchPriceRequests(
-      url,
-      makeTimeBasedQuery(queryName, oracleType, first, Number(lastTime)),
-    );
-  }
-
-  result.push(...requests);
-
-  return result;
 }
+
+// async function fetchAllRequests(
+//   url: string,
+//   queryName: string,
+//   oracleType: OracleType
+// ) {
+//   const result: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
+//   let skip = 0;
+//   const first = 1000;
+//   let requests = await fetchPriceRequests(
+//     url,
+//     makeQuery(queryName, oracleType, first, skip)
+//   );
+
+//   // thegraph wont allow skip > 5000,
+//   while (requests.length > 0 && skip < 5000) {
+//     result.push(...requests);
+//     skip += first;
+//     requests = await fetchPriceRequests(
+//       url,
+//       makeQuery(queryName, oracleType, first, skip)
+//     );
+//   }
+
+//   // have to use time based logic after we run out of skip size
+//   while (requests.length === first) {
+//     result.push(...requests);
+//     const lastTime = requests[requests.length - 1].time;
+//     requests = await fetchPriceRequests(
+//       url,
+//       makeTimeBasedQuery(queryName, oracleType, first, Number(lastTime))
+//     );
+//   }
+
+//   result.push(...requests);
+
+//   return result;
+// }
 
 async function fetchPriceRequests(url: string, query: string) {
   const result = await request<
