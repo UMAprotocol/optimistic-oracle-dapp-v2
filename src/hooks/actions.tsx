@@ -16,6 +16,7 @@ import {
   settle,
   settled,
   settling,
+  trackingCalldataSuffix,
 } from "@/constants";
 import {
   alreadyDisputedV2,
@@ -278,6 +279,7 @@ export function useProposeAction({
     ...proposePriceParams?.(proposePriceInput),
     scopeKey: query?.id,
     enabled: prepare && !!query?.id && actionType === "propose",
+    dataSuffix: trackingCalldataSuffix,
   });
   const {
     write: proposePrice,
@@ -407,6 +409,7 @@ export function useDisputeAction({
     ...disputePriceParams,
     scopeKey: query?.id,
     enabled: prepare && !!query?.id && actionType === "dispute",
+    dataSuffix: trackingCalldataSuffix,
   });
   const {
     write: disputePrice,
@@ -502,6 +505,7 @@ export function useDisputeAssertionAction({
     ...disputeAssertionParams?.(address),
     scopeKey: query?.id,
     enabled: prepare && !!query?.id && actionType === "dispute",
+    dataSuffix: trackingCalldataSuffix,
   });
   const {
     write: disputeAssertion,
