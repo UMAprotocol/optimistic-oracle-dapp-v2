@@ -273,6 +273,92 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 11155111,
     address: getAddress("0x255483434aba5a75dc60c1391bB162BCd9DE2882"),
   },
+  // managed optimistic oracle v2
+  // TODO: fill in these addresses
+  // -----------------------------------
+  // -----------------------------------
+  // -----------------------------------
+  {
+    // mainnet
+    type: "Managed Optimistic Oracle V2",
+    chainId: 1,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // goerli
+    type: "Managed Optimistic Oracle V2",
+    chainId: 5,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // optimism
+    type: "Managed Optimistic Oracle V2",
+    chainId: 10,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // polygon
+    type: "Managed Optimistic Oracle V2",
+    chainId: 137,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // boba
+    type: "Managed Optimistic Oracle V2",
+    chainId: 288,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // core
+    type: "Managed Optimistic Oracle V2",
+    chainId: 1116,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // arbitrum
+    type: "Managed Optimistic Oracle V2",
+    chainId: 42161,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // mumbai
+    type: "Managed Optimistic Oracle V2",
+    chainId: 80001,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // amoy
+    type: "Managed Optimistic Oracle V2",
+    chainId: 80002,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // sepolia
+    type: "Managed Optimistic Oracle V2",
+    chainId: 11155111,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // blast
+    type: "Managed Optimistic Oracle V2",
+    chainId: 81457,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // base
+    type: "Managed Optimistic Oracle V2",
+    chainId: 8453,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  {
+    // story mainnet
+    type: "Managed Optimistic Oracle V2",
+    chainId: 1514,
+    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+  },
+  // -----------------------------------
+  // -----------------------------------
+  // -----------------------------------
   // base contracts
   {
     type: "Optimistic Oracle V1",

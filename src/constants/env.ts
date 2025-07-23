@@ -73,6 +73,21 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_SKINNY_11155111: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_SKINNY_168587773: ss.optional(ss.string()),
 
+  // managed optimistic oracle v2 subgraphs
+  // TODO: verify these chains
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_1: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_10: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_137: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_288: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_1116: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_1514: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_42161: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_5: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_80001: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_80002: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_81457: ss.optional(ss.string()),
+  NEXT_PUBLIC_SUBGRAPH_MANAGED_11155111: ss.optional(ss.string()),
+
   // enabling services for realtime updates oo v1
   NEXT_PUBLIC_PROVIDER_V1_1: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_V1_137: ss.optional(ss.string()),
@@ -238,6 +253,31 @@ const env = ss.create(
     // NEXT_PUBLIC_SUBGRAPH_SKINNY_168587773:
     //   process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_168587773,
 
+    // managed optimistic oracle v2 subgraphs
+    // TODO: verify these chains
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_1: process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_1,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_10:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_10,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_137:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_137,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_288:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_288,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_1116:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_1116,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_1514:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_1514,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_42161:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_42161,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_5: process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_5,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_80001:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_80001,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_80002:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_80002,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_81457:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_81457,
+    NEXT_PUBLIC_SUBGRAPH_MANAGED_11155111:
+      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_11155111,
+
     // enabling providers for each chain will enable web3 data services, which are needed for real time updates
     NEXT_PUBLIC_PROVIDER_V1_1: process.env.NEXT_PUBLIC_PROVIDER_V1_1,
     NEXT_PUBLIC_PROVIDER_V1_137: process.env.NEXT_PUBLIC_PROVIDER_V1_137,
@@ -300,6 +340,8 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_1116,
     NEXT_PUBLIC_PROVIDER_SKINNY_1514:
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_1514,
+    NEXT_PUBLIC_PROVIDER_SKINNY_1516:
+      process.env.NEXT_PUBLIC_PROVIDER_SKINNY_1516,
     NEXT_PUBLIC_PROVIDER_SKINNY_42161:
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_42161,
     NEXT_PUBLIC_PROVIDER_SKINNY_5: process.env.NEXT_PUBLIC_PROVIDER_SKINNY_5,
@@ -352,6 +394,7 @@ const SubgraphConfig = ss.object({
     "Optimistic Oracle V2",
     "Optimistic Oracle V3",
     "Skinny Optimistic Oracle",
+    "Managed Optimistic Oracle V2",
   ]),
   chainId: ChainId,
   address: ss.string(),
@@ -369,6 +412,7 @@ const ProviderConfig = ss.object({
     "Optimistic Oracle V2",
     "Optimistic Oracle V3",
     "Skinny Optimistic Oracle",
+    "Managed Optimistic Oracle V2",
   ]),
   url: ss.string(),
   address: ss.string(),
@@ -415,6 +459,20 @@ function parseEnv(env: Env): Config {
         if (ss.is(subgraph, SubgraphConfig)) {
           subgraphs.push(subgraph);
         }
+      } else if (version === "MANAGED") {
+        const subgraph = {
+          source: "gql",
+          urls,
+          type: "Managed Optimistic Oracle V2",
+          chainId: parseInt(chainId),
+          address: getContractAddress({
+            chainId: parseInt(chainId),
+            type: "Managed Optimistic Oracle V2",
+          }),
+        };
+        if (ss.is(subgraph, SubgraphConfig)) {
+          subgraphs.push(subgraph);
+        }
       } else {
         const subgraph = {
           source: "gql",
@@ -442,6 +500,23 @@ function parseEnv(env: Env): Config {
             chainId: parseInt(chainId),
             type: "Skinny Optimistic Oracle",
           }),
+          blockHistoryLimit: 1000000,
+        };
+        if (ss.is(provider, ProviderConfig)) {
+          providers.push(provider);
+        }
+      } else if (version === "MANAGED") {
+        const contractConfig = getContractInfo({
+          chainId: parseInt(chainId),
+          type: "Managed Optimistic Oracle V2",
+        });
+        const provider = {
+          source: "provider",
+          type: "Managed Optimistic Oracle V2",
+          url: value,
+          chainId: parseInt(chainId),
+          address: contractConfig.address,
+          deployBlock: contractConfig.deployBlock,
           blockHistoryLimit: 1000000,
         };
         if (ss.is(provider, ProviderConfig)) {

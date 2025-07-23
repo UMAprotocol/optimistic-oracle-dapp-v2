@@ -165,7 +165,8 @@ function makeQuery(
       settlementHash
       settlementLogIndex
       ${
-        oracleType === "Optimistic Oracle V2"
+        oracleType === "Optimistic Oracle V2" ||
+        oracleType === "Managed Optimistic Oracle V2"
           ? `
             customLiveness
             bond
@@ -230,7 +231,8 @@ function makeTimeBasedQuery(
       settlementHash
       settlementLogIndex
       ${
-        oracleType === "Optimistic Oracle V2"
+        oracleType === "Optimistic Oracle V2" ||
+        oracleType === "Managed Optimistic Oracle V2"
           ? `
             customLiveness
             bond

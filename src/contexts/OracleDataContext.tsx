@@ -51,6 +51,8 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
       return [config, ...oracle2Ethers.Factory(config)];
     if (config.type === "Optimistic Oracle V3")
       return [config, ...oracle3Ethers.Factory(config)];
+    if (config.type === "Managed Optimistic Oracle V2")
+      return [config, ...oracle2Ethers.Factory(config)];
     // skinny optimistic oracle is left
     return [config, ...skinny1Ethers.Factory(config)];
   })
