@@ -1,6 +1,10 @@
-import { getContract } from "@/helpers";
+import { getProvider } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
-import type { OptimisticOracleV2Ethers } from "@uma/contracts-node";
+import { getContractAddress } from "@libs/constants";
+import {
+  OptimisticOracleV2Ethers__factory,
+  type OptimisticOracleV2Ethers,
+} from "@uma/contracts-frontend";
 import assert from "assert";
 import type { BytesLike } from "ethers";
 import { useAccount, useQuery } from "wagmi";
@@ -10,7 +14,7 @@ export type ProposerWhitelistWithEnforcementStatus = {
   isEnforced: boolean;
 };
 
-// TODO: replace this stub when @uma/contracts-node is updated
+// TODO: replace this stub when @uma/contracts-frontend is updated
 type ManagedOptimisticOracleV2 = OptimisticOracleV2Ethers & {
   getProposerWhitelistWithEnforcementStatus: (
     requester: string,
@@ -19,17 +23,27 @@ type ManagedOptimisticOracleV2 = OptimisticOracleV2Ethers & {
   ) => Promise<ProposerWhitelistWithEnforcementStatus>;
 };
 
-async function getProposerWhitelistWithEnforcementStatus(query: OracleQueryUI) {
+async function getProposerWhitelistWithEnforcementStatus(
+  query: OracleQueryUI,
+): Promise<ProposerWhitelistWithEnforcementStatus> {
   try {
     const { requester, identifier, queryTextHex: ancillaryData } = query;
     assert(requester, "requester missing from query object");
     assert(identifier, "identifier missing from query object");
     assert(ancillaryData, "ancillaryData missing from query object");
 
-    const contract = (await getContract(
-      "OptimisticOracleV2", // TODO: replace "OptimisticOracleV2" with "ManagedOptimisticOracleV2"
-      query.chainId,
-    )) as ManagedOptimisticOracleV2;
+    const contractAddress = getContractAddress({
+      chainId: query.chainId,
+      type: "Managed Optimistic Oracle V2",
+    });
+
+    if (!contractAddress)
+      throw Error("Unable to resolve address for Managed Optimistic Oracle V2");
+    const contract = OptimisticOracleV2Ethers__factory.connect(
+      contractAddress,
+      getProvider(query.chainId),
+    ) as ManagedOptimisticOracleV2;
+
     return await contract.getProposerWhitelistWithEnforcementStatus(
       requester,
       identifier,
