@@ -1,5 +1,7 @@
-import { ethersErrorCodes } from "@/constants";
-import { ethers } from "ethers";
+import { config, ethersErrorCodes } from "@/constants";
+import { Contract, ethers } from "ethers";
+import type { ContractName } from "@uma/contracts-node";
+import { getAbi, getAddress as getContractAddress } from "@uma/contracts-node";
 
 export const formatEther = ethers.utils.formatEther;
 
@@ -68,4 +70,22 @@ export function parseEthersError(ethersError: string) {
       href,
     },
   };
+}
+
+export function getProvider(chainId: number) {
+  const rpc = config.providers.find((p) => p.chainId === chainId)?.url;
+  return new ethers.providers.JsonRpcProvider(rpc);
+}
+
+export async function getContract(contractName: ContractName, chainId: number) {
+  const contractAddress = await getContractAddress(contractName, chainId);
+
+  if (!contractAddress)
+    throw Error(`Unable to resolve address for ${contractName}`);
+
+  return new Contract(
+    contractAddress,
+    getAbi(contractName),
+    getProvider(chainId),
+  );
 }

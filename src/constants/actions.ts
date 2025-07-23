@@ -14,6 +14,7 @@ export const changeChain = "Change chain";
 export const insufficientBalance = "Insufficient balance";
 export const approveSpend = "Approve spend";
 export const approvingSpend = "Approving spend...";
+export const notWhitelisted = "Connected address not permitted";
 
 export const actionTitles = [
   propose,
@@ -32,4 +33,5 @@ export const actionTitles = [
   insufficientBalance,
   approveSpend,
   approvingSpend,
+  notWhitelisted,
 ];
