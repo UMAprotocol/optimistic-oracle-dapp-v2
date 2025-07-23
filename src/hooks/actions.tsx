@@ -41,7 +41,7 @@ import {
   useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
-import { useIsUserWhitelisted } from "./useWhitelistProposer";
+import { useIsUserWhitelisted } from "./useProposerWhitelist";
 
 // This represents an action button, and the state we need to render it
 export type ActionState = Partial<{

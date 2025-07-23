@@ -1,12 +1,10 @@
 import { getProvider } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { getContractAddress } from "@libs/constants";
-import {
-  OptimisticOracleV2Ethers__factory,
-  type OptimisticOracleV2Ethers,
-} from "@uma/contracts-frontend";
+import { getProposerWhitelistWithEnforcementStatusAbi } from "@shared/constants/abi";
+import { type OptimisticOracleV2Ethers } from "@uma/contracts-frontend";
 import assert from "assert";
-import type { BytesLike } from "ethers";
+import { Contract, type BytesLike } from "ethers";
 import { useAccount, useQuery } from "wagmi";
 
 export type ProposerWhitelistWithEnforcementStatus = {
@@ -39,8 +37,10 @@ async function getProposerWhitelistWithEnforcementStatus(
 
     if (!contractAddress)
       throw Error("Unable to resolve address for Managed Optimistic Oracle V2");
-    const contract = OptimisticOracleV2Ethers__factory.connect(
+
+    const contract = new Contract(
       contractAddress,
+      getProposerWhitelistWithEnforcementStatusAbi,
       getProvider(query.chainId),
     ) as ManagedOptimisticOracleV2;
 

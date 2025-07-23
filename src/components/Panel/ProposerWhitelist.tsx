@@ -1,7 +1,7 @@
 import type { OracleQueryUI } from "@/types";
 import { SectionSubTitle } from "./style";
 import { useState } from "react";
-import { useProposerWhitelist } from "@/hooks/useWhitelistProposer";
+import { useProposerWhitelist } from "@/hooks/useProposerWhitelist";
 import Chevron from "public/assets/icons/chevron.svg";
 
 export function ProposerWhitelist({ query }: { query: OracleQueryUI }) {
