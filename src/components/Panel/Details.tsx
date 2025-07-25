@@ -13,23 +13,26 @@ import {
   Text,
   WordBreakLink,
 } from "./style";
+import { ProposerWhitelist } from "./ProposerWhitelist";
 
-export function Details({
-  timeUTC,
-  timeUNIX,
-  proposalTimeUTC,
-  proposalTimeUNIX,
-  settlementTimeUTC,
-  settlementTimeUNIX,
-  disputeTimeUTC,
-  disputeTimeUNIX,
-  description,
-  queryText,
-  queryTextHex,
-  moreInformation,
-  project,
-  chainId,
-}: OracleQueryUI) {
+export function Details(query: OracleQueryUI) {
+  const {
+    timeUTC,
+    timeUNIX,
+    proposalTimeUTC,
+    proposalTimeUNIX,
+    settlementTimeUTC,
+    settlementTimeUNIX,
+    disputeTimeUTC,
+    disputeTimeUNIX,
+    description,
+    queryText,
+    queryTextHex,
+    moreInformation,
+    project,
+    chainId,
+  } = query;
+
   function getAdditionalTextData() {
     if (!queryText) return undefined;
     if (project === "Rated") {
@@ -130,6 +133,7 @@ export function Details({
             </WordBreakLink>
           </Fragment>
         ))}
+        <ProposerWhitelist query={query} />
       </DetailWrapper>
     </div>
   );

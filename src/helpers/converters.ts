@@ -204,7 +204,10 @@ function isOOV1PriceRequest(
 function isOOV2PriceRequest(
   request: Request | Assertion,
 ): request is ParsedOOV2GraphEntity {
-  return request.oracleType === "Optimistic Oracle V2";
+  return (
+    request.oracleType === "Optimistic Oracle V2" ||
+    request.oracleType === "Managed Optimistic Oracle V2"
+  );
 }
 
 function isAssertion(request: Request | Assertion): request is Assertion {
