@@ -1,10 +1,11 @@
-import { getProvider } from "@/helpers";
+import { getProvider, isAddress, utf8ToHex } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import { getContractAddress } from "@libs/constants";
 import { getProposerWhitelistWithEnforcementStatusAbi } from "@shared/constants/abi";
 import { type OptimisticOracleV2Ethers } from "@uma/contracts-frontend";
 import assert from "assert";
 import { Contract, type BytesLike } from "ethers";
+import { isBytesLike } from "ethers/lib/utils";
 import { useAccount, useQuery } from "wagmi";
 
 export type ProposerWhitelistWithEnforcementStatus = {
@@ -26,9 +27,16 @@ async function getProposerWhitelistWithEnforcementStatus(
 ): Promise<ProposerWhitelistWithEnforcementStatus> {
   try {
     const { requester, identifier, queryTextHex: ancillaryData } = query;
-    assert(requester, "requester missing from query object");
-    assert(identifier, "identifier missing from query object");
-    assert(ancillaryData, "ancillaryData missing from query object");
+    // identifier is decoded at this point
+    const identifierHex = identifier ? utf8ToHex(identifier) : identifier;
+
+    // check inputs
+    assert(requester && isAddress(requester), "Invalid requester");
+    assert(identifierHex && isBytesLike(identifierHex), "Invalid identifier");
+    assert(
+      ancillaryData && isBytesLike(ancillaryData),
+      "Invalid ancillaryData",
+    );
 
     const contractAddress = getContractAddress({
       chainId: query.chainId,
@@ -46,7 +54,7 @@ async function getProposerWhitelistWithEnforcementStatus(
 
     return await contract.getProposerWhitelistWithEnforcementStatus(
       requester,
-      identifier,
+      identifierHex,
       ancillaryData,
     );
   } catch (e) {
