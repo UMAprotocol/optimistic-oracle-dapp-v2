@@ -74,19 +74,8 @@ const Env = ss.object({
   NEXT_PUBLIC_SUBGRAPH_SKINNY_168587773: ss.optional(ss.string()),
 
   // managed optimistic oracle v2 subgraphs
-  // TODO: verify these chains
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_1: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_10: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_MANAGED_137: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_288: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_1116: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_1514: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_42161: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_5: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_80001: ss.optional(ss.string()),
   NEXT_PUBLIC_SUBGRAPH_MANAGED_80002: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_81457: ss.optional(ss.string()),
-  NEXT_PUBLIC_SUBGRAPH_MANAGED_11155111: ss.optional(ss.string()),
 
   // enabling services for realtime updates oo v1
   NEXT_PUBLIC_PROVIDER_V1_1: ss.optional(ss.string()),
@@ -255,28 +244,11 @@ const env = ss.create(
 
     // managed optimistic oracle v2 subgraphs
     // TODO: verify these chains
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_1: process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_1,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_10:
-      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_10,
     NEXT_PUBLIC_SUBGRAPH_MANAGED_137:
       process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_137,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_288:
-      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_288,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_1116:
-      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_1116,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_1514:
-      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_1514,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_42161:
-      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_42161,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_5: process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_5,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_80001:
-      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_80001,
+
     NEXT_PUBLIC_SUBGRAPH_MANAGED_80002:
       process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_80002,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_81457:
-      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_81457,
-    NEXT_PUBLIC_SUBGRAPH_MANAGED_11155111:
-      process.env.NEXT_PUBLIC_SUBGRAPH_MANAGED_11155111,
 
     // enabling providers for each chain will enable web3 data services, which are needed for real time updates
     NEXT_PUBLIC_PROVIDER_V1_1: process.env.NEXT_PUBLIC_PROVIDER_V1_1,
