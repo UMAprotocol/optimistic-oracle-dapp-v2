@@ -284,7 +284,7 @@ export const ContractInfoList: ContractInfoList = [
     // amoy
     type: "Managed Optimistic Oracle V2",
     chainId: 80002,
-    address: getAddress("0x0000000000000000000000000000000000000000"), // TODO: Add actual address
+    address: getAddress("0x79950a8e152766f2282d315bdad889202c38fe8e"),
   },
   // base contracts
   {
