@@ -41,7 +41,7 @@ export const DropdownTrigger = styled(RadixDropdown.Trigger)`
 `;
 
 export const DropdownContent = styled(RadixDropdown.Content)`
-  width: var(--radix-dropdown-menu-trigger-width);
+  width: max(var(--radix-dropdown-menu-trigger-width), fit-content);
   margin-top: 4px;
   font: var(--body-sm);
   color: var(--blue-grey-500);
