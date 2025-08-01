@@ -21,7 +21,8 @@ export const Factory = (config: Config): ServiceFactory[] => {
         config.source === "gql" &&
         (config.type === "Optimistic Oracle V1" ||
           config.type === "Optimistic Oracle V2" ||
-          config.type === "Skinny Optimistic Oracle")
+          config.type === "Skinny Optimistic Oracle" ||
+          config.type === "Managed Optimistic Oracle V2")
       ) {
         return gql1.Factory(config)(handlers);
       }
