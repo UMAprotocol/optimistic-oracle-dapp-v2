@@ -139,6 +139,9 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_SKINNY_81457: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_11155111: ss.optional(ss.string()),
   NEXT_PUBLIC_PROVIDER_SKINNY_168587773: ss.optional(ss.string()),
+  // managed OOv2
+  NEXT_PUBLIC_PROVIDER_MANAGED_137: ss.optional(ss.string()),
+  NEXT_PUBLIC_PROVIDER_MANAGED_80002: ss.optional(ss.string()),
   // not supported yet
   // NEXT_PUBLIC_PROVIDER_V1_416: ss.optional(ss.string()),
   // NEXT_PUBLIC_PROVIDER_V1_43114: ss.optional(ss.string()),
@@ -326,6 +329,12 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_81457,
     NEXT_PUBLIC_PROVIDER_SKINNY_11155111:
       process.env.NEXT_PUBLIC_PROVIDER_SKINNY_11155111,
+
+    // Managed OOv2
+    NEXT_PUBLIC_PROVIDER_MANAGED_137:
+      process.env.NEXT_PUBLIC_PROVIDER_MANAGED_137,
+    NEXT_PUBLIC_PROVIDER_MANAGED_80002:
+      process.env.NEXT_PUBLIC_PROVIDER_MANAGED_80002,
 
     // NEXT_PUBLIC_PROVIDER_SKINNY_168587773:
     //   process.env.NEXT_PUBLIC_PROVIDER_SKINNY_168587773,
