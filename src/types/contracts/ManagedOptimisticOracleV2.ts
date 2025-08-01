@@ -124,7 +124,7 @@ export interface ManagedOptimisticOracleV2Interface extends utils.Interface {
     "getCurrentTime()": FunctionFragment;
     "getCustomProposerWhitelist(address,bytes32,bytes)": FunctionFragment;
     "getManagedRequestId(address,bytes32,bytes)": FunctionFragment;
-    "getProposerWhitelistWithEnforcementStatus(address,bytes32,bytes)": FunctionFragment;
+    "getProposerWhitelistWithEnabledStatus(address,bytes32,bytes)": FunctionFragment;
     "getRequest(address,bytes32,uint256,bytes)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getState(address,bytes32,uint256,bytes)": FunctionFragment;
@@ -197,7 +197,7 @@ export interface ManagedOptimisticOracleV2Interface extends utils.Interface {
       | "getCurrentTime"
       | "getCustomProposerWhitelist"
       | "getManagedRequestId"
-      | "getProposerWhitelistWithEnforcementStatus"
+      | "getProposerWhitelistWithEnabledStatus"
       | "getRequest"
       | "getRoleAdmin"
       | "getState"
@@ -341,7 +341,7 @@ export interface ManagedOptimisticOracleV2Interface extends utils.Interface {
     values: [string, BytesLike, BytesLike],
   ): string;
   encodeFunctionData(
-    functionFragment: "getProposerWhitelistWithEnforcementStatus",
+    functionFragment: "getProposerWhitelistWithEnabledStatus",
     values: [string, BytesLike, BytesLike],
   ): string;
   encodeFunctionData(
@@ -618,7 +618,7 @@ export interface ManagedOptimisticOracleV2Interface extends utils.Interface {
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getProposerWhitelistWithEnforcementStatus",
+    functionFragment: "getProposerWhitelistWithEnabledStatus",
     data: BytesLike,
   ): Result;
   decodeFunctionResult(functionFragment: "getRequest", data: BytesLike): Result;
@@ -1029,7 +1029,7 @@ export interface ManagedOptimisticOracleV2 extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[string]>;
 
-    getProposerWhitelistWithEnforcementStatus(
+    getProposerWhitelistWithEnabledStatus(
       requester: string,
       identifier: BytesLike,
       ancillaryData: BytesLike,
@@ -1418,7 +1418,7 @@ export interface ManagedOptimisticOracleV2 extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<string>;
 
-  getProposerWhitelistWithEnforcementStatus(
+  getProposerWhitelistWithEnabledStatus(
     requester: string,
     identifier: BytesLike,
     ancillaryData: BytesLike,
@@ -1803,7 +1803,7 @@ export interface ManagedOptimisticOracleV2 extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<string>;
 
-    getProposerWhitelistWithEnforcementStatus(
+    getProposerWhitelistWithEnabledStatus(
       requester: string,
       identifier: BytesLike,
       ancillaryData: BytesLike,
@@ -2190,7 +2190,7 @@ export interface ManagedOptimisticOracleV2 extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getProposerWhitelistWithEnforcementStatus(
+    getProposerWhitelistWithEnabledStatus(
       requester: string,
       identifier: BytesLike,
       ancillaryData: BytesLike,
@@ -2564,7 +2564,7 @@ export interface ManagedOptimisticOracleV2 extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    getProposerWhitelistWithEnforcementStatus(
+    getProposerWhitelistWithEnabledStatus(
       requester: string,
       identifier: BytesLike,
       ancillaryData: BytesLike,

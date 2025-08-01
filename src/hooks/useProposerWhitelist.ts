@@ -2,19 +2,17 @@ import { getProvider, isAddress, utf8ToHex } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import type { ManagedOptimisticOracleV2 } from "@/types/contracts/ManagedOptimisticOracleV2";
 import { getContractAddress } from "@libs/constants";
-import { getProposerWhitelistWithEnforcementStatusAbi } from "@shared/constants/abi";
+import { getProposerWhitelistWithEnabledStatusAbi } from "@shared/constants/abi";
 import assert from "assert";
 import { Contract } from "ethers";
 import { isBytesLike } from "ethers/lib/utils";
 import { useAccount, useQuery } from "wagmi";
 
 export type ProposerWhitelistWithEnforcementStatus = Awaited<
-  ReturnType<
-    ManagedOptimisticOracleV2["getProposerWhitelistWithEnforcementStatus"]
-  >
+  ReturnType<ManagedOptimisticOracleV2["getProposerWhitelistWithEnabledStatus"]>
 >;
 
-async function getProposerWhitelistWithEnforcementStatus(
+async function getProposerWhitelistWithEnabledStatus(
   query: OracleQueryUI,
 ): Promise<ProposerWhitelistWithEnforcementStatus> {
   try {
@@ -40,11 +38,11 @@ async function getProposerWhitelistWithEnforcementStatus(
 
     const contract = new Contract(
       contractAddress,
-      getProposerWhitelistWithEnforcementStatusAbi,
+      getProposerWhitelistWithEnabledStatusAbi,
       getProvider(query.chainId),
     ) as ManagedOptimisticOracleV2;
 
-    return await contract.getProposerWhitelistWithEnforcementStatus(
+    return await contract.getProposerWhitelistWithEnabledStatus(
       requester,
       identifierHex,
       ancillaryData,
@@ -62,10 +60,10 @@ export function useProposerWhitelist(
   query: OracleQueryUI | undefined,
   queryOptions?: QueryOptions,
 ) {
-  return useQuery(["getProposerWhitelistWithEnforcementStatus", query?.id], {
+  return useQuery(["getProposerWhitelistWithEnabledStatus", query?.id], {
     queryFn: () => {
       if (!query) return undefined;
-      return getProposerWhitelistWithEnforcementStatus(query);
+      return getProposerWhitelistWithEnabledStatus(query);
     },
     refetchInterval: 30_000, // 30 seconds
     enabled: Boolean(query),
