@@ -1,26 +1,18 @@
 import { getProvider, isAddress, utf8ToHex } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
+import type { ManagedOptimisticOracleV2 } from "@/types/contracts/ManagedOptimisticOracleV2";
 import { getContractAddress } from "@libs/constants";
 import { getProposerWhitelistWithEnforcementStatusAbi } from "@shared/constants/abi";
-import { type OptimisticOracleV2Ethers } from "@uma/contracts-frontend";
 import assert from "assert";
-import { Contract, type BytesLike } from "ethers";
+import { Contract } from "ethers";
 import { isBytesLike } from "ethers/lib/utils";
 import { useAccount, useQuery } from "wagmi";
 
-export type ProposerWhitelistWithEnforcementStatus = {
-  allowedProposers: string[];
-  isEnforced: boolean;
-};
-
-// TODO: replace this stub when @uma/contracts-frontend is updated
-type ManagedOptimisticOracleV2 = OptimisticOracleV2Ethers & {
-  getProposerWhitelistWithEnforcementStatus: (
-    requester: string,
-    identifier: BytesLike,
-    ancillaryData: BytesLike,
-  ) => Promise<ProposerWhitelistWithEnforcementStatus>;
-};
+export type ProposerWhitelistWithEnforcementStatus = Awaited<
+  ReturnType<
+    ManagedOptimisticOracleV2["getProposerWhitelistWithEnforcementStatus"]
+  >
+>;
 
 async function getProposerWhitelistWithEnforcementStatus(
   query: OracleQueryUI,
