@@ -5,7 +5,7 @@ import { getContractAddress } from "@libs/constants";
 import { getProposerWhitelistWithEnforcementStatusAbi } from "@shared/constants/abi";
 import assert from "assert";
 import { Contract } from "ethers";
-import { isBytesLike } from "ethers/lib/utils";
+import { hexZeroPad, isBytesLike } from "ethers/lib/utils";
 import { useAccount, useQuery } from "wagmi";
 
 export type ProposerWhitelistWithEnforcementStatus = Awaited<
@@ -20,7 +20,9 @@ async function getProposerWhitelistWithEnforcementStatus(
   try {
     const { requester, identifier, queryTextHex: ancillaryData } = query;
     // identifier is decoded at this point
-    const identifierHex = identifier ? utf8ToHex(identifier) : identifier;
+    const identifierHex = identifier
+      ? hexZeroPad(utf8ToHex(identifier), 32)
+      : undefined;
 
     // check inputs
     assert(requester && isAddress(requester), "Invalid requester");
