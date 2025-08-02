@@ -181,7 +181,7 @@ export function useApproveBondAction({
   } = usePrepareContractWrite({
     ...approveBondSpendParams,
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && Boolean(isUserWhitelisted),
   });
   const {
     write: approveBondSpend,
@@ -290,7 +290,11 @@ export function useProposeAction({
   } = usePrepareContractWrite({
     ...proposePriceParams?.(proposePriceInput),
     scopeKey: query?.id,
-    enabled: prepare && !!query?.id && actionType === "propose",
+    enabled:
+      prepare &&
+      !!query?.id &&
+      actionType === "propose" &&
+      Boolean(isUserWhitelisted),
     dataSuffix: trackingCalldataSuffix,
   });
   const {
@@ -420,7 +424,6 @@ export function useDisputeAction({
   query?: OracleQueryUI;
   prepare?: boolean;
 }): ActionState | undefined {
-  const { data: isUserWhitelisted } = useIsUserWhitelisted(query);
   const { disputePriceParams, chainId, actionType } = query ?? {};
   const {
     config: disputePriceConfig,
@@ -473,14 +476,6 @@ export function useDisputeAction({
   if (actionType === "settle") return undefined;
   if (disputePriceParams === undefined) return undefined;
 
-  if (!isUserWhitelisted) {
-    return {
-      title: notWhitelisted,
-      disabled: true,
-      disabledReason:
-        "Connected address is not on this request's proposer whitelist. See proposer whitelist below.",
-    };
-  }
   if (isPrepareDisputePriceLoading) {
     return {
       title: dispute,
