@@ -2,19 +2,17 @@ import { getProvider, isAddress, utf8ToHex } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import type { ManagedOptimisticOracleV2 } from "@/types/contracts/ManagedOptimisticOracleV2";
 import { getContractAddress } from "@libs/constants";
-import { getProposerWhitelistWithEnforcementStatusAbi } from "@shared/constants/abi";
+import { getProposerWhitelistWithEnabledStatusAbi } from "@shared/constants/abi";
 import assert from "assert";
 import { Contract } from "ethers";
 import { hexZeroPad, isBytesLike } from "ethers/lib/utils";
 import { useAccount, useQuery } from "wagmi";
 
 export type ProposerWhitelistWithEnforcementStatus = Awaited<
-  ReturnType<
-    ManagedOptimisticOracleV2["getProposerWhitelistWithEnforcementStatus"]
-  >
+  ReturnType<ManagedOptimisticOracleV2["getProposerWhitelistWithEnabledStatus"]>
 >;
 
-async function getProposerWhitelistWithEnforcementStatus(
+async function getProposerWhitelistWithEnabledStatus(
   query: OracleQueryUI,
 ): Promise<ProposerWhitelistWithEnforcementStatus> {
   try {
@@ -42,11 +40,11 @@ async function getProposerWhitelistWithEnforcementStatus(
 
     const contract = new Contract(
       contractAddress,
-      getProposerWhitelistWithEnforcementStatusAbi,
+      getProposerWhitelistWithEnabledStatusAbi,
       getProvider(query.chainId),
     ) as ManagedOptimisticOracleV2;
 
-    return await contract.getProposerWhitelistWithEnforcementStatus(
+    return await contract.getProposerWhitelistWithEnabledStatus(
       requester,
       identifierHex,
       ancillaryData,
@@ -65,11 +63,11 @@ export function useProposerWhitelist(
   queryOptions?: QueryOptions,
 ) {
   return useQuery(
-    ["getProposerWhitelistWithEnforcementStatus", query?.id, query?.oracleType],
+    ["getProposerWhitelistWithEnabledStatus", query?.id, query?.oracleType],
     {
       queryFn: () => {
         if (!query) return undefined;
-        return getProposerWhitelistWithEnforcementStatus(query);
+        return getProposerWhitelistWithEnabledStatus(query);
       },
       refetchInterval: 30_000, // 30 seconds
       enabled: Boolean(query),
@@ -98,8 +96,8 @@ export function useIsUserWhitelisted(
         if (!address) {
           return false;
         }
-        const data = await getProposerWhitelistWithEnforcementStatus(query);
-        if (!data.isEnforced) return true;
+        const data = await getProposerWhitelistWithEnabledStatus(query);
+        if (!data.isEnabled) return true;
         return data.allowedProposers
           .map((a) => a.toLowerCase())
           .includes(address.toLowerCase());
