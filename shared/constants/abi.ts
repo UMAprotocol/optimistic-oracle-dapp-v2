@@ -1216,7 +1216,7 @@ export const getProposerWhitelistWithEnabledStatusAbi = [
         name: "allowedProposers",
         type: "address[]",
       },
-      { internalType: "bool", name: "isEnforced", type: "bool" },
+      { internalType: "bool", name: "isEnabled", type: "bool" },
     ],
     stateMutability: "view",
     type: "function",
