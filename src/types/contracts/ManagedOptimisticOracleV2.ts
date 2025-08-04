@@ -1035,7 +1035,7 @@ export interface ManagedOptimisticOracleV2 extends BaseContract {
       ancillaryData: BytesLike,
       overrides?: CallOverrides,
     ): Promise<
-      [string[], boolean] & { allowedProposers: string[]; isEnforced: boolean }
+      [string[], boolean] & { allowedProposers: string[]; isEnabled: boolean }
     >;
 
     getRequest(
@@ -1424,7 +1424,7 @@ export interface ManagedOptimisticOracleV2 extends BaseContract {
     ancillaryData: BytesLike,
     overrides?: CallOverrides,
   ): Promise<
-    [string[], boolean] & { allowedProposers: string[]; isEnforced: boolean }
+    [string[], boolean] & { allowedProposers: string[]; isEnabled: boolean }
   >;
 
   getRequest(
@@ -1809,7 +1809,7 @@ export interface ManagedOptimisticOracleV2 extends BaseContract {
       ancillaryData: BytesLike,
       overrides?: CallOverrides,
     ): Promise<
-      [string[], boolean] & { allowedProposers: string[]; isEnforced: boolean }
+      [string[], boolean] & { allowedProposers: string[]; isEnabled: boolean }
     >;
 
     getRequest(

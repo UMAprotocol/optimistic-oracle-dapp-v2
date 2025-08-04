@@ -97,7 +97,7 @@ export function useIsUserWhitelisted(
           return false;
         }
         const data = await getProposerWhitelistWithEnabledStatus(query);
-        if (!data.isEnforced) return true;
+        if (!data.isEnabled) return true;
         return data.allowedProposers
           .map((a) => a.toLowerCase())
           .includes(address.toLowerCase());
