@@ -85,24 +85,22 @@ export function useIsUserWhitelisted(
   query: OracleQueryUI | undefined,
   queryOptions?: QueryOptions,
 ) {
-  const { data } = useProposerWhitelist(query, {
-    enabled: Boolean(
-      query && query.oracleType === "Managed Optimistic Oracle V2",
-    ),
-  });
   const { address } = useAccount();
   return useQuery(["useIsUserWhitelisted", address, query?.id], {
-    queryFn: () => {
-      if (!query) return false;
+    queryFn: async () => {
+      if (!query || !query.oracleType) return false;
       if (query.oracleType !== "Managed Optimistic Oracle V2") return true;
-      if (!data || !address) {
+      if (!address) {
         return false;
       }
+      const data = await getProposerWhitelistWithEnforcementStatus(query);
       if (!data.isEnforced) return true;
-      return data.allowedProposers.includes(address);
+      return data.allowedProposers
+        .map((a) => a.toLowerCase())
+        .includes(address.toLowerCase());
     },
     refetchInterval: 30_000, // 30 seconds
-    enabled: Boolean(query),
+    enabled: Boolean(query?.id && address),
     onError(err) {
       console.error({
         error: err,
