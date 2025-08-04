@@ -70,7 +70,7 @@ export function useProposerWhitelist(
         return getProposerWhitelistWithEnabledStatus(query);
       },
       refetchInterval: 30_000, // 30 seconds
-      enabled: Boolean(query),
+      enabled: query && query.oracleType === "Managed Optimistic Oracle V2",
       onError(err) {
         console.error({
           error: err,

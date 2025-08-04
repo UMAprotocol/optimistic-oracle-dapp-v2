@@ -5,9 +5,7 @@ import { useProposerWhitelist } from "@/hooks/useProposerWhitelist";
 import Chevron from "public/assets/icons/chevron.svg";
 
 export function ProposerWhitelist({ query }: { query: OracleQueryUI }) {
-  const { data } = useProposerWhitelist(query, {
-    enabled: query?.oracleType === "Managed Optimistic Oracle V2",
-  });
+  const { data } = useProposerWhitelist(query);
   const whitelist = data?.allowedProposers;
 
   const [showWhitelist, setShowWhitelist] = useState(false);
