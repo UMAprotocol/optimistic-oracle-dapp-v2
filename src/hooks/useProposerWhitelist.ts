@@ -64,21 +64,24 @@ export function useProposerWhitelist(
   query: OracleQueryUI | undefined,
   queryOptions?: QueryOptions,
 ) {
-  return useQuery(["getProposerWhitelistWithEnforcementStatus", query?.id], {
-    queryFn: () => {
-      if (!query) return undefined;
-      return getProposerWhitelistWithEnforcementStatus(query);
+  return useQuery(
+    ["getProposerWhitelistWithEnforcementStatus", query?.id, query?.oracleType],
+    {
+      queryFn: () => {
+        if (!query) return undefined;
+        return getProposerWhitelistWithEnforcementStatus(query);
+      },
+      refetchInterval: 30_000, // 30 seconds
+      enabled: Boolean(query),
+      onError(err) {
+        console.error({
+          error: err,
+          at: "useProposerWhitelist",
+        });
+      },
+      ...queryOptions,
     },
-    refetchInterval: 30_000, // 30 seconds
-    enabled: Boolean(query),
-    onError(err) {
-      console.error({
-        error: err,
-        at: "useProposerWhitelist",
-      });
-    },
-    ...queryOptions,
-  });
+  );
 }
 
 export function useIsUserWhitelisted(
@@ -86,27 +89,30 @@ export function useIsUserWhitelisted(
   queryOptions?: QueryOptions,
 ) {
   const { address } = useAccount();
-  return useQuery(["useIsUserWhitelisted", address, query?.id], {
-    queryFn: async () => {
-      if (!query || !query.oracleType) return false;
-      if (query.oracleType !== "Managed Optimistic Oracle V2") return true;
-      if (!address) {
-        return false;
-      }
-      const data = await getProposerWhitelistWithEnforcementStatus(query);
-      if (!data.isEnforced) return true;
-      return data.allowedProposers
-        .map((a) => a.toLowerCase())
-        .includes(address.toLowerCase());
+  return useQuery(
+    ["useIsUserWhitelisted", address, query?.id, query?.oracleType],
+    {
+      queryFn: async () => {
+        if (!query || !query.oracleType) return false;
+        if (query.oracleType !== "Managed Optimistic Oracle V2") return true;
+        if (!address) {
+          return false;
+        }
+        const data = await getProposerWhitelistWithEnforcementStatus(query);
+        if (!data.isEnforced) return true;
+        return data.allowedProposers
+          .map((a) => a.toLowerCase())
+          .includes(address.toLowerCase());
+      },
+      refetchInterval: 30_000, // 30 seconds
+      enabled: Boolean(query?.id && address && query.oracleType),
+      onError(err) {
+        console.error({
+          error: err,
+          at: "useIsUserWhitelisted",
+        });
+      },
+      ...queryOptions,
     },
-    refetchInterval: 30_000, // 30 seconds
-    enabled: Boolean(query?.id && address),
-    onError(err) {
-      console.error({
-        error: err,
-        at: "useIsUserWhitelisted",
-      });
-    },
-    ...queryOptions,
-  });
+  );
 }
