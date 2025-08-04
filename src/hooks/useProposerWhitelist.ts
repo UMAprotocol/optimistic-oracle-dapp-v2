@@ -87,7 +87,7 @@ export function useIsUserWhitelisted(
 ) {
   const { data } = useProposerWhitelist(query, {
     enabled: Boolean(
-      query && query.oracleType !== "Managed Optimistic Oracle V2",
+      query && query.oracleType === "Managed Optimistic Oracle V2",
     ),
   });
   const { address } = useAccount();
