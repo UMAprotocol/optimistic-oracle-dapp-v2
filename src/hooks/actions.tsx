@@ -10,6 +10,7 @@ import {
   disputed,
   disputing,
   insufficientBalance,
+  notWhitelisted,
   propose,
   proposed,
   proposing,
@@ -40,6 +41,7 @@ import {
   useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
+import { useIsUserWhitelisted } from "./useProposerWhitelist";
 
 // This represents an action button, and the state we need to render it
 export type ActionState = Partial<{
@@ -167,6 +169,7 @@ export function useApproveBondAction({
 }: {
   query?: OracleQueryUI;
 }): ActionState | undefined {
+  const { data: isUserWhitelisted } = useIsUserWhitelisted(query);
   const { bond, tokenAddress, chainId, approveBondSpendParams, actionType } =
     query ?? {};
   const { allowance, balance } = useBalanceAndAllowance(query);
@@ -178,7 +181,7 @@ export function useApproveBondAction({
   } = usePrepareContractWrite({
     ...approveBondSpendParams,
     scopeKey: query?.id,
-    enabled: !!query?.id,
+    enabled: !!query?.id && Boolean(isUserWhitelisted),
   });
   const {
     write: approveBondSpend,
@@ -218,6 +221,14 @@ export function useApproveBondAction({
   }, [approveBondSpendTransaction, bond, chainId, tokenAddress]);
 
   if (actionType !== "propose" && actionType !== "dispute") return undefined;
+  if (!isUserWhitelisted) {
+    return {
+      title: notWhitelisted,
+      disabled: true,
+      disabledReason:
+        "Connected address is not on this request's proposer whitelist. See proposer whitelist below.",
+    };
+  }
   if (balance && bond && balance.value < bond) {
     return {
       title: insufficientBalance,
@@ -269,6 +280,7 @@ export function useProposeAction({
   proposePriceInput?: string;
   prepare?: boolean;
 }): ActionState | undefined {
+  const { data: isUserWhitelisted } = useIsUserWhitelisted(query);
   const { proposePriceParams, chainId, actionType } = query ?? {};
   const {
     config: proposePriceConfig,
@@ -278,7 +290,11 @@ export function useProposeAction({
   } = usePrepareContractWrite({
     ...proposePriceParams?.(proposePriceInput),
     scopeKey: query?.id,
-    enabled: prepare && !!query?.id && actionType === "propose",
+    enabled:
+      prepare &&
+      !!query?.id &&
+      actionType === "propose" &&
+      Boolean(isUserWhitelisted),
     dataSuffix: trackingCalldataSuffix,
   });
   const {
@@ -328,6 +344,15 @@ export function useProposeAction({
       .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [proposePriceTransaction]);
+
+  if (!isUserWhitelisted) {
+    return {
+      title: notWhitelisted,
+      disabled: true,
+      disabledReason:
+        "Connected address is not on this request's proposer whitelist. See proposer whitelist below.",
+    };
+  }
 
   if (isPrepareProposePriceLoading) {
     return {

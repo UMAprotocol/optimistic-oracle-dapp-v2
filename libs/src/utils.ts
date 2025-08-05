@@ -336,3 +336,10 @@ export function rangeFailureDescending(state: RangeState): RangeState {
 export function isDefined<T>(value: T): value is NonNullable<T> {
   return value !== undefined && value !== null;
 }
+
+export function shortenIfAddress(
+  address: string | undefined,
+): string | undefined {
+  if (!address) return;
+  return `${address.slice(0, 7)}...${address.slice(-5)}`;
+}

@@ -273,6 +273,21 @@ export const ContractInfoList: ContractInfoList = [
     chainId: 11155111,
     address: getAddress("0x255483434aba5a75dc60c1391bB162BCd9DE2882"),
   },
+  // managed optimistic oracle v2
+  {
+    // polygon
+    type: "Managed Optimistic Oracle V2",
+    chainId: 137,
+    address: getAddress("0x2C0367a9DB231dDeBd88a94b4f6461a6e47C58B1"),
+    deployBlock: 74677419,
+  },
+  {
+    // amoy
+    type: "Managed Optimistic Oracle V2",
+    chainId: 80002,
+    address: getAddress("0xa3dE5F042EFD4C732498883100A2d319BbB3c1A1"),
+    deployBlock: 24737019,
+  },
   // base contracts
   {
     type: "Optimistic Oracle V1",

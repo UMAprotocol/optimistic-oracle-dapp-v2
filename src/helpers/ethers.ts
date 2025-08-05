@@ -1,4 +1,4 @@
-import { ethersErrorCodes } from "@/constants";
+import { config, ethersErrorCodes } from "@/constants";
 import { ethers } from "ethers";
 
 export const formatEther = ethers.utils.formatEther;
@@ -68,4 +68,9 @@ export function parseEthersError(ethersError: string) {
       href,
     },
   };
+}
+
+export function getProvider(chainId: number) {
+  const rpc = config.providers.find((p) => p.chainId === chainId)?.url;
+  return new ethers.providers.JsonRpcProvider(rpc);
 }

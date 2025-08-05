@@ -1201,3 +1201,24 @@ export const polymarketBulletinAbi = [
     type: "function",
   },
 ] as const;
+
+export const getProposerWhitelistWithEnabledStatusAbi = [
+  {
+    inputs: [
+      { internalType: "address", name: "requester", type: "address" },
+      { internalType: "bytes32", name: "identifier", type: "bytes32" },
+      { internalType: "bytes", name: "ancillaryData", type: "bytes" },
+    ],
+    name: "getProposerWhitelistWithEnabledStatus",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "allowedProposers",
+        type: "address[]",
+      },
+      { internalType: "bool", name: "isEnabled", type: "bool" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;

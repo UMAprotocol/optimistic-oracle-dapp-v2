@@ -4,6 +4,7 @@ export const oracleTypes = [
   "Optimistic Oracle V3",
   "Skinny Optimistic Oracle",
   "Skinny Optimistic Oracle V2",
+  "Managed Optimistic Oracle V2",
 ] as const;
 
 export const expiryTypes = ["Event-based", "Time-based"] as const;
