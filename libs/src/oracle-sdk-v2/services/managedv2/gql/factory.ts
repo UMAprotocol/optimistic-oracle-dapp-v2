@@ -28,18 +28,8 @@ export const Factory =
             type,
           )) as OOV2GraphEntity[];
 
-          // For each request, fetch the corresponding CustomBond and CustomLiveness entities
           const enhancedRequests = await Promise.all(
             requests.map(async (request) => {
-              console.log(
-                "Fetching custom bond and liveness for request with data",
-                {
-                  requester: request.requester,
-                  identifier: request.identifier,
-                  ancillaryData: request.ancillaryData,
-                },
-              );
-              // Fetch custom bond and liveness data for this specific request using raw values
               const [customBond, customLiveness] = await Promise.all([
                 getCustomBondForRequest(
                   url,
@@ -54,9 +44,6 @@ export const Factory =
                   request.ancillaryData,
                 ),
               ]);
-
-              // Create enhanced raw request with custom bond and liveness data
-              // Only add customLiveness and bond if this is an OOV2GraphEntity
               const enhancedRequest = {
                 ...request,
                 customLiveness: customLiveness?.customLiveness?.toString(),
@@ -69,7 +56,6 @@ export const Factory =
             }),
           );
 
-          // Parse the enhanced requests using handlers
           handlers.requests?.(
             enhancedRequests.map((request) =>
               parsePriceRequestGraphEntity(
