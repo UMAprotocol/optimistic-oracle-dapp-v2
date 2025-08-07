@@ -128,8 +128,6 @@ function mergeData(
   return {
     ...(prev || {}),
     ...next,
-    // Preserve the original oracleType to prevent it from being overwritten
-    // oracleType: prev?.oracleType || next.oracleType,
     moreInformation,
   };
 }
