@@ -89,6 +89,7 @@ export type OracleQueryUI = {
   disputeTimeUNIX?: number;
   disputeTimeUTC?: string;
   livenessEndsMilliseconds?: number;
+  customLiveness?: string;
   formattedLivenessEndsIn?: string;
   actionType: ActionType | null;
   moreInformation: MoreInformationItem[];

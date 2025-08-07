@@ -19,6 +19,7 @@ import {
   oracle3Ethers,
   oracles,
   skinny1Ethers,
+  oracleManagedEthers,
 } from "@libs/oracle-sdk-v2/services";
 import type { Api } from "@libs/oracle-sdk-v2/services/oraclev1/ethers";
 import type {
@@ -52,7 +53,7 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
     if (config.type === "Optimistic Oracle V3")
       return [config, ...oracle3Ethers.Factory(config)];
     if (config.type === "Managed Optimistic Oracle V2")
-      return [config, ...oracle2Ethers.Factory(config)];
+      return [config, ...oracleManagedEthers.Factory(config)];
     // skinny optimistic oracle is left
     return [config, ...skinny1Ethers.Factory(config)];
   })
@@ -128,7 +129,7 @@ function mergeData(
     ...(prev || {}),
     ...next,
     // Preserve the original oracleType to prevent it from being overwritten
-    oracleType: prev?.oracleType || next.oracleType,
+    // oracleType: prev?.oracleType || next.oracleType,
     moreInformation,
   };
 }

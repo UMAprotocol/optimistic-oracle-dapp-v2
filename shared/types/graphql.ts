@@ -421,3 +421,21 @@ export type ParsedOOV2GraphEntity = ParsedOOV1GraphEntity & {
 export type ParsedOOV3GraphEntity = ReturnType<
   typeof parseAssertionGraphEntity
 >;
+
+export type CustomBond = {
+  id: string;
+  requester: string;
+  identifier: string;
+  ancillaryData: string;
+  customBond: number;
+  time: string;
+};
+
+export type CustomLiveness = {
+  id: string;
+  requester: string;
+  identifier: string;
+  ancillaryData: string;
+  customLiveness: number;
+  time: string;
+};
