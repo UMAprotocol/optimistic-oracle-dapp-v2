@@ -428,7 +428,6 @@ export type CustomBond = {
   identifier: string;
   ancillaryData: string;
   customBond: number;
-  time: string;
 };
 
 export type CustomLiveness = {
@@ -437,5 +436,4 @@ export type CustomLiveness = {
   identifier: string;
   ancillaryData: string;
   customLiveness: number;
-  time: string;
 };
