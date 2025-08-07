@@ -20,6 +20,7 @@ export class PolymarketProject extends Project<"Polymarket"> {
         "0x8A667535eB42F942186C30E70c72483612E0854b",
         "0x084EA0bAC17aD8a23A84F596b4adcA432aa118A3",
         "0x9E2ad3FB89B6357b601932B673f77B371ff91871",
+        "0x6e0c80c90ea6c15917308f820eac91ce2724b5b5",
       ],
       requesters: [
         "0xcb1822859cef82cd2eb4e6276c7916e692995130", // Polymarket Binary Adapter Address
@@ -28,6 +29,7 @@ export class PolymarketProject extends Project<"Polymarket"> {
         "0x4bfb41d5b3570defd03c39a9a4d8de6bd8b8982e", // Polymarket CTF Exchange Address
         "0xb21182d0494521cf45dbbeebb5a3acaab6d22093", // Polymarket Sports Address
         "0x157ce2d672854c848c9b79c49a8cc6cc89176a49", // Polymarket CTF Adapter Address V3
+        "0x65070BE91477460D8A7AeEb94ef92fe056C2f2A7", // Polymarket UmaCtfAdapter for Managed OOv2
       ],
       requiredTokens: {
         YES_OR_NO_QUERY: ["q: title:", "res_data:"],
