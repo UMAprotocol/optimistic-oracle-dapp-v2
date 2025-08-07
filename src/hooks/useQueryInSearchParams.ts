@@ -25,6 +25,8 @@ function getOracleType(oracleType: string | undefined): OracleType | undefined {
       return "Optimistic Oracle V2";
     case "Skinny":
       return "Skinny Optimistic Oracle";
+    case "Managed Optimistic Oracle V2":
+      return "Managed Optimistic Oracle V2";
     default:
       return undefined;
   }
@@ -78,7 +80,7 @@ export function useQueryInSearchParams() {
           .updateFromTransactionHash?.(transactionHash!)
           .catch((err) =>
             console.error(
-              "Error fetching tx by hash in useWueryInSearchParams",
+              "Error fetching tx by hash in useQueryInSearchParams",
               err,
             ),
           );
@@ -227,16 +229,10 @@ export function useQueryInSearchParams() {
       setState((draft) => {
         draft.query = castDraft(query);
       });
+      return; // Exit early if we found a match via transaction hash
     }
-  }, [
-    isHashAndIndex,
-    queries,
-    setState,
-    state.eventIndex,
-    state.transactionHash,
-  ]);
 
-  useEffect(() => {
+    // Fallback to legacy request details matching only if transaction hash matching failed
     if (!isLegacyRequestDetails) return;
 
     const {
@@ -248,7 +244,7 @@ export function useQueryInSearchParams() {
       ancillaryData,
     } = state;
 
-    const query = find<OracleQueryUI>(queries, {
+    const legacyQuery = find<OracleQueryUI>(queries, {
       chainId: chainId as ChainId,
       identifier,
       requester: lowerCase(requester),
@@ -258,7 +254,14 @@ export function useQueryInSearchParams() {
     });
 
     setState((draft) => {
-      draft.query = castDraft(query);
+      draft.query = castDraft(legacyQuery);
     });
-  });
+  }, [
+    isHashAndIndex,
+    isLegacyRequestDetails,
+    queries,
+    setState,
+    state.eventIndex,
+    state.transactionHash,
+  ]);
 }
