@@ -52,13 +52,14 @@ export async function getPriceRequests(
 
   const until = endOfLastDay();
   // fetch requests from the serverless endpoint
-  const fetchResult = await fetch(
-    `/api/subgraph?url=${url}&queryName=${queryName}&oracleType=${oracleType}&until=${until}`,
-  );
-
-  console.log(fetchResult);
-
-  const result = await fetchRequestsAfter(url, queryName, oracleType, until);
+  const [fetchResult, result] = await Promise.all([
+    fetch(
+      `/api/subgraph?url=${url}&queryName=${queryName}&oracleType=${oracleType}&until=${until}`,
+    ).then((res) => res.json()) as Promise<
+      OOV1GraphEntity[] | OOV2GraphEntity[]
+    >,
+    fetchRequestsAfter(url, queryName, oracleType, until),
+  ]);
 
   // const [fetchResult, result] = (await Promise.all([
   //   fetchResultPromise.then((res) => res.json()) as Promise<
@@ -70,10 +71,7 @@ export async function getPriceRequests(
   //   OOV1GraphEntity[] | OOV2GraphEntity[],
   // ];
 
-  return [
-    ...((await fetchResult.json()) as OOV1GraphEntity[] | OOV2GraphEntity[]),
-    ...result,
-  ];
+  return [...fetchResult, ...result];
 }
 
 export async function* getPriceRequestsIncremental(
