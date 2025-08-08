@@ -113,7 +113,7 @@ export default async function handler(
   _request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  response.setHeader("Cache-Control", "max-age=0, s-maxage=43200"); // Cache for 12 hours, reset on re-deployment.
+  response.setHeader("Cache-Control", "max-age=0, s-maxage=60"); // Cache for 1 minute, reset on re-deployment.
 
   if (
     !_request.query.url ||
