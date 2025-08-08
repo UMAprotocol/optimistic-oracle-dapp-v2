@@ -10,4 +10,4 @@ export * as oracle3Gql from "./oraclev3/gql";
 export * as oracle3Ethers from "./oraclev3/ethers";
 export * as oracles from "./oracles";
 // managed V2 is handled the same way as oracle v2
-export * as oracleManagedEthers from "./managedv2/ethers";
+export * as oracleManagedEthers from "./oraclev2/ethers";
