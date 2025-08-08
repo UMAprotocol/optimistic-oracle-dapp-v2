@@ -9,6 +9,39 @@ import type {
 import { makeQueryName } from "@shared/utils";
 import request, { gql } from "graphql-request";
 
+function endOfLastDay() {
+  const now = Math.round(Date.now() / 1000);
+  const secondsInDay = 60 * 60 * 24;
+  const endOfLastDay = now - (now % secondsInDay);
+  return endOfLastDay;
+}
+
+async function fetchRequestsAfter(
+  url: string,
+  queryName: string,
+  oracleType: OracleType,
+  after: number,
+) {
+  const first = 1000;
+
+  let firstRun = true;
+
+  let requests: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
+  const result: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
+
+  while (requests.length === first || firstRun) {
+    firstRun = false;
+    requests = await fetchPriceRequests(
+      url,
+      makeTimeBasedQueryAfter(queryName, oracleType, 1000, after),
+    );
+    after = Number(requests[requests.length - 1].time);
+    result.push(...requests);
+  }
+
+  return result.reverse();
+}
+
 export async function getPriceRequests(
   url: string,
   chainId: ChainId,
@@ -16,8 +49,26 @@ export async function getPriceRequests(
 ) {
   const chainName = chainsById[chainId];
   const queryName = makeQueryName(oracleType, chainName);
-  const result = await fetchAllRequests(url, queryName, oracleType);
-  return result;
+
+  const until = endOfLastDay();
+  // fetch requests from the serverless endpoint
+  const fetchResultPromise = fetch(
+    `${url}/api/subgraph?url=${url}&queryName=${queryName}&oracleType=${oracleType}&until=${until}`,
+  );
+
+  const resultPromise = fetchRequestsAfter(url, queryName, oracleType, until);
+
+  const [fetchResult, result] = (await Promise.all([
+    fetchResultPromise.then((res) => res.json()) as Promise<
+      OOV1GraphEntity[] | OOV2GraphEntity[]
+    >,
+    resultPromise,
+  ])) as [
+    OOV1GraphEntity[] | OOV2GraphEntity[],
+    OOV1GraphEntity[] | OOV2GraphEntity[],
+  ];
+
+  return [...fetchResult, ...result];
 }
 
 export async function* getPriceRequestsIncremental(
@@ -75,7 +126,7 @@ async function* fetchAllRequestsIncremental(
     }
   }
 }
-async function fetchAllRequests(
+export async function fetchAllRequests(
   url: string,
   queryName: string,
   oracleType: OracleType,
@@ -198,6 +249,72 @@ function makeTimeBasedQuery(
   const query = gql`
   query ${queryName} {
     optimisticPriceRequests(orderBy: time, orderDirection: desc, first: ${first}, where: { time_lt: ${lastTime}}) {
+      id
+      identifier
+      ancillaryData
+      time
+      requester
+      currency
+      reward
+      finalFee
+      proposer
+      proposedPrice
+      proposalExpirationTimestamp
+      disputer
+      settlementPrice
+      settlementPayout
+      settlementRecipient
+      state
+      requestTimestamp
+      requestBlockNumber
+      requestHash
+      requestLogIndex
+      proposalTimestamp
+      proposalBlockNumber
+      proposalHash
+      proposalLogIndex
+      disputeTimestamp
+      disputeBlockNumber
+      disputeHash
+      disputeLogIndex
+      settlementTimestamp
+      settlementBlockNumber
+      settlementHash
+      settlementLogIndex
+      ${
+        oracleType === "Optimistic Oracle V2" ||
+        oracleType === "Managed Optimistic Oracle V2"
+          ? `
+            customLiveness
+            bond
+            eventBased
+            `
+          : ""
+      }
+      ${
+        oracleType === "Skinny Optimistic Oracle"
+          ? `
+            customLiveness
+            bond
+            `
+          : ""
+      }
+    }
+  }
+`;
+
+  return query;
+}
+
+function makeTimeBasedQueryAfter(
+  queryName: string,
+  oracleType: OracleType,
+  first: number,
+  after: number,
+) {
+  const query = gql`
+  query ${queryName} {
+    optimisticPriceRequests(orderBy: time, orderDirection: asc, first: ${first}, where: { time_gt: ${after}}) {
       id
       identifier
       ancillaryData
