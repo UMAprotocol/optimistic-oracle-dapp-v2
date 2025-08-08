@@ -37,12 +37,6 @@ async function getProposerWhitelistWithEnabledStatus(
   if (!contractAddress)
     throw Error("Unable to resolve address for Managed Optimistic Oracle V2");
 
-  console.log("Fetching whitelist data for request", {
-    requester,
-    identifierBytes32,
-    ancillaryData,
-  });
-
   const contract = new Contract(
     contractAddress,
     getProposerWhitelistWithEnabledStatusAbi,
