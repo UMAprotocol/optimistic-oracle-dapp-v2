@@ -1,11 +1,11 @@
-import { formatBytes32String, getProvider, isAddress } from "@/helpers";
+import { getProvider, isAddress } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import type { ManagedOptimisticOracleV2 } from "@/types/contracts/ManagedOptimisticOracleV2";
 import { getContractAddress } from "@libs/constants";
 import { getProposerWhitelistWithEnabledStatusAbi } from "@shared/constants/abi";
 import assert from "assert";
 import { Contract } from "ethers";
-import { isBytesLike } from "ethers/lib/utils";
+import { hexZeroPad, isBytesLike, toUtf8Bytes } from "ethers/lib/utils";
 import { useAccount, useQuery } from "wagmi";
 
 export type ProposerWhitelistWithEnforcementStatus = Awaited<
@@ -15,54 +15,45 @@ export type ProposerWhitelistWithEnforcementStatus = Awaited<
 async function getProposerWhitelistWithEnabledStatus(
   query: OracleQueryUI,
 ): Promise<ProposerWhitelistWithEnforcementStatus> {
-  try {
-    const { requester, identifier, queryTextHex: ancillaryData } = query;
-    // identifier is decoded at this point
-    const identifierHex = identifier
-      ? formatBytes32String(identifier)
-      : undefined;
+  const { requester, identifier, queryTextHex: ancillaryData } = query;
+  // big-endian
+  const identifierBytes32 = identifier
+    ? hexZeroPad(toUtf8Bytes(identifier), 32)
+    : undefined;
 
-    // check inputs
-    assert(requester && isAddress(requester), "Invalid requester");
-    assert(identifierHex && isBytesLike(identifierHex), "Invalid identifier");
-    assert(
-      ancillaryData && isBytesLike(ancillaryData),
-      "Invalid ancillaryData",
-    );
+  // check inputs
+  assert(requester && isAddress(requester), "Invalid requester");
+  assert(
+    identifierBytes32 && isBytesLike(identifierBytes32),
+    "Invalid identifier",
+  );
+  assert(ancillaryData && isBytesLike(ancillaryData), "Invalid ancillaryData");
 
-    const contractAddress = getContractAddress({
-      chainId: query.chainId,
-      type: "Managed Optimistic Oracle V2",
-    });
+  const contractAddress = getContractAddress({
+    chainId: query.chainId,
+    type: "Managed Optimistic Oracle V2",
+  });
 
-    if (!contractAddress)
-      throw Error("Unable to resolve address for Managed Optimistic Oracle V2");
+  if (!contractAddress)
+    throw Error("Unable to resolve address for Managed Optimistic Oracle V2");
 
-    console.log("Fetching whitelist data for request", {
-      requester,
-      identifierHex,
-      ancillaryData,
-    });
+  console.log("Fetching whitelist data for request", {
+    requester,
+    identifierBytes32,
+    ancillaryData,
+  });
 
-    const contract = new Contract(
-      contractAddress,
-      getProposerWhitelistWithEnabledStatusAbi,
-      getProvider(query.chainId),
-    ) as ManagedOptimisticOracleV2;
+  const contract = new Contract(
+    contractAddress,
+    getProposerWhitelistWithEnabledStatusAbi,
+    getProvider(query.chainId),
+  ) as ManagedOptimisticOracleV2;
 
-    const data = await contract.getProposerWhitelistWithEnabledStatus(
-      requester,
-      identifierHex,
-      ancillaryData,
-    );
-
-    console.log("Found whitelist data", data);
-    return data;
-  } catch (e) {
-    // TODO: handle errors, add retry logic?
-    console.error(e);
-    throw e;
-  }
+  return await contract.getProposerWhitelistWithEnabledStatus(
+    requester,
+    identifierBytes32,
+    ancillaryData,
+  );
 }
 
 type QueryOptions = Omit<Parameters<typeof useQuery>[1], "queryFn">;
