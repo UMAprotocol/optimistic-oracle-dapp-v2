@@ -1,11 +1,11 @@
-import { getProvider, isAddress, utf8ToHex } from "@/helpers";
+import { formatBytes32String, getProvider, isAddress } from "@/helpers";
 import type { OracleQueryUI } from "@/types";
 import type { ManagedOptimisticOracleV2 } from "@/types/contracts/ManagedOptimisticOracleV2";
 import { getContractAddress } from "@libs/constants";
 import { getProposerWhitelistWithEnabledStatusAbi } from "@shared/constants/abi";
 import assert from "assert";
 import { Contract } from "ethers";
-import { hexZeroPad, isBytesLike } from "ethers/lib/utils";
+import { isBytesLike } from "ethers/lib/utils";
 import { useAccount, useQuery } from "wagmi";
 
 export type ProposerWhitelistWithEnforcementStatus = Awaited<
@@ -19,7 +19,7 @@ async function getProposerWhitelistWithEnabledStatus(
     const { requester, identifier, queryTextHex: ancillaryData } = query;
     // identifier is decoded at this point
     const identifierHex = identifier
-      ? hexZeroPad(utf8ToHex(identifier), 32)
+      ? formatBytes32String(identifier)
       : undefined;
 
     // check inputs
@@ -38,17 +38,26 @@ async function getProposerWhitelistWithEnabledStatus(
     if (!contractAddress)
       throw Error("Unable to resolve address for Managed Optimistic Oracle V2");
 
+    console.log("Fetching whitelist data for request", {
+      requester,
+      identifierHex,
+      ancillaryData,
+    });
+
     const contract = new Contract(
       contractAddress,
       getProposerWhitelistWithEnabledStatusAbi,
       getProvider(query.chainId),
     ) as ManagedOptimisticOracleV2;
 
-    return await contract.getProposerWhitelistWithEnabledStatus(
+    const data = await contract.getProposerWhitelistWithEnabledStatus(
       requester,
       identifierHex,
       ancillaryData,
     );
+
+    console.log("Found whitelist data", data);
+    return data;
   } catch (e) {
     // TODO: handle errors, add retry logic?
     console.error(e);
