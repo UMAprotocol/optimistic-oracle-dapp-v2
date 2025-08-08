@@ -75,6 +75,10 @@ export function useQueryInSearchParams() {
     if (hasHash) {
       const transactionHash = searchParams?.get("transactionHash");
 
+      // TODO: FIXME - This loops through ALL ethers provider APIs, attempting to parse the same transaction receipt.
+      // WARNING: Different oracle contracts (e.g., OOv2 vs Managed OOv2) may have compatible event signatures,
+      // causing the same events to be parsed by multiple APIs and potentially overwriting data with incorrect oracle types.
+      // SOLUTION: Filter logs by contract address in parseLog() or only process through APIs matching the transaction's contract.
       oracleEthersApiList.forEach(([, api]) => {
         api
           .updateFromTransactionHash?.(transactionHash!)

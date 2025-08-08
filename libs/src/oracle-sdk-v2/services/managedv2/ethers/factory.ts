@@ -176,7 +176,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
       );
       events.emit("requests", sharedRequests);
     } catch (err) {
-      console.warn("Error updating oov2 from receipt:", err);
+      console.warn("Error updating MOOv2 from receipt:", err);
     }
   }
   async function updateFromTransactionHash(transactionHash: string) {
