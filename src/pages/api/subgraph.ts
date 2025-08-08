@@ -60,7 +60,7 @@ async function fetchAllRequests(
       async ([startTime, endTime]): Promise<
         [number, number, (OOV1GraphEntity | OOV2GraphEntity)[] | null]
       > => {
-        const cacheKey = `${process.env.VERCEL_DEPLOYMENT_ID}-${url}-${queryName}-${oracleType}-${startTime}-${endTime}`;
+        const cacheKey = `${process.env.CACHE_KEY_PREFIX}-${url}-${queryName}-${oracleType}-${startTime}-${endTime}`;
         const cachedResult = await getCachedResult(cacheKey);
         return [startTime, endTime, cachedResult];
       },
@@ -79,6 +79,13 @@ async function fetchAllRequests(
     const chunkResults: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
     // eslint-disable-next-line no-constant-condition
     while (true) {
+      const cacheKey = `${process.env.CACHE_KEY_PREFIX}${url}-${queryName}-${oracleType}-${queryStartTime}-${endTime}`;
+      const cachedResult = await getCachedResult(cacheKey);
+      if (cachedResult) {
+        chunkResults.push(...cachedResult);
+        break;
+      }
+
       const requests = await fetchPriceRequests(
         url,
         makeTimeBasedQuery(
@@ -91,11 +98,14 @@ async function fetchAllRequests(
         ),
       );
 
+      await cacheResult(cacheKey, requests);
+
       chunkResults.push(...requests);
 
       if (requests.length < first) {
         break;
       }
+
       queryStartTime = Number(requests[requests.length - 1].time);
     }
 
