@@ -49,6 +49,7 @@
     "@uma/contracts-frontend": "^0.4.17",
     "@uma/contracts-node": "^0.4.17",
     "@uma/sdk": "^0.34.2",
+    "@vercel/kv": "^3.0.0",
     "autoprefixer": "^10.4.14",
     "chromatic": "^6.20.0",
     "class-variance-authority": "^0.7.1",
