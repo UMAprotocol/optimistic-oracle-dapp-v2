@@ -52,23 +52,28 @@ export async function getPriceRequests(
 
   const until = endOfLastDay();
   // fetch requests from the serverless endpoint
-  const fetchResultPromise = fetch(
-    `${url}/api/subgraph?url=${url}&queryName=${queryName}&oracleType=${oracleType}&until=${until}`,
+  const fetchResult = await fetch(
+    `/api/subgraph?url=${url}&queryName=${queryName}&oracleType=${oracleType}&until=${until}`,
   );
 
-  const resultPromise = fetchRequestsAfter(url, queryName, oracleType, until);
+  console.log(fetchResult);
 
-  const [fetchResult, result] = (await Promise.all([
-    fetchResultPromise.then((res) => res.json()) as Promise<
-      OOV1GraphEntity[] | OOV2GraphEntity[]
-    >,
-    resultPromise,
-  ])) as [
-    OOV1GraphEntity[] | OOV2GraphEntity[],
-    OOV1GraphEntity[] | OOV2GraphEntity[],
+  const result = await fetchRequestsAfter(url, queryName, oracleType, until);
+
+  // const [fetchResult, result] = (await Promise.all([
+  //   fetchResultPromise.then((res) => res.json()) as Promise<
+  //     OOV1GraphEntity[] | OOV2GraphEntity[]
+  //   >,
+  //   resultPromise,
+  // ])) as [
+  //   OOV1GraphEntity[] | OOV2GraphEntity[],
+  //   OOV1GraphEntity[] | OOV2GraphEntity[],
+  // ];
+
+  return [
+    ...((await fetchResult.json()) as OOV1GraphEntity[] | OOV2GraphEntity[]),
+    ...result,
   ];
-
-  return [...fetchResult, ...result];
 }
 
 export async function* getPriceRequestsIncremental(

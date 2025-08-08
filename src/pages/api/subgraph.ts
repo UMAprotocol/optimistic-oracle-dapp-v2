@@ -46,3 +46,9 @@ export default async function handler(
 
   response.status(200).send(filteredRequests);
 }
+
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+};
