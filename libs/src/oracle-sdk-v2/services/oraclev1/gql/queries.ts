@@ -28,6 +28,7 @@ export async function getPriceRequests(
     const blob = await fetch(result.url);
     let requests = (await blob.json()) as OOV1GraphEntity[] | OOV2GraphEntity[];
     if (requests.length > 0) {
+      // Blob should cover most historical data, but we need to fetch the rest.
       const remainingRequests = await fetchAllRequests(
         url,
         queryName,
