@@ -1,5 +1,3 @@
-"use client";
-
 import { ConfigWrappers } from "@/components/ConfigWrappers";
 import "@/styles/fonts.css";
 import "@/styles/globals.css";

@@ -28,6 +28,7 @@ export type Config = {
   chainId: ChainId;
   url: string;
   address: string;
+  type: OracleType;
 };
 
 function convertToSharedState(state: RequestState): SharedRequestState {
@@ -157,7 +158,7 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const convertToSharedRequest = ConvertToSharedRequest(
     config.chainId,
     assertAddress(config.address),
-    "Optimistic Oracle V2",
+    config.type,
   );
   const provider = new ethers.providers.JsonRpcProvider(config.url);
   const oo = new OptimisticOracleV2(provider, config.address, config.chainId);
@@ -165,6 +166,9 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const addTimestamps = AddTimestamps(provider);
   async function updateFromTransactionReceipt(receipt: TransactionReceipt) {
     try {
+      if (receipt.to.toLowerCase() !== config.address.toLowerCase()) {
+        throw new Error("Log not from this contract");
+      }
       await oo.updateFromTransactionReceipt(receipt);
       const requests: Request[] = oo.listRequests();
       const sharedRequests = requests.map((request) =>

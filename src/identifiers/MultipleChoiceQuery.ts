@@ -96,7 +96,7 @@ export class MultipleChoiceQuery extends Identifier {
         },
       ];
     } catch (err) {
-      console.error(
+      console.debug(
         "Failed to parse multiple choice query. Using default propose options.",
         err,
       );

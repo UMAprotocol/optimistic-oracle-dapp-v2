@@ -25,6 +25,8 @@ function getOracleType(oracleType: string | undefined): OracleType | undefined {
       return "Optimistic Oracle V2";
     case "Skinny":
       return "Skinny Optimistic Oracle";
+    case "Managed Optimistic Oracle V2":
+      return "Managed Optimistic Oracle V2";
     default:
       return undefined;
   }
@@ -73,12 +75,16 @@ export function useQueryInSearchParams() {
     if (hasHash) {
       const transactionHash = searchParams?.get("transactionHash");
 
+      // TODO: FIXME - This loops through ALL ethers provider APIs, attempting to parse the same transaction receipt.
+      // WARNING: Different oracle contracts (e.g., OOv2 vs Managed OOv2) may have compatible event signatures,
+      // causing the same events to be parsed by multiple APIs and potentially overwriting data with incorrect oracle types.
+      // SOLUTION: Filter logs by contract address in parseLog() or only process through APIs matching the transaction's contract.
       oracleEthersApiList.forEach(([, api]) => {
         api
           .updateFromTransactionHash?.(transactionHash!)
           .catch((err) =>
             console.error(
-              "Error fetching tx by hash in useWueryInSearchParams",
+              "Error fetching tx by hash in useQueryInSearchParams",
               err,
             ),
           );
@@ -227,16 +233,10 @@ export function useQueryInSearchParams() {
       setState((draft) => {
         draft.query = castDraft(query);
       });
+      return; // Exit early if we found a match via transaction hash
     }
-  }, [
-    isHashAndIndex,
-    queries,
-    setState,
-    state.eventIndex,
-    state.transactionHash,
-  ]);
 
-  useEffect(() => {
+    // Fallback to legacy request details matching only if transaction hash matching failed
     if (!isLegacyRequestDetails) return;
 
     const {
@@ -248,7 +248,7 @@ export function useQueryInSearchParams() {
       ancillaryData,
     } = state;
 
-    const query = find<OracleQueryUI>(queries, {
+    const legacyQuery = find<OracleQueryUI>(queries, {
       chainId: chainId as ChainId,
       identifier,
       requester: lowerCase(requester),
@@ -258,7 +258,14 @@ export function useQueryInSearchParams() {
     });
 
     setState((draft) => {
-      draft.query = castDraft(query);
+      draft.query = castDraft(legacyQuery);
     });
-  });
+  }, [
+    isHashAndIndex,
+    isLegacyRequestDetails,
+    queries,
+    setState,
+    state.eventIndex,
+    state.transactionHash,
+  ]);
 }

@@ -235,7 +235,6 @@ export class OptimisticOracleV2 implements OracleInterface {
         try {
           return this.parseLog(log);
         } catch (err) {
-          console.warn("Failed parsing log for oov2:", err);
           return undefined;
         }
       })

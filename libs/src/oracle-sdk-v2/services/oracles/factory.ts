@@ -4,6 +4,7 @@ import type { Handlers, Service, ServiceFactory } from "../../types";
 // gql1 covers skinny, v1, v2
 import { gql as gql1 } from "../oraclev1";
 import { gql as gql3 } from "../oraclev3";
+import { gql as gqlManaged } from "../managedv2";
 
 export type GqlConfig = {
   source: "gql";
@@ -21,10 +22,15 @@ export const Factory = (config: Config): ServiceFactory[] => {
         config.source === "gql" &&
         (config.type === "Optimistic Oracle V1" ||
           config.type === "Optimistic Oracle V2" ||
-          config.type === "Skinny Optimistic Oracle" ||
-          config.type === "Managed Optimistic Oracle V2")
+          config.type === "Skinny Optimistic Oracle")
       ) {
         return gql1.Factory(config)(handlers);
+      }
+      if (
+        config.source === "gql" &&
+        config.type === "Managed Optimistic Oracle V2"
+      ) {
+        return gqlManaged.Factory(config)(handlers);
       }
       if (config.source === "gql" && config.type === "Optimistic Oracle V3") {
         return gql3.Factory(config)(handlers);
