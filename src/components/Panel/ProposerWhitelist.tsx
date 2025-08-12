@@ -13,7 +13,10 @@ export function ProposerWhitelist({ query }: { query: OracleQueryUI }) {
   function toggleShowBytes() {
     setShowWhitelist((prev) => !prev);
   }
-  if (!data) return null;
+
+  if (!data) {
+    return null;
+  }
 
   const whitelist = data?.allowedProposers;
   // whitelist DISABLED
