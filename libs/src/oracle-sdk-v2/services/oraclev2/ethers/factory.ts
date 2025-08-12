@@ -166,9 +166,6 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
   const addTimestamps = AddTimestamps(provider);
   async function updateFromTransactionReceipt(receipt: TransactionReceipt) {
     try {
-      if (receipt.to.toLowerCase() !== config.address.toLowerCase()) {
-        throw new Error("Log not from this contract");
-      }
       await oo.updateFromTransactionReceipt(receipt);
       const requests: Request[] = oo.listRequests();
       const sharedRequests = requests.map((request) =>
