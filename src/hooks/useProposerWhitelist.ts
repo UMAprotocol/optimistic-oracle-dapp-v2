@@ -96,7 +96,9 @@ export function useIsUserWhitelisted(
         if (!data.isEnabled) return true;
 
         // If whitelist is enabled but empty, no one can propose
-        if (data.allowedProposers.length === 0) return false;
+        if (data.allowedProposers.length === 0) { 
+            return false;
+        }
 
         // If whitelist is enabled and populated, check if user is in the list
         return data.allowedProposers
