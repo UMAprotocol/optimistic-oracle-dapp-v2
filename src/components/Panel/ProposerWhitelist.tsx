@@ -6,13 +6,37 @@ import Chevron from "public/assets/icons/chevron.svg";
 
 export function ProposerWhitelist({ query }: { query: OracleQueryUI }) {
   const { data } = useProposerWhitelist(query);
-  const whitelist = data?.allowedProposers;
+
+  const whitelistEnabled = data?.isEnabled === true;
 
   const [showWhitelist, setShowWhitelist] = useState(false);
   function toggleShowBytes() {
     setShowWhitelist((prev) => !prev);
   }
-  if (!whitelist || !whitelist.length) return null;
+
+  if (!data) {
+    return null;
+  }
+
+  const whitelist = data?.allowedProposers;
+  // whitelist DISABLED
+  if (!whitelistEnabled) {
+    return (
+      <>
+        <SectionSubTitle>Proposer Whitelist</SectionSubTitle>
+        <p>Proposer whitelist disabled. Any address may propose.</p>
+      </>
+    );
+  }
+  // whitelist EMPTY
+  if (whitelistEnabled && !whitelist?.length) {
+    return (
+      <>
+        <SectionSubTitle>Proposer Whitelist</SectionSubTitle>
+        <p>The request manager had disabled all proposals on this request.</p>
+      </>
+    );
+  }
 
   return (
     <>
