@@ -179,9 +179,12 @@ export const Factory = (config: Config): [ServiceFactory, Api] => {
     try {
       const parsedLogs = receipt.logs
         .map((log) => {
-          // ignore errors, its possible to have logs from other contracts in receipt
           try {
-            return parseLog(log);
+            // only parse logs emitted by this contract
+            if (log.address.toLowerCase() === contract.address.toLowerCase()) {
+              return parseLog(log);
+            }
+            return;
           } catch (err) {
             return false;
           }

@@ -233,7 +233,11 @@ export class OptimisticOracleV2 implements OracleInterface {
     const events = receipt.logs
       .map((log) => {
         try {
-          return this.parseLog(log);
+          // only parse logs emitted by this contract
+          if (log.address.toLowerCase() === this.address.toLowerCase()) {
+            return this.parseLog(log);
+          }
+          return;
         } catch (err) {
           return undefined;
         }

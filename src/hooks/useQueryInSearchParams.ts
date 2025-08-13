@@ -89,6 +89,7 @@ export function useQueryInSearchParams() {
             ),
           );
       });
+
       const hasEventIndex = searchParams?.has("eventIndex");
       setState((draft) => {
         draft.transactionHash = transactionHash!;

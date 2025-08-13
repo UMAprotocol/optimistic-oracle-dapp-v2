@@ -345,15 +345,6 @@ export function useProposeAction({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [proposePriceTransaction]);
 
-  if (!isUserWhitelisted) {
-    return {
-      title: notWhitelisted,
-      disabled: true,
-      disabledReason:
-        "Connected address is not on this request's proposer whitelist. See proposer whitelist below.",
-    };
-  }
-
   if (isPrepareProposePriceLoading) {
     return {
       title: propose,
@@ -371,6 +362,14 @@ export function useProposeAction({
 
   // if proposal succeeds, disable button
   if (actionType === "propose") {
+    if (!isUserWhitelisted) {
+      return {
+        title: notWhitelisted,
+        disabled: true,
+        disabledReason:
+          "Connected address is not on this request's proposer whitelist. See proposer whitelist below.",
+      };
+    }
     if (
       query?.identifier === "MULTIPLE_VALUES" &&
       !isMultipleValuesInputValid(
