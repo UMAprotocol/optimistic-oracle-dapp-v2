@@ -1,3 +1,4 @@
+"use client";
 import { CloseButton, ErrorMessage } from "@/components";
 import { mobileAndUnder, tabletAndUnder } from "@/constants";
 import { useErrorContext } from "@/hooks";

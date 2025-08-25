@@ -6,7 +6,7 @@ export { CheckboxList } from "./CheckboxList";
 export { CloseButton } from "./CloseButton";
 export { Currency } from "./Currency";
 export { DecimalInput } from "./DecimalInput";
-export { ErrorBanner } from "./ErrorBanner";
+export { ErrorBanner } from "./Banners/ErrorBanner";
 export { ErrorMessage } from "./ErrorMessage";
 export { Filters } from "./Filters/Filters";
 export { ConnectButton } from "./Header/ConnectButton";
