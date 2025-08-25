@@ -16,6 +16,7 @@ export function Link({
   externalIcon = false,
   ...props
 }: LinkProps) {
+  // Url.format is necessary to parse either string or object
   const isInternal = Url.format(props.href).toString().startsWith("/");
   return (
     <NextLink
