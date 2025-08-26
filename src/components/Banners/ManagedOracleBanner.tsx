@@ -1,9 +1,10 @@
+import styled from "styled-components";
 import { Link } from "../Link";
 import { Banner } from "./Banner";
 
 export function ManagedOracleBanner() {
   return (
-    <Banner>
+    <GradientBanner>
       <span>
         Polymarket&apos;s <strong>Managed Optimistic Oracle V2</strong> contract
         is now live! Please review these new requests on the &quot;Verify&quot;
@@ -16,6 +17,16 @@ export function ManagedOracleBanner() {
         </Link>{" "}
         for more information.
       </span>
-    </Banner>
+    </GradientBanner>
   );
 }
+
+const GradientBanner = styled(Banner)`
+  background: linear-gradient(
+    80deg,
+    #3c2525 0%,
+    #ff4a4a 25%,
+    #ff4a4a 75%,
+    #eabbbb 100%
+  );
+`;
