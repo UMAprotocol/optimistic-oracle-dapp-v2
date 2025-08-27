@@ -25,7 +25,7 @@ function getOracleType(oracleType: string | undefined): OracleType | undefined {
       return "Optimistic Oracle V2";
     case "Skinny":
       return "Skinny Optimistic Oracle";
-    case "Managed Optimistic Oracle V2":
+    case "ManagedV2":
       return "Managed Optimistic Oracle V2";
     default:
       return undefined;
