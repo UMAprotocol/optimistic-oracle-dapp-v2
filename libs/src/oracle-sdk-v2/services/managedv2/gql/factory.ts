@@ -2,11 +2,7 @@ import type { ChainId, OOV2GraphEntity, OracleType } from "@shared/types";
 import { parsePriceRequestGraphEntity } from "@shared/utils";
 import type { Address } from "wagmi";
 import type { Handlers, Service, ServiceFactory } from "../../../types";
-import {
-  getPriceRequests,
-  getCustomBondForRequest,
-  getCustomLivenessForRequest,
-} from "./queries";
+import { getPriceRequests } from "./queries";
 
 export type Config = {
   urls: string[];
@@ -28,36 +24,36 @@ export const Factory =
             type,
           )) as OOV2GraphEntity[];
 
-          const enhancedRequests = await Promise.all(
-            requests.map(async (request) => {
-              const [customBond, customLiveness] = await Promise.all([
-                getCustomBondForRequest(
-                  url,
-                  request.requester,
-                  request.identifier,
-                  request.ancillaryData,
-                ),
-                getCustomLivenessForRequest(
-                  url,
-                  request.requester,
-                  request.identifier,
-                  request.ancillaryData,
-                ),
-              ]);
-              const enhancedRequest = {
-                ...request,
-                customLiveness: customLiveness?.customLiveness?.toString(),
-                bond: customBond?.customBond
-                  ? customBond.customBond
-                  : request.bond,
-              };
+          // const enhancedRequests = await Promise.all(
+          //   requests.map(async (request) => {
+          //     const [customBond, customLiveness] = await Promise.all([
+          //       getCustomBondForRequest(
+          //         url,
+          //         request.requester,
+          //         request.identifier,
+          //         request.ancillaryData,
+          //       ),
+          //       getCustomLivenessForRequest(
+          //         url,
+          //         request.requester,
+          //         request.identifier,
+          //         request.ancillaryData,
+          //       ),
+          //     ]);
+          //     const enhancedRequest = {
+          //       ...request,
+          //       customLiveness: customLiveness?.customLiveness?.toString(),
+          //       bond: customBond?.customBond
+          //         ? customBond.customBond
+          //         : request.bond,
+          //     };
 
-              return enhancedRequest;
-            }),
-          );
+          //     return enhancedRequest;
+          //   }),
+          // );
 
           handlers.requests?.(
-            enhancedRequests.map((request) =>
+            requests.map((request) =>
               parsePriceRequestGraphEntity(
                 request,
                 chainId,
