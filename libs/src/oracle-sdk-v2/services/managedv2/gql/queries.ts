@@ -5,8 +5,6 @@ import type {
   OOV2GraphEntity,
   OracleType,
   PriceRequestsQuery,
-  CustomBond,
-  CustomLiveness,
 } from "@shared/types";
 import { makeQueryName } from "@shared/utils";
 import request, { gql } from "graphql-request";
@@ -113,64 +111,6 @@ async function fetchAllRequests(
   result.push(...requests);
 
   return result;
-}
-
-export async function getCustomBondForRequest(
-  url: string,
-  requester: string,
-  identifier: string,
-  ancillaryData: string,
-) {
-  const query = gql`
-    query GetCustomBond {
-      customBonds(where: { requester: "${requester}", identifier: "${identifier}", ancillaryData: "${ancillaryData}" }) {
-        id
-        requester
-        identifier
-        ancillaryData
-        customBond
-      }
-    }
-  `;
-
-  const result = await request<
-    { customBonds: CustomBond[] } | { errors: { message: string }[] }
-  >(url, query);
-
-  if ("errors" in result) {
-    throw new Error(result.errors[0].message);
-  }
-
-  return result?.customBonds?.[0] || null;
-}
-
-export async function getCustomLivenessForRequest(
-  url: string,
-  requester: string,
-  identifier: string,
-  ancillaryData: string,
-) {
-  const query = gql`
-    query GetCustomLiveness {
-      customLivenesses(where: { requester: "${requester}", identifier: "${identifier}", ancillaryData: "${ancillaryData}" }) {
-        id
-        requester
-        identifier
-        ancillaryData
-        customLiveness
-      }
-    }
-  `;
-
-  const result = await request<
-    { customLiveness: CustomLiveness[] } | { errors: { message: string }[] }
-  >(url, query);
-
-  if ("errors" in result) {
-    throw new Error(result.errors[0].message);
-  }
-
-  return result?.customLiveness?.[0] || null;
 }
 
 async function fetchPriceRequests(url: string, query: string) {
