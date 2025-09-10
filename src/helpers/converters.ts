@@ -51,13 +51,15 @@ export type RequiredRequest = Omit<
   bond: bigint | null | undefined;
   customLiveness: bigint | null | undefined;
 };
-function canConvertToSolidityRequest(
+export function canConvertToSolidityRequest(
   request: Request,
 ): request is RequiredRequest {
   return Boolean(request.currency);
 }
 
-function convertToSolidityRequest(request: RequiredRequest): SolidityRequest {
+export function convertToSolidityRequest(
+  request: RequiredRequest,
+): SolidityRequest {
   return {
     proposer: request.proposer || "0x0",
     disputer: request.disputer || "0x0",
@@ -214,7 +216,7 @@ function isAssertion(request: Request | Assertion): request is Assertion {
   return request.oracleType === "Optimistic Oracle V3";
 }
 
-function makeApproveBondSpendParams({
+export function makeApproveBondSpendParams({
   bond,
   tokenAddress,
   oracleAddress,
@@ -235,7 +237,7 @@ function makeApproveBondSpendParams({
   };
 }
 
-function makeProposePriceParams({
+export function makeProposePriceParams({
   requester,
   bytes32Identifier,
   time,
@@ -278,7 +280,7 @@ function makeProposePriceParams({
   };
 }
 
-function makeProposePriceSkinnyParams({
+export function makeProposePriceSkinnyParams({
   requester,
   bytes32Identifier,
   time,
@@ -691,6 +693,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   } = request;
 
   const result: OracleQueryUI = {
+    time,
     id,
     chainId,
     oracleType,
@@ -775,24 +778,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     result.expiryType = eventBased ? "Event-based" : "Time-based";
   }
 
-  // For managed OO v2, calculate liveness end time using customLiveness and proposalTimestamp
-  if (
-    request.oracleType === "Managed Optimistic Oracle V2" &&
-    exists(customLiveness) &&
-    exists(proposalTimestamp)
-  ) {
-    const proposalTime = Number(proposalTimestamp);
-    const livenessDuration = Number(customLiveness);
-    const livenessEndTime = proposalTime + livenessDuration;
-
-    result.livenessEndsMilliseconds = toTimeMilliseconds(
-      livenessEndTime.toString(),
-    );
-    result.formattedLivenessEndsIn = toTimeFormatted(
-      livenessEndTime.toString(),
-    );
-  } else if (exists(proposalExpirationTimestamp)) {
-    // For other oracle types, use the existing logic
+  if (exists(proposalExpirationTimestamp)) {
     result.livenessEndsMilliseconds = getLivenessEnds(
       proposalExpirationTimestamp,
     );

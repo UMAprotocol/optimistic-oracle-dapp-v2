@@ -424,15 +424,16 @@ export type ParsedOOV3GraphEntity = ReturnType<
 
 export type CustomBond = {
   id: string;
-  requester: string;
+  requester: Address;
   identifier: string;
   ancillaryData: string;
+  currency: Address;
   customBond: number;
 };
 
 export type CustomLiveness = {
   id: string;
-  requester: string;
+  requester: Address;
   identifier: string;
   ancillaryData: string;
   customLiveness: number;
