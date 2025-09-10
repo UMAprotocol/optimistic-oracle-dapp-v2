@@ -5,13 +5,24 @@ import type { PageName } from "@shared/types";
 import { ItemDetails } from "./ItemDetails";
 import { ItemTitle } from "./ItemTitle";
 import { ClickableIconWrapper, ItemInnerWrapper, ItemWrapper } from "./style";
+import { useCustomBond } from "@/hooks/useCustomBond";
 
 interface Props {
   page: PageName;
   item: OracleQueryUI;
 }
-export function Item({ page, item }: Props) {
+export function Item({ page, item: query }: Props) {
   const { openPanel } = usePanelContext();
+
+  const customBondData = useCustomBond({
+    query,
+  });
+
+  const item: OracleQueryUI = {
+    ...query,
+    tokenAddress: customBondData?.data?.currency || query.tokenAddress,
+    bond: customBondData?.data?.bond || query.bond,
+  };
 
   return (
     <ItemWrapper onClick={() => void openPanel(item.id)}>

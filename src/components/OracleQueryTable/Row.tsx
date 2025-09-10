@@ -7,6 +7,7 @@ import { SettledCells } from "./SettledCells";
 import { TD, TR } from "./style";
 import { TitleCell } from "./TitleCell";
 import { VerifyCells } from "./VerifyCells";
+import { useCustomBond } from "@/hooks/useCustomBond";
 
 /**
  * Row for the table
@@ -14,7 +15,22 @@ import { VerifyCells } from "./VerifyCells";
  * @param page - the page of the app, used to determine which columns to show
  * @param row - the row to show
  */
-export function Row({ page, row }: { page: PageName; row: OracleQueryUI }) {
+export function Row({
+  page,
+  row: query,
+}: {
+  page: PageName;
+  row: OracleQueryUI;
+}) {
+  const customBondData = useCustomBond({
+    query,
+  });
+
+  const row: OracleQueryUI = {
+    ...query,
+    tokenAddress: customBondData?.data?.currency || query.tokenAddress,
+    bond: customBondData?.data?.bond || query.bond,
+  };
   const { openPanel } = usePanelContext();
   const innerCells = {
     verify: <VerifyCells {...row} />,
