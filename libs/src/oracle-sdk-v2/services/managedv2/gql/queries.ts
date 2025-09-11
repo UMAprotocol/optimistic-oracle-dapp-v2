@@ -138,7 +138,7 @@ export async function getCustomBondForRequest(
     throw new Error(result.errors[0].message);
   }
 
-  return result?.customBonds?.[0] || undefined;
+  return result?.customBonds?.[0];
 }
 
 export async function getCustomLivenessForRequest(
@@ -163,7 +163,7 @@ export async function getCustomLivenessForRequest(
     throw new Error(result.errors[0].message);
   }
 
-  return result?.customLiveness?.[0] || undefined;
+  return result?.customLiveness?.[0];
 }
 
 async function fetchPriceRequests(url: string, query: string) {
