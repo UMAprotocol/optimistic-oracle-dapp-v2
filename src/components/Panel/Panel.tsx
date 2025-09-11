@@ -9,6 +9,7 @@ import { Actions } from "./Actions";
 import { Details } from "./Details";
 import { InfoIcons } from "./InfoIcons";
 import { Title } from "./Title";
+import { useCustomBond } from "@/hooks/useCustomBond";
 
 /**
  * A panel that slides in from the right.
@@ -17,6 +18,10 @@ import { Title } from "./Title";
  */
 export function Panel() {
   const { query, panelOpen, closePanel } = usePanelContext();
+  const customBondData = useCustomBond({
+    query,
+    enabled: !!query,
+  });
 
   const close = useCallback(() => {
     closePanel();
@@ -24,8 +29,9 @@ export function Panel() {
 
   const props = query
     ? {
-        query,
+        query: { ...query, ...customBondData.data },
         ...query,
+        ...customBondData.data,
         close,
         isLoading: false,
       }

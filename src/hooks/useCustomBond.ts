@@ -6,7 +6,7 @@ import { useQuery } from "wagmi";
 import type { Address } from "wagmi";
 
 export type useCustomBondParams = {
-  query: OracleQueryUI;
+  query?: OracleQueryUI;
   enabled?: boolean;
 };
 
@@ -31,14 +31,14 @@ export function useCustomBond({
   enabled = true,
 }: useCustomBondParams): CustomBondResult {
   const shouldFetch =
-    query.oracleType === "Managed Optimistic Oracle V2" &&
-    query.actionType === "propose" &&
+    query?.oracleType === "Managed Optimistic Oracle V2" &&
+    query?.actionType === "propose" &&
     enabled;
 
   // Get the subgraph URL for this chain/oracle
   const subgraphUrl = config.subgraphs.find(
     (subgraph: SubgraphConfig) =>
-      subgraph.chainId === query.chainId &&
+      subgraph.chainId === query?.chainId &&
       subgraph.type === "Managed Optimistic Oracle V2",
   )?.urls?.[0];
 
@@ -46,23 +46,23 @@ export function useCustomBond({
     [
       "customBond",
       subgraphUrl,
-      query.requester,
-      query.identifier,
-      query.queryTextHex,
+      query?.requester,
+      query?.identifier,
+      query?.queryTextHex,
     ],
     {
       queryFn: async (): Promise<CustomBondData | null> => {
         if (
           subgraphUrl &&
-          query.requester &&
-          query.identifier &&
-          query.queryTextHex
+          query?.requester &&
+          query?.identifier &&
+          query?.queryTextHex
         ) {
           const result = await getCustomBondForRequest(
             subgraphUrl,
-            query.requester,
-            query.identifier,
-            query.queryTextHex,
+            query?.requester,
+            query?.identifier,
+            query?.queryTextHex,
           );
           if (result) {
             return {
@@ -77,9 +77,9 @@ export function useCustomBond({
       enabled: Boolean(
         shouldFetch &&
           subgraphUrl &&
-          query.requester &&
-          query.identifier &&
-          query.queryTextHex,
+          query?.requester &&
+          query?.identifier &&
+          query?.queryTextHex,
       ),
       retry: 3,
     },

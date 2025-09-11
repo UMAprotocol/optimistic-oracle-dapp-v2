@@ -28,8 +28,8 @@ export function Row({
 
   const row: OracleQueryUI = {
     ...query,
-    tokenAddress: customBondData?.data?.currency || query.tokenAddress,
-    bond: customBondData?.data?.bond || query.bond,
+    tokenAddress: customBondData?.data?.currency ?? query.tokenAddress,
+    bond: customBondData?.data?.bond ?? query.bond,
   };
   const { openPanel } = usePanelContext();
   const innerCells = {
