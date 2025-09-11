@@ -64,6 +64,7 @@ export type OracleQueryUI = {
   oracleType: OracleType;
   oracleAddress: Address;
   project: ProjectName;
+  time?: string;
   proposeOptions?: DropdownItem[] | undefined;
   title?: string;
   description?: string;

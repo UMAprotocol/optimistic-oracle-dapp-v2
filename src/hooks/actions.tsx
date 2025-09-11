@@ -20,6 +20,11 @@ import {
   trackingCalldataSuffix,
 } from "@/constants";
 import {
+  makeApproveBondSpendParams,
+  makeProposePriceParams,
+} from "@/helpers/converters";
+import { formatBytes32String } from "@/helpers/ethers";
+import {
   alreadyDisputedV2,
   alreadyDisputedV3,
   alreadyProposed,
@@ -40,8 +45,10 @@ import {
   usePrepareContractWrite,
   useSwitchNetwork,
   useWaitForTransaction,
+  type Address,
 } from "wagmi";
 import { useIsUserWhitelisted } from "./useProposerWhitelist";
+import { useCustomBond } from "./useCustomBond";
 
 // This represents an action button, and the state we need to render it
 export type ActionState = Partial<{
@@ -58,7 +65,7 @@ export function usePrimaryPanelAction({
   formattedProposePriceInput,
   disabled,
 }: {
-  query?: OracleQueryUI;
+  query: OracleQueryUI;
   formattedProposePriceInput?: PriceInputProps["formattedValue"];
   disabled?: boolean;
 }): ActionState | undefined {
@@ -104,7 +111,7 @@ export function usePrimaryPanelAction({
 export function useAccountAction({
   query,
 }: {
-  query?: OracleQueryUI;
+  query: OracleQueryUI;
 }): ActionState | undefined {
   const { isConnected } = useAccount();
   const { isLoading: isWalletLoading } = useConnect();
@@ -167,21 +174,43 @@ export function useAccountAction({
 export function useApproveBondAction({
   query,
 }: {
-  query?: OracleQueryUI;
+  query: OracleQueryUI;
 }): ActionState | undefined {
   const { data: isUserWhitelisted } = useIsUserWhitelisted(query);
+  const customBondResult = useCustomBond({ query });
   const { bond, tokenAddress, chainId, approveBondSpendParams, actionType } =
     query ?? {};
+
+  // Use custom bond if available, otherwise fall back to query bond
+  const effectiveBond = customBondResult.hasCustomBond
+    ? customBondResult.data?.bond
+    : bond;
+  const effectiveTokenAddress = customBondResult.hasCustomBond
+    ? customBondResult.data?.currency
+    : tokenAddress;
+
   const { allowance, balance } = useBalanceAndAllowance(query);
+
+  // Create approve bond spend params with effective bond and token address
+  const effectiveApproveBondSpendParams =
+    customBondResult.hasCustomBond && effectiveBond && effectiveTokenAddress
+      ? makeApproveBondSpendParams({
+          bond: effectiveBond,
+          tokenAddress: effectiveTokenAddress,
+          oracleAddress: query.oracleAddress,
+          chainId: query.chainId,
+        })
+      : approveBondSpendParams;
+
   const {
     config: approveBondSpendConfig,
     error: prepareApproveBondSpendError,
     isLoading: isPrepareApproveBondSpendLoading,
     refetch: refetchConfig,
   } = usePrepareContractWrite({
-    ...approveBondSpendParams,
-    scopeKey: query?.id,
-    enabled: !!query?.id && Boolean(isUserWhitelisted),
+    ...effectiveApproveBondSpendParams,
+    scopeKey: query.id,
+    enabled: !!query.id && Boolean(isUserWhitelisted),
   });
   const {
     write: approveBondSpend,
@@ -195,13 +224,13 @@ export function useApproveBondAction({
   });
 
   useEffect(() => {
-    if (!query?.id) return;
+    if (!query.id) return;
     refetchConfig &&
       refetchConfig().catch((err) =>
         console.warn("error refetching config", err),
       );
     resetContractWrite();
-  }, [query?.id, refetchConfig, resetContractWrite]);
+  }, [query.id, refetchConfig, resetContractWrite]);
   // notify based on approval
   useEffect(() => {
     if (!approveBondSpendTransaction || !chainId) return;
@@ -229,7 +258,7 @@ export function useApproveBondAction({
         "Connected address is not on this request's proposer whitelist. See proposer whitelist below.",
     };
   }
-  if (balance && bond && balance.value < bond) {
+  if (balance && effectiveBond && balance.value < effectiveBond) {
     return {
       title: insufficientBalance,
       disabled: true,
@@ -238,7 +267,9 @@ export function useApproveBondAction({
   }
   if (!approveBondSpendParams) return undefined;
   const needsToApprove =
-    allowance !== undefined && bond !== undefined && allowance < bond;
+    allowance !== undefined &&
+    effectiveBond !== undefined &&
+    allowance < effectiveBond;
   if (!needsToApprove) return undefined;
 
   if (isPrepareApproveBondSpendLoading) {
@@ -276,25 +307,62 @@ export function useProposeAction({
   proposePriceInput,
   prepare,
 }: {
-  query?: OracleQueryUI;
+  query: OracleQueryUI;
   proposePriceInput?: string;
   prepare?: boolean;
 }): ActionState | undefined {
+  const customBondResult = useCustomBond({
+    query,
+  });
   const { data: isUserWhitelisted } = useIsUserWhitelisted(query);
-  const { proposePriceParams, chainId, actionType } = query ?? {};
+  const {
+    proposePriceParams,
+    chainId,
+    actionType,
+    oracleType,
+    requester,
+    identifier,
+    queryTextHex,
+    oracleAddress,
+    time,
+  } = query ?? {};
+
+  // For Managed OO with custom bonds, we need to regenerate propose price params
+  const effectiveProposePriceParams =
+    customBondResult.hasCustomBond &&
+    customBondResult.data &&
+    time &&
+    identifier
+      ? makeProposePriceParams({
+          requester: requester as Address,
+          bytes32Identifier: formatBytes32String(identifier),
+          time,
+          ancillaryData: queryTextHex,
+          oracleAddress: oracleAddress,
+          chainId: chainId,
+        })
+      : proposePriceParams;
+  // For managed OO requests, only prepare contract write when:
+  // a. We successfully fetched custom bond data, OR
+  // b. We confirmed no custom bond exists (use defaults from query)
+  const shouldPrepareContractWrite =
+    prepare &&
+    !!query.id &&
+    actionType === "propose" &&
+    Boolean(isUserWhitelisted) &&
+    // For managed OO, wait until custom bond fetch is resolved
+    (oracleType !== "Managed Optimistic Oracle V2" ||
+      customBondResult.isResolved);
+
   const {
     config: proposePriceConfig,
     error: prepareProposePriceError,
     isLoading: isPrepareProposePriceLoading,
     refetch: refetchConfig,
   } = usePrepareContractWrite({
-    ...proposePriceParams?.(proposePriceInput),
-    scopeKey: query?.id,
-    enabled:
-      prepare &&
-      !!query?.id &&
-      actionType === "propose" &&
-      Boolean(isUserWhitelisted),
+    ...effectiveProposePriceParams?.(proposePriceInput),
+    scopeKey: query.id,
+    enabled: shouldPrepareContractWrite,
     dataSuffix: trackingCalldataSuffix,
   });
   const {
@@ -319,13 +387,13 @@ export function useProposeAction({
     hash: proposePriceTransaction?.hash,
   });
   useEffect(() => {
-    if (!query?.id) return;
+    if (!query.id) return;
     refetchConfig &&
       refetchConfig().catch((err) =>
         console.warn("error refetching config", err),
       );
     resetContractWrite();
-  }, [query?.id, refetchConfig, resetContractWrite]);
+  }, [query.id, refetchConfig, resetContractWrite]);
   // notify based on proposal tx
   useEffect(() => {
     if (!proposePriceTransaction || !chainId) return;
@@ -371,7 +439,7 @@ export function useProposeAction({
       };
     }
     if (
-      query?.identifier === "MULTIPLE_VALUES" &&
+      query.identifier === "MULTIPLE_VALUES" &&
       !isMultipleValuesInputValid(
         proposePriceInput,
         query.proposeOptions?.length ?? 0,
@@ -420,7 +488,7 @@ export function useDisputeAction({
   query,
   prepare,
 }: {
-  query?: OracleQueryUI;
+  query: OracleQueryUI;
   prepare?: boolean;
 }): ActionState | undefined {
   const { disputePriceParams, chainId, actionType } = query ?? {};
@@ -431,8 +499,8 @@ export function useDisputeAction({
     refetch: refetchConfig,
   } = usePrepareContractWrite({
     ...disputePriceParams,
-    scopeKey: query?.id,
-    enabled: prepare && !!query?.id && actionType === "dispute",
+    scopeKey: query.id,
+    enabled: prepare && !!query.id && actionType === "dispute",
     dataSuffix: trackingCalldataSuffix,
   });
   const {
@@ -447,13 +515,13 @@ export function useDisputeAction({
     hash: disputePriceTransaction?.hash,
   });
   useEffect(() => {
-    if (!query?.id) return;
+    if (!query.id) return;
     refetchConfig &&
       refetchConfig().catch((err) =>
         console.warn("error refetching config", err),
       );
     resetContractWrite();
-  }, [query?.id, refetchConfig, resetContractWrite]);
+  }, [query.id, refetchConfig, resetContractWrite]);
   // notify based on dispute tx
   useEffect(() => {
     if (!disputePriceTransaction || !chainId) return;
@@ -515,7 +583,7 @@ export function useDisputeAssertionAction({
   query,
   prepare,
 }: {
-  query?: OracleQueryUI;
+  query: OracleQueryUI;
   prepare?: boolean;
 }): ActionState | undefined {
   const { disputeAssertionParams, chainId, actionType } = query ?? {};
@@ -527,8 +595,8 @@ export function useDisputeAssertionAction({
     refetch: refetchConfig,
   } = usePrepareContractWrite({
     ...disputeAssertionParams?.(address),
-    scopeKey: query?.id,
-    enabled: prepare && !!query?.id && actionType === "dispute",
+    scopeKey: query.id,
+    enabled: prepare && !!query.id && actionType === "dispute",
     dataSuffix: trackingCalldataSuffix,
   });
   const {
@@ -543,13 +611,13 @@ export function useDisputeAssertionAction({
   });
 
   useEffect(() => {
-    if (!query?.id) return;
+    if (!query.id) return;
     refetchConfig &&
       refetchConfig().catch((err) =>
         console.warn("error refetching config", err),
       );
     resetContractWrite();
-  }, [query?.id, refetchConfig, resetContractWrite]);
+  }, [query.id, refetchConfig, resetContractWrite]);
   // notify based on dispute tx
   useEffect(() => {
     if (!disputeAssertionTransaction || !chainId) return;
@@ -615,7 +683,7 @@ export function useSettlePriceAction({
   query,
   prepare = true,
 }: {
-  query?: OracleQueryUI;
+  query: OracleQueryUI;
   prepare?: boolean;
 }): ActionState | undefined {
   const { settlePriceParams, chainId, actionType } = query ?? {};
@@ -626,8 +694,8 @@ export function useSettlePriceAction({
     refetch: refetchConfig,
   } = usePrepareContractWrite({
     ...settlePriceParams,
-    scopeKey: query?.id,
-    enabled: Boolean(prepare && !!query?.id && actionType === "settle"),
+    scopeKey: query.id,
+    enabled: Boolean(prepare && !!query.id && actionType === "settle"),
   });
   const {
     write: settlePrice,
@@ -640,13 +708,13 @@ export function useSettlePriceAction({
     hash: settlePriceTransaction?.hash,
   });
   useEffect(() => {
-    if (!query?.id) return;
+    if (!query.id) return;
     refetchConfig &&
       refetchConfig().catch((err) =>
         console.warn("error refetching config", err),
       );
     resetContractWrite();
-  }, [query?.id, refetchConfig, resetContractWrite]);
+  }, [query.id, refetchConfig, resetContractWrite]);
   useEffect(() => {
     if (!settlePriceTransaction || !chainId) return;
     handleNotifications(settlePriceTransaction, chainId, {
@@ -713,7 +781,7 @@ export function useSettleAssertionAction({
   query,
   prepare = true,
 }: {
-  query?: OracleQueryUI;
+  query: OracleQueryUI;
   prepare?: boolean;
 }): ActionState | undefined {
   const { settleAssertionParams, chainId, actionType } = query ?? {};
@@ -724,8 +792,8 @@ export function useSettleAssertionAction({
     refetch: refetchConfig,
   } = usePrepareContractWrite({
     ...settleAssertionParams,
-    scopeKey: query?.id,
-    enabled: Boolean(prepare && !!query?.id && actionType === "settle"),
+    scopeKey: query.id,
+    enabled: Boolean(prepare && !!query.id && actionType === "settle"),
   });
   const {
     write: settleAssertion,
@@ -738,13 +806,13 @@ export function useSettleAssertionAction({
     hash: settleAssertionTransaction?.hash,
   });
   useEffect(() => {
-    if (!query?.id) return;
+    if (!query.id) return;
     refetchConfig &&
       refetchConfig().catch((err) =>
         console.warn("error refetching config", err),
       );
     resetContractWrite();
-  }, [query?.id, refetchConfig, resetContractWrite]);
+  }, [query.id, refetchConfig, resetContractWrite]);
   useEffect(() => {
     if (!settleAssertionTransaction || !chainId) return;
     handleNotifications(settleAssertionTransaction, chainId, {
