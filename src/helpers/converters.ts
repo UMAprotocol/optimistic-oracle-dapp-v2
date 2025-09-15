@@ -775,24 +775,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     result.expiryType = eventBased ? "Event-based" : "Time-based";
   }
 
-  // For managed OO v2, calculate liveness end time using customLiveness and proposalTimestamp
-  if (
-    request.oracleType === "Managed Optimistic Oracle V2" &&
-    exists(customLiveness) &&
-    exists(proposalTimestamp)
-  ) {
-    const proposalTime = Number(proposalTimestamp);
-    const livenessDuration = Number(customLiveness);
-    const livenessEndTime = proposalTime + livenessDuration;
-
-    result.livenessEndsMilliseconds = toTimeMilliseconds(
-      livenessEndTime.toString(),
-    );
-    result.formattedLivenessEndsIn = toTimeFormatted(
-      livenessEndTime.toString(),
-    );
-  } else if (exists(proposalExpirationTimestamp)) {
-    // For other oracle types, use the existing logic
+  if (exists(proposalExpirationTimestamp)) {
     result.livenessEndsMilliseconds = getLivenessEnds(
       proposalExpirationTimestamp,
     );
