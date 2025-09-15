@@ -776,7 +776,6 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   }
 
   if (exists(proposalExpirationTimestamp)) {
-    // For other oracle types, use the existing logic
     result.livenessEndsMilliseconds = getLivenessEnds(
       proposalExpirationTimestamp,
     );
