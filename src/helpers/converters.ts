@@ -820,8 +820,9 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     result.settlementTimestamp = settlementTimestamp;
   }
   if (exists(settlementHash)) result.settlementHash = settlementHash;
-  if (exists(settlementLogIndex))
+  if (exists(settlementLogIndex)) {
     result.settlementLogIndex = settlementLogIndex;
+  }
   result.approveBondSpendParams = makeApproveBondSpendParams({
     bond,
     tokenAddress: currency,

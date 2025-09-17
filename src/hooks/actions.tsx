@@ -19,11 +19,7 @@ import {
   settling,
   trackingCalldataSuffix,
 } from "@/constants";
-import {
-  makeApproveBondSpendParams,
-  makeProposePriceParams,
-} from "@/helpers/converters";
-import { formatBytes32String } from "@/helpers/ethers";
+import { makeApproveBondSpendParams } from "@/helpers/converters";
 import {
   alreadyDisputedV2,
   alreadyDisputedV3,
@@ -45,10 +41,9 @@ import {
   usePrepareContractWrite,
   useSwitchNetwork,
   useWaitForTransaction,
-  type Address,
 } from "wagmi";
 import { useIsUserWhitelisted } from "./useProposerWhitelist";
-import { useCustomBond } from "./useCustomBond";
+import { isDefined } from "@libs/utils";
 
 // This represents an action button, and the state we need to render it
 export type ActionState = Partial<{
@@ -176,31 +171,12 @@ export function useApproveBondAction({
 }: {
   query: OracleQueryUI;
 }): ActionState | undefined {
+  // Create approve bond spend params with effective bond and token address
+  const approveBondSpendParams = makeApproveBondSpendParams(query);
   const { data: isUserWhitelisted } = useIsUserWhitelisted(query);
-  const customBondResult = useCustomBond({ query });
-  const { bond, tokenAddress, chainId, approveBondSpendParams, actionType } =
-    query ?? {};
-
-  // Use custom bond if available, otherwise fall back to query bond
-  const effectiveBond = customBondResult.hasCustomBond
-    ? customBondResult.data?.bond
-    : bond;
-  const effectiveTokenAddress = customBondResult.hasCustomBond
-    ? customBondResult.data?.currency
-    : tokenAddress;
+  const { bond, tokenAddress, chainId, actionType } = query ?? {};
 
   const { allowance, balance } = useBalanceAndAllowance(query);
-
-  // Create approve bond spend params with effective bond and token address
-  const effectiveApproveBondSpendParams =
-    customBondResult.hasCustomBond && effectiveBond && effectiveTokenAddress
-      ? makeApproveBondSpendParams({
-          bond: effectiveBond,
-          tokenAddress: effectiveTokenAddress,
-          oracleAddress: query.oracleAddress,
-          chainId: query.chainId,
-        })
-      : approveBondSpendParams;
 
   const {
     config: approveBondSpendConfig,
@@ -208,7 +184,7 @@ export function useApproveBondAction({
     isLoading: isPrepareApproveBondSpendLoading,
     refetch: refetchConfig,
   } = usePrepareContractWrite({
-    ...effectiveApproveBondSpendParams,
+    ...approveBondSpendParams,
     scopeKey: query.id,
     enabled: !!query.id && Boolean(isUserWhitelisted),
   });
@@ -258,7 +234,7 @@ export function useApproveBondAction({
         "Connected address is not on this request's proposer whitelist. See proposer whitelist below.",
     };
   }
-  if (balance && effectiveBond && balance.value < effectiveBond) {
+  if (balance && bond && balance.value < bond) {
     return {
       title: insufficientBalance,
       disabled: true,
@@ -267,9 +243,7 @@ export function useApproveBondAction({
   }
   if (!approveBondSpendParams) return undefined;
   const needsToApprove =
-    allowance !== undefined &&
-    effectiveBond !== undefined &&
-    allowance < effectiveBond;
+    allowance !== undefined && bond !== undefined && allowance < bond;
   if (!needsToApprove) return undefined;
 
   if (isPrepareApproveBondSpendLoading) {
@@ -311,48 +285,16 @@ export function useProposeAction({
   proposePriceInput?: string;
   prepare?: boolean;
 }): ActionState | undefined {
-  const customBondResult = useCustomBond({
-    query,
-  });
   const { data: isUserWhitelisted } = useIsUserWhitelisted(query);
-  const {
-    proposePriceParams,
-    chainId,
-    actionType,
-    oracleType,
-    requester,
-    identifier,
-    queryTextHex,
-    oracleAddress,
-    time,
-  } = query ?? {};
+  const { chainId, actionType, proposePriceParams } = query ?? {};
 
-  // For Managed OO with custom bonds, we need to regenerate propose price params
-  const effectiveProposePriceParams =
-    customBondResult.hasCustomBond &&
-    customBondResult.data &&
-    time &&
-    identifier
-      ? makeProposePriceParams({
-          requester: requester as Address,
-          bytes32Identifier: formatBytes32String(identifier),
-          time,
-          ancillaryData: queryTextHex,
-          oracleAddress: oracleAddress,
-          chainId: chainId,
-        })
-      : proposePriceParams;
-  // For managed OO requests, only prepare contract write when:
-  // a. We successfully fetched custom bond data, OR
-  // b. We confirmed no custom bond exists (use defaults from query)
-  const shouldPrepareContractWrite =
+  const shouldPrepareContractWrite = Boolean(
     prepare &&
-    !!query.id &&
-    actionType === "propose" &&
-    Boolean(isUserWhitelisted) &&
-    // For managed OO, wait until custom bond fetch is resolved
-    (oracleType !== "Managed Optimistic Oracle V2" ||
-      customBondResult.isResolved);
+      !!query.id &&
+      actionType === "propose" &&
+      Boolean(isUserWhitelisted) &&
+      isDefined(proposePriceInput),
+  );
 
   const {
     config: proposePriceConfig,
@@ -360,7 +302,7 @@ export function useProposeAction({
     isLoading: isPrepareProposePriceLoading,
     refetch: refetchConfig,
   } = usePrepareContractWrite({
-    ...effectiveProposePriceParams?.(proposePriceInput),
+    ...proposePriceParams?.(proposePriceInput),
     scopeKey: query.id,
     enabled: shouldPrepareContractWrite,
     dataSuffix: trackingCalldataSuffix,

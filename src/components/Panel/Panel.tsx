@@ -27,11 +27,18 @@ export function Panel() {
     closePanel();
   }, [closePanel]);
 
-  const props = query
+  const effectiveQuery = query
     ? {
-        query: { ...query, ...customBondData.data },
         ...query,
-        ...customBondData.data,
+        tokenAddress: customBondData?.data?.currency ?? query.tokenAddress,
+        bond: customBondData?.data?.bond ?? query.bond,
+      }
+    : undefined;
+
+  const props = effectiveQuery
+    ? {
+        query: effectiveQuery,
+        ...effectiveQuery,
         close,
         isLoading: false,
       }
