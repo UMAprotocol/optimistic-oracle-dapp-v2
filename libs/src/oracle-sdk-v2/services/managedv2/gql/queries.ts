@@ -120,12 +120,12 @@ export async function getCustomBondForRequest(
   requester: string,
   identifier: string,
   ancillaryData: string,
+  currency: string,
 ): Promise<Pick<CustomBond, "customBond" | "currency"> | undefined> {
   const query = gql`
     query GetCustomBond {
-      customBonds(where: { requester: "${requester}", identifier: "${identifier}", ancillaryData: "${ancillaryData}" }) {
+      customBonds(where: { requester: "${requester}", identifier: "${identifier}", ancillaryData: "${ancillaryData}", currency: "${currency}" }) {
         customBond
-        currency
       }
     }
   `;

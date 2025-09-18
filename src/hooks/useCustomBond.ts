@@ -3,7 +3,6 @@ import { getCustomBondForRequest } from "@libs/oracle-sdk-v2/services/managedv2/
 import type { OracleQueryUI } from "@/types";
 import type { SubgraphConfig } from "@/constants/env";
 import { useQuery } from "wagmi";
-import type { Address } from "wagmi";
 
 export type useCustomBondParams = {
   query?: OracleQueryUI;
@@ -12,7 +11,6 @@ export type useCustomBondParams = {
 
 export type CustomBondData = {
   bond: bigint;
-  currency: Address;
 };
 
 export type CustomBondResult = {
@@ -56,18 +54,19 @@ export function useCustomBond({
           subgraphUrl &&
           query?.requester &&
           query?.identifier &&
-          query?.queryTextHex
+          query?.queryTextHex &&
+          query?.tokenAddress
         ) {
           const result = await getCustomBondForRequest(
             subgraphUrl,
-            query?.requester,
-            query?.identifier,
-            query?.queryTextHex,
+            query.requester,
+            query.identifier,
+            query.queryTextHex,
+            query.tokenAddress,
           );
           if (result) {
             return {
               bond: BigInt(result.customBond),
-              currency: result.currency,
             };
           }
         }
@@ -79,9 +78,11 @@ export function useCustomBond({
           subgraphUrl &&
           query?.requester &&
           query?.identifier &&
-          query?.queryTextHex,
+          query?.queryTextHex &&
+          query?.tokenAddress,
       ),
       retry: 3,
+      retryDelay: 1_000,
     },
   );
 
@@ -89,7 +90,6 @@ export function useCustomBond({
     data: queryResult.data
       ? {
           bond: queryResult.data.bond + (query?.finalFee ?? 0n), // add final fee to total bond
-          currency: queryResult.data.currency,
         }
       : null,
     isResolved: queryResult.isSuccess, // Successfully fetched (whether data found or not)

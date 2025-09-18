@@ -20,7 +20,6 @@ export function Item({ page, item: query }: Props) {
 
   const item: OracleQueryUI = {
     ...query,
-    tokenAddress: customBondData?.data?.currency ?? query.tokenAddress,
     bond: customBondData?.data?.bond ?? query.bond,
   };
 

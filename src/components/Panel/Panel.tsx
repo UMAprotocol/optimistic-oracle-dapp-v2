@@ -30,7 +30,6 @@ export function Panel() {
   const effectiveQuery = query
     ? {
         ...query,
-        tokenAddress: customBondData?.data?.currency ?? query.tokenAddress,
         bond: customBondData?.data?.bond ?? query.bond,
       }
     : undefined;

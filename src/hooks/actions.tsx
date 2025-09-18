@@ -296,13 +296,17 @@ export function useProposeAction({
       isDefined(proposePriceInput),
   );
 
+  const _proposePriceParams = proposePriceParams?.(proposePriceInput);
+
+  console.log("proposePriceParams", _proposePriceParams);
+
   const {
     config: proposePriceConfig,
     error: prepareProposePriceError,
     isLoading: isPrepareProposePriceLoading,
     refetch: refetchConfig,
   } = usePrepareContractWrite({
-    ...proposePriceParams?.(proposePriceInput),
+    ..._proposePriceParams,
     scopeKey: query.id,
     enabled: shouldPrepareContractWrite,
     dataSuffix: trackingCalldataSuffix,
