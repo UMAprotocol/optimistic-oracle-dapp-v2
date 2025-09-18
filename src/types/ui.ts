@@ -69,6 +69,7 @@ export type OracleQueryUI = {
   title?: string;
   description?: string;
   expiryType?: ExpiryType | null;
+  finalFee?: bigint | undefined;
   // not always available with assertions
   identifier?: string;
   // price requests query text is the ancillary data

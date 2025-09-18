@@ -690,6 +690,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     proposalHash,
     proposalLogIndex,
     proposalExpirationTimestamp,
+    finalFee,
   } = request;
 
   const result: OracleQueryUI = {
@@ -703,6 +704,10 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     moreInformation: [],
     project: "Unknown",
   };
+
+  if (exists(finalFee)) {
+    result.finalFee = finalFee;
+  }
 
   if (exists(ancillaryData)) {
     result.queryTextHex = ancillaryData;

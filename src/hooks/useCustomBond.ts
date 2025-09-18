@@ -86,7 +86,12 @@ export function useCustomBond({
   );
 
   return {
-    data: queryResult.data || null,
+    data: queryResult.data
+      ? {
+          bond: queryResult.data.bond + (query?.finalFee ?? 0n), // add final fee to total bond
+          currency: queryResult.data.currency,
+        }
+      : null,
     isResolved: queryResult.isSuccess, // Successfully fetched (whether data found or not)
     isLoading: queryResult.isLoading,
     isError: queryResult.isError,
