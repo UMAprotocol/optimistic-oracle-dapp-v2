@@ -221,7 +221,7 @@ export function useApproveBondAction({
   }, [approveBondSpendTransaction, bond, chainId, tokenAddress]);
 
   if (actionType !== "propose" && actionType !== "dispute") return undefined;
-  if (!isUserWhitelisted) {
+  if (actionType === "propose" && !isUserWhitelisted) {
     return {
       title: notWhitelisted,
       disabled: true,
