@@ -24,34 +24,6 @@ export const Factory =
             type,
           )) as OOV2GraphEntity[];
 
-          // const enhancedRequests = await Promise.all(
-          //   requests.map(async (request) => {
-          //     const [customBond, customLiveness] = await Promise.all([
-          //       getCustomBondForRequest(
-          //         url,
-          //         request.requester,
-          //         request.identifier,
-          //         request.ancillaryData,
-          //       ),
-          //       getCustomLivenessForRequest(
-          //         url,
-          //         request.requester,
-          //         request.identifier,
-          //         request.ancillaryData,
-          //       ),
-          //     ]);
-          //     const enhancedRequest = {
-          //       ...request,
-          //       customLiveness: customLiveness?.customLiveness?.toString(),
-          //       bond: customBond?.customBond
-          //         ? customBond.customBond
-          //         : request.bond,
-          //     };
-
-          //     return enhancedRequest;
-          //   }),
-          // );
-
           handlers.requests?.(
             requests.map((request) =>
               parsePriceRequestGraphEntity(

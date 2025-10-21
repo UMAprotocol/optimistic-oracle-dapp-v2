@@ -64,10 +64,12 @@ export type OracleQueryUI = {
   oracleType: OracleType;
   oracleAddress: Address;
   project: ProjectName;
+  time?: string;
   proposeOptions?: DropdownItem[] | undefined;
   title?: string;
   description?: string;
   expiryType?: ExpiryType | null;
+  finalFee?: bigint | undefined;
   // not always available with assertions
   identifier?: string;
   // price requests query text is the ancillary data

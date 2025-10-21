@@ -120,14 +120,11 @@ export async function getCustomBondForRequest(
   requester: string,
   identifier: string,
   ancillaryData: string,
-) {
+  currency: string,
+): Promise<Pick<CustomBond, "customBond" | "currency"> | undefined> {
   const query = gql`
     query GetCustomBond {
-      customBonds(where: { requester: "${requester}", identifier: "${identifier}", ancillaryData: "${ancillaryData}" }) {
-        id
-        requester
-        identifier
-        ancillaryData
+      customBonds(where: { requester: "${requester}", identifier: "${identifier}", ancillaryData: "${ancillaryData}", currency: "${currency}" }) {
         customBond
       }
     }
@@ -141,7 +138,7 @@ export async function getCustomBondForRequest(
     throw new Error(result.errors[0].message);
   }
 
-  return result?.customBonds?.[0] || null;
+  return result?.customBonds?.[0];
 }
 
 export async function getCustomLivenessForRequest(
@@ -149,14 +146,10 @@ export async function getCustomLivenessForRequest(
   requester: string,
   identifier: string,
   ancillaryData: string,
-) {
+): Promise<Pick<CustomLiveness, "ancillaryData"> | undefined> {
   const query = gql`
     query GetCustomLiveness {
       customLivenesses(where: { requester: "${requester}", identifier: "${identifier}", ancillaryData: "${ancillaryData}" }) {
-        id
-        requester
-        identifier
-        ancillaryData
         customLiveness
       }
     }
@@ -170,7 +163,7 @@ export async function getCustomLivenessForRequest(
     throw new Error(result.errors[0].message);
   }
 
-  return result?.customLiveness?.[0] || null;
+  return result?.customLiveness?.[0];
 }
 
 async function fetchPriceRequests(url: string, query: string) {
