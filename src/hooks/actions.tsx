@@ -181,7 +181,9 @@ export function useApproveBondAction({
   } = usePrepareContractWrite({
     ...approveBondSpendParams,
     scopeKey: query?.id,
-    enabled: !!query?.id && Boolean(isUserWhitelisted),
+    enabled:
+      !!query?.id &&
+      (actionType === "dispute" ? true : Boolean(isUserWhitelisted)),
   });
   const {
     write: approveBondSpend,
