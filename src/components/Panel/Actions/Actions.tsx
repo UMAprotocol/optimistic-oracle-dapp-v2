@@ -206,7 +206,7 @@ function MultipleValues({
             >
               {label}
               <div className="w-full h-[44px] pl-4 rounded-md bg-white flex items-center">
-                {value}
+                Proposal: {value}
               </div>
             </label>
             {i === 0 && valuesToShow?.length === 2 && (
