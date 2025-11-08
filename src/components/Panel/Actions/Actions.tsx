@@ -95,7 +95,7 @@ export function Actions({ query }: Props) {
     if (pageIsPropose) {
       return <>Propose Answer</>;
     }
-    return <>Verify Answer</>;
+    return <>Dispute Proposal</>;
   }
 
   const isMultipleValuesRequest = query.identifier === "MULTIPLE_VALUES";
@@ -123,7 +123,9 @@ export function Actions({ query }: Props) {
                 marginBottom: !pageIsSettled ? "20px" : "0px",
               }}
             >
-              <p className="sm:text-lg font-semibold">{valuesToShow[0]}</p>
+              <p className="sm:text-lg font-semibold">
+                Proposal: {valuesToShow[0]}
+              </p>
             </div>
           )}
         </>
