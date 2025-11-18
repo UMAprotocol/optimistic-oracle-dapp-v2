@@ -95,7 +95,7 @@ export function Actions({ query }: Props) {
     if (pageIsPropose) {
       return <>Propose Answer</>;
     }
-    return <>Dispute Proposal</>;
+    return <>Dispute Proposal?</>;
   }
 
   const isMultipleValuesRequest = query.identifier === "MULTIPLE_VALUES";
