@@ -16,8 +16,29 @@ export async function getPriceRequests(
 ) {
   const chainName = chainsById[chainId];
   const queryName = makeQueryName(oracleType, chainName);
-  const result = await fetchAllRequests(url, queryName, oracleType);
-  return result;
+
+  const result = (await fetch(
+    `/api/subgraph-blob-info?url=${url}&queryName=${queryName}&oracleType=${oracleType}`,
+  ).then((res) => res.json())) as { url: string | null };
+
+  if (result.url === null) {
+    const requests = await fetchAllRequests(url, queryName, oracleType);
+    return requests;
+  } else {
+    const blob = await fetch(result.url);
+    let requests = (await blob.json()) as OOV1GraphEntity[] | OOV2GraphEntity[];
+    if (requests.length > 0) {
+      // Blob should cover most historical data, but we need to fetch the rest.
+      const remainingRequests = await fetchAllRequests(
+        url,
+        queryName,
+        oracleType,
+        Number(requests[0].time),
+      );
+      requests = [...remainingRequests, ...requests];
+    }
+    return requests;
+  }
 }
 
 export async function* getPriceRequestsIncremental(
@@ -75,17 +96,18 @@ async function* fetchAllRequestsIncremental(
     }
   }
 }
-async function fetchAllRequests(
+export async function fetchAllRequests(
   url: string,
   queryName: string,
   oracleType: OracleType,
+  after?: number,
 ) {
   const result: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
   let skip = 0;
   const first = 1000;
   let requests = await fetchPriceRequests(
     url,
-    makeQuery(queryName, oracleType, first, skip),
+    makeQuery(queryName, oracleType, first, skip, after),
   );
 
   // thegraph wont allow skip > 5000,
@@ -94,7 +116,7 @@ async function fetchAllRequests(
     skip += first;
     requests = await fetchPriceRequests(
       url,
-      makeQuery(queryName, oracleType, first, skip),
+      makeQuery(queryName, oracleType, first, skip, after),
     );
   }
 
@@ -104,7 +126,7 @@ async function fetchAllRequests(
     const lastTime = requests[requests.length - 1].time;
     requests = await fetchPriceRequests(
       url,
-      makeTimeBasedQuery(queryName, oracleType, first, Number(lastTime)),
+      makeTimeBasedQuery(queryName, oracleType, first, Number(lastTime), after),
     );
   }
 
@@ -113,7 +135,7 @@ async function fetchAllRequests(
   return result;
 }
 
-async function fetchPriceRequests(url: string, query: string) {
+export async function fetchPriceRequests(url: string, query: string) {
   const result = await request<
     PriceRequestsQuery | { errors: { message: string }[] }
   >(url, query);
@@ -123,15 +145,18 @@ async function fetchPriceRequests(url: string, query: string) {
   return result.optimisticPriceRequests;
 }
 
-function makeQuery(
+export function makeQuery(
   queryName: string,
   oracleType: OracleType,
   first: number,
   skip: number,
+  after?: number,
 ) {
   const query = gql`
   query ${queryName} {
-    optimisticPriceRequests(orderBy: time, orderDirection: desc, first: ${first}, skip: ${skip}) {
+    optimisticPriceRequests(orderBy: time, orderDirection: desc, first: ${first}, skip: ${skip}${
+      after ? `, where: { time_gt: ${after} }` : ""
+    }) {
       id
       identifier
       ancillaryData
@@ -189,15 +214,18 @@ function makeQuery(
   return query;
 }
 
-function makeTimeBasedQuery(
+export function makeTimeBasedQuery(
   queryName: string,
   oracleType: OracleType,
   first: number,
   lastTime: number,
+  after?: number,
 ) {
   const query = gql`
   query ${queryName} {
-    optimisticPriceRequests(orderBy: time, orderDirection: desc, first: ${first}, where: { time_lt: ${lastTime}}) {
+    optimisticPriceRequests(orderBy: time, orderDirection: desc, first: ${first}, where: { time_lt: ${lastTime}${
+      after ? `, time_gt: ${after}` : ""
+    }}) {
       id
       identifier
       ancillaryData
