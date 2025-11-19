@@ -86,12 +86,7 @@ export function Actions({ query }: Props) {
 
   function getActionsTitle() {
     if (pageIsSettled) return "Settled as";
-    if (oracleType === "Optimistic Oracle V3")
-      return (
-        <>
-          Assertion <span>(proposal)</span>
-        </>
-      );
+    if (oracleType === "Optimistic Oracle V3") return <>Dispute assertion?</>;
     if (pageIsPropose) {
       return <>Propose Answer</>;
     }
