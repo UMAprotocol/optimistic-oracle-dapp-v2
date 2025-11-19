@@ -86,16 +86,11 @@ export function Actions({ query }: Props) {
 
   function getActionsTitle() {
     if (pageIsSettled) return "Settled as";
-    if (oracleType === "Optimistic Oracle V3")
-      return (
-        <>
-          Assertion <span>(proposal)</span>
-        </>
-      );
+    if (oracleType === "Optimistic Oracle V3") return <>Dispute assertion?</>;
     if (pageIsPropose) {
       return <>Propose Answer</>;
     }
-    return <>Verify Answer</>;
+    return <>Dispute Proposal?</>;
   }
 
   const isMultipleValuesRequest = query.identifier === "MULTIPLE_VALUES";
@@ -123,7 +118,9 @@ export function Actions({ query }: Props) {
                 marginBottom: !pageIsSettled ? "20px" : "0px",
               }}
             >
-              <p className="sm:text-lg font-semibold">{valuesToShow[0]}</p>
+              <p className="sm:text-lg font-semibold">
+                Proposal: {valuesToShow[0]}
+              </p>
             </div>
           )}
         </>
@@ -204,7 +201,7 @@ function MultipleValues({
             >
               {label}
               <div className="w-full h-[44px] pl-4 rounded-md bg-white flex items-center">
-                {value}
+                Proposal: {value}
               </div>
             </label>
             {i === 0 && valuesToShow?.length === 2 && (
