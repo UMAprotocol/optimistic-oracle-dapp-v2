@@ -2,6 +2,7 @@ import type { DropdownItem } from "@/types/ui";
 import { Identifier } from "./abstract";
 import type { MetaData } from "./abstract";
 import { getTitleAndDescriptionFromTokens } from "@/helpers/queryParsing";
+import { maybeMakePolymarketOptions } from "@/projects/polymarket";
 
 export class YesOrNoQuery extends Identifier {
   constructor() {
@@ -26,7 +27,7 @@ export class YesOrNoQuery extends Identifier {
   parseQuery(decodedAncillaryData: string) {
     return {
       ...this.getMetaData(decodedAncillaryData),
-      proposeOptions: this.makeProposeOptions(),
+      proposeOptions: this.makeProposeOptions(decodedAncillaryData),
     };
   }
 
@@ -46,8 +47,10 @@ export class YesOrNoQuery extends Identifier {
     ];
   }
 
-  makeProposeOptions(): DropdownItem[] {
-    // For YES_OR_NO_QUERY, the default options are always used
-    return this.makeDefaultProposeOptions();
+  makeProposeOptions(decodedAncillaryData: string): DropdownItem[] {
+    // first try to parse res_data options
+    const polyMarketOptions = maybeMakePolymarketOptions(decodedAncillaryData);
+    // fallback to identifier standard
+    return polyMarketOptions ?? this.makeDefaultProposeOptions();
   }
 }
