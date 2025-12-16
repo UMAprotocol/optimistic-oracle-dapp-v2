@@ -34,7 +34,7 @@
     "**/*.js",
     "**/*.mjs"
   ],
-  "exclude": ["node_modules", "**/*.e2e.ts", "**/*.test.ts"],
+  "exclude": ["node_modules", "**/*.e2e.ts"],
   "ts-node": {
     "swc": true,
     "compilerOptions": {
