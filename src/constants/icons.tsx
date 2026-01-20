@@ -3,10 +3,8 @@ import { chainsById } from "@shared/constants";
 import type { ChainId } from "@shared/types";
 // chains
 import Arbitrum from "public/assets/icons/chains/arbitrum.svg";
-import Avalanche from "public/assets/icons/chains/avax.svg";
 import Boba from "public/assets/icons/chains/boba.svg";
 import Ethereum from "public/assets/icons/chains/ethereum.svg";
-import Gnosis from "public/assets/icons/chains/gnosis.svg";
 import Optimism from "public/assets/icons/chains/optimism.svg";
 import Polygon from "public/assets/icons/chains/polygon.svg";
 import SX from "public/assets/icons/chains/sx.svg";
@@ -72,13 +70,11 @@ export const chainIcons = {
   Ethereum,
   Goerli: ETH,
   Optimism,
-  Gnosis,
   Polygon,
   Mumbai: Polygon,
   Amoy: Polygon,
   Boba,
   SX,
-  Avalanche,
   Arbitrum,
   Story,
 };

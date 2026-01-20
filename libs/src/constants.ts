@@ -46,12 +46,6 @@ export const ContractInfoList: ContractInfoList = [
     address: getAddress("0x7da554228555C8Bf3748403573d48a2138C6b848"),
   },
   {
-    // core
-    type: "Optimistic Oracle V1",
-    chainId: 1116,
-    address: getAddress("0x6999526e507Cc3b03b180BbE05E1Ff938259A874"),
-  },
-  {
     // arbitrum
     type: "Optimistic Oracle V1",
     chainId: 42161,
@@ -116,12 +110,6 @@ export const ContractInfoList: ContractInfoList = [
     type: "Optimistic Oracle V2",
     chainId: 288,
     address: getAddress("0xb2b5C1b17B19d92CC4fC1f026B2133259e3ccd41"),
-  },
-  {
-    // core
-    type: "Optimistic Oracle V2",
-    chainId: 1116,
-    address: getAddress("0xd85630E361cEbBC4c7f13e6eEd3587050fB81B86"),
   },
   {
     // arbitrum
@@ -195,12 +183,6 @@ export const ContractInfoList: ContractInfoList = [
     type: "Optimistic Oracle V3",
     chainId: 288,
     address: getAddress("0xe1C2587C1789f7D00F22931D4DBAD537405DFe1f"),
-  },
-  {
-    // core
-    type: "Optimistic Oracle V3",
-    chainId: 1116,
-    address: getAddress("0xD84ACa67d683aF7702705141b3C7E57e4e5e7726"),
   },
   {
     // arbitrum
