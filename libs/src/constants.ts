@@ -260,8 +260,8 @@ export const ContractInfoList: ContractInfoList = [
     // polygon
     type: "Managed Optimistic Oracle V2",
     chainId: 137,
-    address: getAddress("0x2C0367a9DB231dDeBd88a94b4f6461a6e47C58B1"),
-    deployBlock: 74677419,
+    address: getAddress("0x0a50B5028fEf3f504115B282EEF22e9cbeF3d9Bc"),
+    deployBlock: 82287894,
   },
   {
     // amoy
