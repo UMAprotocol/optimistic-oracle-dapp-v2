@@ -143,15 +143,32 @@ export function makeUrlParamsForQuery({
   requestLogIndex,
   assertionHash,
   assertionLogIndex,
+  proposalHash,
+  proposalLogIndex,
+  disputeHash,
+  disputeLogIndex,
+  settlementHash,
+  settlementLogIndex,
 }: OracleQueryUI) {
-  const isRequest = !!requestHash && !!requestLogIndex;
+  // Priority: request/assertion > proposal > dispute > settlement
+  if (requestHash && requestLogIndex) {
+    return { transactionHash: requestHash, eventIndex: requestLogIndex };
+  }
+  if (assertionHash && assertionLogIndex) {
+    return { transactionHash: assertionHash, eventIndex: assertionLogIndex };
+  }
+  if (proposalHash && proposalLogIndex) {
+    return { transactionHash: proposalHash, eventIndex: proposalLogIndex };
+  }
+  if (disputeHash && disputeLogIndex) {
+    return { transactionHash: disputeHash, eventIndex: disputeLogIndex };
+  }
+  if (settlementHash && settlementLogIndex) {
+    return { transactionHash: settlementHash, eventIndex: settlementLogIndex };
+  }
 
-  const queryParams = {
-    transactionHash: isRequest ? requestHash : assertionHash!,
-    eventIndex: isRequest ? requestLogIndex : assertionLogIndex!,
-  };
-
-  return queryParams;
+  // Fallback for edge cases
+  return { transactionHash: "", eventIndex: "" };
 }
 
 export function getPageForQuery({ actionType }: OracleQueryUI) {
