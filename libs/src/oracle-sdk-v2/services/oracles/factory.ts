@@ -12,6 +12,8 @@ export type GqlConfig = {
   chainId: ChainId;
   type: OracleType;
   address: string;
+  enableFastVerifyQuery?: boolean;
+  verifyQueryDaysBack?: number;
 };
 export type Config = GqlConfig[];
 

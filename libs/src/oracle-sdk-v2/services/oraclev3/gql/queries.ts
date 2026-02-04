@@ -71,3 +71,103 @@ function makeQuery(queryName: string, first: number, skip: number) {
 
   return query;
 }
+
+export async function getRecentAssertions(
+  url: string,
+  chainId: ChainId,
+  daysBack: number = 7,
+) {
+  const chainName = chainsById[chainId];
+  const queryName =
+    makeQueryName("Optimistic Oracle V3", chainName) + "RecentAssertions";
+  const cutoffTime = Math.floor(Date.now() / 1000) - daysBack * 24 * 60 * 60;
+
+  const result = await fetchRecentAssertions(url, queryName, cutoffTime);
+  return result;
+}
+
+function makeRecentAssertionsQuery(
+  queryName: string,
+  first: number,
+  cutoffTime: number,
+  lastAssertionTime?: number,
+) {
+  const whereClause = lastAssertionTime
+    ? `where: { assertionTimestamp_gt: "${cutoffTime}", assertionTimestamp_lt: "${lastAssertionTime}" }`
+    : `where: { assertionTimestamp_gt: "${cutoffTime}" }`;
+
+  const query = gql`
+  query ${queryName} {
+    assertions(
+      orderBy: assertionTimestamp,
+      orderDirection: desc,
+      first: ${first},
+      ${whereClause}
+    ) {
+      id
+      assertionId
+      identifier
+      domainId
+      claim
+      asserter
+      callbackRecipient
+      escalationManager
+      caller
+      expirationTime
+      currency
+      bond
+      disputer
+      settlementPayout
+      settlementRecipient
+      settlementResolution
+      assertionTimestamp
+      assertionBlockNumber
+      assertionHash
+      assertionLogIndex
+      disputeTimestamp
+      disputeBlockNumber
+      disputeHash
+      disputeLogIndex
+      settlementTimestamp
+      settlementBlockNumber
+      settlementHash
+      settlementLogIndex
+    }
+  }
+  `;
+  return query;
+}
+
+async function fetchRecentAssertions(
+  url: string,
+  queryName: string,
+  cutoffTime: number,
+) {
+  const result: OOV3GraphEntity[] = [];
+  const first = 500;
+  let lastAssertionTime: number | undefined = undefined;
+
+  let assertions = await fetchAssertions(
+    url,
+    makeRecentAssertionsQuery(queryName, first, cutoffTime),
+  );
+
+  while (assertions.length === first) {
+    result.push(...assertions);
+    lastAssertionTime = Number(
+      assertions[assertions.length - 1].assertionTimestamp,
+    );
+    assertions = await fetchAssertions(
+      url,
+      makeRecentAssertionsQuery(
+        queryName,
+        first,
+        cutoffTime,
+        lastAssertionTime,
+      ),
+    );
+  }
+
+  result.push(...assertions);
+  return result;
+}

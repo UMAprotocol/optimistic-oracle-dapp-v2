@@ -214,7 +214,13 @@ const serviceConfigs = [
 
 export function OracleDataProvider({ children }: { children: ReactNode }) {
   const { addErrorMessage } = useErrorContext();
-  const oraclesServices = oracles.Factory(config.subgraphs);
+  const oraclesServices = oracles.Factory(
+    config.subgraphs.map((subgraph) => ({
+      ...subgraph,
+      enableFastVerifyQuery: config.enableFastVerifyQuery,
+      verifyQueryDaysBack: config.verifyQueryDaysBack,
+    })),
+  );
 
   const [queries, dispatch] = useReducer(
     oracleDataReducer,
