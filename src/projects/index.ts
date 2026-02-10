@@ -1,3 +1,4 @@
+import type { Project as ProjectType } from "./abstract";
 import { AcrossV2 } from "./across";
 import { CozyFinanceProject } from "./cozyFinance";
 import { InfiniteGamesProject } from "./infiniteGames";
@@ -9,7 +10,7 @@ import { PredictFunProject } from "./predictFun";
 import { PrognozeProject } from "./prognoze";
 import { RatedProject } from "./rated";
 import { SherlockProject } from "./sherlock";
-import type { Project as ProjectType } from "./abstract";
+import { ProbableProject } from "./probable";
 
 export const projects = {
   across: new AcrossV2(),
@@ -23,6 +24,7 @@ export const projects = {
   prognoze: new PrognozeProject(),
   rated: new RatedProject(),
   sherlock: new SherlockProject(),
+  probable: new ProbableProject(),
   // register more projects here
 };
 
