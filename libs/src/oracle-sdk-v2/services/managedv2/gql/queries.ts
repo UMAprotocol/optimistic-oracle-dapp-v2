@@ -284,3 +284,116 @@ function makeTimeBasedQuery(
 
   return query;
 }
+
+export async function getRecentProposals(
+  url: string,
+  chainId: ChainId,
+  oracleType: OracleType,
+  daysBack: number = 7,
+) {
+  const chainName = chainsById[chainId];
+  const queryName = makeQueryName(oracleType, chainName) + "RecentProposals";
+  const cutoffTime = Math.floor(Date.now() / 1000) - daysBack * 24 * 60 * 60;
+
+  const result = await fetchRecentProposals(
+    url,
+    queryName,
+    oracleType,
+    cutoffTime,
+  );
+  return result;
+}
+
+function makeRecentProposalsQuery(
+  queryName: string,
+  oracleType: OracleType,
+  first: number,
+  cutoffTime: number,
+  lastProposalTime?: number,
+) {
+  const whereClause = lastProposalTime
+    ? `where: { proposalTimestamp_gt: "${cutoffTime}", proposalTimestamp_lt: "${lastProposalTime}", proposalTimestamp_not: null }`
+    : `where: { proposalTimestamp_gt: "${cutoffTime}", proposalTimestamp_not: null }`;
+
+  const query = gql`
+  query ${queryName} {
+    optimisticPriceRequests(
+      orderBy: proposalTimestamp,
+      orderDirection: desc,
+      first: ${first},
+      ${whereClause}
+    ) {
+      id
+      identifier
+      ancillaryData
+      time
+      requester
+      currency
+      reward
+      finalFee
+      proposer
+      proposedPrice
+      proposalExpirationTimestamp
+      disputer
+      settlementPrice
+      settlementPayout
+      settlementRecipient
+      state
+      requestTimestamp
+      requestBlockNumber
+      requestHash
+      requestLogIndex
+      proposalTimestamp
+      proposalBlockNumber
+      proposalHash
+      proposalLogIndex
+      disputeTimestamp
+      disputeBlockNumber
+      disputeHash
+      disputeLogIndex
+      settlementTimestamp
+      settlementBlockNumber
+      settlementHash
+      settlementLogIndex
+      customLiveness
+      bond
+      eventBased
+    }
+  }
+  `;
+  return query;
+}
+
+async function fetchRecentProposals(
+  url: string,
+  queryName: string,
+  oracleType: OracleType,
+  cutoffTime: number,
+) {
+  const result: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
+  const first = 1000;
+  let lastProposalTime: number | undefined = undefined;
+
+  let requests = await fetchPriceRequests(
+    url,
+    makeRecentProposalsQuery(queryName, oracleType, first, cutoffTime),
+  );
+
+  while (requests.length === first) {
+    result.push(...requests);
+    lastProposalTime = Number(requests[requests.length - 1].proposalTimestamp);
+    requests = await fetchPriceRequests(
+      url,
+      makeRecentProposalsQuery(
+        queryName,
+        oracleType,
+        first,
+        cutoffTime,
+        lastProposalTime,
+      ),
+    );
+  }
+
+  result.push(...requests);
+  return result;
+}

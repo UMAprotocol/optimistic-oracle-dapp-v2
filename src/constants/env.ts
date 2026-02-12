@@ -149,6 +149,8 @@ const Env = ss.object({
   NEXT_PUBLIC_MAX_SETTLED_REQUESTS: ss.optional(ss.string()),
 
   NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER: ss.optional(ss.string()),
+  NEXT_PUBLIC_ENABLE_FAST_VERIFY: ss.optional(ss.string()),
+  NEXT_PUBLIC_VERIFY_DAYS_BACK: ss.optional(ss.string()),
 });
 export type Env = ss.Infer<typeof Env>;
 
@@ -342,6 +344,8 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_MAX_SETTLED_REQUESTS,
     NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER:
       process.env.NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER,
+    NEXT_PUBLIC_ENABLE_FAST_VERIFY: process.env.NEXT_PUBLIC_ENABLE_FAST_VERIFY,
+    NEXT_PUBLIC_VERIFY_DAYS_BACK: process.env.NEXT_PUBLIC_VERIFY_DAYS_BACK,
   },
   Env,
 );
@@ -397,6 +401,8 @@ const Config = ss.object({
   providers: ProviderConfigs,
   maxSettledRequests: ss.string(),
   showManagedOracleBanner: ss.boolean(),
+  enableFastVerifyQuery: ss.boolean(),
+  verifyQueryDaysBack: ss.number(),
 });
 export type Config = ss.Infer<typeof Config>;
 
@@ -519,6 +525,8 @@ function parseEnv(env: Env): Config {
     maxSettledRequests: env.NEXT_PUBLIC_MAX_SETTLED_REQUESTS ?? "5000",
     showManagedOracleBanner:
       env.NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER === "true",
+    enableFastVerifyQuery: env.NEXT_PUBLIC_ENABLE_FAST_VERIFY !== "false",
+    verifyQueryDaysBack: Number(env.NEXT_PUBLIC_VERIFY_DAYS_BACK || "7"),
   };
 }
 
