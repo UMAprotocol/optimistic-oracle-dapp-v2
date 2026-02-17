@@ -15,7 +15,9 @@ export function VerifyCells({
   bond,
   chainId,
   tokenAddress,
+  oracleType,
 }: OracleQueryUI) {
+  const isManaged = oracleType === "Managed Optimistic Oracle V2";
   const valuesToShow = Array.isArray(valueText)
     ? valueText
     : [maybeGetValueTextFromOptions(valueText, proposeOptions)];
@@ -48,6 +50,7 @@ export function VerifyCells({
           <LivenessProgressBar
             startTime={timeMilliseconds}
             endTime={livenessEndsMilliseconds}
+            endedLabel={isManaged ? "Challenge Period Extended" : undefined}
           />
         </TD>
       ) : undefined}

@@ -25,7 +25,9 @@ export function ItemDetails({
     reward,
     valueText,
     proposeOptions,
+    oracleType,
   } = item;
+  const isManaged = oracleType === "Managed Optimistic Oracle V2";
 
   const valuesToShow = Array.isArray(valueText)
     ? valueText
@@ -55,12 +57,17 @@ export function ItemDetails({
       {livenessEndsMilliseconds !== undefined &&
       timeMilliseconds !== undefined ? (
         <ItemDetailsInnerWrapper>
-          <ItemDetailsText>Challenge Period Left</ItemDetailsText>
+          <ItemDetailsText>
+            {isManaged
+              ? "Minimum Challenge Period Left"
+              : "Challenge Period Left"}
+          </ItemDetailsText>
           <LivenessProgressBar
             startTime={timeMilliseconds}
             endTime={livenessEndsMilliseconds}
             fontSize={12}
             marginBottom={0}
+            endedLabel={isManaged ? "Challenge Period Extended" : undefined}
           />
         </ItemDetailsInnerWrapper>
       ) : undefined}
