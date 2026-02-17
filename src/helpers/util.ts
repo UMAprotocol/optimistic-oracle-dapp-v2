@@ -258,7 +258,7 @@ export function isValidChainId(
 export function isValidOracleType(
   oracleType: string | undefined,
 ): oracleType is OracleType {
-  return !!oracleType && oracleType in oracleTypes;
+  return !!oracleType && oracleTypes.includes(oracleType as OracleType);
 }
 
 export function isWagmiAddress(
