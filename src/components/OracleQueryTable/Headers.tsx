@@ -6,7 +6,7 @@ import styled from "styled-components";
  * @param page - the page of the app, used to determine which columns to show
  */
 export function Headers({ page }: { page: PageName }) {
-  const verify = ["Query", "Proposal", "Bond", "Challenge period left"];
+  const verify = ["Query", "Proposal", "Bond", "Minimum challenge period left"];
 
   const propose = ["Query", "Type", "Bond", "Reward"];
 
