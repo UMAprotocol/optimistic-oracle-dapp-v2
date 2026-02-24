@@ -61,9 +61,11 @@ export function Currency(props: Props) {
             href={`${makeBlockExplorerLink(address, chainId, "address")}`}
             className="border text-sm inline-flex gap-2 items-center border-dashed border-dark/50 hover:border-dark rounded-lg px-1 mr-1"
           >
-            {symbolForDisplay}
             {hasIcon ? (
-              <Icon className="w-[16px] h-[16px] inline-block" />
+              <>
+                {symbolForDisplay}
+                <Icon className="w-[16px] h-[16px] inline-block" />
+              </>
             ) : (
               symbolForDisplay
             )}
