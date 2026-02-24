@@ -67,7 +67,7 @@ export function ItemDetails({
             endTime={livenessEndsMilliseconds}
             fontSize={12}
             marginBottom={0}
-            endedLabel={isManaged ? "Challenge Period Extended" : undefined}
+            endedLabel={isManaged ? "Awaiting Settlement" : undefined}
           />
         </ItemDetailsInnerWrapper>
       ) : undefined}
