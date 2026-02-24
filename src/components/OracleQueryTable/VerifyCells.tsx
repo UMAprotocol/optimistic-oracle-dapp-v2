@@ -50,7 +50,7 @@ export function VerifyCells({
           <LivenessProgressBar
             startTime={timeMilliseconds}
             endTime={livenessEndsMilliseconds}
-            endedLabel={isManaged ? "Challenge Period Extended" : undefined}
+            endedLabel={isManaged ? "Awaiting Settlement" : undefined}
           />
         </TD>
       ) : undefined}
