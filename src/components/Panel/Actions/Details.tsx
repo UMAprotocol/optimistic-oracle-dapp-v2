@@ -8,8 +8,10 @@ export function Details({
   formattedLivenessEndsIn,
   tokenAddress,
   chainId,
+  oracleType,
 }: OracleQueryUI) {
   const hasReward = reward !== null;
+  const isManaged = oracleType === "Managed Optimistic Oracle V2";
 
   return (
     <div className="mb-4 bg-white rounded-md py-2 px-3">
@@ -45,7 +47,9 @@ export function Details({
       )}
       <TextWrapper>
         <Text>
-          Challenge period ends
+          {isManaged
+            ? "Minimum challenge period ends"
+            : "Challenge period ends"}
           <InformationIcon content={livenessInformation} />
         </Text>
         <Text>{formattedLivenessEndsIn}</Text>

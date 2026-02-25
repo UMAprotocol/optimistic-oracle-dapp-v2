@@ -21,6 +21,7 @@ import type {
   Assertion,
   ChainId,
   ChainName,
+  OracleType,
   ParsedOOV1GraphEntity,
   ParsedOOV2GraphEntity,
   Request,
@@ -146,13 +147,20 @@ export function isSupportedChain(chainId: number): chainId is ChainId {
   return chainId in chainsById;
 }
 
-function getRequestActionType(state: RequestState | undefined): ActionType {
+function getRequestActionType(
+  state: RequestState | undefined,
+  oracleType: OracleType,
+): ActionType {
   // goes to `propose` page
   if (state === "Requested") {
     return "propose";
   }
   // goes to `verify` page
   if (state === "Proposed") {
+    return "dispute";
+  }
+  // MOOv2 requests may still be disputed after challenge period ends
+  if (state === "Expired" && oracleType === "Managed Optimistic Oracle V2") {
     return "dispute";
   }
   // also goes to `verify` page
@@ -696,7 +704,7 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     oracleType,
     oracleAddress,
     chainName: getChainName(chainId),
-    actionType: getRequestActionType(state),
+    actionType: getRequestActionType(state, oracleType),
     moreInformation: [],
     project: "Unknown",
   };

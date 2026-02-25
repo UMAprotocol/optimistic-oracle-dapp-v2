@@ -12,6 +12,7 @@ interface Props {
   endTime: number;
   fontSize?: number;
   marginBottom?: number;
+  endedLabel?: string;
 }
 /**
  * A progress bar that shows the time remaining until a request or assertion
@@ -24,6 +25,7 @@ export function LivenessProgressBar({
   endTime,
   fontSize,
   marginBottom,
+  endedLabel = "Ended",
 }: Props) {
   const [now, setNow] = useState(new Date());
 
@@ -67,7 +69,7 @@ export function LivenessProgressBar({
           } as CSSProperties
         }
       >
-        {isEnded ? "Ended" : timeRemainingString}
+        {isEnded ? endedLabel : timeRemainingString}
       </Text>
       <_Root value={normalizedPercent}>
         <_Indicator
