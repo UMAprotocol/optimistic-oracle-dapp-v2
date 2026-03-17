@@ -113,7 +113,7 @@ export function useDeeplinkQuery() {
         ...(chainId ? { chainId } : {}),
         ...(oracleType ? { oracleType } : {}),
       });
-      router.replace(`${targetPath}?${qs}`);
+      router.replace(`${targetPath}?${qs}`, { scroll: false });
       return;
     }
 

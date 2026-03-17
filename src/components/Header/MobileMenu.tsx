@@ -2,7 +2,7 @@ import { CloseButton, PanelBase } from "@/components";
 import { navLinks, socialIcons, socialLinks } from "@/constants";
 import { isActiveRoute, isExternalLink } from "@/helpers";
 import NextLink from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import ExternalLink from "public/assets/icons/external-link.svg";
 
 import Logo from "public/assets/logo.svg";
@@ -17,7 +17,6 @@ interface Props {
 }
 export function MobileMenu({ panelOpen, closePanel }: Props) {
   const pathname = usePathname()!;
-  const searchParams = useSearchParams();
 
   return (
     <PanelBase panelOpen={panelOpen} closePanel={closePanel}>
@@ -34,9 +33,7 @@ export function MobileMenu({ panelOpen, closePanel }: Props) {
             <NavItem key={href}>
               <Link
                 onClick={closePanel}
-                href={`${href}${
-                  searchParams ? `/?${searchParams.toString()}` : ""
-                }`}
+                href={href}
                 target={isExternalLink(href) ? "_blank" : undefined}
                 style={
                   {
