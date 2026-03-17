@@ -2,7 +2,7 @@
 
 import { Filters, Header, Notifications, Panel } from "@/components";
 import { usePageContext } from "@/hooks";
-import { useQueryInSearchParams } from "@/hooks/useQueryInSearchParams";
+import { useDeeplinkQuery } from "@/hooks/useDeeplinkQuery";
 import type { ReactNode } from "react";
 import StyledComponentsRegistry from "./StyledComponentsRegistry";
 import { useFiltersInSearchParams } from "@/hooks/useFiltersInSearchParams";
@@ -11,7 +11,7 @@ import { Banners } from "./Banners";
 
 export function Layout({ children }: { children: ReactNode }) {
   const { page } = usePageContext();
-  useQueryInSearchParams();
+  useDeeplinkQuery();
   useFiltersInSearchParams();
 
   return (

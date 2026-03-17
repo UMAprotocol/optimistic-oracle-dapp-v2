@@ -26,8 +26,10 @@ function Wrapper({ query, page }: Args) {
       <PanelContext.Provider
         value={{
           panelOpen,
+          openedFromTable: false,
           setQueryId: () => null,
           openPanel: () => setPanelOpen(true),
+          openPanelWithQuery: () => undefined,
           closePanel: () => setPanelOpen(false),
           query,
         }}

@@ -399,10 +399,7 @@ const Config = ss.object({
   defaultLiveness: ss.string(),
   subgraphs: SubgraphConfigs,
   providers: ProviderConfigs,
-  maxSettledRequests: ss.string(),
   showManagedOracleBanner: ss.boolean(),
-  enableFastVerifyQuery: ss.boolean(),
-  verifyQueryDaysBack: ss.number(),
 });
 export type Config = ss.Infer<typeof Config>;
 
@@ -522,11 +519,8 @@ function parseEnv(env: Env): Config {
     defaultLiveness: env.NEXT_PUBLIC_DEFAULT_LIVENESS ?? "7600",
     subgraphs,
     providers,
-    maxSettledRequests: env.NEXT_PUBLIC_MAX_SETTLED_REQUESTS ?? "5000",
     showManagedOracleBanner:
       env.NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER === "true",
-    enableFastVerifyQuery: env.NEXT_PUBLIC_ENABLE_FAST_VERIFY !== "false",
-    verifyQueryDaysBack: Number(env.NEXT_PUBLIC_VERIFY_DAYS_BACK || "7"),
   };
 }
 
