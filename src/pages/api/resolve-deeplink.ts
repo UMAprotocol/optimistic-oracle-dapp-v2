@@ -309,7 +309,19 @@ export default async function handler(
     page = getPageForRequestState(requestEntity.state);
   }
 
-  res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
+  // Settled requests won't change state — cache indefinitely.
+  // Active requests may transition between states, so cap at 5 minutes.
+  if (page === "settled") {
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=31536000, stale-while-revalidate=31536000",
+    );
+  } else {
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=300, stale-while-revalidate=600",
+    );
+  }
 
   return res.status(200).json({
     type: best.type,
