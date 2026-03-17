@@ -1,4 +1,3 @@
-import { getProjectIcon } from "@/constants";
 import { CloseButton } from "../CloseButton";
 import { LoadingSkeleton } from "../LoadingSkeleton";
 import { TruncatedTitle } from "../TruncatedTitle";
@@ -10,9 +9,7 @@ type Props = {
   isLoading: boolean;
   close: () => void;
 };
-export function Title({ project, title, isLoading, close }: Props) {
-  const ProjectIcon = getProjectIcon(project);
-
+export function Title({ title, isLoading, close }: Props) {
   const buttonMinWidth = "1rem";
   const buttonMaxWidth = "1.25rem";
   const buttonPreferredWidth = "calc(0.9rem + 0.4vw)";
@@ -21,14 +18,7 @@ export function Title({ project, title, isLoading, close }: Props) {
   const iconStyles =
     "min-w-[1.25rem] flex items-center justify-center w-[clamp(1.25rem,0.8rem+2vw,2.5rem)] h-[clamp(1.25rem,0.8rem+2vw,2.5rem)] rounded-full";
   return (
-    <div className="grid grid-cols-[auto,1fr,auto] content-center gap-page-padding min-h-[84px] px-page-padding lg:px-7 py-5 bg-blue-grey-700">
-      {isLoading ? (
-        <div className={iconStyles}>
-          <LoadingSkeleton width="100%" height="100%" borderRadius="50%" />
-        </div>
-      ) : (
-        <ProjectIcon className={iconStyles} />
-      )}
+    <div className="grid grid-cols-[1fr,auto] content-center gap-page-padding min-h-[84px] px-page-padding lg:px-7 py-5 bg-blue-grey-700">
       <h1
         className="inline-flex items-center max-w-[400px] text-lg text-light"
         id="panel-title"

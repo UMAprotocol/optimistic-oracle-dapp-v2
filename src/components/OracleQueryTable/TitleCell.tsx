@@ -1,4 +1,3 @@
-import { getProjectIcon } from "@/constants";
 import type { OracleQueryUI } from "@/types";
 import { ChainNameAndIcon } from "../ChainNameAndIcon";
 import { TruncatedTitle } from "../TruncatedTitle";
@@ -28,13 +27,11 @@ export function TitleCell({
   timeFormatted,
   expiryType,
 }: OracleQueryUI) {
-  const ProjectIcon = getProjectIcon(project);
   const isKnownProject = project !== "Unknown";
 
   return (
     <TitleTD>
       <TitleWrapper>
-        <ProjectIcon className="w-[clamp(24px,3vw,40px)] h-[clamp(24px,3vw,40px)] min-w-[24px]" />
         <TextWrapper>
           <TitleHeader>
             <TruncatedTitle title={title} />
