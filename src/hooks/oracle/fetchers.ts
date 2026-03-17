@@ -116,23 +116,25 @@ export async function fetchProposeRequests(
 
 export async function fetchSettledRequests(
   config: SubgraphConfig,
+  maxResults?: number,
 ): Promise<Request[]> {
   const { urls, chainId, type } = config;
   const getSettled = isManaged(type)
     ? getManagedSettledRequests
     : getOOV1SettledRequests;
   const raw = await fetchWithUrlFallback(urls, (url) =>
-    getSettled(url, chainId, type),
+    getSettled(url, chainId, type, maxResults),
   );
   return parseRequests(raw, config);
 }
 
 export async function fetchSettledAssertions(
   config: SubgraphConfig,
+  maxResults?: number,
 ): Promise<Assertion[]> {
   const { urls, chainId } = config;
   const raw = await fetchWithUrlFallback(urls, (url) =>
-    getSettledAssertions(url, chainId),
+    getSettledAssertions(url, chainId, maxResults),
   );
   return parseAssertions(raw, config);
 }

@@ -11,6 +11,8 @@ import {
   splitConfigsByType,
 } from "./fetchers";
 
+const maxSettledPerSubgraph = Number(config.maxSettledRequests);
+
 const { requestConfigs, assertionConfigs } = splitConfigsByType(
   config.subgraphs,
 );
@@ -135,7 +137,8 @@ export function useSettledData(enabled: boolean): OracleQueryResult {
         subgraphConfig.chainId,
         subgraphConfig.type,
       ],
-      queryFn: () => fetchSettledRequests(subgraphConfig),
+      queryFn: () =>
+        fetchSettledRequests(subgraphConfig, maxSettledPerSubgraph),
       staleTime: 5 * 60_000, // 5 min stale
       enabled,
       refetchOnWindowFocus: false,
@@ -151,7 +154,8 @@ export function useSettledData(enabled: boolean): OracleQueryResult {
         subgraphConfig.chainId,
         subgraphConfig.type,
       ],
-      queryFn: () => fetchSettledAssertions(subgraphConfig),
+      queryFn: () =>
+        fetchSettledAssertions(subgraphConfig, maxSettledPerSubgraph),
       staleTime: 5 * 60_000,
       enabled,
       refetchOnWindowFocus: false,

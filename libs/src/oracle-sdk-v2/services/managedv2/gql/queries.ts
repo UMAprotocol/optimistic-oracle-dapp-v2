@@ -62,25 +62,31 @@ export const managedFields = `
 
 /**
  * Paginate through subgraph results using skip, then time-based cursor.
+ * @param maxResults - stop paginating once this many results have been collected
  */
 async function fetchAllMatching(
   url: string,
   queryBuilder: (first: number, skip: number) => string,
   timeQueryBuilder?: (first: number, lastTime: number) => string,
+  maxResults = 5000,
 ) {
   const result: (OOV1GraphEntity | OOV2GraphEntity)[] = [];
   let skip = 0;
   const first = 1000;
   let requests = await fetchPriceRequests(url, queryBuilder(first, skip));
 
-  while (requests.length > 0 && skip < 5000) {
+  while (requests.length > 0 && skip < 5000 && result.length < maxResults) {
     result.push(...requests);
     skip += first;
     requests = await fetchPriceRequests(url, queryBuilder(first, skip));
   }
 
-  if (timeQueryBuilder && requests.length === first) {
-    while (requests.length === first) {
+  if (
+    timeQueryBuilder &&
+    requests.length === first &&
+    result.length < maxResults
+  ) {
+    while (requests.length === first && result.length < maxResults) {
       result.push(...requests);
       const lastTime = Number(requests[requests.length - 1].time);
       requests = await fetchPriceRequests(
@@ -88,7 +94,9 @@ async function fetchAllMatching(
         timeQueryBuilder(first, lastTime),
       );
     }
-    result.push(...requests);
+    if (result.length < maxResults) {
+      result.push(...requests);
+    }
   }
 
   return result;
@@ -157,12 +165,11 @@ export async function getSettledRequests(
   url: string,
   chainId: ChainId,
   oracleType: OracleType,
+  maxResults?: number,
 ) {
   const chainName = chainsById[chainId];
   const queryName = makeQueryName(oracleType, chainName) + "SettledRequests";
 
-  // No time-based fallback — cap at 5000 results per subgraph to avoid
-  // loading the entire settlement history.
   return fetchAllMatching(
     url,
     (first, skip) => gql`
@@ -174,6 +181,8 @@ export async function getSettledRequests(
       ) { ${managedFields} }
     }
   `,
+    undefined,
+    maxResults,
   );
 }
 

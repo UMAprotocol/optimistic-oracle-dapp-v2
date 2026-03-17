@@ -399,6 +399,7 @@ const Config = ss.object({
   defaultLiveness: ss.string(),
   subgraphs: SubgraphConfigs,
   providers: ProviderConfigs,
+  maxSettledRequests: ss.string(),
   showManagedOracleBanner: ss.boolean(),
 });
 export type Config = ss.Infer<typeof Config>;
@@ -519,6 +520,7 @@ function parseEnv(env: Env): Config {
     defaultLiveness: env.NEXT_PUBLIC_DEFAULT_LIVENESS ?? "7600",
     subgraphs,
     providers,
+    maxSettledRequests: env.NEXT_PUBLIC_MAX_SETTLED_REQUESTS ?? "1000",
     showManagedOracleBanner:
       env.NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER === "true",
   };

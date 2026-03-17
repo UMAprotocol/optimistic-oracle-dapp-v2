@@ -42,17 +42,19 @@ export const assertionFields = `
 
 /**
  * Paginate through subgraph results using skip.
+ * @param maxResults - stop paginating once this many results have been collected
  */
 async function fetchAllMatching(
   url: string,
   queryBuilder: (first: number, skip: number) => string,
+  maxResults = 5000,
 ) {
   const result: OOV3GraphEntity[] = [];
   let skip = 0;
   const first = 500;
   let assertions = await fetchAssertions(url, queryBuilder(first, skip));
 
-  while (assertions.length > 0 && skip < 5000) {
+  while (assertions.length > 0 && skip < 5000 && result.length < maxResults) {
     result.push(...assertions);
     skip += first;
     assertions = await fetchAssertions(url, queryBuilder(first, skip));
@@ -83,7 +85,11 @@ export async function getVerifyAssertions(url: string, chainId: ChainId) {
 
 // --- Settled: assertions with a settlement hash ---
 
-export async function getSettledAssertions(url: string, chainId: ChainId) {
+export async function getSettledAssertions(
+  url: string,
+  chainId: ChainId,
+  maxResults?: number,
+) {
   const chainName = chainsById[chainId];
   const queryName =
     makeQueryName("Optimistic Oracle V3", chainName) + "SettledAssertions";
@@ -99,6 +105,7 @@ export async function getSettledAssertions(url: string, chainId: ChainId) {
       ) { ${assertionFields} }
     }
   `,
+    maxResults,
   );
 }
 
