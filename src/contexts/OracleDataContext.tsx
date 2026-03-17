@@ -4,47 +4,41 @@ import type { ProviderConfig } from "@/constants";
 import { config } from "@/constants";
 import {
   assertionToOracleQuery,
-  getPageForQuery,
   requestToOracleQuery,
-  sortQueries,
+  sortByTimeCreated,
 } from "@/helpers";
-import { useErrorContext } from "@/hooks";
+import { useVerifyData, useProposeData, useSettledData } from "@/hooks/oracle";
+import type { OracleQueryResult } from "@/hooks/oracle";
 import { projects } from "@/projects";
 import type { OracleQueryUI } from "@/types";
 import type { ServiceFactories, ServiceFactory } from "@libs/oracle-sdk-v2";
-import { Client } from "@libs/oracle-sdk-v2";
+import { PageContext } from "./PageContext";
 import {
   oracle1Ethers,
   oracle2Ethers,
   oracle3Ethers,
-  oracles,
   skinny1Ethers,
   oracleManagedEthers,
 } from "@libs/oracle-sdk-v2/services";
 import type { Api } from "@libs/oracle-sdk-v2/services/oraclev1/ethers";
-import type {
-  Assertion,
-  Assertions,
-  ChainId,
-  OracleType,
-  Request,
-  Requests,
-} from "@shared/types";
-import unionWith from "lodash/unionWith";
+import type { ChainId, OracleType } from "@shared/types";
 import type { ReactNode } from "react";
-import { createContext, useEffect, useReducer, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+} from "react";
 
-const maxSettledRequests = Number(config.maxSettledRequests);
-//TODO: hate this approach, will need to refactor in future, current services interface does not make it easy to define custom functions
-// this will be moved somewhere else in future pr.
+// --- Ethers APIs (module-level, used for transaction updates) ---
 type EthersServicesList = [
   ServiceFactories,
   Partial<Record<OracleType, Partial<Record<ChainId, Api>>>>,
 ];
-// keep a list we can iterate easily over
-export const oracleEthersApiList: Array<[ChainId, Api]> = [];
+const oracleEthersApiList: Array<[ChainId, Api]> = [];
 const ethersServicesListInit: EthersServicesList = [[], {}];
-const [oracleEthersServices, oracleEthersApis] = config.providers
+const [oracleEthersServices] = config.providers
   .map((config): [ProviderConfig, ServiceFactory, Api] => {
     if (config.type === "Optimistic Oracle V1")
       return [config, ...oracle1Ethers.Factory(config)];
@@ -75,28 +69,24 @@ const [oracleEthersServices, oracleEthersApis] = config.providers
     ethersServicesListInit,
   );
 
-// This exposes any api calls to services to other parts of app
-export { oracleEthersApis };
-
+// --- Context types ---
 export type OracleQueryList = OracleQueryUI[];
 export type OracleQueryTable = Record<string, OracleQueryUI>;
-export type RequestTable = Record<string, Request>;
-export type AssertionTable = Record<string, Assertion>;
 export type Errors = (Error | undefined)[];
 
 export interface OracleDataContextState {
-  all: OracleQueryTable | undefined;
-  verify: OracleQueryList | undefined;
-  propose: OracleQueryList | undefined;
-  settled: OracleQueryList | undefined;
+  all: OracleQueryTable;
+  verify: OracleQueryList;
+  propose: OracleQueryList;
+  settled: OracleQueryList;
   errors: Errors;
 }
 
 export const defaultOracleDataContextState: OracleDataContextState = {
-  all: undefined,
-  verify: undefined,
-  propose: undefined,
-  settled: undefined,
+  all: {},
+  verify: [],
+  propose: [],
+  settled: [],
   errors: [],
 };
 
@@ -104,202 +94,118 @@ export const OracleDataContext = createContext<OracleDataContextState>(
   defaultOracleDataContextState,
 );
 
-type DispatchAction<Type extends string, Data> = {
-  type: Type;
-  data: Data;
-};
-// replace many requests, used when querying data from the graph
-type ProcessRequestsAction = DispatchAction<"requests", Requests>;
-// same thing with assertions
-type ProcessAssertionsAction = DispatchAction<"assertions", Assertions>;
+// --- Helpers ---
 
-type DispatchActions = ProcessRequestsAction | ProcessAssertionsAction;
+function convertResults(result: OracleQueryResult): OracleQueryUI[] {
+  const queries: OracleQueryUI[] = [];
 
-function mergeData(
-  prev: OracleQueryUI | undefined,
-  next: OracleQueryUI,
-): OracleQueryUI {
-  // we must merge data in more information, since the next data may be mission previously queried data
-  const moreInformation = unionWith(
-    prev?.moreInformation ?? [],
-    next?.moreInformation ?? [],
-    (a, b) => a.title === b.title,
-  );
-  return {
-    ...(prev || {}),
-    ...next,
-    moreInformation,
-  };
-}
-function DataReducerFactory<Input extends Request | Assertion>(
-  converter: (input: Input) => OracleQueryUI,
-) {
-  return (
-    state: OracleDataContextState,
-    updates: Input[],
-  ): OracleDataContextState => {
-    const { all = {} } = state;
-    updates.forEach((update) => {
-      const queryUpdate = converter(update);
-      // TODO: do this when matching with project. Currently logic for converting requests and assertions is separate.
-      // We should extract metadata for project and identifier in one place.
-      const project = Object.values(projects).find(
-        (p) => p.name === queryUpdate.project,
-      );
-      if (project?.hideRequests) {
-        return; // remove request from context
-      }
-
-      all[update.id] = mergeData(all[update.id], queryUpdate);
-    });
-    const init: {
-      verify: OracleQueryList;
-      propose: OracleQueryList;
-      settled: OracleQueryList;
-    } = {
-      verify: [],
-      propose: [],
-      settled: [],
-    };
-    const queries = Object.values(all).reduce((result, query) => {
-      const pageForQuery = getPageForQuery(query);
-      result[pageForQuery].push(query);
-      return result;
-    }, init);
-
-    const sorted = sortQueries(queries);
-    return {
-      ...state,
-      all: { ...all },
-      verify: sorted.verify,
-      propose: sorted.propose,
-      // limit settled length. this is adjustable through env but defaults to 5k if not specified
-      settled: sorted.settled.slice(0, maxSettledRequests),
-    };
-  };
-}
-
-const requestReducer = DataReducerFactory(requestToOracleQuery);
-const assertionReducer = DataReducerFactory(assertionToOracleQuery);
-
-export function oracleDataReducer(
-  state: OracleDataContextState,
-  action: DispatchActions,
-): OracleDataContextState {
-  if (action.type === "requests") {
-    return requestReducer(state, action.data);
-  } else if (action.type === "assertions") {
-    return assertionReducer(state, action.data);
-  }
-  return state;
-}
-
-const serviceConfigs = [
-  ...config.providers.map((provider) => {
-    if (provider.source === "provider") {
-      return {
-        ...provider,
-        isSubgraphDefined: Boolean(
-          config.subgraphs.find(
-            (subgraph) =>
-              subgraph.type === provider.type &&
-              subgraph.chainId === provider.chainId,
-          ),
-        ),
-      };
+  for (const req of result.requests) {
+    const query = requestToOracleQuery(req);
+    const project = Object.values(projects).find(
+      (p) => p.name === query.project,
+    );
+    if (!project?.hideRequests) {
+      queries.push(query);
     }
-  }),
-  ...config.subgraphs,
-];
+  }
+
+  for (const assertion of result.assertions) {
+    const query = assertionToOracleQuery(assertion);
+    const project = Object.values(projects).find(
+      (p) => p.name === query.project,
+    );
+    if (!project?.hideRequests) {
+      queries.push(query);
+    }
+  }
+
+  return sortByTimeCreated(queries);
+}
+
+function buildAllTable(
+  ...lists: (OracleQueryUI[] | undefined)[]
+): OracleQueryTable {
+  const all: OracleQueryTable = {};
+  for (const list of lists) {
+    if (!list) continue;
+    for (const query of list) {
+      all[query.id] = query;
+    }
+  }
+  return all;
+}
+
+// --- Provider ---
 
 export function OracleDataProvider({ children }: { children: ReactNode }) {
-  const { addErrorMessage } = useErrorContext();
-  const oraclesServices = oracles.Factory(
-    config.subgraphs.map((subgraph) => ({
-      ...subgraph,
-      enableFastVerifyQuery: config.enableFastVerifyQuery,
-      verifyQueryDaysBack: config.verifyQueryDaysBack,
-    })),
+  const { page } = useContext(PageContext);
+
+  // Each page fetches only its own data
+  const verifyResult = useVerifyData();
+  const proposeResult = useProposeData(page === "propose");
+  const settledResult = useSettledData(page === "settled");
+
+  // Convert raw requests/assertions to OracleQueryUI, sorted.
+  // Results trickle in as each subgraph query resolves — no need to wait for all.
+  const verify = useMemo(
+    () => convertResults(verifyResult),
+    [verifyResult.requests, verifyResult.assertions],
   );
 
-  const [queries, dispatch] = useReducer(
-    oracleDataReducer,
-    defaultOracleDataContextState,
+  const propose = useMemo(
+    () => convertResults(proposeResult),
+    [proposeResult.requests, proposeResult.assertions],
   );
-  const [errors, setErrors] = useState<Errors>(
-    defaultOracleDataContextState.errors,
+
+  const settled = useMemo(
+    () => convertResults(settledResult),
+    [settledResult.requests, settledResult.assertions],
   );
+
+  // Defer heavy downstream rendering so the UI stays responsive while
+  // subgraph results trickle in. React will render with stale data first,
+  // then update in a lower-priority pass that can be interrupted.
+  const deferredVerify = useDeferredValue(verify);
+  const deferredPropose = useDeferredValue(propose);
+  const deferredSettled = useDeferredValue(settled);
+
+  // Lookup table for useQueryById (panel)
+  const all = useMemo(
+    () => buildAllTable(deferredVerify, deferredPropose, deferredSettled),
+    [deferredVerify, deferredPropose, deferredSettled],
+  );
+
+  // Connect ethers services for transaction updates
   useEffect(() => {
-    // its important this client only gets initialized once
-    Client([...oraclesServices, ...oracleEthersServices], {
-      requests: (requests) => dispatch({ type: "requests", data: requests }),
-      assertions: (assertions) =>
-        dispatch({ type: "assertions", data: assertions }),
-      errors: setErrors,
+    oracleEthersServices.forEach((factory) => {
+      factory({
+        // Ethers transaction updates are rare — for now they're no-ops since
+        // the per-page hooks will pick up changes on next refetch
+        requests: () => {},
+        assertions: () => {},
+      });
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //  for provider configs that don't have a subgraph, fetch those events immediately
-  useEffect(() => {
-    serviceConfigs.forEach((service) => {
-      if (service?.source === "provider" && !service.isSubgraphDefined) {
-        const web3Fallback =
-          oracleEthersApis?.[service.type]?.[service.chainId];
-        web3Fallback?.queryLatestRequests &&
-          web3Fallback.queryLatestRequests(
-            service.blockHistoryLimit ?? 100000,
-            service.deployBlock,
-          );
-      }
-    });
-  }, []);
+  const errors: Errors = [
+    ...verifyResult.errors,
+    ...proposeResult.errors,
+    ...settledResult.errors,
+  ];
 
-  useEffect(() => {
-    errors.forEach((error, i) => {
-      if (error == undefined) return;
-      // index of service must align with order configs are passed into client
-      const serviceConfig = serviceConfigs[i];
-      console.warn({ serviceConfig, error, i });
-      // this error is coming from ether provider queries, this would mean fallback is broken
-      if (serviceConfig?.source !== "gql") {
-        addErrorMessage({
-          text: "Oracle data is not loading as expected. If issues persist, verify requests with our CLI Tool",
-          link: {
-            text: "Oracle CLI Tool",
-            href: "https://github.com/UMAprotocol/oo-dispute-cli",
-          },
-        });
-        return;
-      }
-      const web3Fallback =
-        oracleEthersApis?.[serviceConfig.type]?.[serviceConfig.chainId];
-      if (web3Fallback && web3Fallback.queryLatestRequests) {
-        const web3Config = config.providers.find(
-          (c) =>
-            c.type == serviceConfig.type && c.chainId == serviceConfig.chainId,
-        );
-        web3Fallback.queryLatestRequests(
-          web3Config?.blockHistoryLimit ?? 100000,
-          web3Config?.deployBlock,
-        );
-        // if we reach here, theres a subgraph thats not working, but we can still fetch limited  history through provider
-        addErrorMessage({
-          text: "The Graph is experiencing downtime, site may be slower than normal",
-        });
-      } else {
-        // if we reach here, we dont have a fallback for a specific subgraph, technically this shouldnt ever happen though
-        // if the app is configured correctly
-        addErrorMessage({
-          text: "Currently unable to fetch all data, check back later",
-        });
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errors]);
+  const value = useMemo(
+    () => ({
+      all,
+      verify: deferredVerify,
+      propose: deferredPropose,
+      settled: deferredSettled,
+      errors,
+    }),
+    [all, deferredVerify, deferredPropose, deferredSettled, errors],
+  );
 
   return (
-    <OracleDataContext.Provider value={{ ...queries, errors }}>
+    <OracleDataContext.Provider value={value}>
       {children}
     </OracleDataContext.Provider>
   );
