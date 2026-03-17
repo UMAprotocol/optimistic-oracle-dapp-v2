@@ -31,15 +31,15 @@ Client redirects to correct page if needed, opens panel
 
 ### Key files
 
-| File | Purpose |
-|------|---------|
-| `src/pages/api/resolve-deeplink.ts` | API route — queries subgraphs, scores results, returns best match with target page |
-| `src/hooks/useDeeplinkQuery.ts` | Client hook — Tanstack Query fetch, page redirect, panel open |
-| `src/hooks/useDeeplinkParams.ts` | Shared deeplink URL param keys and parser |
-| `src/contexts/PanelContext.tsx` | Panel state — added `openPanelWithQuery` for deeplink-resolved entities, `openedFromTable` to distinguish row clicks from deeplinks |
-| `libs/.../oraclev1/gql/queries.ts` | Added `getRequestByHash` (4-alias GQL), `getRequestByDetails` (legacy lookup) |
-| `libs/.../managedv2/gql/queries.ts` | Added `getRequestByHash` for managed oracle |
-| `libs/.../oraclev3/gql/queries.ts` | Added `getAssertionByHash` (3-alias GQL) |
+| File                                | Purpose                                                                                                                             |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `src/pages/api/resolve-deeplink.ts` | API route — queries subgraphs, scores results, returns best match with target page                                                  |
+| `src/hooks/useDeeplinkQuery.ts`     | Client hook — Tanstack Query fetch, page redirect, panel open                                                                       |
+| `src/hooks/useDeeplinkParams.ts`    | Shared deeplink URL param keys and parser                                                                                           |
+| `src/contexts/PanelContext.tsx`     | Panel state — added `openPanelWithQuery` for deeplink-resolved entities, `openedFromTable` to distinguish row clicks from deeplinks |
+| `libs/.../oraclev1/gql/queries.ts`  | Added `getRequestByHash` (4-alias GQL), `getRequestByDetails` (legacy lookup)                                                       |
+| `libs/.../managedv2/gql/queries.ts` | Added `getRequestByHash` for managed oracle                                                                                         |
+| `libs/.../oraclev3/gql/queries.ts`  | Added `getAssertionByHash` (3-alias GQL)                                                                                            |
 
 ### How the API route works
 
@@ -68,18 +68,15 @@ Client redirects to correct page if needed, opens panel
 ### Supported deeplink formats
 
 **Hash-based (primary):**
+
 ```
 /?transactionHash=0x...&eventIndex=239&chainId=137&oracleType=Optimistic+Oracle+V2
 ```
+
 `chainId` and `oracleType` are optional — if omitted, all subgraphs are searched.
 
 **Legacy (detail-based):**
+
 ```
 /?chainId=137&oracleType=OptimisticV2&requester=0x...&timestamp=...&identifier=...&ancillaryData=...
 ```
-
-## Settled page limit
-
-Settled page data is capped at **5000 requests per subgraph**. Previously the `getSettledRequests` queries used time-based cursor pagination after the skip limit, fetching the entire settlement history (unbounded). The time-based fallback was removed for settled queries in both `oraclev1` and `managedv2`. V3 assertions were already capped at 5000.
-
-This was done to reduce the data volume on the settled page, which was loading 200+ MB of resources and causing UI lockups.
