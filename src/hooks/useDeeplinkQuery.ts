@@ -96,7 +96,9 @@ export function useDeeplinkQuery() {
     // written by PanelContext, not by an inbound deeplink.
     enabled: hasDeeplink && !openedFromTable,
     staleTime: Infinity,
-    retry: 1,
+    // Retry a few times to allow subgraph indexing to catch up for fresh transactions.
+    retry: 3,
+    retryDelay: (attempt) => Math.min(attempt * 3000, 10000),
   });
 
   useEffect(() => {
