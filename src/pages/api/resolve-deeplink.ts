@@ -29,6 +29,15 @@ function isTransactionHash(hash: string | undefined): hash is string {
   return !!hash && hash.startsWith("0x") && hash.length === 66;
 }
 
+// Legacy short-form oracle type mapping (used by old deeplink URLs)
+const LEGACY_ORACLE_TYPE_MAP: Record<string, OracleType> = {
+  Optimistic: "Optimistic Oracle V1",
+  OptimisticV2: "Optimistic Oracle V2",
+  OptimisticV3: "Optimistic Oracle V3",
+  Skinny: "Skinny Optimistic Oracle",
+  ManagedV2: "Managed Optimistic Oracle V2",
+};
+
 const VALID_ORACLE_TYPES: OracleType[] = [
   "Optimistic Oracle V1",
   "Optimistic Oracle V2",
@@ -37,8 +46,10 @@ const VALID_ORACLE_TYPES: OracleType[] = [
   "Managed Optimistic Oracle V2",
 ];
 
-function isValidOracleType(t: string | undefined): t is OracleType {
-  return !!t && VALID_ORACLE_TYPES.includes(t as OracleType);
+function normalizeOracleType(t: string | undefined): OracleType | undefined {
+  if (!t) return undefined;
+  if (VALID_ORACLE_TYPES.includes(t as OracleType)) return t as OracleType;
+  return LEGACY_ORACLE_TYPE_MAP[t];
 }
 
 function isV3(type: OracleType) {
@@ -255,12 +266,13 @@ export default async function handler(
       : undefined;
 
   // Filter configs based on provided chainId and oracleType
+  const normalizedOracleType = normalizeOracleType(oracleType);
   let configs = config.subgraphs;
   if (chainId) {
     configs = configs.filter((c) => c.chainId === chainId);
   }
-  if (isValidOracleType(oracleType)) {
-    configs = configs.filter((c) => c.type === oracleType);
+  if (normalizedOracleType) {
+    configs = configs.filter((c) => c.type === normalizedOracleType);
   }
 
   if (configs.length === 0) {
