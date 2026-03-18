@@ -1,9 +1,12 @@
-export function buildSearchParams(
-  params: Record<
-    string,
-    number | string | boolean | Array<number | string | boolean>
-  >,
-): string {
+type ParamValue =
+  | number
+  | string
+  | boolean
+  | null
+  | undefined
+  | Array<number | string | boolean>;
+
+export function buildSearchParams(params: Record<string, ParamValue>): string {
   const searchParams = new URLSearchParams();
   for (const key in params) {
     const value = params[key];

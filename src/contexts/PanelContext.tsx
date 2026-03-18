@@ -3,7 +3,7 @@
 import { makeUrlParamsForQuery } from "@/helpers";
 import { useQueryById } from "@/hooks";
 import { useUrlBar } from "@/hooks/useUrlBar";
-import { DEEPLINK_PARAM_KEYS } from "@/hooks/useDeeplinkParams";
+import { DEEPLINK_PARAM_KEYS } from "@/helpers/deeplink";
 import type { OracleQueryUI } from "@/types";
 import type { ReactNode } from "react";
 import {

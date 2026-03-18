@@ -5,7 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { usePanelContext, usePageContext } from "./contexts";
-import { parseDeeplinkParams } from "./useDeeplinkParams";
+import {
+  parseDeeplinkParams,
+  parseLegacyDeeplinkParams,
+  hasLegacyDeeplinkParams,
+} from "@/helpers/deeplink";
 import { buildSearchParams } from "@shared/utils/http";
 import type { OracleQueryUI } from "@/types";
 import type {
@@ -35,21 +39,10 @@ type DeeplinkResponse = {
   error?: string;
 };
 
-type FetchParams = {
-  transactionHash: string;
-  eventIndex?: string | null;
-  chainId?: number | null;
-  oracleType?: string | null;
-};
-
-async function resolveDeeplink(params: FetchParams): Promise<DeeplinkResponse> {
-  const qs = buildSearchParams({
-    transactionHash: params.transactionHash,
-    ...(params.eventIndex ? { eventIndex: params.eventIndex } : {}),
-    ...(params.chainId ? { chainId: params.chainId } : {}),
-    ...(params.oracleType ? { oracleType: params.oracleType } : {}),
-  });
-
+async function resolveDeeplink(
+  params: Record<string, string | number | null | undefined>,
+): Promise<DeeplinkResponse> {
+  const qs = buildSearchParams(params);
   const res = await fetch(`/api/resolve-deeplink?${qs}`);
   if (!res.ok) throw new Error("Deeplink resolution failed");
   return res.json() as Promise<DeeplinkResponse>;
@@ -77,21 +70,33 @@ export function useDeeplinkQuery() {
   const searchParams = useSearchParams();
   const { transactionHash, eventIndex, chainId, oracleType } =
     parseDeeplinkParams(searchParams);
+  const legacyParams = parseLegacyDeeplinkParams(searchParams);
   const { page } = usePageContext();
   const router = useRouter();
   const { openPanelWithQuery, openedFromTable } = usePanelContext();
 
-  const hasDeeplink = isTransactionHash(transactionHash ?? undefined);
+  const hasHashDeeplink = isTransactionHash(transactionHash ?? undefined);
+  const hasLegacyDeeplink =
+    !hasHashDeeplink && hasLegacyDeeplinkParams(legacyParams);
+  const hasDeeplink = hasHashDeeplink || hasLegacyDeeplink;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["deeplink", transactionHash, eventIndex, chainId, oracleType],
+    queryKey: hasHashDeeplink
+      ? ["deeplink", "hash", transactionHash, eventIndex, chainId, oracleType]
+      : [
+          "deeplink",
+          "legacy",
+          legacyParams.chainId,
+          legacyParams.oracleType,
+          legacyParams.requester,
+          legacyParams.timestamp,
+          legacyParams.identifier,
+          legacyParams.ancillaryData,
+        ],
     queryFn: () =>
-      resolveDeeplink({
-        transactionHash: transactionHash!,
-        eventIndex,
-        chainId,
-        oracleType,
-      }),
+      hasHashDeeplink
+        ? resolveDeeplink({ transactionHash, eventIndex, chainId, oracleType })
+        : resolveDeeplink(legacyParams),
     // Skip when the panel was opened from a table row click — URL params were
     // written by PanelContext, not by an inbound deeplink.
     enabled: hasDeeplink && !openedFromTable,
@@ -109,12 +114,15 @@ export function useDeeplinkQuery() {
     const currentPath = page === "verify" ? "/" : `/${page}`;
 
     if (currentPath !== targetPath) {
-      const qs = buildSearchParams({
-        transactionHash: transactionHash!,
-        ...(eventIndex ? { eventIndex } : {}),
-        ...(chainId ? { chainId } : {}),
-        ...(oracleType ? { oracleType } : {}),
-      });
+      // Preserve whichever params brought us here
+      const qs = hasHashDeeplink
+        ? buildSearchParams({
+            transactionHash,
+            eventIndex,
+            chainId,
+            oracleType,
+          })
+        : buildSearchParams(legacyParams);
       router.replace(`${targetPath}?${qs}`, { scroll: false });
       return;
     }
