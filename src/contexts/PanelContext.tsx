@@ -69,6 +69,7 @@ export function PanelProvider({ children }: { children: ReactNode }) {
       if (!searchParams?.has("transactionHash")) {
         setPanelOpen(false);
         setDirectQuery(undefined);
+        setOpenedFromTable(false);
       }
     }
 
