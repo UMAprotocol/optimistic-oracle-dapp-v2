@@ -7,12 +7,8 @@ import type {
   OOV3GraphEntity,
   OracleType,
 } from "@shared/types";
-import {
-  getRequestByHash as getOOV1RequestByHash,
-  getRequestByDetails as getOOV1RequestByDetails,
-} from "@libs/oracle-sdk-v2/services/oraclev1/gql/queries";
-import { getRequestByHash as getManagedRequestByHash } from "@libs/oracle-sdk-v2/services/managedv2/gql/queries";
-import { getAssertionByHash } from "@libs/oracle-sdk-v2/services/oraclev3/gql/queries";
+import { searchByHash, searchByDetails } from "./_gql";
+import { searchByHashViaRpc } from "./_rpc";
 
 type Page = "verify" | "propose" | "settled";
 
@@ -25,9 +21,12 @@ type DeeplinkResult = {
   page: Page;
 };
 
-function isTransactionHash(hash: string | undefined): hash is string {
-  return !!hash && hash.startsWith("0x") && hash.length === 66;
-}
+export type ScoredResult = {
+  type: "request" | "assertion";
+  entity: OOV1GraphEntity | OOV2GraphEntity | OOV3GraphEntity;
+  config: SubgraphConfig;
+  score: number;
+};
 
 // Legacy short-form oracle type mapping (used by old deeplink URLs)
 const LEGACY_ORACLE_TYPE_MAP: Record<string, OracleType> = {
@@ -46,17 +45,21 @@ const VALID_ORACLE_TYPES: OracleType[] = [
   "Managed Optimistic Oracle V2",
 ];
 
+function isTransactionHash(hash: string | undefined): hash is string {
+  return !!hash && hash.startsWith("0x") && hash.length === 66;
+}
+
 function normalizeOracleType(t: string | undefined): OracleType | undefined {
   if (!t) return undefined;
   if (VALID_ORACLE_TYPES.includes(t as OracleType)) return t as OracleType;
   return LEGACY_ORACLE_TYPE_MAP[t];
 }
 
-function isV3(type: OracleType) {
+export function isV3(type: OracleType) {
   return type === "Optimistic Oracle V3";
 }
 
-function isManaged(type: OracleType) {
+export function isManaged(type: OracleType) {
   return type === "Managed Optimistic Oracle V2";
 }
 
@@ -71,7 +74,6 @@ function getPageForAssertion(entity: OOV3GraphEntity): Page {
   return entity.settlementHash ? "settled" : "verify";
 }
 
-// Scoring logic ported from useQueryInSearchParams
 function eventDistanceScore(value: number, target: number) {
   const distance = Math.abs(value - target);
   if (distance === 0) return 4;
@@ -79,14 +81,7 @@ function eventDistanceScore(value: number, target: number) {
   return -(maxDistance / 10);
 }
 
-type ScoredResult = {
-  type: "request" | "assertion";
-  entity: OOV1GraphEntity | OOV2GraphEntity | OOV3GraphEntity;
-  config: SubgraphConfig;
-  score: number;
-};
-
-function scoreRequestEntity(
+export function scoreRequestEntity(
   entity: OOV1GraphEntity | OOV2GraphEntity,
   txHash: string,
   eventIndex: number | undefined,
@@ -119,7 +114,7 @@ function scoreRequestEntity(
   return s;
 }
 
-function scoreAssertionEntity(
+export function scoreAssertionEntity(
   entity: OOV3GraphEntity,
   txHash: string,
   eventIndex: number | undefined,
@@ -144,100 +139,6 @@ function scoreAssertionEntity(
     }
   }
   return s;
-}
-
-async function fetchWithUrlFallback<T>(
-  urls: string[],
-  fetcher: (url: string) => Promise<T>,
-): Promise<T> {
-  let lastError: Error | undefined;
-  for (const url of urls) {
-    try {
-      return await fetcher(url);
-    } catch (error) {
-      lastError = error as Error;
-    }
-  }
-  throw lastError ?? new Error("All URLs failed");
-}
-
-async function searchByHash(
-  configs: SubgraphConfig[],
-  txHash: string,
-  eventIndex: number | undefined,
-): Promise<ScoredResult[]> {
-  const results: ScoredResult[] = [];
-
-  const promises = configs.map(async (cfg) => {
-    try {
-      if (isV3(cfg.type)) {
-        const entities = await fetchWithUrlFallback(cfg.urls, (url) =>
-          getAssertionByHash(url, txHash),
-        );
-        for (const entity of entities) {
-          const score = scoreAssertionEntity(entity, txHash, eventIndex);
-          if (score > 0) {
-            results.push({ type: "assertion", entity, config: cfg, score });
-          }
-        }
-      } else if (isManaged(cfg.type)) {
-        const entities = await fetchWithUrlFallback(cfg.urls, (url) =>
-          getManagedRequestByHash(url, txHash),
-        );
-        for (const entity of entities) {
-          const score = scoreRequestEntity(entity, txHash, eventIndex);
-          if (score > 0) {
-            results.push({ type: "request", entity, config: cfg, score });
-          }
-        }
-      } else {
-        const entities = await fetchWithUrlFallback(cfg.urls, (url) =>
-          getOOV1RequestByHash(url, txHash, cfg.type),
-        );
-        for (const entity of entities) {
-          const score = scoreRequestEntity(entity, txHash, eventIndex);
-          if (score > 0) {
-            results.push({ type: "request", entity, config: cfg, score });
-          }
-        }
-      }
-    } catch {
-      // Individual subgraph failures are non-fatal
-    }
-  });
-
-  await Promise.allSettled(promises);
-  return results;
-}
-
-async function searchByDetails(
-  configs: SubgraphConfig[],
-  params: {
-    requester: string;
-    time: string;
-    identifier: string;
-    ancillaryData: string;
-  },
-): Promise<ScoredResult[]> {
-  const results: ScoredResult[] = [];
-  // Only search non-V3 configs (V3 doesn't have these fields)
-  const requestConfigs = configs.filter((c) => !isV3(c.type));
-
-  const promises = requestConfigs.map(async (cfg) => {
-    try {
-      const entities = await fetchWithUrlFallback(cfg.urls, (url) =>
-        getOOV1RequestByDetails(url, params, cfg.type),
-      );
-      for (const entity of entities) {
-        results.push({ type: "request", entity, config: cfg, score: 10 });
-      }
-    } catch {
-      // Individual subgraph failures are non-fatal
-    }
-  });
-
-  await Promise.allSettled(promises);
-  return results;
 }
 
 export default async function handler(
@@ -284,6 +185,25 @@ export default async function handler(
   // Hash-based lookup
   if (isTransactionHash(transactionHash)) {
     scoredResults = await searchByHash(configs, transactionHash, eventIndex);
+
+    // RPC fallback: if subgraph search found nothing, try fetching the tx
+    // receipt directly from an RPC provider and parsing the logs.
+    if (scoredResults.length === 0) {
+      let providerConfigs = config.providers;
+      if (chainId) {
+        providerConfigs = providerConfigs.filter((p) => p.chainId === chainId);
+      }
+      if (normalizedOracleType) {
+        providerConfigs = providerConfigs.filter(
+          (p) => p.type === normalizedOracleType,
+        );
+      }
+      scoredResults = await searchByHashViaRpc(
+        providerConfigs,
+        transactionHash,
+        eventIndex,
+      );
+    }
   }
   // Legacy detail-based lookup
   else if (requester && timestamp && identifier && ancillaryData) {
