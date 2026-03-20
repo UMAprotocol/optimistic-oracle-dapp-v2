@@ -2,7 +2,7 @@ import { mobileAndUnder, tabletAndUnder } from "@/constants/styles/breakpoints";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { chainsById, oracleTypes } from "@shared/constants";
 import type { ChainId, OracleType } from "@shared/types";
-import { capitalize, orderBy, words } from "lodash";
+import { capitalize, orderBy, partition, words } from "lodash";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { css } from "styled-components";
 import type { Address } from "wagmi";
@@ -99,6 +99,21 @@ export function makeFilterTitle(filterName: string) {
 
 export function sortByTimeCreated(queries: OracleQueryUI[]) {
   return orderBy(queries, (query) => query.timeMilliseconds, ["desc"]);
+}
+
+export function sortByLivenessExpiry(queries: OracleQueryUI[]) {
+  const [inLiveness, notInLiveness] = partition(
+    queries,
+    ({ livenessEndsMilliseconds, disputeHash }) => {
+      if (disputeHash !== undefined) return false;
+      return (livenessEndsMilliseconds ?? 0) > Date.now();
+    },
+  );
+
+  return [
+    ...orderBy(inLiveness, (q) => q.livenessEndsMilliseconds),
+    ...sortByTimeCreated(notInLiveness),
+  ];
 }
 
 export function makeUrlParamsForQuery(query: OracleQueryUI) {

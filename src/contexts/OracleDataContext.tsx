@@ -6,6 +6,7 @@ import {
   assertionToOracleQuery,
   requestToOracleQuery,
   sortByTimeCreated,
+  sortByLivenessExpiry,
 } from "@/helpers";
 import { useVerifyData, useProposeData, useSettledData } from "@/hooks/oracle";
 import type { OracleQueryResult } from "@/hooks/oracle";
@@ -96,7 +97,10 @@ export const OracleDataContext = createContext<OracleDataContextState>(
 
 // --- Helpers ---
 
-function convertResults(result: OracleQueryResult): OracleQueryUI[] {
+function convertResults(
+  result: OracleQueryResult,
+  sort: (queries: OracleQueryUI[]) => OracleQueryUI[] = sortByTimeCreated,
+): OracleQueryUI[] {
   const queries: OracleQueryUI[] = [];
 
   for (const req of result.requests) {
@@ -119,7 +123,7 @@ function convertResults(result: OracleQueryResult): OracleQueryUI[] {
     }
   }
 
-  return sortByTimeCreated(queries);
+  return sort(queries);
 }
 
 function buildAllTable(
@@ -148,7 +152,7 @@ export function OracleDataProvider({ children }: { children: ReactNode }) {
   // Convert raw requests/assertions to OracleQueryUI, sorted.
   // Results trickle in as each subgraph query resolves — no need to wait for all.
   const verify = useMemo(
-    () => convertResults(verifyResult),
+    () => convertResults(verifyResult, sortByLivenessExpiry),
     [verifyResult.requests, verifyResult.assertions],
   );
 
