@@ -101,6 +101,9 @@ export function sortByTimeCreated(queries: OracleQueryUI[]) {
   return orderBy(queries, (query) => query.timeMilliseconds, ["desc"]);
 }
 
+// Items still in their challenge period (undisputed, not yet expired) come
+// first, ordered by soonest-expiring. Everything else (disputed / expired)
+// follows, sorted newest-first by creation time.
 export function sortByLivenessExpiry(queries: OracleQueryUI[]) {
   const [inLiveness, notInLiveness] = partition(
     queries,
