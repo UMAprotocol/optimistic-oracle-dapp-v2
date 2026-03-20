@@ -1,17 +1,25 @@
 import { Currency, InformationIcon } from "@/components";
+import { config } from "@/constants";
+import { usePageContext } from "@/hooks";
 import type { OracleQueryUI } from "@/types";
 import { Link } from "../style";
 
 export function Details({
   bond,
+  customBond,
   reward,
   formattedLivenessEndsIn,
+  customLiveness,
   tokenAddress,
   chainId,
   oracleType,
 }: OracleQueryUI) {
-  const hasReward = reward !== null;
+  const { page } = usePageContext();
+  const pageIsPropose = page === "propose";
   const isManaged = oracleType === "Managed Optimistic Oracle V2";
+
+  const hasReward = reward !== null && reward !== undefined;
+  const disputerReward = customBond !== undefined ? customBond / 2n : undefined;
 
   return (
     <div className="mb-4 bg-white rounded-md py-2 px-3">
@@ -32,30 +40,50 @@ export function Details({
       {hasReward && (
         <TextWrapper>
           <Text>
-            Reward
-            <InformationIcon content={rewardInformation} />
+            {pageIsPropose ? "Proposer Reward" : "Disputer Reward"}
+            <InformationIcon
+              content={
+                pageIsPropose
+                  ? proposerRewardInformation
+                  : disputerRewardInformation
+              }
+            />
           </Text>
           <Text>
             <Currency
               showAddressLink
               address={tokenAddress}
               chainId={chainId}
-              value={reward}
+              value={pageIsPropose ? reward : disputerReward}
             />
           </Text>
         </TextWrapper>
       )}
       <TextWrapper>
         <Text>
-          {isManaged
+          {pageIsPropose
+            ? "Challenge period length"
+            : isManaged
             ? "Minimum challenge period ends"
             : "Challenge period ends"}
           <InformationIcon content={livenessInformation} />
         </Text>
-        <Text>{formattedLivenessEndsIn}</Text>
+        <Text>
+          {pageIsPropose
+            ? formatLivenessDuration(customLiveness)
+            : formattedLivenessEndsIn}
+        </Text>
       </TextWrapper>
     </div>
   );
+}
+
+function formatLivenessDuration(customLiveness: string | undefined): string {
+  const seconds = Number(customLiveness ?? config.defaultLiveness);
+  if (isNaN(seconds) || seconds <= 0) return "";
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 120) return `${minutes} minutes`;
+  return `${Math.round(minutes / 60)} hours`;
 }
 
 const bondInformation = (
@@ -76,11 +104,28 @@ const bondInformation = (
   </>
 );
 
-const rewardInformation = (
+const proposerRewardInformation = (
   <>
     <p>
       Rewards are posted by data requesters and are distributed to correct
       proposers once liveness is complete and the proposal is settled.
+    </p>
+    <br />
+    <br />
+    <Link
+      href="https://docs.uma.xyz/developers/setting-custom-bond-and-liveness-parameters"
+      target="_blank"
+    >
+      Learn more
+    </Link>
+  </>
+);
+
+const disputerRewardInformation = (
+  <>
+    <p>
+      Successful disputers will receive a portion of the proposer&apos;s bond as
+      a reward.
     </p>
     <br />
     <br />

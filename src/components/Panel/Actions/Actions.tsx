@@ -110,6 +110,7 @@ export function Actions({ query }: Props) {
               className={cn(!pageIsSettled ? "mb-5" : "mb-0")}
               valuesToShow={valuesToShow}
               query={query}
+              pageIsSettled={pageIsSettled}
             />
           ) : (
             <div
@@ -119,7 +120,8 @@ export function Actions({ query }: Props) {
               }}
             >
               <p className="sm:text-lg font-semibold">
-                Proposal: {valuesToShow[0]}
+                {!pageIsSettled && "Proposal: "}
+                {valuesToShow[0]}
               </p>
             </div>
           )}
@@ -159,10 +161,12 @@ function MultipleValues({
   query,
   valuesToShow,
   className,
+  pageIsSettled,
 }: {
   query: OracleQueryUI;
   valuesToShow: (string | null | undefined)[];
   className?: string;
+  pageIsSettled: boolean;
 }) {
   if (!query.proposeOptions || !query.proposeOptions.length) {
     return (
@@ -201,7 +205,8 @@ function MultipleValues({
             >
               {label}
               <div className="w-full h-[44px] pl-4 rounded-md bg-white flex items-center">
-                Proposal: {value}
+                {!pageIsSettled && "Proposal: "}
+                {value}
               </div>
             </label>
             {i === 0 && valuesToShow?.length === 2 && (

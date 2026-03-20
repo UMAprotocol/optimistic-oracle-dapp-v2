@@ -98,6 +98,10 @@ export type OracleQueryUI = {
   // it is in the `bond` field returned for the request
   // for oo-v3 the bond is always the `bond` field returned for the request
   bond?: bigint;
+  // raw requester-set bond before finalFee is added (undefined for oo-v1)
+  // for oo-v2, this is request.bond before combining with finalFee
+  // for oo-v3, equals bond (no finalFee is merged)
+  customBond?: bigint;
   reward?: bigint | null;
   tokenAddress?: Address;
   approveBondSpendParams?: ApproveBondSpendParams | undefined;
