@@ -165,6 +165,7 @@ export async function getProposeRequests(
         ) { ${fields} }
       }
     `,
+    Infinity,
   );
 }
 
