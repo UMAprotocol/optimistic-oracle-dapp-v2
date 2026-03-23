@@ -10,7 +10,7 @@ export function useUrlBar() {
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams?.toString());
       params.set(name, value);
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams],
   );
@@ -19,7 +19,7 @@ export function useUrlBar() {
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams?.toString());
       params.append(name, value);
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams],
   );
@@ -32,7 +32,9 @@ export function useUrlBar() {
         urlSearchParams.set(key, value);
       }
 
-      router.push(`${pathname}?${urlSearchParams.toString()}`);
+      router.push(`${pathname}?${urlSearchParams.toString()}`, {
+        scroll: false,
+      });
     },
     [pathname, router, searchParams],
   );
@@ -48,7 +50,7 @@ export function useUrlBar() {
         }
         params.append(_name, _value);
       }
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams],
   );
@@ -61,7 +63,9 @@ export function useUrlBar() {
         urlSearchParams.delete(param);
       }
 
-      router.push(`${pathname}?${urlSearchParams.toString()}`);
+      router.push(`${pathname}?${urlSearchParams.toString()}`, {
+        scroll: false,
+      });
     },
     [pathname, router, searchParams],
   );

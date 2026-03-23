@@ -1,5 +1,4 @@
 import { mobileAndUnder, tabletAndUnder } from "@/constants/styles/breakpoints";
-import type { OracleQueryList } from "@/contexts";
 import type { DropdownItem, OracleQueryUI } from "@/types";
 import { chainsById, oracleTypes } from "@shared/constants";
 import type { ChainId, OracleType } from "@shared/types";
@@ -98,34 +97,16 @@ export function makeFilterTitle(filterName: string) {
   return capitalize(words(filterName)[0]);
 }
 
-export function sortQueries({
-  verify,
-  propose,
-  settled,
-}: {
-  verify: OracleQueryList;
-  propose: OracleQueryList;
-  settled: OracleQueryList;
-}) {
-  // propose and settled are sorted by the time the query was created
-  // verify is sorted by when the liveness ends, so that the ones that end soonest are easy to find
-  return {
-    verify: sortVerifyQueries(verify),
-    propose: sortByTimeCreated(propose),
-    settled: sortByTimeCreated(settled),
-  };
-}
-
-function sortByLivenessEnds(queries: OracleQueryUI[]) {
-  return orderBy(queries, (query) => query.livenessEndsMilliseconds);
-}
-
-function sortByTimeCreated(queries: OracleQueryUI[]) {
+export function sortByTimeCreated(queries: OracleQueryUI[]) {
   return orderBy(queries, (query) => query.timeMilliseconds, ["desc"]);
 }
-function sortVerifyQueries(verify: OracleQueryUI[]) {
+
+// Items still in their challenge period (undisputed, not yet expired) come
+// first, ordered by soonest-expiring. Everything else (disputed / expired)
+// follows, sorted newest-first by creation time.
+export function sortByLivenessExpiry(queries: OracleQueryUI[]) {
   const [inLiveness, notInLiveness] = partition(
-    verify,
+    queries,
     ({ livenessEndsMilliseconds, disputeHash }) => {
       if (disputeHash !== undefined) return false;
       return (livenessEndsMilliseconds ?? 0) > Date.now();
@@ -133,54 +114,53 @@ function sortVerifyQueries(verify: OracleQueryUI[]) {
   );
 
   return [
-    ...sortByLivenessEnds(inLiveness),
+    ...orderBy(inLiveness, (q) => q.livenessEndsMilliseconds),
     ...sortByTimeCreated(notInLiveness),
   ];
 }
 
-export function makeUrlParamsForQuery({
-  requestHash,
-  requestLogIndex,
-  assertionHash,
-  assertionLogIndex,
-  proposalHash,
-  proposalLogIndex,
-  disputeHash,
-  disputeLogIndex,
-  settlementHash,
-  settlementLogIndex,
-}: OracleQueryUI) {
+export function makeUrlParamsForQuery(query: OracleQueryUI) {
+  const {
+    requestHash,
+    requestLogIndex,
+    assertionHash,
+    assertionLogIndex,
+    proposalHash,
+    proposalLogIndex,
+    disputeHash,
+    disputeLogIndex,
+    settlementHash,
+    settlementLogIndex,
+    chainId,
+    oracleType,
+  } = query;
+
   // Priority: request/assertion > proposal > dispute > settlement
+  let transactionHash = "";
+  let eventIndex = "";
   if (requestHash && requestLogIndex) {
-    return { transactionHash: requestHash, eventIndex: requestLogIndex };
-  }
-  if (assertionHash && assertionLogIndex) {
-    return { transactionHash: assertionHash, eventIndex: assertionLogIndex };
-  }
-  if (proposalHash && proposalLogIndex) {
-    return { transactionHash: proposalHash, eventIndex: proposalLogIndex };
-  }
-  if (disputeHash && disputeLogIndex) {
-    return { transactionHash: disputeHash, eventIndex: disputeLogIndex };
-  }
-  if (settlementHash && settlementLogIndex) {
-    return { transactionHash: settlementHash, eventIndex: settlementLogIndex };
+    transactionHash = requestHash;
+    eventIndex = requestLogIndex;
+  } else if (assertionHash && assertionLogIndex) {
+    transactionHash = assertionHash;
+    eventIndex = assertionLogIndex;
+  } else if (proposalHash && proposalLogIndex) {
+    transactionHash = proposalHash;
+    eventIndex = proposalLogIndex;
+  } else if (disputeHash && disputeLogIndex) {
+    transactionHash = disputeHash;
+    eventIndex = disputeLogIndex;
+  } else if (settlementHash && settlementLogIndex) {
+    transactionHash = settlementHash;
+    eventIndex = settlementLogIndex;
   }
 
-  // Fallback for edge cases
-  return { transactionHash: "", eventIndex: "" };
-}
-
-export function getPageForQuery({ actionType }: OracleQueryUI) {
-  switch (actionType) {
-    case "propose":
-      return "propose";
-    case "dispute":
-    case "settle":
-      return "verify";
-    default:
-      return "settled";
-  }
+  return {
+    transactionHash,
+    eventIndex,
+    ...(chainId ? { chainId: String(chainId) } : {}),
+    ...(oracleType ? { oracleType } : {}),
+  };
 }
 
 export function mapMultipleValueOutcomes(

@@ -5,9 +5,8 @@ import {
   chains as supportedChains,
   walletsAndConnectors,
 } from "@/constants";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
-import type { ReactNode } from "react";
-import { WagmiConfig, configureChains, createConfig } from "wagmi";
+import { darkTheme } from "@rainbow-me/rainbowkit";
+import { configureChains, createConfig } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -30,13 +29,3 @@ export const rainbowKitTheme = darkTheme({
   borderRadius: "small",
   overlayBlur: "small",
 });
-
-export function WalletConfig({ children }: { children: ReactNode }) {
-  return (
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider chains={chains} theme={rainbowKitTheme}>
-        {children}
-      </RainbowKitProvider>
-    </WagmiConfig>
-  );
-}

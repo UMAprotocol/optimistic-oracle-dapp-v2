@@ -3,6 +3,7 @@
 import { makeUrlParamsForQuery } from "@/helpers";
 import { useQueryById } from "@/hooks";
 import { useUrlBar } from "@/hooks/useUrlBar";
+import { DEEPLINK_PARAM_KEYS } from "@/helpers/deeplink";
 import type { OracleQueryUI } from "@/types";
 import type { ReactNode } from "react";
 import {
@@ -16,16 +17,21 @@ import {
 export interface PanelContextState {
   panelOpen: boolean;
   query: OracleQueryUI | undefined;
+  /** True when the panel was opened from a table row click (not a deeplink). */
+  openedFromTable: boolean;
   setQueryId: (queryId: string | undefined) => void;
   openPanel: (queryId?: string) => void;
+  openPanelWithQuery: (query: OracleQueryUI) => void;
   closePanel: () => void;
 }
 
-export const defaultPanelContextState = {
+export const defaultPanelContextState: PanelContextState = {
   panelOpen: false,
   query: undefined,
+  openedFromTable: false,
   setQueryId: () => undefined,
   openPanel: () => undefined,
+  openPanelWithQuery: () => undefined,
   closePanel: () => undefined,
 };
 
@@ -35,61 +41,89 @@ export const PanelContext = createContext<PanelContextState>(
 
 export function PanelProvider({ children }: { children: ReactNode }) {
   const [queryId, setQueryId] = useState<string | undefined>();
+  const [directQuery, setDirectQuery] = useState<OracleQueryUI | undefined>();
   const [panelOpen, setPanelOpen] = useState(false);
+  const [openedFromTable, setOpenedFromTable] = useState(false);
   const { addSearchParams, removeSearchParams, searchParams } = useUrlBar();
-  const query = useQueryById(queryId);
+  const queryFromTable = useQueryById(queryId);
 
-  const addHashAndIndexToUrl = useCallback(
+  // Deeplink query takes precedence over table lookup
+  const query = directQuery ?? queryFromTable;
+
+  const setUrlParamsForQuery = useCallback(
     (query: OracleQueryUI) => {
-      const searchParams = makeUrlParamsForQuery(query);
-      addSearchParams(searchParams);
+      const params = makeUrlParamsForQuery(query);
+      if (!params.transactionHash) return;
+      addSearchParams(params);
     },
     [addSearchParams],
   );
 
-  const removeHashAndIndexFromUrl = useCallback(() => {
-    removeSearchParams("transactionHash", "eventIndex");
+  const removeDeeplinkParamsFromUrl = useCallback(() => {
+    removeSearchParams(...DEEPLINK_PARAM_KEYS);
   }, [removeSearchParams]);
 
+  // Handle browser back button
   useEffect(() => {
     function onPopState() {
-      if (!searchParams) {
+      if (!searchParams?.has("transactionHash")) {
         setPanelOpen(false);
+        setDirectQuery(undefined);
+        setOpenedFromTable(false);
       }
     }
 
     window.addEventListener("popstate", onPopState);
-
     return () => {
       window.removeEventListener("popstate", onPopState);
     };
   }, [searchParams]);
 
+  // Sync URL when panel opens with table query
   useEffect(() => {
-    if (panelOpen && query) {
-      addHashAndIndexToUrl(query);
+    if (panelOpen && queryFromTable && !directQuery) {
+      setUrlParamsForQuery(queryFromTable);
     }
-  }, [addHashAndIndexToUrl, panelOpen, query, removeHashAndIndexFromUrl]);
+  }, [panelOpen, queryFromTable, directQuery, setUrlParamsForQuery]);
 
   const openPanel = useCallback((queryId?: string) => {
+    setDirectQuery(undefined);
+    setOpenedFromTable(true);
     setQueryId(queryId);
+    setPanelOpen(true);
+  }, []);
+
+  const openPanelWithQuery = useCallback((query: OracleQueryUI) => {
+    setDirectQuery(query);
+    setOpenedFromTable(false);
     setPanelOpen(true);
   }, []);
 
   const closePanel = useCallback(() => {
     setPanelOpen(false);
-    removeHashAndIndexFromUrl();
-  }, [removeHashAndIndexFromUrl]);
+    setDirectQuery(undefined);
+    setOpenedFromTable(false);
+    removeDeeplinkParamsFromUrl();
+  }, [removeDeeplinkParamsFromUrl]);
 
   const value = useMemo(
     () => ({
       query,
       panelOpen,
+      openedFromTable,
       setQueryId,
       openPanel,
+      openPanelWithQuery,
       closePanel,
     }),
-    [closePanel, openPanel, panelOpen, query],
+    [
+      closePanel,
+      openPanel,
+      openPanelWithQuery,
+      openedFromTable,
+      panelOpen,
+      query,
+    ],
   );
 
   return (
