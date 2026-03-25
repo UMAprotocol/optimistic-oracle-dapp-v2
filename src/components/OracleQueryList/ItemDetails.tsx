@@ -68,6 +68,10 @@ export function ItemDetails({
             fontSize={12}
             marginBottom={0}
             endedLabel={isManaged ? "Awaiting Settlement" : undefined}
+            gracePeriodMs={isManaged ? 5 * 60 * 1000 : undefined}
+            gracePeriodLabel={
+              isManaged ? "Challenge Period Extended" : undefined
+            }
           />
         </ItemDetailsInnerWrapper>
       ) : undefined}
