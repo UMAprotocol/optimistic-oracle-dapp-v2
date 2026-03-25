@@ -13,6 +13,8 @@ interface Props {
   fontSize?: number;
   marginBottom?: number;
   endedLabel?: string;
+  gracePeriodMs?: number;
+  gracePeriodLabel?: string;
 }
 /**
  * A progress bar that shows the time remaining until a request or assertion
@@ -26,6 +28,8 @@ export function LivenessProgressBar({
   fontSize,
   marginBottom,
   endedLabel = "Ended",
+  gracePeriodMs,
+  gracePeriodLabel,
 }: Props) {
   const [now, setNow] = useState(new Date());
 
@@ -54,6 +58,24 @@ export function LivenessProgressBar({
 
   const isEnded = endTimeAsDate < now;
 
+  const graceDeadline =
+    gracePeriodMs !== undefined ? endTime + gracePeriodMs : undefined;
+  const isInGracePeriod =
+    isEnded && graceDeadline !== undefined && currentTime < graceDeadline;
+  const isAfterGracePeriod =
+    isEnded && graceDeadline !== undefined && currentTime >= graceDeadline;
+
+  let displayText: string;
+  if (!isEnded) {
+    displayText = timeRemainingString;
+  } else if (isInGracePeriod) {
+    displayText = "0 m 00 s";
+  } else if (isAfterGracePeriod && gracePeriodLabel) {
+    displayText = gracePeriodLabel;
+  } else {
+    displayText = endedLabel;
+  }
+
   const isTextRed =
     !timeRemaining.hours || timeRemaining.hours === 0 || isEnded;
 
@@ -69,7 +91,7 @@ export function LivenessProgressBar({
           } as CSSProperties
         }
       >
-        {isEnded ? endedLabel : timeRemainingString}
+        {displayText}
       </Text>
       <_Root value={normalizedPercent}>
         <_Indicator
