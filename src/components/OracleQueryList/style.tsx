@@ -4,9 +4,6 @@ import { oracleQueryHover } from "../style";
 export const TitleWrapper = styled.div``;
 
 export const HeaderWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 18px auto;
-  gap: 8px;
   margin-bottom: 4px;
 `;
 

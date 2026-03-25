@@ -35,7 +35,6 @@ export function LoadingItem() {
 const loadingTitle = (
   <TitleWrapper>
     <HeaderWrapper>
-      <LoadingSkeleton width={18} height={18} borderRadius="50%" />
       <TitleHeader>
         <LoadingSkeleton width={150} />
       </TitleHeader>
