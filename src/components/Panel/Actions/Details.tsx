@@ -6,12 +6,11 @@ export function Details({
   bond,
   reward,
   formattedLivenessEndsIn,
+  formattedExtendedLivenessEndsIn,
   tokenAddress,
   chainId,
-  oracleType,
 }: OracleQueryUI) {
   const hasReward = reward !== null;
-  const isManaged = oracleType === "Managed Optimistic Oracle V2";
 
   return (
     <div className="mb-4 bg-white rounded-md py-2 px-3">
@@ -47,13 +46,20 @@ export function Details({
       )}
       <TextWrapper>
         <Text>
-          {isManaged
-            ? "Minimum challenge period ends"
-            : "Challenge period ends"}
+          Challenge period ends
           <InformationIcon content={livenessInformation} />
         </Text>
         <Text>{formattedLivenessEndsIn}</Text>
       </TextWrapper>
+      {formattedExtendedLivenessEndsIn && (
+        <TextWrapper>
+          <Text>
+            Extended challenge period ends
+            <InformationIcon content={extendedLivenessInformation} />
+          </Text>
+          <Text>{formattedExtendedLivenessEndsIn}</Text>
+        </TextWrapper>
+      )}
     </div>
   );
 }
@@ -93,6 +99,14 @@ const rewardInformation = (
   </>
 );
 
+const extendedLivenessInformation = (
+  <p>
+    Managed Optimistic Oracle V2 requests have an additional 5-minute grace
+    period after the minimum challenge period ends, during which disputes can
+    still be submitted.
+  </p>
+);
+
 const livenessInformation = (
   <>
     <p>
@@ -117,7 +131,7 @@ const Text = ({ children }: { children: React.ReactNode }) => (
 );
 
 const TextWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex justify-between last-of-type:mt-4 [&:not(:last-child)]:mb-1">
+  <div className="flex justify-between [&:not(:last-child)]:mb-1">
     {children}
   </div>
 );

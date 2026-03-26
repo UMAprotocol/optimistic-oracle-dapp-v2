@@ -790,6 +790,11 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
     result.formattedLivenessEndsIn = toTimeFormatted(
       proposalExpirationTimestamp,
     );
+    if (oracleType === "Managed Optimistic Oracle V2") {
+      const extendedEndsMs =
+        toTimeMilliseconds(proposalExpirationTimestamp) + 5 * 60 * 1000;
+      result.formattedExtendedLivenessEndsIn = format(extendedEndsMs, "Pp");
+    }
   }
 
   if (exists(time)) {

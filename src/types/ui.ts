@@ -91,6 +91,7 @@ export type OracleQueryUI = {
   livenessEndsMilliseconds?: number;
   customLiveness?: string;
   formattedLivenessEndsIn?: string;
+  formattedExtendedLivenessEndsIn?: string;
   actionType: ActionType | null;
   moreInformation: MoreInformationItem[];
   // for oo-v1 bond is the final fee
