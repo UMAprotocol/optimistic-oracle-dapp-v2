@@ -1,6 +1,7 @@
 import { Currency, InformationIcon } from "@/components";
 import type { OracleQueryUI } from "@/types";
 import { Link } from "../style";
+import { cn } from "@/helpers";
 
 export function Details({
   bond,
@@ -44,7 +45,7 @@ export function Details({
           </Text>
         </TextWrapper>
       )}
-      <TextWrapper>
+      <TextWrapper className="mt-4">
         <Text>
           Challenge period ends
           <InformationIcon content={livenessInformation} />
@@ -130,8 +131,16 @@ const Text = ({ children }: { children: React.ReactNode }) => (
   <p className="flex items-center">{children}</p>
 );
 
-const TextWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex justify-between [&:not(:last-child)]:mb-1">
+const TextWrapper = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div
+    className={cn("flex justify-between [&:not(:last-child)]:mb-1", className)}
+  >
     {children}
   </div>
 );
