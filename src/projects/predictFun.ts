@@ -6,10 +6,8 @@ export class PredictFunProject extends Project<"Predict.Fun"> {
   constructor() {
     super({
       name: "Predict.Fun",
-      requesters: [
-        "0x0c1331e4a4bbd59b7aae2902290506bf8fbe3e6c",
-        "0xb0c308abec5d321a7b6a8e3ce43a368276178f7a",
-      ],
+      requesters: ["0x2C0367a9DB231dDeBd88a94b4f6461a6e47C58B1"],
+      initializers: ["0x0168e3F4DE550942ce528FE9697d387A33465BA1"],
       identifiers: ["YES_OR_NO_QUERY"],
       requiredTokens: {
         YES_OR_NO_QUERY: ["res_data:", "q: title:"],
