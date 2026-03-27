@@ -93,6 +93,7 @@ const ConvertToSharedRequest =
       settleLogIndex,
       state,
       bond,
+      customLiveness,
     } = request;
     const id = requestId(request);
 
@@ -140,6 +141,9 @@ const ConvertToSharedRequest =
       result.settlementBlockNumber = settleBlockNumber.toString();
     if (settleLogIndex) result.settlementLogIndex = settleLogIndex.toString();
     if (bond) result.bond = bond.toBigInt();
+    if (customLiveness && !customLiveness.isZero())
+      (result as Record<string, unknown>).customLiveness =
+        customLiveness.toString();
     // unable to get the following values, omit their keys to avoid
     // overriding other sources when merged in final store
     // dont know how this comes from events

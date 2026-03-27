@@ -779,6 +779,9 @@ export function requestToOracleQuery(request: Request): OracleQueryUI {
   if (exists(bond)) {
     result.bond = bond;
   }
+  if (exists(request.bond)) {
+    result.customBond = request.bond;
+  }
   if (exists(eventBased)) {
     result.expiryType = eventBased ? "Event-based" : "Time-based";
   }
@@ -952,6 +955,7 @@ export function assertionToOracleQuery(assertion: Assertion): OracleQueryUI {
 
   if (exists(bond)) {
     result.bond = bond;
+    result.customBond = bond; // for oo-v3, customBond equals bond (no finalFee is merged)
   }
   if (exists(expirationTime)) {
     result.livenessEndsMilliseconds = getLivenessEnds(expirationTime);
