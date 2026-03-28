@@ -6,12 +6,19 @@ export function Details({
   bond,
   reward,
   formattedLivenessEndsIn,
+  livenessEndsMilliseconds,
   tokenAddress,
   chainId,
   oracleType,
 }: OracleQueryUI) {
   const hasReward = reward !== null;
   const isManaged = oracleType === "Managed Optimistic Oracle V2";
+  const gracePeriodMs = 5 * 60 * 1000;
+  const now = Date.now();
+  const isExtended =
+    isManaged &&
+    livenessEndsMilliseconds !== undefined &&
+    now >= livenessEndsMilliseconds + gracePeriodMs;
 
   return (
     <div className="mb-4 bg-white rounded-md py-2 px-3">
@@ -46,17 +53,40 @@ export function Details({
         </TextWrapper>
       )}
       <TextWrapper>
-        <Text>
-          {isManaged
-            ? "Minimum challenge period ends"
-            : "Challenge period ends"}
-          <InformationIcon content={livenessInformation} />
-        </Text>
-        <Text>{formattedLivenessEndsIn}</Text>
+        {isExtended ? (
+          <Text>
+            Challenge period extended{" "}
+            <InformationIcon content={extendedLivenessInformation} />
+          </Text>
+        ) : isManaged ? (
+          <>
+            <Text>
+              Minimum challenge period ends{" "}
+              <InformationIcon content={livenessInformation} />
+            </Text>
+            <Text>{formattedLivenessEndsIn}</Text>
+          </>
+        ) : (
+          <>
+            <Text>
+              Challenge period ends{" "}
+              <InformationIcon content={livenessInformation} />
+            </Text>
+            <Text>{formattedLivenessEndsIn}</Text>
+          </>
+        )}
       </TextWrapper>
     </div>
   );
 }
+
+const extendedLivenessInformation = (
+  <p>
+    Managed Optimistic Oracle V2 requests have an additional 5-minute grace
+    period after the minimum challenge period ends, during which disputes can
+    still be submitted.
+  </p>
+);
 
 const bondInformation = (
   <>
