@@ -9,6 +9,7 @@ import type {
 } from "@shared/types";
 import { searchByHash, searchByDetails } from "./_gql";
 import { searchByHashViaRpc } from "./_rpc";
+import { setDeeplinkCacheHeaders } from "./cache";
 
 type Page = "verify" | "propose" | "settled";
 
@@ -149,6 +150,8 @@ export default async function handler(
     return res.status(405).json({ error: "method_not_allowed" });
   }
 
+  setDeeplinkCacheHeaders(res);
+
   const {
     transactionHash,
     eventIndex: eventIndexStr,
@@ -161,10 +164,9 @@ export default async function handler(
   } = req.query as Record<string, string | undefined>;
 
   const chainId = chainIdStr ? Number(chainIdStr) : undefined;
-  const eventIndex =
-    eventIndexStr && Number.isInteger(Number(eventIndexStr))
-      ? Number(eventIndexStr)
-      : undefined;
+  const hasEventIndex =
+    eventIndexStr !== undefined && Number.isInteger(Number(eventIndexStr));
+  const eventIndex = hasEventIndex ? Number(eventIndexStr) : undefined;
 
   // Filter configs based on provided chainId and oracleType
   const normalizedOracleType = normalizeOracleType(oracleType);
@@ -239,20 +241,6 @@ export default async function handler(
   } else {
     const requestEntity = best.entity as OOV1GraphEntity | OOV2GraphEntity;
     page = getPageForRequestState(requestEntity.state);
-  }
-
-  // Settled requests won't change state — cache indefinitely.
-  // Active requests may transition between states, so cap at 5 minutes.
-  if (page === "settled") {
-    res.setHeader(
-      "Cache-Control",
-      "public, s-maxage=31536000, stale-while-revalidate=31536000",
-    );
-  } else {
-    res.setHeader(
-      "Cache-Control",
-      "public, s-maxage=300, stale-while-revalidate=600",
-    );
   }
 
   return res.status(200).json({
