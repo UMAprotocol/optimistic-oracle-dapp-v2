@@ -5,7 +5,7 @@ import type { DropdownItem } from "@/types";
 export class MetaMarketProject extends Project<"MetaMarket"> {
   constructor() {
     super({
-      name: "MetaMarket",
+      name: "Hit",
       requesters: ["0x46500F8BfF8B8DEE2DA41e8960681C792270e10c"],
       identifiers: ["YES_OR_NO_QUERY"],
     });
