@@ -2,7 +2,7 @@ import type { Project as ProjectType } from "./abstract";
 import { AcrossV2 } from "./across";
 import { CozyFinanceProject } from "./cozyFinance";
 import { InfiniteGamesProject } from "./infiniteGames";
-import { MetaMarketProject } from "./metaMarket";
+import { MetaMarketProject } from "./hit";
 import { OSnapProject } from "./osnap";
 import { PolyBetProject } from "./polybet";
 import { PolymarketProject } from "./polymarket";
