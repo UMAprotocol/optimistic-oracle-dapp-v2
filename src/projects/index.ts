@@ -2,7 +2,7 @@ import type { Project as ProjectType } from "./abstract";
 import { AcrossV2 } from "./across";
 import { CozyFinanceProject } from "./cozyFinance";
 import { InfiniteGamesProject } from "./infiniteGames";
-import { MetaMarketProject } from "./metaMarket";
+import { HitProject } from "./hit";
 import { OSnapProject } from "./osnap";
 import { PolyBetProject } from "./polybet";
 import { PolymarketProject } from "./polymarket";
@@ -16,7 +16,7 @@ export const projects = {
   across: new AcrossV2(),
   cozyFinance: new CozyFinanceProject(),
   infiniteGames: new InfiniteGamesProject(),
-  metaMarket: new MetaMarketProject(),
+  hit: new HitProject(),
   oSnap: new OSnapProject(),
   polyBet: new PolyBetProject(),
   polymarket: new PolymarketProject(),
