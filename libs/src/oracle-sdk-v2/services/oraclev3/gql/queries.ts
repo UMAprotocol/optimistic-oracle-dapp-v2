@@ -111,12 +111,23 @@ export async function getSettledAssertions(
 
 // --- Deeplink: lookup by transaction hash ---
 
-export async function getAssertionByHash(url: string, txHash: string) {
+export async function getAssertionByHash(
+  url: string,
+  txHash: string,
+  eventIndex?: number,
+) {
+  const exactMatchQueries =
+    eventIndex !== undefined
+      ? `
+      byAssertionExact: assertions(where: { assertionHash: "${txHash}", assertionLogIndex: "${eventIndex}" }, first: 1) { ${assertionFields} }
+      byDisputeExact: assertions(where: { disputeHash: "${txHash}", disputeLogIndex: "${eventIndex}" }, first: 1) { ${assertionFields} }
+      bySettlementExact: assertions(where: { settlementHash: "${txHash}", settlementLogIndex: "${eventIndex}" }, first: 1) { ${assertionFields} }`
+      : "";
   const query = gql`
-    query GetAssertionByHash {
-      byAssertion: assertions(where: { assertionHash: "${txHash}" }, first: 5) { ${assertionFields} }
-      byDispute: assertions(where: { disputeHash: "${txHash}" }, first: 5) { ${assertionFields} }
-      bySettlement: assertions(where: { settlementHash: "${txHash}" }, first: 5) { ${assertionFields} }
+    query GetAssertionByHash {${exactMatchQueries}
+      byAssertion: assertions(where: { assertionHash: "${txHash}" }, first: 100) { ${assertionFields} }
+      byDispute: assertions(where: { disputeHash: "${txHash}" }, first: 100) { ${assertionFields} }
+      bySettlement: assertions(where: { settlementHash: "${txHash}" }, first: 100) { ${assertionFields} }
     }
   `;
   const result = await request<Record<string, OOV3GraphEntity[]>>(url, query);

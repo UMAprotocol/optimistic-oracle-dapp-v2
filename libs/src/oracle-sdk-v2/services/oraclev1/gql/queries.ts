@@ -203,14 +203,27 @@ export async function getRequestByHash(
   url: string,
   txHash: string,
   oracleType: OracleType,
+  eventIndex?: number,
 ) {
   const fields = requestFields(oracleType);
+  // When eventIndex is provided, exact (hash + logIndex) matches deterministically
+  // pinpoint the target entity even when a single tx contains many requests
+  // (a batch). The broader hash-only queries below remain so proximity scoring
+  // still works when eventIndex is missing or doesn't line up exactly.
+  const exactMatchQueries =
+    eventIndex !== undefined
+      ? `
+      byRequestExact: optimisticPriceRequests(where: { requestHash: "${txHash}", requestLogIndex: "${eventIndex}" }, first: 1) { ${fields} }
+      byProposalExact: optimisticPriceRequests(where: { proposalHash: "${txHash}", proposalLogIndex: "${eventIndex}" }, first: 1) { ${fields} }
+      byDisputeExact: optimisticPriceRequests(where: { disputeHash: "${txHash}", disputeLogIndex: "${eventIndex}" }, first: 1) { ${fields} }
+      bySettlementExact: optimisticPriceRequests(where: { settlementHash: "${txHash}", settlementLogIndex: "${eventIndex}" }, first: 1) { ${fields} }`
+      : "";
   const query = gql`
-    query GetRequestByHash {
-      byRequest: optimisticPriceRequests(where: { requestHash: "${txHash}" }, first: 5) { ${fields} }
-      byProposal: optimisticPriceRequests(where: { proposalHash: "${txHash}" }, first: 5) { ${fields} }
-      byDispute: optimisticPriceRequests(where: { disputeHash: "${txHash}" }, first: 5) { ${fields} }
-      bySettlement: optimisticPriceRequests(where: { settlementHash: "${txHash}" }, first: 5) { ${fields} }
+    query GetRequestByHash {${exactMatchQueries}
+      byRequest: optimisticPriceRequests(where: { requestHash: "${txHash}" }, first: 100) { ${fields} }
+      byProposal: optimisticPriceRequests(where: { proposalHash: "${txHash}" }, first: 100) { ${fields} }
+      byDispute: optimisticPriceRequests(where: { disputeHash: "${txHash}" }, first: 100) { ${fields} }
+      bySettlement: optimisticPriceRequests(where: { settlementHash: "${txHash}" }, first: 100) { ${fields} }
     }
   `;
   const result = await request<
