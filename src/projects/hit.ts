@@ -2,7 +2,7 @@ import { Project } from "./abstract";
 import { maybeMakePolymarketOptions } from "./polymarket";
 import type { DropdownItem } from "@/types";
 
-export class MetaMarketProject extends Project<"MetaMarket"> {
+export class HitProject extends Project<"Hit"> {
   constructor() {
     super({
       name: "Hit",

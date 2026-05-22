@@ -189,13 +189,25 @@ export async function getSettledRequests(
 
 // --- Deeplink: lookup by transaction hash ---
 
-export async function getRequestByHash(url: string, txHash: string) {
+export async function getRequestByHash(
+  url: string,
+  txHash: string,
+  eventIndex?: number,
+) {
+  const exactMatchQueries =
+    eventIndex !== undefined
+      ? `
+      byRequestExact: optimisticPriceRequests(where: { requestHash: "${txHash}", requestLogIndex: "${eventIndex}" }, first: 1) { ${managedFields} }
+      byProposalExact: optimisticPriceRequests(where: { proposalHash: "${txHash}", proposalLogIndex: "${eventIndex}" }, first: 1) { ${managedFields} }
+      byDisputeExact: optimisticPriceRequests(where: { disputeHash: "${txHash}", disputeLogIndex: "${eventIndex}" }, first: 1) { ${managedFields} }
+      bySettlementExact: optimisticPriceRequests(where: { settlementHash: "${txHash}", settlementLogIndex: "${eventIndex}" }, first: 1) { ${managedFields} }`
+      : "";
   const query = gql`
-    query GetManagedRequestByHash {
-      byRequest: optimisticPriceRequests(where: { requestHash: "${txHash}" }, first: 5) { ${managedFields} }
-      byProposal: optimisticPriceRequests(where: { proposalHash: "${txHash}" }, first: 5) { ${managedFields} }
-      byDispute: optimisticPriceRequests(where: { disputeHash: "${txHash}" }, first: 5) { ${managedFields} }
-      bySettlement: optimisticPriceRequests(where: { settlementHash: "${txHash}" }, first: 5) { ${managedFields} }
+    query GetManagedRequestByHash {${exactMatchQueries}
+      byRequest: optimisticPriceRequests(where: { requestHash: "${txHash}" }, first: 100) { ${managedFields} }
+      byProposal: optimisticPriceRequests(where: { proposalHash: "${txHash}" }, first: 100) { ${managedFields} }
+      byDispute: optimisticPriceRequests(where: { disputeHash: "${txHash}" }, first: 100) { ${managedFields} }
+      bySettlement: optimisticPriceRequests(where: { settlementHash: "${txHash}" }, first: 100) { ${managedFields} }
     }
   `;
   const result = await request<

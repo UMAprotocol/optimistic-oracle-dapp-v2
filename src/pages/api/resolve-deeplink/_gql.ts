@@ -39,7 +39,7 @@ export async function searchByHash(
     try {
       if (isV3(cfg.type)) {
         const entities = await fetchWithUrlFallback(cfg.urls, (url) =>
-          getAssertionByHash(url, txHash),
+          getAssertionByHash(url, txHash, eventIndex),
         );
         for (const entity of entities) {
           const score = scoreAssertionEntity(entity, txHash, eventIndex);
@@ -49,7 +49,7 @@ export async function searchByHash(
         }
       } else if (isManaged(cfg.type)) {
         const entities = await fetchWithUrlFallback(cfg.urls, (url) =>
-          getManagedRequestByHash(url, txHash),
+          getManagedRequestByHash(url, txHash, eventIndex),
         );
         for (const entity of entities) {
           const score = scoreRequestEntity(entity, txHash, eventIndex);
@@ -59,7 +59,7 @@ export async function searchByHash(
         }
       } else {
         const entities = await fetchWithUrlFallback(cfg.urls, (url) =>
-          getOOV1RequestByHash(url, txHash, cfg.type),
+          getOOV1RequestByHash(url, txHash, cfg.type, eventIndex),
         );
         for (const entity of entities) {
           const score = scoreRequestEntity(entity, txHash, eventIndex);

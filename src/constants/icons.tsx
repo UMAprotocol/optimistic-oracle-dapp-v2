@@ -28,7 +28,7 @@ import Unknown from "public/assets/icons/projects/unknown.svg";
 import PredictFun from "public/assets/icons/projects/predict-fun.svg";
 import InfiniteGames from "public/assets/icons/projects/infinite-games.svg";
 import Prognoze from "public/assets/icons/projects/prognoze.svg";
-import MetaMarket from "public/assets/icons/projects/meta-market.svg";
+import Hit from "public/assets/icons/projects/hit.svg";
 import Probable from "public/assets/icons/projects/probable.svg";
 // Social Icons
 import Discord from "public/assets/icons/social/discord.svg";
@@ -53,7 +53,7 @@ export const projectIcons: Record<
   "Predict.Fun": PredictFun,
   "Infinite Games": InfiniteGames,
   Prognoze,
-  MetaMarket,
+  Hit,
   Probable,
 };
 
