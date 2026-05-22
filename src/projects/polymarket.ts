@@ -21,7 +21,8 @@ export class PolymarketProject extends Project<"Polymarket"> {
         "0x084EA0bAC17aD8a23A84F596b4adcA432aa118A3",
         "0x9E2ad3FB89B6357b601932B673f77B371ff91871",
         "0x6e0c80c90ea6c15917308f820eac91ce2724b5b5",
-        "0xac9930b2ae455a671b62de86876a7e8587825294"
+        "0xac9930b2ae455a671b62de86876a7e8587825294",
+        "0xF43d55F3A8B7484Ed4B6931f93CB6F9eF5Dd369D"
       ],
       requesters: [
         "0xcb1822859cef82cd2eb4e6276c7916e692995130", // Polymarket Binary Adapter Address
