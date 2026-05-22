@@ -1,10 +1,15 @@
 import { SectionSubTitle, Text } from "./style";
 import { AdditionalTextData } from "./AdditionalTextData";
-import { useContractRead, type Address } from "wagmi";
+import { useContractReads, type Address } from "wagmi";
 import { polymarketBulletinAbi } from "@shared/constants/abi";
 import { utils } from "ethers";
 import { isWagmiAddress, toUtcTimeFormatted } from "@/helpers";
 import { getInitializerAddress } from "@/helpers/queryParsing";
+import {
+  getBulletinOwnerQueries,
+  mergePolymarketBulletinUpdates,
+  type RawPolymarketBulletinUpdate,
+} from "@/projects/polymarketBulletinOwners";
 
 interface Props {
   description: string | undefined;
@@ -30,15 +35,26 @@ export function useGetUpdates(props: {
   const { queryTextHex, description, address } = props;
   const questionId = queryTextHex ? utils.keccak256(queryTextHex) : undefined;
   const ownerAddress = getInitializerAddress(description);
+  const ownerQueries = ownerAddress
+    ? getBulletinOwnerQueries(ownerAddress)
+    : [];
 
-  return useContractRead({
-    address,
-    abi: polymarketBulletinAbi,
-    functionName: "getUpdates",
-    // bulletin contractr on polygon
-    chainId: 137,
-    args: [questionId as Address, ownerAddress!],
+  return useContractReads({
+    allowFailure: false,
+    contracts: ownerQueries.map((ownerQuery) => ({
+      address,
+      abi: polymarketBulletinAbi,
+      functionName: "getUpdates",
+      // bulletin contract on polygon
+      chainId: 137,
+      args: [questionId as Address, ownerQuery.owner],
+    })),
     enabled: !!address && !!questionId && !!ownerAddress,
+    select: (updatesByOwner) =>
+      mergePolymarketBulletinUpdates(
+        updatesByOwner as RawPolymarketBulletinUpdate[][],
+        ownerQueries,
+      ),
   });
 }
 
@@ -56,9 +72,9 @@ export function PolymarketTextData(props: Props) {
       {bulletinUpdates?.data?.length ? (
         <>
           <SectionSubTitle>Polymarket Bulletin Board</SectionSubTitle>
-          {bulletinUpdates.data.map((data) => {
+          {bulletinUpdates.data.map((data, index) => {
             return (
-              <Text key={data.timestamp.toString()}>
+              <Text key={`${data.timestamp.toString()}-${index}`}>
                 {toUtcTimeFormatted(data.timestamp.toString())}:{" "}
                 {utils.toUtf8String(data.update)}
               </Text>
