@@ -37,6 +37,22 @@ export function getInitializerAddress(
   }
 }
 
+// Additional bulletin-board owners to query alongside a request's initializer.
+// When an initializer EOA is deprecated, clarifications continue to be posted
+// under a replacement EOA against the same questionId. The replaced owner is
+// kept in the query list so clarifications posted before the swap remain
+// visible.
+const bulletinOwnerRemaps: Record<string, Address[]> = {
+  "0x91430cad2d3975766499717fa0d66a78d814e5c5": [
+    "0xf43d55f3a8b7484ed4b6931f93cb6f9ef5dd369d",
+  ],
+};
+
+export function getBulletinOwners(initializer: Address): Address[] {
+  const extras = bulletinOwnerRemaps[initializer.toLowerCase()] ?? [];
+  return [initializer, ...extras];
+}
+
 // Define MetaData type here for this file
 export type MetaData = {
   title: string;

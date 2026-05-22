@@ -1,5 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { getQueryMetaData } from "./queryParsing";
+import { getBulletinOwners, getQueryMetaData } from "./queryParsing";
+import type { Address } from "wagmi";
 
 describe("getQueryMetaData - YES_OR_NO_QUERY and Polymarket", () => {
   const polymarketRequester = "0xcb1822859cef82cd2eb4e6276c7916e692995130"; // Polymarket Binary Adapter Address
@@ -120,5 +121,24 @@ describe("getQueryMetaData - YES_OR_NO_QUERY and Polymarket", () => {
     expect(result.description).toBe(
       "q:Did the Dallas Mavericks beat the Miami Heat January 6th, 2022?, p1:0, p2:1, p3:0.5, earlyExpiration:1",
     );
+  });
+});
+
+describe("getBulletinOwners", () => {
+  const deprecated = "0x91430cad2d3975766499717fa0d66a78d814e5c5" as Address;
+  const replacement = "0xf43d55f3a8b7484ed4b6931f93cb6f9ef5dd369d" as Address;
+
+  test("returns the deprecated initializer alongside the replacement owner", () => {
+    expect(getBulletinOwners(deprecated)).toEqual([deprecated, replacement]);
+  });
+
+  test("looks up remaps case-insensitively while preserving input casing", () => {
+    const upper = deprecated.toUpperCase() as Address;
+    expect(getBulletinOwners(upper)).toEqual([upper, replacement]);
+  });
+
+  test("returns just the input when no remap is configured", () => {
+    const other = "0x1111111111111111111111111111111111111111" as Address;
+    expect(getBulletinOwners(other)).toEqual([other]);
   });
 });

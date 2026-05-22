@@ -1,10 +1,13 @@
 import { SectionSubTitle, Text } from "./style";
 import { AdditionalTextData } from "./AdditionalTextData";
-import { useContractRead, type Address } from "wagmi";
+import { useContractReads, type Address } from "wagmi";
 import { polymarketBulletinAbi } from "@shared/constants/abi";
 import { utils } from "ethers";
 import { isWagmiAddress, toUtcTimeFormatted } from "@/helpers";
-import { getInitializerAddress } from "@/helpers/queryParsing";
+import {
+  getBulletinOwners,
+  getInitializerAddress,
+} from "@/helpers/queryParsing";
 
 interface Props {
   description: string | undefined;
@@ -29,16 +32,19 @@ export function useGetUpdates(props: {
 }) {
   const { queryTextHex, description, address } = props;
   const questionId = queryTextHex ? utils.keccak256(queryTextHex) : undefined;
-  const ownerAddress = getInitializerAddress(description);
+  const initializer = getInitializerAddress(description);
+  const owners = initializer ? getBulletinOwners(initializer) : [];
 
-  return useContractRead({
-    address,
-    abi: polymarketBulletinAbi,
-    functionName: "getUpdates",
-    // bulletin contractr on polygon
-    chainId: 137,
-    args: [questionId as Address, ownerAddress!],
-    enabled: !!address && !!questionId && !!ownerAddress,
+  return useContractReads({
+    contracts: owners.map((owner) => ({
+      address,
+      abi: polymarketBulletinAbi,
+      functionName: "getUpdates" as const,
+      // bulletin contract on polygon
+      chainId: 137,
+      args: [questionId as Address, owner],
+    })),
+    enabled: !!address && !!questionId && owners.length > 0,
   });
 }
 
@@ -51,14 +57,17 @@ export function PolymarketTextData(props: Props) {
     queryTextHex: props.queryTextHex,
     description: props.description,
   });
+  const mergedUpdates = bulletinUpdates?.data
+    ?.flatMap((result) => (result.status === "success" ? result.result : []))
+    .sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   return (
     <>
-      {bulletinUpdates?.data?.length ? (
+      {mergedUpdates?.length ? (
         <>
           <SectionSubTitle>Polymarket Bulletin Board</SectionSubTitle>
-          {bulletinUpdates.data.map((data) => {
+          {mergedUpdates.map((data, index) => {
             return (
-              <Text key={data.timestamp.toString()}>
+              <Text key={`${data.timestamp.toString()}-${index}`}>
                 {toUtcTimeFormatted(data.timestamp.toString())}:{" "}
                 {utils.toUtf8String(data.update)}
               </Text>
