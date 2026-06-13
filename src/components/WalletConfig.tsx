@@ -7,11 +7,11 @@ import {
 } from "@/constants";
 import { darkTheme } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig } from "wagmi";
-import { infuraProvider } from "wagmi/providers/infura";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
 export const { chains, publicClient } = configureChains(supportedChains, [
-  infuraProvider({ apiKey: config.infuraId }),
+  alchemyProvider({ apiKey: config.alchemyId }),
   publicProvider(),
 ]);
 

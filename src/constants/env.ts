@@ -3,7 +3,7 @@ import * as ss from "superstruct";
 
 const Env = ss.object({
   NEXT_PUBLIC_DEFAULT_APY: ss.optional(ss.string()),
-  NEXT_PUBLIC_INFURA_ID: ss.string(),
+  NEXT_PUBLIC_ALCHEMY_ID: ss.string(),
   NEXT_PUBLIC_DEFAULT_LIVENESS: ss.string(),
   NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ss.string(),
   NEXT_PUBLIC_SIMULATION_ENDPOINT: ss.string(),
@@ -158,7 +158,7 @@ export type Env = ss.Infer<typeof Env>;
 const env = ss.create(
   {
     NEXT_PUBLIC_DEFAULT_APY: process.env.NEXT_PUBLIC_DEFAULT_APY,
-    NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
+    NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID:
       process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     NEXT_PUBLIC_SIMULATION_ENDPOINT:
@@ -394,7 +394,7 @@ export type ProviderConfigs = ss.Infer<typeof ProviderConfigs>;
 const Config = ss.object({
   simulationEndpoint: ss.string(),
   defaultApy: ss.string(),
-  infuraId: ss.string(),
+  alchemyId: ss.string(),
   walletconnectProjectId: ss.string(),
   defaultLiveness: ss.string(),
   subgraphs: SubgraphConfigs,
@@ -515,7 +515,7 @@ function parseEnv(env: Env): Config {
   return {
     simulationEndpoint: env.NEXT_PUBLIC_SIMULATION_ENDPOINT,
     defaultApy: env.NEXT_PUBLIC_DEFAULT_APY ?? "30.1",
-    infuraId: env.NEXT_PUBLIC_INFURA_ID,
+    alchemyId: env.NEXT_PUBLIC_ALCHEMY_ID,
     walletconnectProjectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     defaultLiveness: env.NEXT_PUBLIC_DEFAULT_LIVENESS ?? "7600",
     subgraphs,
