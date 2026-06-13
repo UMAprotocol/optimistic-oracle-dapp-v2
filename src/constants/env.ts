@@ -279,14 +279,14 @@ export type Config = ss.Infer<typeof Config>;
 // Chain subdomain used when composing an Alchemy URL from NEXT_PUBLIC_ALCHEMY_KEY.
 // Chains absent here are not covered by Alchemy and require either a per-chain
 // override (NEXT_PUBLIC_PROVIDER_<id>) or a QuickNode template.
+// Goerli (5) and Polygon Mumbai (80001) are intentionally omitted: Alchemy
+// shut both off in April 2024, so the universal key cannot serve them.
 const alchemySlugByChainId: Record<number, string> = {
   1: "eth-mainnet",
-  5: "eth-goerli",
   10: "opt-mainnet",
   137: "polygon-mainnet",
   8453: "base-mainnet",
   42161: "arb-mainnet",
-  80001: "polygon-mumbai",
   80002: "polygon-amoy",
   81457: "blast-mainnet",
   11155111: "eth-sepolia",
@@ -303,7 +303,7 @@ const quicknodeSlugByChainId: Record<number, string> = {
   137: ".matic",
   8453: ".base-mainnet",
   42161: ".arbitrum-mainnet",
-  80002: ".polygon-amoy",
+  80002: ".matic-amoy",
   81457: ".blast-mainnet",
   11155111: ".ethereum-sepolia",
   168587773: ".blast-sepolia",
@@ -424,12 +424,21 @@ function buildSubgraphs(env: Env): SubgraphConfigs {
     if (version === "SKINNY") type = "Skinny Optimistic Oracle";
     else if (version === "MANAGED") type = "Managed Optimistic Oracle V2";
     else type = `Optimistic Oracle ${version}`;
+    // Not every oracle version is deployed on every chain (e.g. no Skinny on
+    // Blast Sepolia). Skip the subgraph entry instead of throwing at module
+    // init when the contract address is missing.
+    let address: string;
+    try {
+      address = getContractAddress({ chainId, type });
+    } catch {
+      continue;
+    }
     const subgraph = {
       source: "gql",
       urls,
       type,
       chainId,
-      address: getContractAddress({ chainId, type }),
+      address,
     };
     if (ss.is(subgraph, SubgraphConfig)) {
       subgraphs.push(subgraph);
