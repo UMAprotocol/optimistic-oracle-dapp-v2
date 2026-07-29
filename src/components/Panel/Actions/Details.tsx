@@ -15,7 +15,7 @@ export function Details({
   const isManaged = oracleType === "Managed Optimistic Oracle V2";
   const gracePeriodMs = 5 * 60 * 1000;
   const now = Date.now();
-  const isExtended =
+  const isAwaitingSettlement =
     isManaged &&
     livenessEndsMilliseconds !== undefined &&
     now >= livenessEndsMilliseconds + gracePeriodMs;
@@ -53,10 +53,10 @@ export function Details({
         </TextWrapper>
       )}
       <TextWrapper>
-        {isExtended ? (
+        {isAwaitingSettlement ? (
           <Text>
-            Challenge period extended{" "}
-            <InformationIcon content={extendedLivenessInformation} />
+            Awaiting settlement{" "}
+            <InformationIcon content={awaitingSettlementInformation} />
           </Text>
         ) : isManaged ? (
           <>
@@ -80,11 +80,10 @@ export function Details({
   );
 }
 
-const extendedLivenessInformation = (
+const awaitingSettlementInformation = (
   <p>
-    Managed Optimistic Oracle V2 requests have an additional 5-minute grace
-    period after the minimum challenge period ends, during which disputes can
-    still be submitted.
+    The minimum challenge period for this request has ended and it is awaiting
+    settlement. Disputes can still be submitted until the request is settled.
   </p>
 );
 
