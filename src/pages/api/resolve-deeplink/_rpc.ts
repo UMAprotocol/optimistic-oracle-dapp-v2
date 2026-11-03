@@ -301,7 +301,8 @@ async function applyLiveRequestState(
  * back to the receipt-only view.
  *
  * Some RPCs (e.g. Infura) cap getLogs at a 10k-block range. For those we scan
- * forward from the linked tx in capped windows until the settlement shows up.
+ * capped windows: forward from the linked tx until the settlement shows up,
+ * and backward until the AssertionMade event shows up.
  */
 const LOG_RANGE_CAP = 10_000;
 const MAX_RANGE_WINDOWS = 30;
@@ -328,27 +329,61 @@ async function getAssertionHistory(
 
   try {
     const head = await provider.getBlockNumber();
-    const windows: [number, number][] = [];
+    const scan = async (
+      windows: [number, number][],
+      doneTopic: string,
+    ): Promise<ethers.providers.Log[]> => {
+      const found: ethers.providers.Log[] = [];
+      for (let i = 0; i < windows.length; i += WINDOW_CONCURRENCY) {
+        const batch = await Promise.all(
+          windows.slice(i, i + WINDOW_CONCURRENCY).map(([from, to]) =>
+            provider.getLogs({
+              address,
+              topics,
+              fromBlock: from,
+              toBlock: to,
+            }),
+          ),
+        );
+        found.push(...batch.flat());
+        if (found.some((log) => log.topics[0] === doneTopic)) break;
+      }
+      return found;
+    };
+
+    // Forward from the linked tx until the settlement shows up.
+    const forward: [number, number][] = [];
     for (
       let start = fromBlock;
-      start <= head && windows.length < MAX_RANGE_WINDOWS;
+      start <= head && forward.length < MAX_RANGE_WINDOWS;
       start += LOG_RANGE_CAP
     ) {
-      windows.push([start, Math.min(start + LOG_RANGE_CAP - 1, head)]);
+      forward.push([start, Math.min(start + LOG_RANGE_CAP - 1, head)]);
     }
-    const settledTopic = ooV3Interface.getEventTopic("AssertionSettled");
-    const logs: ethers.providers.Log[] = [];
-    for (let i = 0; i < windows.length; i += WINDOW_CONCURRENCY) {
-      const batch = await Promise.all(
-        windows
-          .slice(i, i + WINDOW_CONCURRENCY)
-          .map(([from, to]) =>
-            provider.getLogs({ address, topics, fromBlock: from, toBlock: to }),
-          ),
-      );
-      logs.push(...batch.flat());
-      if (logs.some((log) => log.topics[0] === settledTopic)) break;
+    const madeTopic = ooV3Interface.getEventTopic("AssertionMade");
+    const logs = await scan(
+      forward,
+      ooV3Interface.getEventTopic("AssertionSettled"),
+    );
+
+    // A dispute/settle link starts after the assertion was made, so scan
+    // backward for AssertionMade; without it the assertion has no claim,
+    // asserter, bond, etc.
+    if (!logs.some((log) => log.topics[0] === madeTopic)) {
+      const backward: [number, number][] = [];
+      for (
+        let end = fromBlock - 1;
+        end >= 0 && backward.length < MAX_RANGE_WINDOWS;
+        end -= LOG_RANGE_CAP
+      ) {
+        backward.push([Math.max(end - LOG_RANGE_CAP + 1, 0), end]);
+      }
+      logs.unshift(...(await scan(backward, madeTopic)));
+      if (!logs.some((log) => log.topics[0] === madeTopic)) return undefined;
     }
+    logs.sort(
+      (a, b) => a.blockNumber - b.blockNumber || a.logIndex - b.logIndex,
+    );
     return parseLogs(logs, address, ooV3Interface);
   } catch {
     return undefined;
