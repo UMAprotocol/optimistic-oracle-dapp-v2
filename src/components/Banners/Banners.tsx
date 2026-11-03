@@ -1,6 +1,4 @@
-import { config } from "@/constants";
 import { ErrorBanner } from "./ErrorBanner";
-import { ManagedOracleBanner } from "./ManagedOracleBanner";
 import { SunsetBanner } from "./SunsetBanner";
 
 export function Banners() {
@@ -8,7 +6,6 @@ export function Banners() {
     <>
       <ErrorBanner />
       <SunsetBanner />
-      {config.showManagedOracleBanner && <ManagedOracleBanner />}
     </>
   );
 }

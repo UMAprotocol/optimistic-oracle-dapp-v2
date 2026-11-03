@@ -148,7 +148,6 @@ const Env = ss.object({
   NEXT_PUBLIC_PROVIDER_SKINNY_8453: ss.optional(ss.string()),
   NEXT_PUBLIC_MAX_SETTLED_REQUESTS: ss.optional(ss.string()),
 
-  NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER: ss.optional(ss.string()),
   NEXT_PUBLIC_ENABLE_FAST_VERIFY: ss.optional(ss.string()),
   NEXT_PUBLIC_VERIFY_DAYS_BACK: ss.optional(ss.string()),
 });
@@ -342,8 +341,6 @@ const env = ss.create(
       process.env.NEXT_PUBLIC_SUBGRAPH_SKINNY_8453,
     NEXT_PUBLIC_MAX_SETTLED_REQUESTS:
       process.env.NEXT_PUBLIC_MAX_SETTLED_REQUESTS,
-    NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER:
-      process.env.NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER,
     NEXT_PUBLIC_ENABLE_FAST_VERIFY: process.env.NEXT_PUBLIC_ENABLE_FAST_VERIFY,
     NEXT_PUBLIC_VERIFY_DAYS_BACK: process.env.NEXT_PUBLIC_VERIFY_DAYS_BACK,
   },
@@ -400,7 +397,6 @@ const Config = ss.object({
   subgraphs: SubgraphConfigs,
   providers: ProviderConfigs,
   maxSettledRequests: ss.string(),
-  showManagedOracleBanner: ss.boolean(),
 });
 export type Config = ss.Infer<typeof Config>;
 
@@ -521,8 +517,6 @@ function parseEnv(env: Env): Config {
     subgraphs,
     providers,
     maxSettledRequests: env.NEXT_PUBLIC_MAX_SETTLED_REQUESTS ?? "1000",
-    showManagedOracleBanner:
-      env.NEXT_PUBLIC_SHOW_MANAGED_ORACLE_BANNER === "true",
   };
 }
 
