@@ -13,6 +13,21 @@ import {
   isManaged,
 } from "./index";
 
+// A hung subgraph must not eat the whole function budget: when every subgraph
+// fails or times out, the caller falls back to resolving the link over RPC.
+const SUBGRAPH_TIMEOUT_MS = 6000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error(`Subgraph timed out after ${ms}ms`)),
+      ms,
+    );
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
 async function fetchWithUrlFallback<T>(
   urls: string[],
   fetcher: (url: string) => Promise<T>,
@@ -20,7 +35,7 @@ async function fetchWithUrlFallback<T>(
   let lastError: Error | undefined;
   for (const url of urls) {
     try {
-      return await fetcher(url);
+      return await withTimeout(fetcher(url), SUBGRAPH_TIMEOUT_MS);
     } catch (error) {
       lastError = error as Error;
     }
