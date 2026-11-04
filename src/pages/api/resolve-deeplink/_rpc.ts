@@ -2,10 +2,12 @@ import type { ProviderConfig } from "@/constants";
 import { config } from "@/constants";
 import type {
   OOV1GraphEntity,
+  OOV2GraphEntity,
   OOV3GraphEntity,
   OracleType,
 } from "@shared/types";
 import { ethers } from "ethers";
+import { parseIdentifier } from "@libs/utils";
 import {
   contractInterface as ooV1Interface,
   getEventState as getOOV1EventState,
@@ -132,12 +134,12 @@ function clientAssertionToGraphEntity(
  * Parses receipt logs for a given contract into event-like objects
  * suitable for the client getEventState() reducers.
  */
-function parseReceiptLogs(
-  receipt: ethers.providers.TransactionReceipt,
+function parseLogs(
+  logs: ethers.providers.Log[],
   contractAddress: string,
   iface: ethers.utils.Interface,
 ) {
-  return receipt.logs
+  return logs
     .filter(
       (log) => log.address.toLowerCase() === contractAddress.toLowerCase(),
     )
@@ -149,14 +151,263 @@ function parseReceiptLogs(
           ...description,
           event: description.name,
           eventSignature: description.signature,
-          transactionHash: receipt.transactionHash,
-          blockNumber: receipt.blockNumber,
         };
       } catch {
         return undefined;
       }
     })
     .filter(Boolean) as unknown[];
+}
+
+function parseReceiptLogs(
+  receipt: ethers.providers.TransactionReceipt,
+  contractAddress: string,
+  iface: ethers.utils.Interface,
+) {
+  return parseLogs(receipt.logs, contractAddress, iface);
+}
+
+// --- Live on-chain state ---
+//
+// A receipt only contains the events of the linked transaction, so a link to a
+// request tx would otherwise look "Requested" forever. These helpers read the
+// current state from the contract so RPC-resolved links land on the right page
+// and show the right actions even when no subgraph is available.
+
+const GET_STATE =
+  "function getState(address requester, bytes32 identifier, uint256 timestamp, bytes ancillaryData) view returns (uint8)";
+const GET_REQUEST =
+  "function getRequest(address requester, bytes32 identifier, uint256 timestamp, bytes ancillaryData) view returns ";
+const REQUEST_SETTINGS =
+  "tuple(bool eventBased, bool refundOnDispute, bool callbackOnPriceProposed, bool callbackOnPriceDisputed, bool callbackOnPriceSettled, uint256 bond, uint256 customLiveness) requestSettings";
+const OOV2_REQUEST_FIELDS = `address proposer, address disputer, address currency, bool settled, ${REQUEST_SETTINGS}, int256 proposedPrice, int256 resolvedPrice, uint256 expirationTime, uint256 reward, uint256 finalFee`;
+
+// The Request struct differs per oracle (Managed appends proposalTime), so
+// each type needs its own ABI to decode getRequest correctly.
+const LIVE_REQUEST_ABIS: Partial<Record<OracleType, string[]>> = {
+  "Optimistic Oracle V1": [
+    GET_STATE,
+    GET_REQUEST +
+      "(tuple(address proposer, address disputer, address currency, bool settled, bool refundOnDispute, int256 proposedPrice, int256 resolvedPrice, uint256 expirationTime, uint256 reward, uint256 finalFee, uint256 bond, uint256 customLiveness))",
+  ],
+  "Optimistic Oracle V2": [
+    GET_STATE,
+    GET_REQUEST + `(tuple(${OOV2_REQUEST_FIELDS}))`,
+  ],
+  "Managed Optimistic Oracle V2": [
+    GET_STATE,
+    GET_REQUEST + `(tuple(${OOV2_REQUEST_FIELDS}, uint256 proposalTime))`,
+  ],
+};
+
+// Decoded getRequest result. requestSettings exists on OOv2/Managed only.
+type LiveRequest = {
+  proposer: string;
+  disputer: string;
+  currency: string;
+  settled: boolean;
+  proposedPrice: ethers.BigNumber;
+  resolvedPrice: ethers.BigNumber;
+  expirationTime: ethers.BigNumber;
+  reward: ethers.BigNumber;
+  finalFee: ethers.BigNumber;
+  requestSettings?: {
+    eventBased: boolean;
+    bond: ethers.BigNumber;
+    customLiveness: ethers.BigNumber;
+  };
+};
+
+// OOv2 and Managed subgraphs build request ids as
+// identifier-timestamp-keccak256(ancillaryData); OOv1 and Skinny use the raw
+// ancillary data.
+const HASHED_ID_TYPES: OracleType[] = [
+  "Optimistic Oracle V2",
+  "Managed Optimistic Oracle V2",
+];
+
+function nonZeroAddress(address: string): string | null {
+  return address === ethers.constants.AddressZero ? null : address;
+}
+
+async function applyLiveRequestState(
+  provider: ethers.providers.Provider,
+  address: string,
+  type: OracleType,
+  request: OOV1Request,
+  entity: OOV1GraphEntity,
+): Promise<OOV1GraphEntity | OOV2GraphEntity> {
+  const abi = LIVE_REQUEST_ABIS[type];
+  if (!abi) return entity;
+  const contract = new ethers.Contract(address, abi, provider);
+  const args = [
+    request.requester,
+    request.identifier,
+    request.timestamp,
+    request.ancillaryData,
+  ];
+  const getRequest = contract.getRequest as (
+    ...a: unknown[]
+  ) => Promise<LiveRequest>;
+  const getState = contract.getState as (...a: unknown[]) => Promise<number>;
+  const [onchain, state] = await Promise.all([
+    getRequest(...args),
+    getState(...args),
+  ]);
+
+  const proposer = nonZeroAddress(onchain.proposer);
+  // The contract zeroes reward on refund-on-dispute, so prefer the values the
+  // RequestPrice event recorded (what the subgraph shows) when we have them.
+  const hasRequestEvent = entity.requestHash !== null;
+  const live: OOV1GraphEntity = {
+    ...entity,
+    // OOv2-family subgraphs key requests by the ancillary data hash.
+    id: HASHED_ID_TYPES.includes(type)
+      ? [
+          parseIdentifier(request.identifier),
+          request.timestamp.toString(),
+          ethers.utils.keccak256(request.ancillaryData),
+        ].join("-")
+      : entity.id,
+    state: convertRequestStateToString(state as RequestState),
+    proposer: proposer,
+    disputer: nonZeroAddress(onchain.disputer),
+    currency: onchain.currency as OOV1GraphEntity["currency"],
+    reward: hasRequestEvent ? entity.reward : onchain.reward.toString(),
+    finalFee: hasRequestEvent ? entity.finalFee : onchain.finalFee.toString(),
+    proposedPrice: proposer ? onchain.proposedPrice.toString() : null,
+    proposalExpirationTimestamp: onchain.expirationTime.isZero()
+      ? null
+      : onchain.expirationTime.toString(),
+    settlementPrice: onchain.settled
+      ? onchain.resolvedPrice.toString()
+      : entity.settlementPrice,
+  };
+
+  const settings = onchain.requestSettings;
+  if (!settings) return live;
+  return {
+    ...live,
+    bond: settings.bond.toString(),
+    customLiveness: settings.customLiveness.toString(),
+    eventBased: settings.eventBased,
+  };
+}
+
+/**
+ * Every OOv3 event indexes assertionId, so a single topic-filtered getLogs
+ * returns the assertion's whole lifecycle (made, disputed, settled) with
+ * hashes. Returns undefined if the RPC rejects the query, so callers can fall
+ * back to the receipt-only view.
+ *
+ * Some RPCs (e.g. Infura) cap getLogs at a 10k-block range. For those we scan
+ * capped windows: forward from the linked tx until the settlement shows up,
+ * and backward until the AssertionMade event shows up.
+ */
+const LOG_RANGE_CAP = 10_000;
+const MAX_RANGE_WINDOWS = 30;
+const WINDOW_CONCURRENCY = 5;
+
+async function getAssertionHistory(
+  provider: ethers.providers.Provider,
+  address: string,
+  assertionId: string,
+  fromBlock: number,
+) {
+  const topics = [null as unknown as string, assertionId];
+  try {
+    const logs = await provider.getLogs({
+      address,
+      topics,
+      fromBlock: 0,
+      toBlock: "latest",
+    });
+    return parseLogs(logs, address, ooV3Interface);
+  } catch {
+    // Fall through to windowed scan
+  }
+
+  try {
+    const head = await provider.getBlockNumber();
+    const scan = async (
+      windows: [number, number][],
+      doneTopic: string,
+    ): Promise<ethers.providers.Log[]> => {
+      const found: ethers.providers.Log[] = [];
+      for (let i = 0; i < windows.length; i += WINDOW_CONCURRENCY) {
+        const batch = await Promise.all(
+          windows.slice(i, i + WINDOW_CONCURRENCY).map(([from, to]) =>
+            provider.getLogs({
+              address,
+              topics,
+              fromBlock: from,
+              toBlock: to,
+            }),
+          ),
+        );
+        found.push(...batch.flat());
+        if (found.some((log) => log.topics[0] === doneTopic)) break;
+      }
+      return found;
+    };
+
+    // Forward from the linked tx until the settlement shows up.
+    const forward: [number, number][] = [];
+    for (
+      let start = fromBlock;
+      start <= head && forward.length < MAX_RANGE_WINDOWS;
+      start += LOG_RANGE_CAP
+    ) {
+      forward.push([start, Math.min(start + LOG_RANGE_CAP - 1, head)]);
+    }
+    const madeTopic = ooV3Interface.getEventTopic("AssertionMade");
+    const logs = await scan(
+      forward,
+      ooV3Interface.getEventTopic("AssertionSettled"),
+    );
+
+    // A dispute/settle link starts after the assertion was made, so scan
+    // backward for AssertionMade; without it the assertion has no claim,
+    // asserter, bond, etc.
+    if (!logs.some((log) => log.topics[0] === madeTopic)) {
+      const backward: [number, number][] = [];
+      for (
+        let end = fromBlock - 1;
+        end >= 0 && backward.length < MAX_RANGE_WINDOWS;
+        end -= LOG_RANGE_CAP
+      ) {
+        backward.push([Math.max(end - LOG_RANGE_CAP + 1, 0), end]);
+      }
+      logs.unshift(...(await scan(backward, madeTopic)));
+      if (!logs.some((log) => log.topics[0] === madeTopic)) return undefined;
+    }
+    logs.sort(
+      (a, b) => a.blockNumber - b.blockNumber || a.logIndex - b.logIndex,
+    );
+    return parseLogs(logs, address, ooV3Interface);
+  } catch {
+    return undefined;
+  }
+}
+
+async function getBlockTimestamps(
+  provider: ethers.providers.Provider,
+  blockNumbers: (string | null | undefined)[],
+) {
+  const unique = [
+    ...new Set(blockNumbers.filter((n): n is string => Boolean(n))),
+  ];
+  const entries = await Promise.all(
+    unique.map(async (n) => {
+      try {
+        const block = await provider.getBlock(Number(n));
+        return [n, block.timestamp.toString()] as const;
+      } catch {
+        return [n, null] as const;
+      }
+    }),
+  );
+  return new Map(entries);
 }
 
 export async function searchByHashViaRpc(
@@ -215,16 +466,46 @@ export async function searchByHashViaRpc(
             const { assertions = {} } = getOOV3EventState(
               parsedEvents as Parameters<typeof getOOV3EventState>[0],
             );
-            for (const assertion of Object.values(assertions)) {
-              const entity = clientAssertionToGraphEntity(assertion);
-              if (blockTimestamp) {
-                if (entity.assertionBlockNumber && !entity.assertionTimestamp)
-                  entity.assertionTimestamp = blockTimestamp;
-                if (entity.disputeBlockNumber && !entity.disputeTimestamp)
-                  entity.disputeTimestamp = blockTimestamp;
-                if (entity.settlementBlockNumber && !entity.settlementTimestamp)
-                  entity.settlementTimestamp = blockTimestamp;
-              }
+            for (const receiptAssertion of Object.values(assertions)) {
+              // Prefer the full lifecycle so later disputes/settlements show up.
+              const history = await getAssertionHistory(
+                provider,
+                pc.address,
+                receiptAssertion.assertionId,
+                receipt.blockNumber,
+              );
+              const fullAssertion = history?.length
+                ? Object.values(
+                    getOOV3EventState(
+                      history as Parameters<typeof getOOV3EventState>[0],
+                    ).assertions ?? {},
+                  ).find((a) => a.assertionId === receiptAssertion.assertionId)
+                : undefined;
+              const entity = clientAssertionToGraphEntity(
+                fullAssertion ?? receiptAssertion,
+              );
+              const timestamps = fullAssertion
+                ? await getBlockTimestamps(provider, [
+                    entity.assertionBlockNumber,
+                    entity.disputeBlockNumber,
+                    entity.settlementBlockNumber,
+                  ])
+                : undefined;
+              const timestampFor = (block: string | null) => {
+                if (!timestamps) return blockTimestamp;
+                return (block ? timestamps.get(block) : null) ?? null;
+              };
+              if (entity.assertionBlockNumber && !entity.assertionTimestamp)
+                entity.assertionTimestamp =
+                  timestampFor(entity.assertionBlockNumber) ?? "";
+              if (entity.disputeBlockNumber && !entity.disputeTimestamp)
+                entity.disputeTimestamp = timestampFor(
+                  entity.disputeBlockNumber,
+                );
+              if (entity.settlementBlockNumber && !entity.settlementTimestamp)
+                entity.settlementTimestamp = timestampFor(
+                  entity.settlementBlockNumber,
+                );
               const score = scoreAssertionEntity(entity, txHash, eventIndex);
               if (score > 0) {
                 results.push({
@@ -247,7 +528,8 @@ export async function searchByHashViaRpc(
                   parsedEvents as Parameters<typeof getOOV1EventState>[0],
                 );
             for (const request of Object.values(requests)) {
-              const entity = clientRequestToGraphEntity(request as OOV1Request);
+              let entity: OOV1GraphEntity | OOV2GraphEntity =
+                clientRequestToGraphEntity(request as OOV1Request);
               if (blockTimestamp) {
                 if (entity.requestBlockNumber && !entity.requestTimestamp)
                   entity.requestTimestamp = blockTimestamp;
@@ -257,6 +539,17 @@ export async function searchByHashViaRpc(
                   entity.disputeTimestamp = blockTimestamp;
                 if (entity.settlementBlockNumber && !entity.settlementTimestamp)
                   entity.settlementTimestamp = blockTimestamp;
+              }
+              try {
+                entity = await applyLiveRequestState(
+                  provider,
+                  pc.address,
+                  pc.type,
+                  request as OOV1Request,
+                  entity,
+                );
+              } catch {
+                // Non-fatal — fall back to the state implied by this tx's events
               }
               const score = scoreRequestEntity(entity, txHash, eventIndex);
               if (score > 0) {

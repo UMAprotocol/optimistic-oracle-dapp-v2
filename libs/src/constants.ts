@@ -85,7 +85,7 @@ export const ContractInfoList: ContractInfoList = [
   {
     type: "Optimistic Oracle V2",
     chainId: 1,
-    address: getAddress("0x004395edb43EFca9885CEdad51EC9fAf93Bd34ac"),
+    address: getAddress("0xA0Ae6609447e57a42c51B50EAe921D701823FFAe"),
   },
   {
     // goerli

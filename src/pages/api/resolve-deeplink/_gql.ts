@@ -13,14 +13,33 @@ import {
   isManaged,
 } from "./index";
 
+// A hung subgraph must not eat the whole function budget: when every subgraph
+// fails or times out, the caller falls back to resolving the link over RPC.
+// The deadline covers all of a config's mirror URLs together, not each one.
+const SUBGRAPH_TIMEOUT_MS = 6000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error(`Subgraph timed out after ${ms}ms`)),
+      ms,
+    );
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
 async function fetchWithUrlFallback<T>(
   urls: string[],
   fetcher: (url: string) => Promise<T>,
 ): Promise<T> {
   let lastError: Error | undefined;
+  const deadline = Date.now() + SUBGRAPH_TIMEOUT_MS;
   for (const url of urls) {
+    const remaining = deadline - Date.now();
+    if (remaining <= 0) break;
     try {
-      return await fetcher(url);
+      return await withTimeout(fetcher(url), remaining);
     } catch (error) {
       lastError = error as Error;
     }
