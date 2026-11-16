@@ -6,9 +6,8 @@ describe("DeprecatedPage", () => {
   const html = renderToStaticMarkup(<DeprecatedPage />);
 
   it("shows the deprecation message", () => {
-    expect(html).toContain("This webpage has been deprecated.");
     expect(html).toContain(
-      "Polygon MOOV2 and legacy Polymarket OOV2 requests can be viewed on the new",
+      "This webpage has been deprecated and replaced by the new",
     );
     expect(html).toContain("for more information.");
   });

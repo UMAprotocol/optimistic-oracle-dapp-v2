@@ -17,8 +17,7 @@ export default function DeprecatedPage() {
       }}
     >
       <p>
-        This webpage has been deprecated. Polygon MOOV2 and legacy Polymarket
-        OOV2 requests can be viewed on the new{" "}
+        This webpage has been deprecated and replaced by the new{" "}
         <a href={EXPLORER_URL}>Explorer</a> page. See our{" "}
         <a href={DOCS_URL}>docs</a> for more information.
       </p>
