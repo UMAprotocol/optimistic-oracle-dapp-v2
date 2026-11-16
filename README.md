@@ -1,26 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Optimistic Oracle dApp (deprecated)
 
-## Getting Started
+oracle.uma.xyz has been deprecated. Every path on the site renders a single
+static page pointing users to the [UMA Explorer](https://explorer.uma.xyz/).
 
--
+The full dApp source, last deployed at commit
+[`63b1533`](https://github.com/UMAprotocol/optimistic-oracle-dapp-v2/tree/63b15337a1d718c81269255885a61db976e3c151),
+is still available in git history for anyone who wants to fork and run it.
 
-First, run the development server:
+## What is still served
+
+- `/` (and any other path, via a fallback rewrite in `next.config.js`): the
+  deprecation page.
+- `/api/get-voting-info`: DVM vote phase and active request count, read over
+  RPC. The Explorer calls this endpoint. Requires the `NODE_URLS` env variable
+  (a JSON map of chain id to RPC URL).
+
+No subgraphs are queried.
+
+## Development
 
 ```bash
-npm run dev
-# or
 yarn dev
-# or
-pnpm dev
+yarn lint
+yarn test
 ```
-
-## Env variables
-
-For provider and subgraph URLs you **must** follow this pattern **in this order**.
-
-> next_public-("provider" | "subgraph")-(version or "skinny")-(chainId)
-
-correct examples:
-
-- NEXT_PUBLIC_PROVIDER_V1_11155111
-- NEXT_PUBLIC_SUBGRAPH_SKINNY_11155111

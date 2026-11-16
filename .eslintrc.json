@@ -8,8 +8,7 @@
     "next",
     "next/core-web-vitals",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:storybook/recommended"
+    "plugin:@typescript-eslint/recommended-type-checked"
   ],
   "plugins": ["@typescript-eslint"],
   "rules": {
