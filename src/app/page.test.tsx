@@ -9,11 +9,12 @@ describe("DeprecatedPage", () => {
     expect(html).toContain(
       "This webpage has been deprecated and replaced by the new",
     );
-    expect(html).toContain("for more information.");
   });
 
-  it("links to the Explorer and the docs", () => {
+  it("links to the Explorer and oracle requests", () => {
     expect(html).toContain('<a href="https://explorer.uma.xyz/">Explorer</a>');
-    expect(html).toMatch(/<a href="https:\/\/docs\.uma\.xyz\/[^"]*">docs<\/a>/);
+    expect(html).toContain(
+      '<a href="https://explorer.uma.xyz/requests">oracle requests</a>',
+    );
   });
 });
