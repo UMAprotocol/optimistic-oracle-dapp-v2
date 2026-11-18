@@ -1,7 +1,5 @@
 const EXPLORER_URL = "https://explorer.uma.xyz/";
-// TODO: placeholder — replace with the docs page about the Explorer / this
-// deprecation before merging.
-const DOCS_URL = "https://docs.uma.xyz/";
+const DOCS_URL = "https://docs.uma.xyz/resources/oracle-dapp-deprecated";
 
 // Every path on this site is rewritten to this page (see next.config.js), so
 // old deeplinks with query params land here too.

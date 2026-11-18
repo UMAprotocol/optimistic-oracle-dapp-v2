@@ -14,6 +14,8 @@ describe("DeprecatedPage", () => {
 
   it("links to the Explorer and the docs", () => {
     expect(html).toContain('<a href="https://explorer.uma.xyz/">Explorer</a>');
-    expect(html).toMatch(/<a href="https:\/\/docs\.uma\.xyz\/[^"]*">docs<\/a>/);
+    expect(html).toContain(
+      '<a href="https://docs.uma.xyz/resources/oracle-dapp-deprecated">docs</a>',
+    );
   });
 });
