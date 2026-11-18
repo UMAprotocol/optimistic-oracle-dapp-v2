@@ -1,36 +1,19 @@
-const withSvgr = require("next-plugin-svgr");
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config) => {
-    config.externals.push("pino-pretty", "lokijs", "encoding");
-    return config;
-  },
-  compiler: { styledComponents: true },
-  svgrOptions: {
-    svgoConfig: {
-      plugins: [
+  async rewrites() {
+    return {
+      // The dapp is deprecated: any path that isn't a real file or route
+      // (old deeplinks, /propose, /settled, /request, ...) renders the
+      // deprecation page at "/". Fallback rewrites run after pages, API routes
+      // and public files, so /api/get-voting-info and static assets still work.
+      fallback: [
         {
-          name: "preset-default",
-          params: {
-            overrides: {
-              removeViewBox: false,
-              cleanupIds: false,
-            },
-          },
+          source: "/:path*",
+          destination: "/",
         },
       ],
-    },
-  },
-  async redirects() {
-    return [
-      {
-        source: "/request",
-        destination: "/",
-        permanent: true,
-      },
-    ];
+    };
   },
 };
 
-module.exports = withSvgr(nextConfig);
+module.exports = nextConfig;

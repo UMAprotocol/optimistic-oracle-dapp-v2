@@ -1,26 +1,24 @@
-import Verify from "@/components/pages/verify";
-import type { Metadata } from "next";
+const EXPLORER_URL = "https://explorer.uma.xyz/";
+const DOCS_URL = "https://docs.uma.xyz/resources/oracle-dapp-deprecated";
 
-export const metadata: Metadata = {
-  title: "Optimistic Oracle | Verify",
-  description: "An optimistic oracle built for web3",
-  icons: {
-    icon: ["/favicon-32x32.png", "/favicon-16x16.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@UMAprotocol",
-    title: "Optimistic Oracle | UMA",
-    images: "/assets/twitter-card.png",
-  },
-  openGraph: {
-    title: "Optimistic Oracle | UMA",
-    description: "An optimistic oracle built for web3",
-    images: "/assets/twitter-card.png",
-    url: "https://oracle.uma.xyz",
-  },
-};
-
-export default function VerifyPage() {
-  return <Verify />;
+// Every path on this site is rewritten to this page (see next.config.js), so
+// old deeplinks with query params land here too.
+export default function DeprecatedPage() {
+  return (
+    <main
+      style={{
+        maxWidth: 640,
+        margin: "0 auto",
+        padding: "96px 24px",
+        fontSize: 18,
+        lineHeight: 1.6,
+      }}
+    >
+      <p>
+        This webpage has been deprecated and replaced by the new{" "}
+        <a href={EXPLORER_URL}>Explorer</a> page. See our{" "}
+        <a href={DOCS_URL}>docs</a> for more information.
+      </p>
+    </main>
+  );
 }
